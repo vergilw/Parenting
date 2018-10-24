@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+let UIScreenWidth = UIScreen.main.bounds.size.width
+let UIScreenHeight = UIScreen.main.bounds.size.height
+
 enum UIConstants {
     case head
     case subhead

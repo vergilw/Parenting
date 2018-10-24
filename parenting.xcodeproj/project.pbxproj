@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1B21801332002B4281 /* PickedCourseCell.swift */; };
+		13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */; };
+		13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */; };
+		13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B21218065FC002B4281 /* CourseIntroductionCell.swift */; };
+		13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B2421806ED9002B4281 /* SeparatorView.swift */; };
+		13144B27218077F4002B4281 /* Course.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13144B26218077F4002B4281 /* Course.xcassets */; };
 		1320C378217EB76600902A5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C36B217EB76600902A5C /* AppDelegate.swift */; };
-		1320C37A217EB76600902A5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1320C36F217EB76600902A5C /* Assets.xcassets */; };
+		1320C37A217EB76600902A5C /* Public.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1320C36F217EB76600902A5C /* Public.xcassets */; };
 		1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C370217EB76600902A5C /* LaunchScreen.storyboard */; };
 		1320C37C217EB76600902A5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C372217EB76600902A5C /* Main.storyboard */; };
 		1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C37D217EB8E800902A5C /* BaseNavigationController.swift */; };
@@ -29,10 +35,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13144B1B21801332002B4281 /* PickedCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedCourseCell.swift; sourceTree = "<group>"; };
+		13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewController.swift; sourceTree = "<group>"; };
+		13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCatalogueCell.swift; sourceTree = "<group>"; };
+		13144B21218065FC002B4281 /* CourseIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseIntroductionCell.swift; sourceTree = "<group>"; };
+		13144B2421806ED9002B4281 /* SeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		13144B26218077F4002B4281 /* Course.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Course.xcassets; sourceTree = "<group>"; };
 		1320C354217EB66E00902A5C /* parenting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parenting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1320C36B217EB76600902A5C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1320C36C217EB76600902A5C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1320C36F217EB76600902A5C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1320C36F217EB76600902A5C /* Public.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Public.xcassets; sourceTree = "<group>"; };
 		1320C371217EB76600902A5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1320C373217EB76600902A5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1320C37D217EB8E800902A5C /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
@@ -68,6 +80,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		13144B1A21800D40002B4281 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				13144B1B21801332002B4281 /* PickedCourseCell.swift */,
+				13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */,
+				13144B21218065FC002B4281 /* CourseIntroductionCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		13144B2321806E71002B4281 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				13144B2421806ED9002B4281 /* SeparatorView.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		1320C34B217EB66E00902A5C = {
 			isa = PBXGroup;
 			children = (
@@ -130,9 +160,10 @@
 		1320C36E217EB76600902A5C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1320C36F217EB76600902A5C /* Assets.xcassets */,
+				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
 				1320C372217EB76600902A5C /* Main.storyboard */,
+				13144B26218077F4002B4281 /* Course.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -164,6 +195,7 @@
 		1320C377217EB76600902A5C /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				13144B2321806E71002B4281 /* Common */,
 				1320C397217EBEA800902A5C /* Home */,
 				1320C398217EBEB000902A5C /* Me */,
 			);
@@ -173,7 +205,9 @@
 		1320C397217EBEA800902A5C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				13144B1A21800D40002B4281 /* Views */,
 				1320C399217EBF3700902A5C /* DHomeViewController.swift */,
+				13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -263,8 +297,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
-				1320C37A217EB76600902A5C /* Assets.xcassets in Resources */,
+				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
 				1320C37C217EB76600902A5C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,8 +380,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
+				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
+				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
@@ -355,9 +393,11 @@
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
 				1320C38F217EB93A00902A5C /* ObjectMapper+Extension.swift in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
+				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
+				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);
@@ -507,12 +547,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A286J5YKKC;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = zc.parenting;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heyooo.heymail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
@@ -526,12 +567,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A286J5YKKC;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = zc.parenting;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heyooo.heymail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
