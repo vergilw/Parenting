@@ -9,7 +9,7 @@ use_frameworks!
 
 target "parenting" do
 
-    #pod 'RealmSwift'            
+    pod 'RealmSwift'            
     pod 'Alamofire'
     pod 'SnapKit'
     pod 'IQKeyboardManagerSwift'
@@ -25,9 +25,9 @@ target "parenting" do
     pod 'Bugly' 
     pod 'YYKit'
     pod 'MJRefresh'
+    pod 'GTSDK'
     
     pod 'UMCCommon'
-    pod 'UMCPush'
     pod 'UMCSecurityPlugins'
 
 end

@@ -13,8 +13,8 @@
 @import MBProgressHUD;
 @import DZNEmptyDataSet;
 @import MJRefresh;
+@import iCarousel;
 
 #import <UMCommon/UMCommon.h>
-#import <UMPush/UMessage.h>
 
 #endif /* BridgeHeader_h */

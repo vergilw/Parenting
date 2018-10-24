@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
         
         let tabBarController = UITabBarController()
+        tabBarController.tabBar.isTranslucent = false
         tabBarController.tabBar.tintColor = UIColor("#333")
         tabBarController.tabBar.unselectedItemTintColor = UIColor("#999")
         tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
