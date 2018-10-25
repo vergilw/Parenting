@@ -71,7 +71,8 @@ class DHomeViewController: BaseViewController {
             make.edges.equalTo(view)
         }
         carouselView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(scrollView)
+            make.leading.equalTo(0)
+            make.trailing.equalTo(scrollView)
             make.top.equalTo(22)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(200)

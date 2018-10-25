@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import UINavigationItem_Margin
 
 class BaseViewController: UIViewController {
 
@@ -28,6 +29,19 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        
+        if let nav = navigationController, nav.viewControllers.first != self {
+            let backBtn: UIButton = {
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12.5+30, height: 44)))
+                button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysOriginal), for: .normal)
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15-4, bottom: 0, right: 15+4)
+                button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+                return button
+            }()
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
+            navigationItem.leftMargin = 0
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,4 +49,7 @@ class BaseViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @objc func backBarItemAction() {
+        navigationController?.popViewController(animated: true)
+    }
 }

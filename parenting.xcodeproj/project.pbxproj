@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
+		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
+		1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201721816F180088F5BF /* DCourseDetailViewModel.swift */; };
+		1311201A218170410088F5BF /* CourseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13112019218170410088F5BF /* CourseModel.swift */; };
+		1311201C218171650088F5BF /* TeacherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201B218171650088F5BF /* TeacherModel.swift */; };
+		1311201E218172F70088F5BF /* AssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201D218172F70088F5BF /* AssetModel.swift */; };
 		13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1B21801332002B4281 /* PickedCourseCell.swift */; };
 		13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */; };
 		13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */; };
@@ -35,6 +41,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
+		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
+		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
+		1311201B218171650088F5BF /* TeacherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherModel.swift; sourceTree = "<group>"; };
+		1311201D218172F70088F5BF /* AssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetModel.swift; sourceTree = "<group>"; };
 		13144B1B21801332002B4281 /* PickedCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedCourseCell.swift; sourceTree = "<group>"; };
 		13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewController.swift; sourceTree = "<group>"; };
 		13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCatalogueCell.swift; sourceTree = "<group>"; };
@@ -105,9 +116,9 @@
 				1320C375217EB76600902A5C /* Base */,
 				1320C377217EB76600902A5C /* Business */,
 				1320C36D217EB76600902A5C /* Extensions */,
+				1320C369217EB76600902A5C /* Models */,
 				1320C376217EB76600902A5C /* NetworkAPI */,
 				1320C36E217EB76600902A5C /* Resources */,
-				1320C369217EB76600902A5C /* Models */,
 				1320C374217EB76600902A5C /* Services */,
 				1320C355217EB66E00902A5C /* Products */,
 				926285033E11C20FED1C0FDE /* Pods */,
@@ -126,6 +137,9 @@
 		1320C369217EB76600902A5C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				13112019218170410088F5BF /* CourseModel.swift */,
+				1311201B218171650088F5BF /* TeacherModel.swift */,
+				1311201D218172F70088F5BF /* AssetModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -188,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				1320C381217EB91100902A5C /* NetworkConstants.swift */,
+				1311201421816CFE0088F5BF /* CourseAPI.swift */,
 			);
 			path = NetworkAPI;
 			sourceTree = "<group>";
@@ -208,6 +223,7 @@
 				13144B1A21800D40002B4281 /* Views */,
 				1320C399217EBF3700902A5C /* DHomeViewController.swift */,
 				13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */,
+				1311201721816F180088F5BF /* DCourseDetailViewModel.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -380,12 +396,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
+				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
+				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
+				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
+				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
@@ -395,6 +416,7 @@
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
+				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
@@ -546,15 +568,17 @@
 			baseConfigurationReference = 40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A286J5YKKC;
+				DEVELOPMENT_TEAM = UNCVGCAK5K;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.heyooo.heymail;
+				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -566,15 +590,17 @@
 			baseConfigurationReference = A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A286J5YKKC;
+				DEVELOPMENT_TEAM = UNCVGCAK5K;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.heyooo.heymail;
+				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
