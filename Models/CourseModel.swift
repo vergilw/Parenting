@@ -18,6 +18,11 @@ class CourseModel: HandyJSON {
     var suitable: String?
     var teacher: TeacherModel?
     var content_images_attribute: [AssetModel]?
+    var is_bought: Bool?
+    var is_favorite: Bool?
+    var audition: Bool?
+    var course_catalogues: [CourseSectionModel]?
+    
     
     required init() {
         

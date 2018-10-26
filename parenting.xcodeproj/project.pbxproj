@@ -13,6 +13,7 @@
 		1311201A218170410088F5BF /* CourseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13112019218170410088F5BF /* CourseModel.swift */; };
 		1311201C218171650088F5BF /* TeacherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201B218171650088F5BF /* TeacherModel.swift */; };
 		1311201E218172F70088F5BF /* AssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201D218172F70088F5BF /* AssetModel.swift */; };
+		131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160B62182B9590000F105 /* CourseSectionModel.swift */; };
 		13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1B21801332002B4281 /* PickedCourseCell.swift */; };
 		13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */; };
 		13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */; };
@@ -46,6 +47,7 @@
 		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
 		1311201B218171650088F5BF /* TeacherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherModel.swift; sourceTree = "<group>"; };
 		1311201D218172F70088F5BF /* AssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetModel.swift; sourceTree = "<group>"; };
+		131160B62182B9590000F105 /* CourseSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseSectionModel.swift; sourceTree = "<group>"; };
 		13144B1B21801332002B4281 /* PickedCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedCourseCell.swift; sourceTree = "<group>"; };
 		13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewController.swift; sourceTree = "<group>"; };
 		13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCatalogueCell.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				13112019218170410088F5BF /* CourseModel.swift */,
 				1311201B218171650088F5BF /* TeacherModel.swift */,
 				1311201D218172F70088F5BF /* AssetModel.swift */,
+				131160B62182B9590000F105 /* CourseSectionModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
+				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,

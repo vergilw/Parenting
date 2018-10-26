@@ -151,6 +151,7 @@ class CourseIntroductionCell: UITableViewCell {
         teacherNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
             make.bottom.equalTo(teacherAvatarImgView.snp.centerY).offset(-1.5)
+            make.trailing.greaterThanOrEqualTo(-25)
         }
         teacherTagLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)

@@ -11,6 +11,16 @@ import Kingfisher
 
 class DCourseDetailViewController: BaseViewController {
 
+    fileprivate enum CourseDisplayMode {
+        case introduction
+        case catalogue
+        case evaluation
+    }
+    
+    fileprivate var courseDisplayMode: CourseDisplayMode = .introduction
+    
+    private let kBannerHeight: CGFloat = 434/750.0*UIScreenWidth
+    
     /*
     private let kBannerHeight: CGFloat = 400.0
     
@@ -159,7 +169,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.body.color, for: .normal)
         button.titleLabel?.font = UIConstants.body.font
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(favoriteBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -178,6 +188,29 @@ class DCourseDetailViewController: BaseViewController {
         return label
     }()
     
+    lazy fileprivate var auditionBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.body.color, for: .normal)
+        button.titleLabel?.font = UIConstants.body.font
+        button.addTarget(self, action: #selector(favoriteBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy fileprivate var auditionImgView: UIImageView = {
+        let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: 22, height: 20)))
+        imgView.image = UIImage(named: "course_audition")
+        imgView.contentMode = .scaleAspectFill
+        return imgView
+    }()
+    
+    lazy fileprivate var auditionLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor("#999")
+        label.text = "试听"
+        return label
+    }()
+    
     lazy fileprivate var toolActionBtn: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 2.5
@@ -185,7 +218,7 @@ class DCourseDetailViewController: BaseViewController {
         button.titleLabel?.font = UIConstants.body.font
         button.setTitle("立即学习", for: .normal)
         button.backgroundColor = UIColor("#00a7a9")
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(toolActionBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -260,9 +293,9 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     func initToolContentView() {
-        toolView.addSubviews(favoriteBtn, toolActionBtn)
+        toolView.addSubviews(favoriteBtn, auditionBtn, toolActionBtn)
         favoriteBtn.addSubviews(favoriteImgView, favoriteLabel)
-
+        auditionBtn.addSubviews(auditionImgView, auditionLabel)
     }
     
     // MARK: - ============= Constraints =============
@@ -295,8 +328,24 @@ class DCourseDetailViewController: BaseViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(favoriteImgView.snp.bottom).offset(6)
         }
+        auditionBtn.snp.makeConstraints { make in
+            make.leading.equalTo(favoriteBtn.snp.trailing)
+            make.top.bottom.equalToSuperview()
+            make.width.equalTo(52)
+        }
+        auditionImgView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(10)
+            make.width.equalTo(22)
+            make.height.equalTo(20)
+        }
+        auditionLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(auditionImgView.snp.bottom).offset(6)
+        }
+
         toolActionBtn.snp.makeConstraints { make in
-            make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
+            make.leading.equalTo(auditionBtn.snp.trailing).offset(10)
             make.trailing.equalTo(-25)
             make.top.equalTo(7.5)
             make.bottom.equalTo(-7.5)
@@ -349,6 +398,47 @@ class DCourseDetailViewController: BaseViewController {
         tableView.reloadData()
         setupHeaderView()
         
+        if viewModel.courseModel?.is_favorite == true {
+            favoriteImgView.image = UIImage(named: "course_favoriteSelected")
+            favoriteLabel.text = "已收藏"
+        } else {
+            favoriteImgView.image = UIImage(named: "course_favoriteNormal")
+            favoriteLabel.text = "收藏"
+        }
+        
+        if viewModel.courseModel?.is_bought == true {
+            toolActionBtn.backgroundColor = UIColor("#00a7a9")
+            toolActionBtn.setTitle("立即学习", for: .normal)
+            auditionBtn.isHidden = true
+            toolActionBtn.snp.remakeConstraints { make in
+                make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
+                make.trailing.equalTo(-25)
+                make.top.equalTo(7.5)
+                make.bottom.equalTo(-7.5)
+            }
+        } else {
+            toolActionBtn.backgroundColor = UIColor("#f05053")
+            toolActionBtn.setTitle("立即购买", for: .normal)
+            
+            if viewModel.courseModel?.audition == true {
+                auditionBtn.isHidden = false
+                toolActionBtn.snp.remakeConstraints { make in
+                    make.leading.equalTo(auditionBtn.snp.trailing).offset(10)
+                    make.trailing.equalTo(-25)
+                    make.top.equalTo(7.5)
+                    make.bottom.equalTo(-7.5)
+                }
+            } else {
+                auditionBtn.isHidden = true
+                toolActionBtn.snp.remakeConstraints { make in
+                    make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
+                    make.trailing.equalTo(-25)
+                    make.top.equalTo(7.5)
+                    make.bottom.equalTo(-7.5)
+                }
+            }
+        }
+        
     }
     
     // MARK: - ============= Action =============
@@ -380,6 +470,33 @@ class DCourseDetailViewController: BaseViewController {
     
     @objc func shareBarItemAction() {
         
+    }
+    
+    @objc func favoriteBtnAction() {
+        guard let isFavorite = viewModel.courseModel?.is_favorite else {
+            return
+        }
+        viewModel.courseModel?.is_favorite = !isFavorite
+        
+        if viewModel.courseModel?.is_favorite == true {
+            favoriteImgView.image = UIImage(named: "course_favoriteSelected")
+            favoriteLabel.text = "已收藏"
+        } else {
+            favoriteImgView.image = UIImage(named: "course_favoriteNormal")
+            favoriteLabel.text = "收藏"
+        }
+    }
+    
+    @objc func toolActionBtnAction() {
+        guard viewModel.courseModel?.is_bought == false else { return }
+        
+        let alertController = UIAlertController(title: "是否购买？", message: nil, preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "true", style: UIAlertAction.Style.default, handler: { (_) in
+            self.viewModel.courseModel?.is_bought = true
+            self.reload()
+        }))
+        alertController.addAction(UIAlertAction(title: "false", style: UIAlertAction.Style.cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
     /*
@@ -468,6 +585,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         let tagLabel: UILabel = {
             let label = UILabel()
             label.font = UIFont.systemFont(ofSize: 15)
+            label.layer.cornerRadius = 2.5
+            label.textAlignment = .center
             label.textColor = UIColor("#ccc")
             return label
         }()
@@ -477,7 +596,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         
         bannerView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
-            make.height.equalTo(200)
+            make.height.equalTo(kBannerHeight)
         }
         bannerImgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -516,7 +635,26 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         
         descriptionLabel.text = "适合人群：" + (viewModel.courseModel?.suitable ?? "")
         footnoteLabel.text = String(viewModel.courseModel?.students_count ?? 0) + "人已学习"
-        tagLabel.text = "已购买"
+        
+        if viewModel.courseModel?.is_bought == true {
+            tagLabel.text = "已购买"
+            tagLabel.textColor = UIColor("#ccc")
+            tagLabel.backgroundColor = .white
+            tagLabel.snp.remakeConstraints { make in
+                make.trailing.equalTo(-25)
+                make.centerY.equalTo(footnoteLabel)
+            }
+        } else if viewModel.courseModel?.audition == true {
+            tagLabel.text = "免费试听"
+            tagLabel.textColor = UIColor("#f05053")
+            tagLabel.backgroundColor = UIColor(hex6: 0xf05053, alpha: 0.1)
+            tagLabel.snp.remakeConstraints { make in
+                make.trailing.equalTo(-35)
+                make.centerY.equalTo(footnoteLabel)
+                make.width.equalTo(80)
+                make.height.equalTo(25)
+            }
+        }
         
         var titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: (UIScreenWidth-50)/2, height: CGFloat.greatestFiniteMagnitude)).height
         if titleHeight < titleLabel.font.lineHeight*2 {
@@ -536,7 +674,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
             titleHeight = 25
         }
-        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 200+20+titleHeight+20+12+10+12+25+62))
+        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: kBannerHeight+20+titleHeight+20+12+10+12+25+62))
         tableView.tableHeaderView = headerView
         
         categoryView.snp.remakeConstraints { make in
@@ -579,6 +717,9 @@ extension DCourseDetailViewController: UIScrollViewDelegate {
         var offsetY = (tableView.tableHeaderView?.bounds.size.height ?? 0) - 62 - scrollView.contentOffset.y
         if offsetY < 0 {
             offsetY = 0
+            navigationItem.title = viewModel.courseModel?.title ?? "课程详情"
+        } else {
+            navigationItem.title = "课程详情"
         }
         categoryView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
