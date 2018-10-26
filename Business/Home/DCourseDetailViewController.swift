@@ -222,6 +222,8 @@ class DCourseDetailViewController: BaseViewController {
         return button
     }()
     
+    lazy fileprivate var isTrackingCategoryEnable: Bool = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -444,6 +446,7 @@ class DCourseDetailViewController: BaseViewController {
     // MARK: - ============= Action =============
     
     @objc func categoryBtnAction(sender: UIButton) {
+        isTrackingCategoryEnable = false
         
         categoryIndicatorImgView.snp.remakeConstraints { make in
             make.centerX.equalTo(sender)
@@ -452,16 +455,18 @@ class DCourseDetailViewController: BaseViewController {
             make.bottom.equalToSuperview()
         }
         
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: 0.35, animations: {
             self.categoryView.layoutIfNeeded()
+        }) { (bool) in
+            self.isTrackingCategoryEnable = true
         }
         
         introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+        catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
+        evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
         
         sender.setTitleColor(UIColor("#101010"), for: .normal)
         sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
@@ -498,6 +503,8 @@ class DCourseDetailViewController: BaseViewController {
             }
         }
 //        tableView.reloadData()
+        
+        
     }
     
     @objc func shareBarItemAction() {
@@ -801,38 +808,40 @@ extension DCourseDetailViewController: UIScrollViewDelegate {
             navigationItem.title = "课程详情"
         }
         
-//        let rect1 = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
-        let rect2 = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
-        let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
+        if isTrackingCategoryEnable {
+    //        let rect1 = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
+            let rect2 = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
+            let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
 
-        var sender: UIButton
-        if scrollView.contentOffset.y+62 >= rect3.origin.y {
-            sender = evaluationBtn
-        } else if scrollView.contentOffset.y+62 >= rect2.origin.y {
-            sender = catalogueBtn
-        } else  {
-            sender = introductionBtn
+            var sender: UIButton
+            if scrollView.contentOffset.y+62 >= rect3.origin.y {
+                sender = evaluationBtn
+            } else if scrollView.contentOffset.y+62 >= rect2.origin.y {
+                sender = catalogueBtn
+            } else  {
+                sender = introductionBtn
+            }
+            categoryIndicatorImgView.snp.remakeConstraints { make in
+                make.centerX.equalTo(sender)
+                make.width.equalTo(27.5)
+                make.height.equalTo(1.5)
+                make.bottom.equalToSuperview()
+            }
+            
+    //        UIView.animate(withDuration: 0.25) {
+    //            self.categoryView.layoutIfNeeded()
+    //        }
+            
+            introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+            catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
+            evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
+            
+            sender.setTitleColor(UIColor("#101010"), for: .normal)
+            sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         }
-        categoryIndicatorImgView.snp.remakeConstraints { make in
-            make.centerX.equalTo(sender)
-            make.width.equalTo(27.5)
-            make.height.equalTo(1.5)
-            make.bottom.equalToSuperview()
-        }
-        
-//        UIView.animate(withDuration: 0.25) {
-//            self.categoryView.layoutIfNeeded()
-//        }
-        
-        introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        
-        sender.setTitleColor(UIColor("#101010"), for: .normal)
-        sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
         categoryView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
