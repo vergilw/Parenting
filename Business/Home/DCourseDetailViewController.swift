@@ -11,13 +11,13 @@ import Kingfisher
 
 class DCourseDetailViewController: BaseViewController {
 
-    fileprivate enum CourseDisplayMode {
-        case introduction
-        case catalogue
-        case evaluation
-    }
-    
-    fileprivate var courseDisplayMode: CourseDisplayMode = .introduction
+//    fileprivate enum CourseDisplayMode {
+//        case introduction
+//        case catalogue
+//        case evaluation
+//    }
+//
+//    fileprivate var courseDisplayMode: CourseDisplayMode = .introduction
     
     private let kBannerHeight: CGFloat = 434/750.0*UIScreenWidth
     
@@ -250,6 +250,10 @@ class DCourseDetailViewController: BaseViewController {
         
         tableView.estimatedRowHeight = 800
         tableView.register(CourseIntroductionCell.self, forCellReuseIdentifier: CourseIntroductionCell.className())
+        tableView.register(CourseCatalogueCell.self, forCellReuseIdentifier: CourseCatalogueCell.className())
+        tableView.register(CourseCatalogueTitleCell.self, forCellReuseIdentifier: CourseCatalogueTitleCell.className())
+        tableView.register(CourseEvaluationTitleCell.self, forCellReuseIdentifier: CourseEvaluationTitleCell.className())
+        
         tableView.dataSource = self
         tableView.delegate = self
         view.addSubviews(tableView, toolView, categoryView)
@@ -320,13 +324,11 @@ class DCourseDetailViewController: BaseViewController {
         }
         favoriteImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(10)
-            make.width.equalTo(22)
-            make.height.equalTo(20)
+            make.top.equalTo(12)
         }
         favoriteLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(favoriteImgView.snp.bottom).offset(6)
+            make.bottom.equalTo(-6)
         }
         auditionBtn.snp.makeConstraints { make in
             make.leading.equalTo(favoriteBtn.snp.trailing)
@@ -336,12 +338,10 @@ class DCourseDetailViewController: BaseViewController {
         auditionImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(10)
-            make.width.equalTo(22)
-            make.height.equalTo(20)
         }
         auditionLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(auditionImgView.snp.bottom).offset(6)
+            make.bottom.equalTo(-6)
         }
 
         toolActionBtn.snp.makeConstraints { make in
@@ -466,6 +466,38 @@ class DCourseDetailViewController: BaseViewController {
         sender.setTitleColor(UIColor("#101010"), for: .normal)
         sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         
+        if sender == introductionBtn {
+//            courseDisplayMode = .introduction
+            
+//            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: true)
+            let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
+            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            } else {
+                tableView.scrollToBottom()
+            }
+            
+        } else if sender == catalogueBtn {
+//            courseDisplayMode = .catalogue
+//            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: UITableView.ScrollPosition.top, animated: true)
+            let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
+            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            } else {
+                tableView.scrollToBottom()
+            }
+            
+        } else if sender == evaluationBtn {
+//            courseDisplayMode = .evaluation
+//            tableView.scrollToRow(at: IndexPath(row: 0, section: 2), at: UITableView.ScrollPosition.top, animated: true)
+            let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
+            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            } else {
+                tableView.scrollToBottom()
+            }
+        }
+//        tableView.reloadData()
     }
     
     @objc func shareBarItemAction() {
@@ -654,9 +686,17 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 make.width.equalTo(80)
                 make.height.equalTo(25)
             }
+        } else if let price = viewModel.courseModel?.price {
+            tagLabel.text = String(format: "¥ %.0f", price)
+            tagLabel.textColor = UIColor("#ef5226")
+            tagLabel.backgroundColor = .white
+            tagLabel.snp.remakeConstraints { make in
+                make.trailing.equalTo(-25)
+                make.centerY.equalTo(footnoteLabel)
+            }
         }
         
-        var titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: (UIScreenWidth-50)/2, height: CGFloat.greatestFiniteMagnitude)).height
+        var titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth-50, height: CGFloat.greatestFiniteMagnitude)).height
         if titleHeight < titleLabel.font.lineHeight*2 {
             let attributedString = NSMutableAttributedString(string: viewModel.courseModel?.title ?? "")
             let paragraph = NSMutableParagraphStyle()
@@ -685,19 +725,58 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 0 {
+            return 1
+        } else if section == 1 {
+            //FIXME: test model
+            guard let catalogues = viewModel.courseModel?.course_catalogues else { return 1 }
+            return catalogues.count + 8
+//            return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
+        } else if section == 2 {
+            return 1
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CourseIntroductionCell.className(), for: indexPath) as! CourseIntroductionCell
-        if let model = viewModel.courseModel {
-            cell.setup(model: model)
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourseIntroductionCell.className(), for: indexPath) as! CourseIntroductionCell
+            if let model = viewModel.courseModel {
+                cell.setup(model: model)
+            }
+            return cell
+            
+        } else if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueTitleCell.className(), for: indexPath)
+                return cell
+            }
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueCell.className(), for: indexPath) as! CourseCatalogueCell
+            if let model = viewModel.courseModel {
+                //FIXME: index 0
+                cell.setup(model: model.course_catalogues![0], isPlayed: indexPath.row == 1 ? true : false, isBought: model.is_bought ?? false)
+            }
+            return cell
+            
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationTitleCell.className(), for: indexPath)
+                return cell
+            }
         }
-        return cell
+        
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        navigationController?.pushViewController(CourseSectionViewController(), animated: true)
     }
 }
 
@@ -721,6 +800,40 @@ extension DCourseDetailViewController: UIScrollViewDelegate {
         } else {
             navigationItem.title = "课程详情"
         }
+        
+//        let rect1 = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
+        let rect2 = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
+        let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
+
+        var sender: UIButton
+        if scrollView.contentOffset.y+62 >= rect3.origin.y {
+            sender = evaluationBtn
+        } else if scrollView.contentOffset.y+62 >= rect2.origin.y {
+            sender = catalogueBtn
+        } else  {
+            sender = introductionBtn
+        }
+        categoryIndicatorImgView.snp.remakeConstraints { make in
+            make.centerX.equalTo(sender)
+            make.width.equalTo(27.5)
+            make.height.equalTo(1.5)
+            make.bottom.equalToSuperview()
+        }
+        
+//        UIView.animate(withDuration: 0.25) {
+//            self.categoryView.layoutIfNeeded()
+//        }
+        
+        introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+        
+        sender.setTitleColor(UIColor("#101010"), for: .normal)
+        sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        
         categoryView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(offsetY)
