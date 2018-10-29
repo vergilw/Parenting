@@ -42,6 +42,8 @@ class BaseViewController: UIViewController {
             navigationItem.leftMargin = 0
         }
         
+        view.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
+        
     }
 
     override func didReceiveMemoryWarning() {

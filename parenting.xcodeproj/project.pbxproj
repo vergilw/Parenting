@@ -43,6 +43,7 @@
 		1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C393217EB95200902A5C /* NotificationConstants.swift */; };
 		1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C399217EBF3700902A5C /* DHomeViewController.swift */; };
 		1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C39B217EBFEA00902A5C /* DMeViewController.swift */; };
+		1324F5662186E099005276C9 /* CourseSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1324F5652186E099005276C9 /* CourseSectionViewModel.swift */; };
 		99D84AC96BCF9FFE3687D6E3 /* Pods_parenting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,7 @@
 		1320C394217EB95200902A5C /* BridgeHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeHeader.h; sourceTree = "<group>"; };
 		1320C399217EBF3700902A5C /* DHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHomeViewController.swift; sourceTree = "<group>"; };
 		1320C39B217EBFEA00902A5C /* DMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeViewController.swift; sourceTree = "<group>"; };
+		1324F5652186E099005276C9 /* CourseSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseSectionViewModel.swift; sourceTree = "<group>"; };
 		40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.debug.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.debug.xcconfig"; sourceTree = "<group>"; };
 		A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.release.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.release.xcconfig"; sourceTree = "<group>"; };
 		F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_parenting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -242,6 +244,7 @@
 				13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */,
 				1311201721816F180088F5BF /* DCourseDetailViewModel.swift */,
 				131160C02183008B0000F105 /* CourseSectionViewController.swift */,
+				1324F5652186E099005276C9 /* CourseSectionViewModel.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* CourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
+				1324F5662186E099005276C9 /* CourseSectionViewModel.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,

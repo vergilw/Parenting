@@ -167,8 +167,8 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var favoriteBtn: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIConstants.body.color, for: .normal)
-        button.titleLabel?.font = UIConstants.body.font
+        button.setTitleColor(UIConstants.Color.foot, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.foot
         button.addTarget(self, action: #selector(favoriteBtnAction), for: .touchUpInside)
         return button
     }()
@@ -190,9 +190,9 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var auditionBtn: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIConstants.body.color, for: .normal)
-        button.titleLabel?.font = UIConstants.body.font
-        button.addTarget(self, action: #selector(favoriteBtnAction), for: .touchUpInside)
+        button.setTitleColor(UIConstants.Color.body, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
+        button.addTarget(self, action: #selector(auditionBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -215,7 +215,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = UIButton()
         button.layer.cornerRadius = 2.5
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIConstants.body.font
+        button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("立即学习", for: .normal)
         button.backgroundColor = UIColor("#00a7a9")
         button.addTarget(self, action: #selector(toolActionBtnAction), for: .touchUpInside)
@@ -255,6 +255,7 @@ class DCourseDetailViewController: BaseViewController {
         tableView.register(CourseCatalogueCell.self, forCellReuseIdentifier: CourseCatalogueCell.className())
         tableView.register(CourseCatalogueTitleCell.self, forCellReuseIdentifier: CourseCatalogueTitleCell.className())
         tableView.register(CourseEvaluationTitleCell.self, forCellReuseIdentifier: CourseEvaluationTitleCell.className())
+        tableView.register(CourseEvaluationCell.self, forCellReuseIdentifier: CourseEvaluationCell.className())
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -526,6 +527,10 @@ class DCourseDetailViewController: BaseViewController {
         }
     }
     
+    @objc func auditionBtnAction() {
+        
+    }
+    
     @objc func toolActionBtnAction() {
         guard viewModel.courseModel?.is_bought == false else { return }
         
@@ -744,7 +749,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             return catalogues.count + 8
 //            return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
         } else if section == 2 {
-            return 1
+            return 1 + 4
         }
         return 0
     }
@@ -775,6 +780,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationTitleCell.className(), for: indexPath)
                 return cell
             }
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell
+            return cell
         }
         
         return UITableViewCell()

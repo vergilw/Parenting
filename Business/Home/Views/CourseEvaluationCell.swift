@@ -11,7 +11,7 @@ import UIKit
 class CourseEvaluationCell: UITableViewCell {
 
     lazy fileprivate var teacherAvatarImgView: UIImageView = {
-        let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: 35, height: 35)))
+        let imgView = UIImageView(frame: CGRect(origin: .zero, size: UIConstants.Size.avatar))
         imgView.contentMode = .scaleToFill
         imgView.image = UIImage(named: "public_avatarPlaceholder")
         imgView.layer.cornerRadius = 15
@@ -24,18 +24,31 @@ class CourseEvaluationCell: UITableViewCell {
         return view
     }()
     
-    lazy var teacherNameLabel: UILabel = {
+    lazy fileprivate var teacherNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIConstants.Font.h3
         label.textColor = UIColor("#101010")
         return label
     }()
     
-    lazy var teacherTagLabel: UILabel = {
+    lazy fileprivate var teacherTagLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIConstants.Font.foot
         label.textColor = UIColor("#777")
         return label
+    }()
+    
+    lazy fileprivate var evluationLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        return label
+    }()
+    
+    lazy fileprivate var evluationBgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_chatBubble")?.resizableImage(withCapInsets: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
+        return imgView
     }()
     
     override func awakeFromNib() {
@@ -53,6 +66,18 @@ class CourseEvaluationCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        
+        contentView.addSubviews([teacherAvatarImgView, teacherNameLabel, teacherTagLabel, evluationBgImgView, evluationLabel])
+        
+        
+        contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
+        
+        teacherAvatarImgView.snp.makeConstraints { make in
+            make.leading.equalTo(contentView.snp_leadingMargin)
+            make.top.equalTo(contentView.snp_topMargin)
+            make.size.equalTo(UIConstants.Size.avatar)
+            make.bottom.equalTo(contentView.snp_bottomMargin)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -16,6 +16,10 @@ class CourseSectionModel: HandyJSON {
     var audition: Bool?
     var duration: Int?
     var duration_with_seconds: Float?
+    var subtitle: String?
+    var learned: Int?
+    var course: CourseModel?
+    var content_images_attribute: [AssetModel]?
     
     required init() {
         

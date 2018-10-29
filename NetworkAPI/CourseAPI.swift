@@ -13,6 +13,7 @@ let CourseProvider = MoyaProvider<CourseAPI>()
 
 enum CourseAPI {
     case course
+    case course_catalogues
 }
 
 extension CourseAPI: TargetType {
@@ -25,12 +26,16 @@ extension CourseAPI: TargetType {
         switch self {
         case .course:
             return "/courses/2"
+        case .course_catalogues:
+            return "/courses/2/course_catalogues/35"
         }
     }
     
     public var method: Moya.Method {
         switch self {
         case .course:
+            return .get
+        case .course_catalogues:
             return .get
         }
     }
@@ -42,6 +47,8 @@ extension CourseAPI: TargetType {
     var task: Task {
         switch self {
         case .course:
+            return .requestPlain
+        case .course_catalogues:
             return .requestPlain
         }
     }
