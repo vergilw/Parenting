@@ -20,6 +20,7 @@ class CourseSectionModel: HandyJSON {
     var learned: Int?
     var course: CourseModel?
     var content_images_attribute: [AssetModel]?
+    var media_attribute: AssetModel?
     
     required init() {
         

@@ -45,6 +45,14 @@ class BaseViewController: UIViewController {
         view.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationController = navigationController {
+            navigationController.setNavigationBarHidden(false, animated: true)
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

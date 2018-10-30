@@ -309,7 +309,11 @@ class DCourseDetailViewController: BaseViewController {
     func initConstraints() {
         toolView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(55)
+            if #available(iOS 11, *) {
+                make.height.equalTo((navigationController?.view.safeAreaInsets.bottom ?? 0)+55)
+            } else {
+                make.height.equalTo(55)
+            }
         }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
@@ -322,7 +326,12 @@ class DCourseDetailViewController: BaseViewController {
         }
         favoriteBtn.snp.makeConstraints { make in
             make.leading.equalTo(10)
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+            if #available(iOS 11, *) {
+                make.bottom.equalTo(-(navigationController?.view.safeAreaInsets.bottom ?? 0))
+            } else {
+                make.bottom.equalTo(55)
+            }
             make.width.equalTo(52)
         }
         favoriteImgView.snp.makeConstraints { make in
@@ -335,7 +344,12 @@ class DCourseDetailViewController: BaseViewController {
         }
         auditionBtn.snp.makeConstraints { make in
             make.leading.equalTo(favoriteBtn.snp.trailing)
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+            if #available(iOS 11, *) {
+                make.bottom.equalTo(-(navigationController?.view.safeAreaInsets.bottom ?? 0))
+            } else {
+                make.bottom.equalTo(55)
+            }
             make.width.equalTo(52)
         }
         auditionImgView.snp.makeConstraints { make in
@@ -351,7 +365,7 @@ class DCourseDetailViewController: BaseViewController {
             make.leading.equalTo(auditionBtn.snp.trailing).offset(10)
             make.trailing.equalTo(-25)
             make.top.equalTo(7.5)
-            make.bottom.equalTo(-7.5)
+            make.height.equalTo(40)
         }
 //        mainScrollView.snp.makeConstraints { make in
 //            make.edges.equalToSuperview()
@@ -409,7 +423,7 @@ class DCourseDetailViewController: BaseViewController {
             favoriteLabel.text = "收藏"
         }
         
-        if viewModel.courseModel?.is_bought == true {
+        if viewModel.courseModel?.audition == true || viewModel.courseModel?.is_bought == true {
             toolActionBtn.backgroundColor = UIColor("#00a7a9")
             toolActionBtn.setTitle("立即学习", for: .normal)
             auditionBtn.isHidden = true
@@ -417,19 +431,22 @@ class DCourseDetailViewController: BaseViewController {
                 make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
                 make.trailing.equalTo(-25)
                 make.top.equalTo(7.5)
-                make.bottom.equalTo(-7.5)
+                make.height.equalTo(40)
             }
         } else {
             toolActionBtn.backgroundColor = UIColor("#f05053")
             toolActionBtn.setTitle("立即购买", for: .normal)
             
-            if viewModel.courseModel?.audition == true {
+            let isFound = viewModel.courseModel?.course_catalogues?.contains(where: { (model) -> Bool in
+                return model.audition ?? false
+            }) ?? false
+            if isFound {
                 auditionBtn.isHidden = false
                 toolActionBtn.snp.remakeConstraints { make in
                     make.leading.equalTo(auditionBtn.snp.trailing).offset(10)
                     make.trailing.equalTo(-25)
                     make.top.equalTo(7.5)
-                    make.bottom.equalTo(-7.5)
+                    make.height.equalTo(40)
                 }
             } else {
                 auditionBtn.isHidden = true
@@ -437,7 +454,7 @@ class DCourseDetailViewController: BaseViewController {
                     make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
                     make.trailing.equalTo(-25)
                     make.top.equalTo(7.5)
-                    make.bottom.equalTo(-7.5)
+                    make.height.equalTo(40)
                 }
             }
         }
@@ -790,7 +807,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(CourseSectionViewController(), animated: true)
+        navigationController?.pushViewController(DCourseSectionViewController(), animated: true)
     }
 }
 

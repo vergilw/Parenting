@@ -1,5 +1,5 @@
 //
-//  CourseSectionViewController.swift
+//  DCourseSectionViewController.swift
 //  parenting
 //
 //  Created by Vergil.Wang on 2018/10/26.
@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 
-class CourseSectionViewController: BaseViewController {
+class DCourseSectionViewController: BaseViewController {
 
     lazy fileprivate var viewModel = CourseSectionViewModel()
     
@@ -47,6 +48,15 @@ class CourseSectionViewController: BaseViewController {
         return button
     }()
     
+    lazy fileprivate var navigationTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
@@ -74,7 +84,7 @@ class CourseSectionViewController: BaseViewController {
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 0.5
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(courseEntranceBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -108,7 +118,7 @@ class CourseSectionViewController: BaseViewController {
         button.backgroundColor = UIConstants.Color.primaryGreen
         button.setImage(UIImage(named: "course_playAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.layer.cornerRadius = 22.5
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(audioActionBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -124,6 +134,8 @@ class CourseSectionViewController: BaseViewController {
         view.minimumTrackTintColor = UIConstants.Color.primaryGreen
         view.maximumTrackTintColor = UIConstants.Color.background
         view.setThumbImage(UIImage(named: "course_audioSliderThumb"), for: .normal)
+        view.addTarget(self, action: #selector(sliderTouchBeganAction), for: .touchDown)
+        view.addTarget(self, action: #selector(sliderTouchEndedAction), for: [.touchUpInside, .touchUpOutside, .touchCancel])
         return view
     }()
     
@@ -166,10 +178,19 @@ class CourseSectionViewController: BaseViewController {
     
     lazy fileprivate var lastOffsetY: CGFloat = 0
     
+    lazy fileprivate var player: AVPlayer = {
+        let player = AVPlayer()
+        return player
+    }()
+    
+    fileprivate var timeObserverToken: Any?
+    
+    lazy fileprivate var isSliderDragging: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        
         
         initContentView()
         initConstraints()
@@ -180,15 +201,26 @@ class CourseSectionViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
+        if scrollView.contentOffset.y > cornerBgImgView.frame.origin.y &&
+            navigationView.frame.origin.y < -navigationView.frame.size.height + UIStatusBarHeight {
+            return UIStatusBarStyle.default
+        } else {
+            return UIStatusBarStyle.lightContent
+        }
     }
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
         
         view.addSubviews([scrollView, navigationView])
-        navigationView.addSubviews([backBarBtn, shareBarBtn])
+        navigationView.addSubviews([backBarBtn, shareBarBtn, navigationTitleLabel])
         scrollView.addSubviews([backgroundImgView, cornerBgImgView, avatarImgView, courseEntranceBtn, titleLabel, tagLabel, audioPanelView, sectionTitleLabel, containerView])
         audioPanelView.addSubviews([audioActionBtn, progressLabel, audioSlider, audioCurrentTimeLabel, audioDurationTimeLabel, playListBtn])
         
@@ -226,6 +258,12 @@ class CourseSectionViewController: BaseViewController {
             make.top.equalTo(UIStatusBarHeight)
             make.width.equalTo(69)
             make.height.equalTo(navigationController!.navigationBar.bounds.size.height)
+        }
+        navigationTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(backBarBtn.snp.trailing)
+            make.trailing.equalTo(shareBarBtn.snp.leading)
+            make.top.equalTo(UIStatusBarHeight)
+            make.bottom.equalToSuperview()
         }
         
         avatarImgView.snp.makeConstraints { make in
@@ -307,7 +345,7 @@ class CourseSectionViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -315,6 +353,26 @@ class CourseSectionViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         tableView.reloadData()
+        
+        if let audioURL = viewModel.courseSectionModel?.media_attribute?.service_url, player.currentItem == nil {
+            if let playItem = URL(string: audioURL) {
+                player = AVPlayer(url: playItem)
+                timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
+                    
+                    guard let cmtime = self?.player.currentTime() else { return }
+                    guard self?.player.rate != 0 else { return }
+                    let seconds = CMTimeGetSeconds(cmtime)
+                    guard seconds >= 0 else { return }
+                    let timeInterval: TimeInterval = TimeInterval(seconds)
+                    let date = Date(timeIntervalSince1970: timeInterval)
+                    self?.audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+                    
+                    guard self?.isSliderDragging == false else { return }
+                    guard let durationSeconds = self?.viewModel.courseSectionModel?.duration_with_seconds else { return }
+                    self?.audioSlider.value = Float(seconds) / durationSeconds
+                })
+            }
+        }
         
         if let avatarURL = viewModel.courseSectionModel?.course?.teacher?.headshot_attribute?.service_url {
             avatarImgView.kf.setImage(with: URL(string: avatarURL))
@@ -333,6 +391,8 @@ class CourseSectionViewController: BaseViewController {
             let durationDate = Date(timeIntervalSince1970: duration)
             audioDurationTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: durationDate)
         }
+        
+        navigationTitleLabel.text = viewModel.courseSectionModel?.subtitle
         
         let attributedString = NSMutableAttributedString(string: viewModel.courseSectionModel?.subtitle ?? "")
         let paragraph = NSMutableParagraphStyle()
@@ -397,9 +457,49 @@ class CourseSectionViewController: BaseViewController {
     
     // MARK: - ============= Action =============
 
+    @objc func audioActionBtnAction() {
+        guard let _ = viewModel.courseSectionModel?.media_attribute?.service_url else {
+            return
+        }
+        if player.rate == 0  {
+            player.play()
+            audioActionBtn.setImage(UIImage(named: "course_pauseAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        } else {
+            player.pause()
+            audioActionBtn.setImage(UIImage(named: "course_playAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+    }
+    
+    @objc func sliderTouchBeganAction() {
+        isSliderDragging = true
+    }
+    
+    @objc func sliderTouchEndedAction() {
+        guard let durationSeconds = viewModel.courseSectionModel?.duration_with_seconds, durationSeconds > 0 else {
+            isSliderDragging = false
+            return
+        }
+        player.seek(to: CMTime(seconds: Double(durationSeconds * audioSlider.value), preferredTimescale: CMTimeScale(NSEC_PER_SEC))) { (bool) in
+            self.isSliderDragging = false
+        }
+    }
+    
+    @objc func playToEndTimeAction() {
+        audioActionBtn.setImage(UIImage(named: "course_playAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+    }
+    
+    @objc func courseEntranceBtnAction() {
+        navigationController?.pushViewController(DCourseDetailViewController(), animated: true)
+    }
+    
+    deinit {
+        if let timeObserverToken = timeObserverToken {
+            player.removeTimeObserver(timeObserverToken)
+        }
+    }
 }
 
-extension CourseSectionViewController: UIScrollViewDelegate {
+extension DCourseSectionViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -432,7 +532,6 @@ extension CourseSectionViewController: UIScrollViewDelegate {
 //        }
         
         let offsetY = scrollView.contentOffset.y - lastOffsetY
-        
         if scrollView.contentOffset.y < 0 {
             navigationView.frame = CGRect(x: navigationView.frame.origin.x,
                                           y: 0,
@@ -444,7 +543,7 @@ extension CourseSectionViewController: UIScrollViewDelegate {
                 offsetY < navigationView.frame.size.height {
                 
                 navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: navigationView.frame.origin.y-offsetY,
+                                              y: (navigationView.frame.origin.y-offsetY < -navigationView.frame.size.height) ? -navigationView.frame.size.height : navigationView.frame.origin.y-offsetY,
                                               width: navigationView.frame.size.width,
                                               height: navigationView.frame.size.height)
             } else {
@@ -458,7 +557,7 @@ extension CourseSectionViewController: UIScrollViewDelegate {
             if navigationView.frame.origin.y < 0 &&
                 offsetY < navigationView.frame.size.height {
                 navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: navigationView.frame.origin.y-offsetY,
+                                              y: (navigationView.frame.origin.y-offsetY > 0) ? 0 : navigationView.frame.origin.y-offsetY,
                                               width: navigationView.frame.size.width,
                                               height: navigationView.frame.size.height)
             } else {
@@ -470,5 +569,12 @@ extension CourseSectionViewController: UIScrollViewDelegate {
             lastOffsetY = scrollView.contentOffset.y
         }
         
+        if scrollView.contentOffset.y > sectionTitleLabel.frame.origin.y+sectionTitleLabel.frame.size.height {
+            navigationTitleLabel.isHidden = false
+        } else {
+            navigationTitleLabel.isHidden = true
+        }
+        
+        setNeedsStatusBarAppearanceUpdate()
     }
 }
