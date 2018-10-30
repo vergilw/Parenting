@@ -14,7 +14,7 @@ class DCourseDetailViewModel {
     var courseModel: CourseModel?
     
     func fetchCourse(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course) { result in
+        CourseProvider.request(.course(courseID: 2)) { result in
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {

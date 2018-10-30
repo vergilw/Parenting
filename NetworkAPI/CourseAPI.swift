@@ -12,8 +12,9 @@ import Moya
 let CourseProvider = MoyaProvider<CourseAPI>()
 
 enum CourseAPI {
-    case course
-    case course_catalogues
+    case course(courseID: Int)
+    case course_sections(courseID: Int)
+    case course_section(courseID: Int, sectionID: Int)
 }
 
 extension CourseAPI: TargetType {
@@ -24,10 +25,12 @@ extension CourseAPI: TargetType {
     
     public var path: String {
         switch self {
-        case .course:
-            return "/courses/2"
-        case .course_catalogues:
-            return "/courses/2/course_catalogues/35"
+        case let .course(courseID):
+            return "/courses/\(courseID)"
+        case let .course_sections(courseID):
+            return "/courses/\(courseID)/course_catalogues"
+        case let .course_section(courseID, sectionID):
+            return "/courses/\(courseID)/course_catalogues/\(sectionID)"
         }
     }
     
@@ -35,7 +38,9 @@ extension CourseAPI: TargetType {
         switch self {
         case .course:
             return .get
-        case .course_catalogues:
+        case .course_sections:
+            return .get
+        case .course_section:
             return .get
         }
     }
@@ -48,8 +53,11 @@ extension CourseAPI: TargetType {
         switch self {
         case .course:
             return .requestPlain
-        case .course_catalogues:
+        case .course_sections:
             return .requestPlain
+        case .course_section:
+            return .requestPlain
+
         }
     }
     

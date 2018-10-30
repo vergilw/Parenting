@@ -13,10 +13,19 @@ class DCourseSectionViewController: BaseViewController {
 
     lazy fileprivate var viewModel = CourseSectionViewModel()
     
+    
     lazy fileprivate var navigationView: UIView = {
         let view = UIView()
         view.backgroundColor = UIConstants.Color.primaryGreen
         return view
+    }()
+    
+    lazy fileprivate var dismissDimBtn: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(courseSectionListAction), for: .touchUpInside)
+        return button
     }()
     
     lazy fileprivate var backgroundImgView: UIImageView = {
@@ -158,7 +167,7 @@ class DCourseSectionViewController: BaseViewController {
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIConstants.Font.foot
         button.setTitle("播放列表", for: .normal)
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(courseSectionListAction), for: .touchUpInside)
         return button
     }()
     
@@ -187,6 +196,14 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var isSliderDragging: Bool = false
     
+    lazy fileprivate var courseCataloguesView: CourseCataloguesView = {
+        let view = CourseCataloguesView()
+        view.dismissBlock = { [weak self] in
+            self?.dismissDimBtn.sendActions(for: .touchUpInside)
+        }
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -198,6 +215,24 @@ class DCourseSectionViewController: BaseViewController {
         
         viewModel.fetchCourseSection { (bool) in
             self.reload()
+        }
+        viewModel.fetchCourseSections { (bool) in
+            self.courseCataloguesView.courseSectionModels = self.viewModel.courseCatalogueModels
+
+            self.courseCataloguesView.tableView.reloadData()
+            self.courseCataloguesView.tableView.layoutIfNeeded()
+            
+            if self.courseCataloguesView.tableView.contentSize.height < UIScreenHeight - self.courseCataloguesView.dismissArrowBtn.bounds.size.height {
+                self.courseCataloguesView.snp.remakeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(self.view.snp.top)
+                    if #available(iOS 11.0, *) {
+                        make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height + (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0))
+                    } else {
+                        make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height)
+                    }
+                }
+            }
         }
     }
     
@@ -219,7 +254,7 @@ class DCourseSectionViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         
-        view.addSubviews([scrollView, navigationView])
+        view.addSubviews([scrollView, navigationView, dismissDimBtn, courseCataloguesView])
         navigationView.addSubviews([backBarBtn, shareBarBtn, navigationTitleLabel])
         scrollView.addSubviews([backgroundImgView, cornerBgImgView, avatarImgView, courseEntranceBtn, titleLabel, tagLabel, audioPanelView, sectionTitleLabel, containerView])
         audioPanelView.addSubviews([audioActionBtn, progressLabel, audioSlider, audioCurrentTimeLabel, audioDurationTimeLabel, playListBtn])
@@ -234,6 +269,9 @@ class DCourseSectionViewController: BaseViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        dismissDimBtn.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         backgroundImgView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.bottom.equalTo(audioPanelView.snp.centerY).offset(10)
@@ -246,6 +284,11 @@ class DCourseSectionViewController: BaseViewController {
         navigationView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(navigationController!.navigationBar.bounds.size.height+UIStatusBarHeight)
+        }
+        courseCataloguesView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view.snp.top)
+            make.height.equalTo(view.snp.height)
         }
         backBarBtn.snp.makeConstraints { make in
             make.leading.equalTo(0)
@@ -490,6 +533,23 @@ class DCourseSectionViewController: BaseViewController {
     
     @objc func courseEntranceBtnAction() {
         navigationController?.pushViewController(DCourseDetailViewController(), animated: true)
+    }
+    
+    @objc func courseSectionListAction() {
+        if courseCataloguesView.transform.isIdentity {
+            dismissDimBtn.isHidden = false
+            UIView.animate(withDuration: 0.25) {
+                self.courseCataloguesView.transform = CGAffineTransform(translationX: 0, y: self.courseCataloguesView.bounds.size.height)
+            }
+            
+        } else {
+            dismissDimBtn.isHidden = true
+            UIView.animate(withDuration: 0.25) {
+                self.courseCataloguesView.transform = CGAffineTransform.identity
+            }
+            
+        }
+        
     }
     
     deinit {

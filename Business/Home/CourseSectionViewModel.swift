@@ -10,15 +10,38 @@ import Foundation
 
 class CourseSectionViewModel {
     
-    var courseSectionModel: CourseSectionModel?
+    public var courseSectionModel: CourseSectionModel?
 
+    public var courseCatalogueModels: [CourseSectionModel]?
+    
     func fetchCourseSection(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course_catalogues) { result in
+        CourseProvider.request(.course_section(courseID: 2, sectionID: 35)) { result in
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {
                     let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
                     self.courseSectionModel = CourseSectionModel.deserialize(from: JSON)
+                    completion(false)
+                    
+                } else {
+                    //                    let error = try? JSON(data: response.data)
+                    //                    let errorCode = error?["code"].stringValue
+                    //                    print(error)
+                }
+            case let .failure(error):
+                //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
+                print("failure")
+            }
+        }
+    }
+    
+    func fetchCourseSections(completion: @escaping (Bool)->Void) {
+        CourseProvider.request(.course_sections(courseID: 2)) { result in
+            switch result {
+            case let .success(response):
+                if response.statusCode == 200 {
+                    let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
+                    self.courseCatalogueModels = CourseModel.deserialize(from: JSON)?.course_catalogues
                     completion(false)
                     
                 } else {
