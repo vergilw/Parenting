@@ -123,8 +123,8 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var introductionBtn: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIColor("#101010"), for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.setTitleColor(UIConstants.Color.head, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("课程介绍", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -132,8 +132,8 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var catalogueBtn: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIColor("#777"), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.setTitleColor(UIConstants.Color.body, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
         button.setTitle("课程目录", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -141,8 +141,8 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var evaluationBtn: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIColor("#777"), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.setTitleColor(UIConstants.Color.body, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
         button.setTitle("互动", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -217,7 +217,7 @@ class DCourseDetailViewController: BaseViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("立即学习", for: .normal)
-        button.backgroundColor = UIColor("#00a7a9")
+        button.backgroundColor = UIConstants.Color.primaryGreen
         button.addTarget(self, action: #selector(toolActionBtnAction), for: .touchUpInside)
         return button
     }()
@@ -424,7 +424,7 @@ class DCourseDetailViewController: BaseViewController {
         }
         
         if viewModel.courseModel?.audition == true || viewModel.courseModel?.is_bought == true {
-            toolActionBtn.backgroundColor = UIColor("#00a7a9")
+            toolActionBtn.backgroundColor = UIConstants.Color.primaryGreen
             toolActionBtn.setTitle("立即学习", for: .normal)
             auditionBtn.isHidden = true
             toolActionBtn.snp.remakeConstraints { make in
@@ -434,7 +434,7 @@ class DCourseDetailViewController: BaseViewController {
                 make.height.equalTo(40)
             }
         } else {
-            toolActionBtn.backgroundColor = UIColor("#f05053")
+            toolActionBtn.backgroundColor = UIConstants.Color.primaryRed
             toolActionBtn.setTitle("立即购买", for: .normal)
             
             let isFound = viewModel.courseModel?.course_catalogues?.contains(where: { (model) -> Bool in
@@ -479,15 +479,15 @@ class DCourseDetailViewController: BaseViewController {
             self.isTrackingCategoryEnable = true
         }
         
-        introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-        catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
-        evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
+        introductionBtn.titleLabel?.font = UIConstants.Font.body
+        catalogueBtn.titleLabel?.font = UIConstants.Font.body
+        evaluationBtn.titleLabel?.font = UIConstants.Font.body
+        introductionBtn.setTitleColor(UIConstants.Color.body, for: .normal)
+        catalogueBtn.setTitleColor(UIConstants.Color.body, for: .normal)
+        evaluationBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         
-        sender.setTitleColor(UIColor("#101010"), for: .normal)
-        sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        sender.setTitleColor(UIConstants.Color.head, for: .normal)
+        sender.titleLabel?.font = UIConstants.Font.h2
         
         if sender == introductionBtn {
 //            courseDisplayMode = .introduction
@@ -621,11 +621,12 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             return imgView
         }()
         
-        let titleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 25)
-            label.textColor = UIColor("#222")
-            label.numberOfLines = 5
+        let titleLabel: ParagraphLabel = {
+            let label = ParagraphLabel()
+            label.font = UIConstants.Font.h1
+            label.textColor = UIConstants.Color.head
+            label.numberOfLines = 0
+            label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
             return label
         }()
         
@@ -639,16 +640,16 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         let footnoteLabel: UILabel = {
             let label = UILabel()
             label.font = UIFont.systemFont(ofSize: 12)
-            label.textColor = UIColor("#f26a44")
+            label.textColor = UIConstants.Color.primaryOrange
             return label
         }()
         
         let tagLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 15)
+            label.font = UIConstants.Font.h2
             label.layer.cornerRadius = 2.5
             label.textAlignment = .center
-            label.textColor = UIColor("#ccc")
+            label.textColor = UIColor("#ef5226")
             return label
         }()
         
@@ -686,20 +687,15 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             bannerImgView.kf.setImage(with: URL(string: URLString))
         }
         
-        
-        let attributedString = NSMutableAttributedString(string: viewModel.courseModel?.title ?? "")
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 10
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-        titleLabel.attributedText = attributedString
+        titleLabel.setParagraphText(viewModel.courseModel?.title ?? "")
         
         descriptionLabel.text = "适合人群：" + (viewModel.courseModel?.suitable ?? "")
         footnoteLabel.text = String(viewModel.courseModel?.students_count ?? 0) + "人已学习"
         
         if viewModel.courseModel?.is_bought == true {
             tagLabel.text = "已购买"
-            tagLabel.textColor = UIColor("#ccc")
+            tagLabel.font = UIConstants.Font.body
+            tagLabel.textColor = UIConstants.Color.disable
             tagLabel.backgroundColor = .white
             tagLabel.snp.remakeConstraints { make in
                 make.trailing.equalTo(-25)
@@ -707,7 +703,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
         } else if viewModel.courseModel?.audition == true {
             tagLabel.text = "免费试听"
-            tagLabel.textColor = UIColor("#f05053")
+            tagLabel.font = UIConstants.Font.body
+            tagLabel.textColor = UIConstants.Color.primaryRed
             tagLabel.backgroundColor = UIColor(hex6: 0xf05053, alpha: 0.1)
             tagLabel.snp.remakeConstraints { make in
                 make.trailing.equalTo(-35)
@@ -725,25 +722,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
         }
         
-        var titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth-50, height: CGFloat.greatestFiniteMagnitude)).height
-        if titleHeight < titleLabel.font.lineHeight*2 {
-            let attributedString = NSMutableAttributedString(string: viewModel.courseModel?.title ?? "")
-            let paragraph = NSMutableParagraphStyle()
-            paragraph.lineSpacing = 0
-            attributedString.addAttributes([
-                NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-            titleLabel.attributedText = attributedString
-            
-            
-            titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(25)
-                make.trailing.equalTo(-25)
-                make.top.equalTo(bannerView.snp.bottom).offset(20)
-                make.height.equalTo(25)
-            }
-            titleHeight = 25
-        }
-        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: kBannerHeight+20+titleHeight+20+12+10+12+25+62))
+        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: kBannerHeight+20+titleLabel.intrinsicContentSize.height+20+12+10+12+25+62))
         tableView.tableHeaderView = headerView
         
         categoryView.snp.remakeConstraints { make in
@@ -794,6 +773,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell
+            cell.setup()
             return cell
         }
         

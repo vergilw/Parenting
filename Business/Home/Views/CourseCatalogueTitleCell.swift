@@ -12,8 +12,8 @@ class CourseCatalogueTitleCell: UITableViewCell {
 
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textColor = UIColor("#101010")
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
         label.text = "课程目录"
         return label
     }()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
 		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
 		1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201721816F180088F5BF /* DCourseDetailViewModel.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
 		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
 		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 			children = (
 				13144B2421806ED9002B4281 /* SeparatorView.swift */,
 				131160B82182E54C0000F105 /* PlaceholderTableViewCell.swift */,
+				130D46002189615B00CB4763 /* ParagraphLabel.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				1324F5662186E099005276C9 /* CourseSectionViewModel.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
+				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,

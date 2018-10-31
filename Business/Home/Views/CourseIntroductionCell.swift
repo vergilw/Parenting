@@ -10,18 +10,19 @@ import UIKit
 
 class CourseIntroductionCell: UITableViewCell {
 
-    lazy var courseBriefLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = UIColor("#333")
-        label.numberOfLines = 50
+    lazy var courseBriefLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        label.numberOfLines = 0
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
         return label
     }()
     
     lazy var teacherTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textColor = UIColor("#101010")
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
         label.text = "讲师介绍"
         return label
     }()
@@ -32,10 +33,10 @@ class CourseIntroductionCell: UITableViewCell {
     }()
     
     lazy fileprivate var teacherAvatarImgView: UIImageView = {
-        let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: 35, height: 35)))
-        imgView.contentMode = .scaleToFill
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleAspectFill
         imgView.image = UIImage(named: "public_avatarPlaceholder")
-        imgView.layer.cornerRadius = 15
+        imgView.layer.cornerRadius = 22.5
         imgView.clipsToBounds = true
         return imgView
     }()
@@ -47,15 +48,15 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var teacherNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = UIColor("#101010")
+        label.font = UIConstants.Font.h3
+        label.textColor = UIConstants.Color.head
         return label
     }()
     
     lazy var teacherTagLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor("#777")
+        label.font = UIConstants.Font.foot
+        label.textColor = UIConstants.Color.foot
         return label
     }()
     
@@ -65,18 +66,19 @@ class CourseIntroductionCell: UITableViewCell {
         return imgView
     }()
     
-    lazy var teacherBriefLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = UIColor("#333")
-        label.numberOfLines = 50
+    lazy var teacherBriefLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        label.numberOfLines = 0
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-30
         return label
     }()
     
     lazy var courseTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textColor = UIColor("#101010")
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
         label.text = "课程介绍"
         return label
     }()
@@ -88,8 +90,8 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var noteTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textColor = UIColor("#101010")
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
         label.text = "听课指南"
         return label
     }()
@@ -145,8 +147,8 @@ class CourseIntroductionCell: UITableViewCell {
         teacherAvatarImgView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.centerY.equalTo(profileView)
-            make.height.equalTo(30)
-            make.width.equalTo(30)
+            make.height.equalTo(45)
+            make.width.equalTo(45)
         }
         teacherNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
@@ -198,12 +200,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     func setup(model: CourseModel) {
         
-        var attributedString = NSMutableAttributedString(string: model.sub_title ?? "")
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 12
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-        courseBriefLabel.attributedText = attributedString
+        courseBriefLabel.setParagraphText(model.sub_title ?? "")
         
         teacherNameLabel.text = model.teacher?.name
         
@@ -219,6 +216,8 @@ class CourseIntroductionCell: UITableViewCell {
         courseImgContainerView.removeAllSubviews()
         var containerHeight: CGFloat = 0
         for imgAsset in model.content_images_attribute ?? [] {
+            guard let height = imgAsset.height, let width = imgAsset.width else { continue }
+            
             let imgView: UIImageView = {
                 let imgView = UIImageView()
                 imgView.kf.setImage(with: URL(string: imgAsset.service_url ?? ""))
@@ -227,7 +226,6 @@ class CourseIntroductionCell: UITableViewCell {
             }()
             courseImgContainerView.addSubview(imgView)
             
-            guard let height = imgAsset.height, let width = imgAsset.width else { return }
             let layoutHeight = CGFloat(height)/CGFloat(width)*(UIScreenWidth)
             imgView.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
@@ -242,10 +240,6 @@ class CourseIntroductionCell: UITableViewCell {
             make.height.equalTo(containerHeight)
         }
         
-        
-        attributedString = NSMutableAttributedString(string: model.teacher?.description ?? "")
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-        teacherBriefLabel.attributedText = attributedString
+        teacherBriefLabel.setParagraphText(model.teacher?.description ?? "")
     }
 }

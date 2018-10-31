@@ -12,8 +12,8 @@ class CourseCatalogueCell: UITableViewCell {
 
     lazy fileprivate var sequenceLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = UIColor("#999")
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.foot
         return label
     }()
     
@@ -24,11 +24,11 @@ class CourseCatalogueCell: UITableViewCell {
         return imgView
     }()
     
-    lazy fileprivate var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = UIColor("#333")
-        label.numberOfLines = 5
+    lazy fileprivate var titleLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-54-25
         return label
     }()
@@ -43,7 +43,7 @@ class CourseCatalogueCell: UITableViewCell {
     lazy fileprivate var timeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
-        label.textColor = UIColor("#777")
+        label.textColor = UIConstants.Color.foot
         return label
     }()
     
@@ -120,37 +120,7 @@ class CourseCatalogueCell: UITableViewCell {
     func setup(model: CourseSectionModel, isPlayed: Bool, isBought: Bool) {
         sequenceLabel.text = String(format: "%02d", model.sort ?? 0)
         
-        let attributedString = NSMutableAttributedString(string: model.title ?? "")
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 12
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-        titleLabel.attributedText = attributedString
-        
-        let titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth-54-25, height: CGFloat.greatestFiniteMagnitude)).height
-        if titleHeight < titleLabel.font.lineHeight*2 {
-            let attributedString = NSMutableAttributedString(string: model.title ?? "")
-            let paragraph = NSMutableParagraphStyle()
-            paragraph.lineSpacing = 0
-            attributedString.addAttributes([
-                NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-            titleLabel.attributedText = attributedString
-            
-            
-            titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(54)
-                make.trailing.greaterThanOrEqualTo(-25)
-                make.top.equalTo(sequenceLabel)
-                make.height.equalTo(17)
-            }
-            
-        } else {
-            titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(54)
-                make.trailing.greaterThanOrEqualTo(-25)
-                make.top.equalTo(sequenceLabel)
-            }
-        }
+        titleLabel.setParagraphText(model.title ?? "")
         
         
         if let durationSeconds = model.duration_with_seconds {
@@ -168,11 +138,11 @@ class CourseCatalogueCell: UITableViewCell {
         if isPlayed {
             sequenceLabel.isHidden = true
             listeningIndicatorImgView.isHidden = false
-            titleLabel.textColor = UIColor("#00a7a9")
+            titleLabel.textColor = UIConstants.Color.primaryGreen
         } else {
             sequenceLabel.isHidden = false
             listeningIndicatorImgView.isHidden = true
-            titleLabel.textColor = UIColor("#333")
+            titleLabel.textColor = UIConstants.Color.body
         }
     }
 }

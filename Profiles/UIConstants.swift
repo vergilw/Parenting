@@ -30,17 +30,42 @@ public struct UIConstants {
     }
     
     public struct Font {
-        public static let h1: UIFont = UIFont.boldSystemFont(ofSize: 25)
-        public static let h2: UIFont = UIFont.boldSystemFont(ofSize: 18)
-        public static let h3: UIFont = UIFont.boldSystemFont(ofSize: 17)
+        public static let h1: UIFont = UIFont.systemFont(ofSize: 25, weight: UIFont.Weight.bold)
+        public static let h2: UIFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.bold)
+        public static let h3: UIFont = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
         
-        public static let body: UIFont = UIFont.systemFont(ofSize: 15)
-        public static let foot: UIFont = UIFont.systemFont(ofSize: 12)
+        public static let body: UIFont = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
+        public static let foot: UIFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
     }
     
     public struct Size {
         public static let avatar: CGSize = CGSize(width: 30, height: 30)
         
+    }
+    
+    public struct LineHeight {
+        public static let h1: CGFloat = 25
+        public static let h2: CGFloat = 18
+        public static let h3: CGFloat = 17
+        
+        public static let body: CGFloat = 15
+        public static let foot: CGFloat = 12
+    }
+    
+    public struct LineSpacing {
+        public static let h1: CGFloat = 15
+        public static let h2: CGFloat = 14
+        public static let h3: CGFloat = 13
+        
+        public static let body: CGFloat = 12
+        public static let foot: CGFloat = 10
+    }
+    
+    public struct Margin {
+        public static let leading: CGFloat = 25
+        public static let trailing: CGFloat = 25
+        public static let top: CGFloat = 16
+        public static let bottom: CGFloat = 16
     }
     
     public static let cornerRadius: CGFloat = 2.5

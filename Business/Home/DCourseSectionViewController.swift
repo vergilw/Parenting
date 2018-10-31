@@ -82,6 +82,7 @@ class DCourseSectionViewController: BaseViewController {
         imgView.contentMode = .scaleAspectFill
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = 15
+        imgView.isHidden = true
         return imgView
     }()
     
@@ -171,11 +172,12 @@ class DCourseSectionViewController: BaseViewController {
         return button
     }()
     
-    lazy fileprivate var sectionTitleLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var sectionTitleLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h1
         label.textColor = UIConstants.Color.head
-        label.numberOfLines = 10
+        label.numberOfLines = 0
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
         return label
     }()
     
@@ -333,13 +335,13 @@ class DCourseSectionViewController: BaseViewController {
             make.height.equalTo(25)
         }
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(avatarImgView.snp.trailing).offset(10)
+            make.leading.equalTo(scrollView.snp_leadingMargin)
             make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
             make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
             make.height.equalTo(14)
         }
         tagLabel.snp.makeConstraints { make in
-            make.leading.equalTo(avatarImgView.snp.trailing).offset(10)
+            make.leading.equalTo(scrollView.snp_leadingMargin)
             make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
             make.top.equalTo(titleLabel.snp.bottom).offset(9)
             make.height.equalTo(12)
@@ -429,14 +431,16 @@ class DCourseSectionViewController: BaseViewController {
             }
         }
         
-        if let avatarURL = viewModel.courseSectionModel?.course?.teacher?.headshot_attribute?.service_url {
-            avatarImgView.kf.setImage(with: URL(string: avatarURL))
-        }
+//        if let avatarURL = viewModel.courseSectionModel?.course?.teacher?.headshot_attribute?.service_url {
+//            avatarImgView.kf.setImage(with: URL(string: avatarURL))
+//        }
         
         titleLabel.text = viewModel.courseSectionModel?.title
+        
+        tagLabel.text = viewModel.courseSectionModel?.course?.teacher?.name ?? ""
         if let tags = viewModel.courseSectionModel?.course?.teacher?.tags {
             let tagString = tags.joined(separator: " | ")
-            tagLabel.text = tagString
+            tagLabel.text = tagLabel.text?.appendingFormat(" | %@", tagString) 
         }
         
         progressLabel.text = String(format: "已学习%d%%", viewModel.courseSectionModel?.learned ?? 0)
@@ -449,41 +453,14 @@ class DCourseSectionViewController: BaseViewController {
         
         navigationTitleLabel.text = viewModel.courseSectionModel?.subtitle
         
-        let attributedString = NSMutableAttributedString(string: viewModel.courseSectionModel?.subtitle ?? "")
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 12
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-        sectionTitleLabel.attributedText = attributedString
         
-        let titleHeight = sectionTitleLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth-50, height: CGFloat.greatestFiniteMagnitude)).height
-        if titleHeight < sectionTitleLabel.font.lineHeight*2 {
-            let attributedString = NSMutableAttributedString(string: viewModel.courseSectionModel?.subtitle ?? "")
-            let paragraph = NSMutableParagraphStyle()
-            paragraph.lineSpacing = 0
-            attributedString.addAttributes([
-                NSAttributedString.Key.paragraphStyle: paragraph], range: NSRange(location: 0, length: attributedString.length))
-            sectionTitleLabel.attributedText = attributedString
-            sectionTitleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(scrollView.snp_leadingMargin)
-                make.trailing.equalTo(scrollView.snp_trailingMargin)
-                make.top.equalTo(audioPanelView.snp.bottom).offset(32)
-                make.width.equalTo(UIScreenWidth-50)
-                make.height.equalTo(17)
-            }
-            
-        } else {
-            sectionTitleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(scrollView.snp_leadingMargin)
-                make.trailing.equalTo(scrollView.snp_trailingMargin)
-                make.top.equalTo(audioPanelView.snp.bottom).offset(32)
-                make.width.equalTo(UIScreenWidth-50)
-            }
-        }
+        sectionTitleLabel.setParagraphText(viewModel.courseSectionModel?.subtitle ?? "")
         
         containerView.removeAllSubviews()
         var containerHeight: CGFloat = 0
         for imgAsset in viewModel.courseSectionModel?.content_images_attribute ?? [] {
+            guard let height = imgAsset.height, let width = imgAsset.width else { continue }
+            
             let imgView: UIImageView = {
                 let imgView = UIImageView()
                 imgView.kf.setImage(with: URL(string: imgAsset.service_url ?? ""))
@@ -492,7 +469,6 @@ class DCourseSectionViewController: BaseViewController {
             }()
             containerView.addSubview(imgView)
             
-            guard let height = imgAsset.height, let width = imgAsset.width else { return }
             let layoutHeight = CGFloat(height)/CGFloat(width)*(UIScreenWidth)
             imgView.snp.makeConstraints { make in
                 make.leading.trailing.equalToSuperview()
