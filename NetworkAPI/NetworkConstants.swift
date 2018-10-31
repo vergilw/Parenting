@@ -9,9 +9,9 @@
 import Foundation
 
 //#if DEBUG
-//    var ServerHost = "http://192.168.1.86:7001"
+//    var ServerHost = "http://test.beichensanjiaozhou.com/app"
 //#else
-    var ServerHost = "http://test.beichensanjiaozhou.com/app"
-//    var ServerHost = "http://192.168.3.35:8000/reasoning"
+
+    var ServerHost = "http://m.1314-edu.com/app"
 //#endif
 

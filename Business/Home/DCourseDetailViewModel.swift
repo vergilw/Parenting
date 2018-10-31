@@ -11,6 +11,8 @@ import HandyJSON
 
 class DCourseDetailViewModel {
     
+    public var courseID: Int = 2
+    
     var courseModel: CourseModel?
     
     func fetchCourse(completion: @escaping (Bool)->Void) {

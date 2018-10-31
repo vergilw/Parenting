@@ -201,13 +201,24 @@ class DCourseSectionViewController: BaseViewController {
         view.dismissBlock = { [weak self] in
             self?.dismissDimBtn.sendActions(for: .touchUpInside)
         }
+        view.selectedSectionBlock = { [weak self] sectionID in
+            self?.reload(sectionID: sectionID)
+        }
         return view
     }()
     
+    init(courseID: Int, sectionID: Int) {
+        super.init(nibName: nil, bundle: nil)
+        viewModel.courseID = courseID
+        viewModel.sectionID = sectionID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
         
         initContentView()
         initConstraints()
@@ -215,6 +226,7 @@ class DCourseSectionViewController: BaseViewController {
         
         viewModel.fetchCourseSection { (bool) in
             self.reload()
+            self.courseCataloguesView.isBought = self.viewModel.courseSectionModel?.course?.is_bought
         }
         viewModel.fetchCourseSections { (bool) in
             self.courseCataloguesView.courseSectionModels = self.viewModel.courseCatalogueModels
@@ -498,6 +510,15 @@ class DCourseSectionViewController: BaseViewController {
         }
     }
     
+    func reload(sectionID: Int) {
+        viewModel.sectionID = sectionID
+        
+        viewModel.fetchCourseSection { (bool) in
+            self.reload()
+            self.courseCataloguesView.isBought = self.viewModel.courseSectionModel?.course?.is_bought
+        }
+    }
+    
     // MARK: - ============= Action =============
 
     @objc func audioActionBtnAction() {
@@ -537,15 +558,20 @@ class DCourseSectionViewController: BaseViewController {
     
     @objc func courseSectionListAction() {
         if courseCataloguesView.transform.isIdentity {
+            
+            self.dismissDimBtn.alpha = 0
             dismissDimBtn.isHidden = false
-            UIView.animate(withDuration: 0.25) {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.courseCataloguesView.transform = CGAffineTransform(translationX: 0, y: self.courseCataloguesView.bounds.size.height)
-            }
+                self.dismissDimBtn.alpha = 1
+            })
             
         } else {
-            dismissDimBtn.isHidden = true
-            UIView.animate(withDuration: 0.25) {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.courseCataloguesView.transform = CGAffineTransform.identity
+                self.dismissDimBtn.alpha = 0
+            }) { bool in
+                self.dismissDimBtn.isHidden = true
             }
             
         }

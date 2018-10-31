@@ -761,10 +761,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         if section == 0 {
             return 1
         } else if section == 1 {
-            //FIXME: test model
-            guard let catalogues = viewModel.courseModel?.course_catalogues else { return 1 }
-            return catalogues.count + 8
-//            return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
+            return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
         } else if section == 2 {
             return 1 + 4
         }
@@ -786,9 +783,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
             
             let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueCell.className(), for: indexPath) as! CourseCatalogueCell
-            if let model = viewModel.courseModel {
-                //FIXME: index 0
-                cell.setup(model: model.course_catalogues![0], isPlayed: indexPath.row == 1 ? true : false, isBought: model.is_bought ?? false)
+            if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
+                cell.setup(model: model, isPlayed: indexPath.row == 1 ? true : false, isBought: viewModel.courseModel?.is_bought ?? false)
             }
             return cell
             
@@ -807,7 +803,10 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DCourseSectionViewController(), animated: true)
+        if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
+            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: model.id ?? 0)
+            navigationController?.pushViewController(viewController, animated: true)
+        }
     }
 }
 

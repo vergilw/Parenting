@@ -120,8 +120,7 @@ class CourseCatalogueCell: UITableViewCell {
     func setup(model: CourseSectionModel, isPlayed: Bool, isBought: Bool) {
         sequenceLabel.text = String(format: "%02d", model.sort ?? 0)
         
-        //FIXME: test data
-        let attributedString = NSMutableAttributedString(string: "课程名称，一般来说不要超过字数限制，字数限制为20个中文字内" ?? "")
+        let attributedString = NSMutableAttributedString(string: model.title ?? "")
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 12
         attributedString.addAttributes([
@@ -130,7 +129,7 @@ class CourseCatalogueCell: UITableViewCell {
         
         let titleHeight = titleLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth-54-25, height: CGFloat.greatestFiniteMagnitude)).height
         if titleHeight < titleLabel.font.lineHeight*2 {
-            let attributedString = NSMutableAttributedString(string: "课程名称，一般来说不要超过字数限制，字数限制为20个中文字内" ?? "")
+            let attributedString = NSMutableAttributedString(string: model.title ?? "")
             let paragraph = NSMutableParagraphStyle()
             paragraph.lineSpacing = 0
             attributedString.addAttributes([

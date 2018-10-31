@@ -10,12 +10,16 @@ import Foundation
 
 class CourseSectionViewModel {
     
+    public var courseID: Int = 0
+    
+    public var sectionID: Int = 0
+    
     public var courseSectionModel: CourseSectionModel?
 
     public var courseCatalogueModels: [CourseSectionModel]?
     
     func fetchCourseSection(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course_section(courseID: 2, sectionID: 35)) { result in
+        CourseProvider.request(.course_section(courseID: courseID, sectionID: sectionID)) { result in
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {
@@ -36,7 +40,7 @@ class CourseSectionViewModel {
     }
     
     func fetchCourseSections(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course_sections(courseID: 2)) { result in
+        CourseProvider.request(.course_sections(courseID: courseID)) { result in
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {

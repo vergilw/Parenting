@@ -12,8 +12,11 @@ class CourseCataloguesView: UIView {
 
     public var courseSectionModels: [CourseSectionModel]?
     
+    public var isBought: Bool?
+    
     public var dismissBlock: (()->())?
-
+    
+    public var selectedSectionBlock: ((_ sectionID: Int)->())?
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -110,13 +113,18 @@ extension CourseCataloguesView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueCell.className(), for: indexPath) as! CourseCatalogueCell
-        cell.setup(model: courseSectionModels![indexPath.row], isPlayed: false, isBought: false)
+        cell.setup(model: courseSectionModels![indexPath.row], isPlayed: indexPath.row == 1 ? true : false, isBought: isBought ?? false)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        
+        if let block = selectedSectionBlock, let sectionID = courseSectionModels![indexPath.row].id {
+            if let dismissBlock = dismissBlock {
+                dismissBlock()
+            }
+            block(_: sectionID)
+        }
     }
 }
