@@ -117,7 +117,7 @@ class CourseCatalogueCell: UITableViewCell {
         fatalError()
     }
     
-    func setup(model: CourseSectionModel, isPlayed: Bool, isBought: Bool) {
+    func setup(model: CourseSectionModel, isPlaying: Bool, isBought: Bool) {
         sequenceLabel.text = String(format: "%02d", model.sort ?? 0)
         
         titleLabel.setParagraphText(model.title ?? "")
@@ -135,7 +135,7 @@ class CourseCatalogueCell: UITableViewCell {
             auditionLabel.isHidden = true
         }
         
-        if isPlayed {
+        if isPlaying {
             sequenceLabel.isHidden = true
             listeningIndicatorImgView.isHidden = false
             titleLabel.textColor = UIConstants.Color.primaryGreen

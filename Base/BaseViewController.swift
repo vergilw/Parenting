@@ -40,6 +40,8 @@ class BaseViewController: UIViewController {
             }()
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
             navigationItem.leftMargin = 0
+            
+            navigationItem.rightMargin = 10
         }
         
         view.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)

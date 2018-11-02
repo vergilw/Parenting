@@ -21,6 +21,7 @@ public struct UIConstants {
         public static let primaryRed: UIColor = UIColor("#f05053")
         
         public static let head: UIColor = UIColor("#222")
+        public static let subhead: UIColor = UIColor("#333")
         public static let body: UIColor = UIColor("#666")
         public static let foot: UIColor = UIColor("#999")
         public static let disable: UIColor = UIColor("#ccc")

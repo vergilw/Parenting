@@ -96,11 +96,22 @@ class CourseIntroductionCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var noteImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "course_noteImg")
-        imgView.contentMode = .scaleToFill
-        return imgView
+    lazy fileprivate var noteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        label.numberOfLines = 0
+        
+        let string = "点击最下方的【立即学习】按钮，完成购买后即刻开始课程学习。\n付费成功后，该课程可反复学习，无次数限制。\n部分课程可免费试听1分钟，欲学习完整课程内容，需点击【立即学习】进行课程购买。\n点击 【收藏】按钮可将课程收藏，在我的个人中心-我的课程-我的收藏可以查看收藏的课程。\n再次学习，请点击最下方【我的】按钮，进入个人中心-我的课程，即可开始学习。\n氧育平台所有课程均为虚拟内容服务产品，购买成功后概不退款，如有疑问可咨询客服。\n氧育平台所有课程内容均已获取课程提供者授权，未获得氧育授权任何人不得以任何形式进行内容转载。"
+        let attributedString = NSMutableAttributedString(string: string)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineSpacing = UIConstants.LineSpacing.body - (label.font.lineHeight - label.font.pointSize)
+        paragraph.paragraphSpacing = 19
+        attributedString.addAttributes([
+            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: label.font], range: NSRange(location: 0, length: attributedString.length))
+        label.attributedText = attributedString
+        
+        return label
     }()
     
     override func awakeFromNib() {
@@ -119,7 +130,9 @@ class CourseIntroductionCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews(courseBriefLabel, teacherTitleLabel, profileView, teacherBriefBgImgView, teacherBriefLabel, courseTitleLabel, courseImgContainerView, noteTitleLabel, noteImgView)
+        contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
+        
+        contentView.addSubviews(courseBriefLabel, teacherTitleLabel, profileView, teacherBriefBgImgView, teacherBriefLabel, courseTitleLabel, courseImgContainerView, noteTitleLabel, noteLabel)
         profileView.addSubviews(teacherAvatarImgView, subProfileView)
         subProfileView.addSubviews(teacherNameLabel, teacherTagLabel)
         
@@ -183,12 +196,11 @@ class CourseIntroductionCell: UITableViewCell {
             make.top.equalTo(courseImgContainerView.snp.bottom).offset(60)
             
         }
-        noteImgView.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.trailing.equalTo(0)
+        noteLabel.snp.makeConstraints { make in
+            make.leading.equalTo(contentView.snp_leadingMargin)
+            make.trailing.equalTo(contentView.snp_trailingMargin)
             make.top.equalTo(noteTitleLabel.snp.bottom).offset(32)
-            make.height.equalTo(942.0/750*(UIScreenWidth))
-            make.bottom.equalTo(-45)
+            make.bottom.equalTo(-64)
         }
         
         

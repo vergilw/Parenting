@@ -19,6 +19,7 @@ target "parenting" do
     pod 'Kingfisher'
     pod 'UINavigationItem+Margin'
     pod 'iCarousel'
+    pod 'Presentr'
 
     pod 'MBProgressHUD'
     pod 'DZNEmptyDataSet'

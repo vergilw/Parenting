@@ -34,8 +34,8 @@ extension UIView {
         linePath.move(to: startPoint)
         linePath.addLine(to: endPoint)
         line.path = linePath.cgPath
-        line.strokeColor = UIColor("f2f2f2").cgColor
-        line.lineWidth = 1
+        line.strokeColor = UIColor("#e7e8ea").cgColor
+        line.lineWidth = 0.5
         layer.addSublayer(line)
     }
 }

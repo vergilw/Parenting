@@ -1,5 +1,5 @@
 //
-//  CourseSectionViewModel.swift
+//  DCourseSectionViewModel.swift
 //  parenting
 //
 //  Created by Vergil.Wang on 2018/10/29.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CourseSectionViewModel {
+class DCourseSectionViewModel {
     
     public var courseID: Int = 0
     

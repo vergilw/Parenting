@@ -113,7 +113,13 @@ extension CourseCataloguesView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueCell.className(), for: indexPath) as! CourseCatalogueCell
-        cell.setup(model: courseSectionModels![indexPath.row], isPlayed: indexPath.row == 1 ? true : false, isBought: isBought ?? false)
+        var isPlaying = false
+        if let sections = PlayListService.sharedInstance.playingSectionModels,
+            PlayListService.sharedInstance.playingIndex != -1,
+            sections[PlayListService.sharedInstance.playingIndex].id == courseSectionModels![indexPath.row].id {
+            isPlaying = true
+        }
+        cell.setup(model: courseSectionModels![indexPath.row], isPlaying: isPlaying, isBought: isBought ?? false)
         return cell
     }
     

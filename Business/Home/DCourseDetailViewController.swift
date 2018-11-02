@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import Presentr
 
 class DCourseDetailViewController: BaseViewController {
 
@@ -213,7 +214,7 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var toolActionBtn: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 2.5
+        button.layer.cornerRadius = 20
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("立即学习", for: .normal)
@@ -224,13 +225,34 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var isTrackingCategoryEnable: Bool = true
     
+    fileprivate var observer: NSKeyValueObservation?
+    
+    let presenter: Presentr = {
+        let width = ModalSize.full
+        let height = ModalSize.full
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: 0))
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVerticalFromTop
+        customPresenter.dismissTransitionType = .coverVerticalFromTop
+        customPresenter.roundCorners = true
+        customPresenter.cornerRadius = 5
+        customPresenter.backgroundColor = .black
+        customPresenter.backgroundOpacity = 0.5
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .top
+        return customPresenter
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
 //        navigationController?.setNavigationBarHidden(true, animated: true)
         
         navigationItem.title = "课程详情"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "public_shareBarItem")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(shareBarItemAction))
+        reloadNavigationItem()
+        
         
         initContentView()
         initConstraints()
@@ -405,7 +427,11 @@ class DCourseDetailViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+
+        observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
+            self?.reloadNavigationItem()
+            self?.tableView.reloadSection(1, with: .none)
+        }
     }
     
     // MARK: - ============= Request =============
@@ -459,6 +485,27 @@ class DCourseDetailViewController: BaseViewController {
             }
         }
         
+    }
+    
+    func reloadNavigationItem() {
+        var barBtnItems = [UIBarButtonItem]()
+        
+        let shareBarBtn: UIButton = {
+            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
+            let img = UIImage(named: "public_shareBarItem")!.withRenderingMode(.alwaysOriginal)
+            button.setImage(img, for: .normal)
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: img.size.width/2-(UIConstants.Margin.trailing-navigationItem.rightMargin), bottom: 0, right: -img.size.width/2+(UIConstants.Margin.trailing-navigationItem.rightMargin))
+            button.addTarget(self, action: #selector(shareBarItemAction), for: .touchUpInside)
+            return button
+        }()
+        barBtnItems.append(UIBarButtonItem(customView: shareBarBtn))
+        if PlayListService.sharedInstance.playingIndex != -1 {
+            let spaceBarItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
+            spaceBarItem.width = navigationItem.rightMargin
+            barBtnItems.insert(spaceBarItem, at: 0)
+            barBtnItems.append(UIBarButtonItem(image: UIImage(named: "public_audioPanelBarItem")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(audioPanelBarItemAction)))
+        }
+        navigationItem.rightBarButtonItems = barBtnItems
     }
     
     // MARK: - ============= Action =============
@@ -529,6 +576,30 @@ class DCourseDetailViewController: BaseViewController {
         
     }
     
+    @objc func audioPanelBarItemAction() {
+//        present(DPlayListViewController(), animated: true, completion: nil)
+        
+        let viewController = DPlayListViewController()
+        viewController.selectedCourseBlock = { [weak self] (courseID) in
+            self?.navigationController?.pushViewController(DCourseDetailViewController(), animated: true)
+        }
+        viewController.selectedSectionBlock = { [weak self] (courseID, sectionID) in
+            self?.navigationController?.pushViewController(DCourseSectionViewController(courseID: courseID, sectionID: sectionID), animated: true)
+        }
+//        viewController.modalPresentationStyle = .overCurrentContext
+//        viewController.modalTransitionStyle = .coverVertical
+//
+//        let transition = CATransition()
+//        transition.duration = 0.5
+//        transition.type = .moveIn
+//        transition.subtype = .fromBottom
+//        transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeInEaseOut)
+//        view.window!.layer.add(transition, forKey: kCATransition)
+//
+//        present(viewController, animated: true, completion: nil)
+        customPresentViewController(presenter, viewController: viewController, animated: true)
+    }
+    
     @objc func favoriteBtnAction() {
         guard let isFavorite = viewModel.courseModel?.is_favorite else {
             return
@@ -593,6 +664,10 @@ class DCourseDetailViewController: BaseViewController {
 //    }
     
     deinit {
+        if observer != nil {
+            observer?.invalidate()
+            observer = nil
+        }
 //        introductionScrollView.removeObserver(self, forKeyPath: "contentOffset")
 //        catalogueTableView.removeObserver(self, forKeyPath: "contentOffset")
 //        evaluationTableView.removeObserver(self, forKeyPath: "contentOffset")
@@ -640,7 +715,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         let footnoteLabel: UILabel = {
             let label = UILabel()
             label.font = UIFont.systemFont(ofSize: 12)
-            label.textColor = UIConstants.Color.primaryOrange
+            label.textColor = UIColor("#f26a44")
             return label
         }()
         
@@ -763,7 +838,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             
             let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueCell.className(), for: indexPath) as! CourseCatalogueCell
             if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
-                cell.setup(model: model, isPlayed: indexPath.row == 1 ? true : false, isBought: viewModel.courseModel?.is_bought ?? false)
+                var isPlaying = false
+                if let sections = PlayListService.sharedInstance.playingSectionModels,
+                    PlayListService.sharedInstance.playingIndex != -1,
+                    sections[PlayListService.sharedInstance.playingIndex].id == model.id {
+                    isPlaying = true
+                }
+                cell.setup(model: model, isPlaying: isPlaying, isBought: viewModel.courseModel?.is_bought ?? false)
             }
             return cell
             
@@ -782,6 +863,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        guard indexPath.section == 1, indexPath.row > 0 else { return }
         
         if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
             let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: model.id ?? 0)
