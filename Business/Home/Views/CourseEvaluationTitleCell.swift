@@ -10,12 +10,23 @@ import UIKit
 
 class CourseEvaluationTitleCell: UITableViewCell {
 
+    public var evaluationBlock: (()->())?
+    
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         label.text = "课程体验"
         return label
+    }()
+    
+    lazy fileprivate var actionBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
+        button.setTitle("我要评价", for: .normal)
+        button.addTarget(self, action: #selector(evaluationBtnAction), for: .touchUpInside)
+        return button
     }()
     
     override func awakeFromNib() {
@@ -34,15 +45,37 @@ class CourseEvaluationTitleCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubview(titleLabel)
+        contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
+        
+        contentView.addSubviews([titleLabel, actionBtn])
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
             make.top.equalTo(32)
             make.bottom.equalTo(-32)
         }
+        actionBtn.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.trailing.equalToSuperview()
+            make.width.equalTo(60+contentView.layoutMargins.right*2)
+            make.height.equalTo(44)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    func setup(isEvaluate: Bool) {
+        if isEvaluate {
+            actionBtn.setTitle("我的评价", for: .normal)
+        } else {
+            actionBtn.setTitle("我要评价", for: .normal)
+        }
+    }
+    
+    @objc func evaluationBtnAction() {
+        if let block = evaluationBlock {
+            block()
+        }
     }
 }

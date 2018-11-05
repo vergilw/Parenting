@@ -23,7 +23,7 @@ class CourseModel: HandyJSON {
     var is_favorite: Bool?
     var audition: Bool?
     var course_catalogues: [CourseSectionModel]?
-    
+    var is_comment: Bool?
     
     required init() {
         

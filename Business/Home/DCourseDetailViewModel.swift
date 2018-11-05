@@ -17,6 +17,10 @@ class DCourseDetailViewModel {
     
     var commentModel: [CommentModel]?
     
+    var myCommentModel: CommentModel?
+    
+    lazy fileprivate var commentPage: Int = 1
+    
     func fetchCourse(completion: @escaping (Bool)->Void) {
         CourseProvider.request(.course(courseID: courseID)) { result in
             switch result {
@@ -39,13 +43,30 @@ class DCourseDetailViewModel {
     }
     
     func fetchComments(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.comments(courseID: courseID, page: 1)) { result in
+        
+        CourseProvider.request(.comments(courseID: courseID, page: commentPage)) { result in
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {
                     let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                    self.commentModel = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
-                    completion(false)
+                    
+                    if self.commentModel == nil {
+                        self.commentModel = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
+                    } else {
+                        let models = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
+                        self.commentModel?.append(contentsOf: models!)
+                    }
+                    
+                    if let pageData = JSON["page_data"] as? [String: Any], let totalPages = pageData["total_pages"] as? Int {
+                        if totalPages > self.commentPage {
+                            self.commentPage += 1
+                            completion(true)
+                        } else {
+                            completion(false)
+                        }
+                    } else {
+                        completion(false)
+                    }
                     
                 } else {
                     //                    let error = try? JSON(data: response.data)

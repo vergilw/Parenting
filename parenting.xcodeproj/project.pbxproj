@@ -10,6 +10,7 @@
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
 		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
+		130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -58,6 +59,7 @@
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
 		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
+		130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseEvaluationViewController.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				131160C02183008B0000F105 /* DCourseSectionViewController.swift */,
 				1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */,
 				130D46022189A5DB00CB4763 /* DPlayListViewController.swift */,
+				130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -388,6 +391,8 @@
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/UINavigationItem+Margin/UINavigationItem_Margin.framework",
+				"${BUILT_PRODUCTS_DIR}/UITableView+FDTemplateLayoutCell/UITableView_FDTemplateLayoutCell.framework",
+				"${BUILT_PRODUCTS_DIR}/UITextView+Placeholder/UITextView_Placeholder.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
 				"${BUILT_PRODUCTS_DIR}/iCarousel/iCarousel.framework",
 			);
@@ -408,6 +413,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UINavigationItem_Margin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UITableView_FDTemplateLayoutCell.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UITextView_Placeholder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/iCarousel.framework",
 			);
@@ -445,6 +452,7 @@
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
+				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,

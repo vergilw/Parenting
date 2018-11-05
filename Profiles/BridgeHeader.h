@@ -14,6 +14,8 @@
 @import DZNEmptyDataSet;
 @import MJRefresh;
 @import iCarousel;
+@import UITableView_FDTemplateLayoutCell;
+@import UITextView_Placeholder;
 
 #import <UMCommon/UMCommon.h>
 

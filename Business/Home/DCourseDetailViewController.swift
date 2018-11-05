@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import Presentr
+import UITableView_FDTemplateLayoutCell
 
 class DCourseDetailViewController: BaseViewController {
 
@@ -230,7 +231,7 @@ class DCourseDetailViewController: BaseViewController {
     let presenter: Presentr = {
         let width = ModalSize.full
         let height = ModalSize.full
-        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: 0))
+        let center = ModalCenterPosition.topCenter
         let customType = PresentationType.custom(width: width, height: height, center: center)
         
         let customPresenter = Presentr(presentationType: customType)
@@ -242,6 +243,24 @@ class DCourseDetailViewController: BaseViewController {
         customPresenter.backgroundOpacity = 0.5
         customPresenter.dismissOnSwipe = true
         customPresenter.dismissOnSwipeDirection = .top
+        return customPresenter
+    }()
+    
+    let evaluationPresenter: Presentr = {
+        let width = ModalSize.full
+        let height = ModalSize.custom(size: 440)
+        let center = ModalCenterPosition.bottomCenter
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVertical
+        customPresenter.dismissTransitionType = .coverVertical
+        customPresenter.roundCorners = true
+        customPresenter.cornerRadius = 5
+        customPresenter.backgroundColor = .black
+        customPresenter.backgroundOpacity = 0.5
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .bottom
         return customPresenter
     }()
     
@@ -261,9 +280,7 @@ class DCourseDetailViewController: BaseViewController {
         viewModel.fetchCourse { (bool) in
             self.reload()
         }
-        viewModel.fetchComments { (bool) in
-            self.reload()
-        }
+        
     }
     
     // MARK: - ============= Initialize View =============
@@ -275,15 +292,27 @@ class DCourseDetailViewController: BaseViewController {
         
         
         
-        tableView.estimatedRowHeight = 800
+        tableView.estimatedRowHeight = 0
         tableView.register(CourseIntroductionCell.self, forCellReuseIdentifier: CourseIntroductionCell.className())
         tableView.register(CourseCatalogueCell.self, forCellReuseIdentifier: CourseCatalogueCell.className())
         tableView.register(CourseCatalogueTitleCell.self, forCellReuseIdentifier: CourseCatalogueTitleCell.className())
         tableView.register(CourseEvaluationTitleCell.self, forCellReuseIdentifier: CourseEvaluationTitleCell.className())
         tableView.register(CourseEvaluationCell.self, forCellReuseIdentifier: CourseEvaluationCell.className())
-        
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.viewModel.fetchComments { (bool) in
+                if bool {
+                    self?.tableView.mj_footer.endRefreshing()
+                } else {
+                    self?.tableView.mj_footer.endRefreshingWithNoMoreData()
+                }
+                self?.reload()
+            }
+        })
+        let footer = tableView.mj_footer as! MJRefreshAutoStateFooter
+        footer.setTitle("以上为筛选后的用户课程体验", for: .noMoreData)
+        
         view.addSubviews(tableView, toolView, categoryView)
         
         initCategoryContentView()
@@ -442,6 +471,7 @@ class DCourseDetailViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         tableView.reloadData()
+        
         setupHeaderView()
         
         if viewModel.courseModel?.is_favorite == true {
@@ -710,6 +740,14 @@ class DCourseDetailViewController: BaseViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    @objc func displayMyEvaluation() {
+        let viewController = DCourseEvaluationViewController(model: viewModel.myCommentModel) { [weak self] (model) in
+            self?.viewModel.myCommentModel = model
+            self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
+        }
+        customPresentViewController(evaluationPresenter, viewController: viewController, animated: true)
+    }
+    
     /*
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "contentOffset" {
@@ -890,6 +928,42 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         return 3
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return tableView.fd_heightForCell(withIdentifier: CourseIntroductionCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                if let cell = cell as? CourseIntroductionCell, let model = self.viewModel.courseModel {
+                    cell.setup(model: model)
+                }
+            })
+        } else if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                return tableView.fd_heightForCell(withIdentifier: CourseCatalogueTitleCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                    
+                })
+            } else {
+                return tableView.fd_heightForCell(withIdentifier: CourseCatalogueCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                    if let cell = cell as? CourseCatalogueCell, let model = self.viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
+                        cell.setup(model: model, isPlaying: false, isBought: false)
+                    }
+                })
+            }
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                return tableView.fd_heightForCell(withIdentifier: CourseEvaluationTitleCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                    
+                })
+            } else {
+                return tableView.fd_heightForCell(withIdentifier: CourseEvaluationCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                    if let cell = cell as? CourseEvaluationCell, let model = self.viewModel.commentModel?[indexPath.row-1] {
+                        cell.setup(model: model)
+                    }
+                })
+            }
+        }
+        
+        return 0
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 1
@@ -929,7 +1003,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationTitleCell.className(), for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationTitleCell.className(), for: indexPath) as! CourseEvaluationTitleCell
+                cell.evaluationBlock = { [weak self] in
+                    self?.displayMyEvaluation()
+                }
+                if viewModel.courseModel?.is_comment == true || viewModel.myCommentModel != nil {
+                    cell.setup(isEvaluate: true)
+                }
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell

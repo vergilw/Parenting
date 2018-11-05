@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -40,6 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         self.window?.rootViewController = tabBarController
         self.window?.makeKeyAndVisible()
+        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.toolbarDoneBarButtonItemImage = UIImage(named: "public_dismissKeyboard")
         
         return true
     }

@@ -27,6 +27,8 @@ target "parenting" do
     pod 'YYKit'
     pod 'MJRefresh'
     pod 'GTSDK'
+    pod 'UITableView+FDTemplateLayoutCell'
+    pod 'UITextView+Placeholder'
     
     pod 'UMCCommon'
     pod 'UMCSecurityPlugins'
