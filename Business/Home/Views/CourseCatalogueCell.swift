@@ -10,8 +10,8 @@ import UIKit
 
 class CourseCatalogueCell: UITableViewCell {
 
-    lazy fileprivate var sequenceLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var sequenceLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.foot
         return label
@@ -118,7 +118,7 @@ class CourseCatalogueCell: UITableViewCell {
     }
     
     func setup(model: CourseSectionModel, isPlaying: Bool, isBought: Bool) {
-        sequenceLabel.text = String(format: "%02d", model.sort ?? 0)
+        sequenceLabel.setParagraphText(String(format: "%02d", model.sort ?? 0))
         
         titleLabel.setParagraphText(model.title ?? "")
         

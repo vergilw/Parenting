@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
+		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
+		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -52,6 +55,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
+		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
+		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -123,6 +129,7 @@
 				131160BE2182F2480000F105 /* CourseEvaluationTitleCell.swift */,
 				131160C221831AC70000F105 /* CourseEvaluationCell.swift */,
 				1312C40521884B030008AB81 /* CourseCataloguesView.swift */,
+				130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -169,6 +176,7 @@
 				1311201B218171650088F5BF /* TeacherModel.swift */,
 				1311201D218172F70088F5BF /* AssetModel.swift */,
 				131160B62182B9590000F105 /* CourseSectionModel.swift */,
+				130B80B6218FF0750076BB50 /* CommentModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -203,6 +211,7 @@
 		1320C36E217EB76600902A5C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */,
 				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
 				1320C372217EB76600902A5C /* Main.storyboard */,
@@ -346,6 +355,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
@@ -451,6 +461,7 @@
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
 				1320C38F217EB93A00902A5C /* ObjectMapper+Extension.swift in Sources */,
+				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
@@ -461,6 +472,7 @@
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
+				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,

@@ -15,6 +15,7 @@ enum CourseAPI {
     case course(courseID: Int)
     case course_sections(courseID: Int)
     case course_section(courseID: Int, sectionID: Int)
+    case comments(courseID: Int, page: Int)
 }
 
 extension CourseAPI: TargetType {
@@ -31,6 +32,8 @@ extension CourseAPI: TargetType {
             return "/courses/\(courseID)/course_catalogues"
         case let .course_section(courseID, sectionID):
             return "/courses/\(courseID)/course_catalogues/\(sectionID)"
+        case .comments:
+            return "/comments"
         }
     }
     
@@ -41,6 +44,8 @@ extension CourseAPI: TargetType {
         case .course_sections:
             return .get
         case .course_section:
+            return .get
+        case .comments:
             return .get
         }
     }
@@ -57,7 +62,8 @@ extension CourseAPI: TargetType {
             return .requestPlain
         case .course_section:
             return .requestPlain
-
+        case let .comments(courseID, page):
+            return .requestParameters(parameters: ["type":"course", "type_id":courseID, "page":page], encoding: URLEncoding.default)
         }
     }
     

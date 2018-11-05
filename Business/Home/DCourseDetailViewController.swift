@@ -261,6 +261,9 @@ class DCourseDetailViewController: BaseViewController {
         viewModel.fetchCourse { (bool) in
             self.reload()
         }
+        viewModel.fetchComments { (bool) in
+            self.reload()
+        }
     }
     
     // MARK: - ============= Initialize View =============
@@ -485,6 +488,7 @@ class DCourseDetailViewController: BaseViewController {
             }
         }
         
+        reloadCategoryView()
     }
     
     func reloadNavigationItem() {
@@ -503,9 +507,84 @@ class DCourseDetailViewController: BaseViewController {
             let spaceBarItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
             spaceBarItem.width = navigationItem.rightMargin
             barBtnItems.insert(spaceBarItem, at: 0)
-            barBtnItems.append(UIBarButtonItem(image: UIImage(named: "public_audioPanelBarItem")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(audioPanelBarItemAction)))
+            
+            
+            let audioBarBtn: UIButton = {
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
+                button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
+                
+                let img = YYImage(named: "public_audioAnimationItem")
+                let imgView = YYAnimatedImageView(image: img)
+                
+                button.addSubview(imgView)
+                imgView.snp.makeConstraints { make in
+                    make.center.equalToSuperview()
+                    make.width.equalTo(22)
+                    make.height.equalTo(22)
+                }
+                
+                if !PlayListService.sharedInstance.isPlaying {
+                    imgView.autoPlayAnimatedImage = false
+                    imgView.stopAnimating()
+                }
+                
+                return button
+            }()
+            
+            barBtnItems.append(UIBarButtonItem(customView: audioBarBtn))
         }
         navigationItem.rightBarButtonItems = barBtnItems
+    }
+    
+    func reloadCategoryView() {
+        var offsetY = (tableView.tableHeaderView?.bounds.size.height ?? 0) - 62 - tableView.contentOffset.y
+        if offsetY < 0 {
+            offsetY = 0
+            navigationItem.title = viewModel.courseModel?.title ?? "课程详情"
+        } else {
+            navigationItem.title = "课程详情"
+        }
+        
+        if isTrackingCategoryEnable {
+            //        let rect1 = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
+            let rect2 = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
+            let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
+            
+            var sender: UIButton
+            if tableView.contentOffset.y+62 >= rect3.origin.y {
+                sender = evaluationBtn
+            } else if tableView.contentOffset.y+62 >= rect2.origin.y {
+                sender = catalogueBtn
+            } else  {
+                sender = introductionBtn
+            }
+            categoryIndicatorImgView.snp.remakeConstraints { make in
+                make.centerX.equalTo(sender)
+                make.width.equalTo(27.5)
+                make.height.equalTo(1.5)
+                make.bottom.equalToSuperview()
+            }
+            
+            //        UIView.animate(withDuration: 0.25) {
+            //            self.categoryView.layoutIfNeeded()
+            //        }
+            
+            introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
+            catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
+            evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
+            
+            sender.setTitleColor(UIColor("#101010"), for: .normal)
+            sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        }
+        
+        categoryView.snp.remakeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(offsetY)
+            make.height.equalTo(62)
+        }
     }
     
     // MARK: - ============= Action =============
@@ -817,7 +896,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         } else if section == 1 {
             return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
         } else if section == 2 {
-            return 1 + 4
+            return (viewModel.commentModel?.count ?? 0) + 1
         }
         return 0
     }
@@ -854,7 +933,9 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell
-            cell.setup()
+            if let model = viewModel.commentModel?[indexPath.row-1] {
+                cell.setup(model: model)
+            }
             return cell
         }
         
@@ -886,53 +967,6 @@ extension DCourseDetailViewController: UIScrollViewDelegate {
 //            }
 //        }
         
-        var offsetY = (tableView.tableHeaderView?.bounds.size.height ?? 0) - 62 - scrollView.contentOffset.y
-        if offsetY < 0 {
-            offsetY = 0
-            navigationItem.title = viewModel.courseModel?.title ?? "课程详情"
-        } else {
-            navigationItem.title = "课程详情"
-        }
-        
-        if isTrackingCategoryEnable {
-    //        let rect1 = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
-            let rect2 = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
-            let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
-
-            var sender: UIButton
-            if scrollView.contentOffset.y+62 >= rect3.origin.y {
-                sender = evaluationBtn
-            } else if scrollView.contentOffset.y+62 >= rect2.origin.y {
-                sender = catalogueBtn
-            } else  {
-                sender = introductionBtn
-            }
-            categoryIndicatorImgView.snp.remakeConstraints { make in
-                make.centerX.equalTo(sender)
-                make.width.equalTo(27.5)
-                make.height.equalTo(1.5)
-                make.bottom.equalToSuperview()
-            }
-            
-    //        UIView.animate(withDuration: 0.25) {
-    //            self.categoryView.layoutIfNeeded()
-    //        }
-            
-            introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-            catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
-            evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
-            
-            sender.setTitleColor(UIColor("#101010"), for: .normal)
-            sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        }
-        
-        categoryView.snp.remakeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(offsetY)
-            make.height.equalTo(62)
-        }
+        reloadCategoryView()
     }
 }
