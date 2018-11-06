@@ -110,8 +110,8 @@ class CourseEvaluationCell: UITableViewCell {
         }
         evluationBgImgView.snp.makeConstraints { make in
             make.top.equalTo(evluationLabel.snp.top).offset(-32)
-            make.leading.equalTo(evluationLabel.snp.leading).offset(-15)
-            make.trailing.equalTo(evluationLabel.snp.trailing).offset(15)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.bottom.equalTo(evluationLabel.snp.bottom).offset(24)
         }
     }

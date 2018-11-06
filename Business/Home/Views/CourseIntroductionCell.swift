@@ -178,8 +178,8 @@ class CourseIntroductionCell: UITableViewCell {
             make.top.equalTo(profileView.snp.bottom).offset(45)
         }
         teacherBriefBgImgView.snp.makeConstraints { make in
-            make.leading.equalTo(teacherBriefLabel.snp.leading).offset(-15)
-            make.trailing.equalTo(teacherBriefLabel.snp.trailing).offset(15)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(teacherBriefLabel.snp.top).offset(-32)
             make.bottom.equalTo(teacherBriefLabel.snp.bottom).offset(24)
         }

@@ -34,10 +34,14 @@ class DCourseDetailViewModel {
 //                    let error = try? JSON(data: response.data)
                     //                    let errorCode = error?["code"].stringValue
 //                    print(error)
+                    
+                    completion(false)
                 }
             case let .failure(error):
                 //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
                 print("failure")
+                
+                completion(false)
             }
         }
     }
@@ -72,10 +76,12 @@ class DCourseDetailViewModel {
                     //                    let error = try? JSON(data: response.data)
                     //                    let errorCode = error?["code"].stringValue
                     //                    print(error)
+                    completion(true)
                 }
             case let .failure(error):
                 //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
                 print("failure")
+                completion(true)
             }
         }
     }

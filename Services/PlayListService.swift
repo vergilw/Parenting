@@ -24,6 +24,7 @@ class PlayListService: NSObject {
         return player
     }()
     
+    
     var playingCourseModel: CourseModel?
     
     var playingSectionModels: [CourseSectionModel]?
@@ -54,6 +55,12 @@ class PlayListService: NSObject {
     func pauseAudio() {
         player.pause()
         isPlaying = false
+    }
+    
+    //FIXME: Debug
+    func play() {
+        player.replaceCurrentItem(with: AVPlayerItem(url: URL(fileURLWithPath: Bundle.main.path(forResource: "demoVideo", ofType: "mp4")!)))
+        player.play()
     }
     
     func seek(_ index: Float, completion: @escaping ()->()) {

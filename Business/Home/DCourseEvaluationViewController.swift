@@ -169,7 +169,7 @@ class DCourseEvaluationViewController: BaseViewController {
 //            make.top.equalTo(textView.snp.bottom).offset(80)
             make.height.equalTo(50)
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(-(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) - 32)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-40-32)
             } else {
                 make.bottom.equalTo(-32)
             }
@@ -211,8 +211,11 @@ class DCourseEvaluationViewController: BaseViewController {
         }
         
         
-        if let evaluationContent = commentModel.content {
+        if let evaluationContent = commentModel.content, evaluationContent != "" {
             textView.text = evaluationContent
+            textView.backgroundColor = .white
+        } else {
+            textView.isHidden = true
         }
     }
     

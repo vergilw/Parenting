@@ -17,6 +17,7 @@ enum CourseAPI {
     case course_section(courseID: Int, sectionID: Int)
     case comments(courseID: Int, page: Int)
     case my_comment(courseID: Int)
+    case post_comment(courseID: Int, starsCount: Int, content: String?)
 }
 
 extension CourseAPI: TargetType {
@@ -37,6 +38,8 @@ extension CourseAPI: TargetType {
             return "/comments"
         case .my_comment:
             return "/comments"
+        case .post_comment:
+            return "/comments"
         }
     }
     
@@ -52,6 +55,8 @@ extension CourseAPI: TargetType {
             return .get
         case .my_comment:
             return .get
+        case .post_comment:
+            return .post
         }
     }
     
@@ -71,6 +76,13 @@ extension CourseAPI: TargetType {
             return .requestParameters(parameters: ["type":"course", "type_id":courseID, "page":page], encoding: URLEncoding.default)
         case let .my_comment(courseID):
             return .requestParameters(parameters: ["type":"course", "type_id":courseID, "user_id":1], encoding: URLEncoding.default)
+        case let .post_comment(courseID, starsCount, content):
+            var parameters: [String: Any] = ["commentable_type":"course", "commentable_id":courseID, "star":starsCount]
+            if let content = content {
+                parameters["content"] = content
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+
         }
     }
     

@@ -112,6 +112,8 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DCourseDetailViewModel()
     
+    lazy fileprivate var coursePlayer = DPlayerViewController()
+    
     lazy fileprivate var categoryView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -922,6 +924,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             make.top.equalTo((tableView.tableHeaderView?.bounds.size.height ?? 0) - 62)
             make.height.equalTo(62)
         }
+        
+        //FIXME: debug
+        bannerView.addSubview(coursePlayer.view)
+        coursePlayer.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        addChild(coursePlayer)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
