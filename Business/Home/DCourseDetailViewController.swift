@@ -217,6 +217,10 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var toolActionBtn: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 20
+//        button.layer.masksToBounds = true
+//        button.clipsToBounds = true
+        
+        
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("立即学习", for: .normal)
@@ -264,6 +268,15 @@ class DCourseDetailViewController: BaseViewController {
         customPresenter.dismissOnSwipeDirection = .bottom
         return customPresenter
     }()
+    
+    init(courseID: Int) {
+        super.init(nibName: nil, bundle: nil)
+        viewModel.courseID = courseID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -701,7 +714,7 @@ class DCourseDetailViewController: BaseViewController {
         
         let viewController = DPlayListViewController()
         viewController.selectedCourseBlock = { [weak self] (courseID) in
-            self?.navigationController?.pushViewController(DCourseDetailViewController(), animated: true)
+            self?.navigationController?.pushViewController(DCourseDetailViewController(courseID: self?.viewModel.courseID ?? 0), animated: true)
         }
         viewController.selectedSectionBlock = { [weak self] (courseID, sectionID) in
             self?.navigationController?.pushViewController(DCourseSectionViewController(courseID: courseID, sectionID: sectionID), animated: true)

@@ -11,7 +11,7 @@ import HandyJSON
 
 class DCourseDetailViewModel {
     
-    public var courseID: Int = 2
+    public var courseID: Int = 0
     
     var courseModel: CourseModel?
     

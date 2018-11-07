@@ -166,6 +166,8 @@ class DPlayerViewController: BaseViewController {
     
     fileprivate var sectionModel: CourseSectionModel?
     
+    fileprivate var hideTimer: Timer?
+    
     init(course: CourseModel, section: CourseSectionModel) {
         super.init(nibName: nil, bundle: nil)
         
@@ -238,6 +240,17 @@ class DPlayerViewController: BaseViewController {
 //                }
 //            }
             self?.controlCoverView.isHidden = !(self?.controlCoverView.isHidden ?? false)
+            
+            if self?.controlCoverView.isHidden == false, self?.player.rate != 0 {
+                self?.hideTimer = Timer.scheduledTimer(withTimeInterval: 3, block: { [weak self] (timer) in
+                    self?.controlCoverView.isHidden = true
+                    }, repeats: false)
+            } else {
+                if let timer = self?.hideTimer {
+                    timer.invalidate()
+                    self?.hideTimer = nil
+                }
+            }
         }
         view.addGestureRecognizer(tapGesture)
     }
@@ -480,7 +493,6 @@ class DPlayerViewController: BaseViewController {
             })
             
             observer = playerItem.observe(\.loadedTimeRanges) { [weak self] (item, changed) in
-                print(#function, playerItem.loadedTimeRanges)
                 guard let first = playerItem.loadedTimeRanges.first else {
                     return
                 }
@@ -502,6 +514,14 @@ class DPlayerViewController: BaseViewController {
                 }
                 
             }
+            
+            if let timer = hideTimer {
+                timer.invalidate()
+                hideTimer = nil
+            }
+            hideTimer = Timer.scheduledTimer(withTimeInterval: 3, block: { [weak self] (timer) in
+                self?.controlCoverView.isHidden = true
+            }, repeats: false)
         }
     }
     
@@ -520,9 +540,20 @@ class DPlayerViewController: BaseViewController {
             audioActionBtn.setImage(UIImage(named: "course_videoPause")?.withRenderingMode(.alwaysOriginal), for: .normal)
             player.play()
             
+            if hideTimer == nil || hideTimer?.isValid ?? false {
+                hideTimer = Timer.scheduledTimer(withTimeInterval: 3, block: { [weak self] (timer) in
+                    self?.controlCoverView.isHidden = true
+                    }, repeats: false)
+            }
+            
         } else {
             audioActionBtn.setImage(UIImage(named: "course_videoPlay")?.withRenderingMode(.alwaysOriginal), for: .normal)
             player.pause()
+            
+            if let timer = hideTimer {
+                timer.invalidate()
+                hideTimer = nil
+            }
         }
     }
     
@@ -575,6 +606,8 @@ class DPlayerViewController: BaseViewController {
         if audioActionBtn.currentImage != playImg {
             audioActionBtn.setImage(playImg, for: .normal)
         }
+        
+        controlCoverView.isHidden = false
     }
     
     deinit {
@@ -585,6 +618,10 @@ class DPlayerViewController: BaseViewController {
         if let observer = observer {
             observer.invalidate()
             self.observer = nil
+        }
+        if let timer = hideTimer {
+            timer.invalidate()
+            self.hideTimer = nil
         }
     }
 

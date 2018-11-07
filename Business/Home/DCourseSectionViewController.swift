@@ -599,7 +599,7 @@ class DCourseSectionViewController: BaseViewController {
     
     
     @objc func courseEntranceBtnAction() {
-        navigationController?.pushViewController(DCourseDetailViewController(), animated: true)
+        navigationController?.pushViewController(DCourseDetailViewController(courseID: viewModel.courseID), animated: true)
     }
     
     @objc func courseSectionListAction() {
