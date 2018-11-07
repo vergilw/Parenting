@@ -24,7 +24,6 @@ class PlayListService: NSObject {
         return player
     }()
     
-    
     var playingCourseModel: CourseModel?
     
     var playingSectionModels: [CourseSectionModel]?
@@ -38,8 +37,9 @@ class PlayListService: NSObject {
         if let audioURL = sections[playingIndex].media_attribute?.service_url {
             if let playURL = URL(string: audioURL) {
                 let currentURL = (player.currentItem?.asset as? AVURLAsset)?.url
+                let playerItem = AVPlayerItem(url: playURL)
                 if currentURL != playURL {
-                    player.replaceCurrentItem(with: AVPlayerItem(url: playURL))
+                    player.replaceCurrentItem(with: playerItem)
                 }
                 player.play()
                 
@@ -48,11 +48,16 @@ class PlayListService: NSObject {
                 playingSectionModels = sections
                 self.playingIndex = playingIndex
                 isPlaying = true
+                
             }
         }
     }
     
     func pauseAudio() {
+        guard player.currentItem != nil, player.rate != 0 else {
+            return
+        }
+        
         player.pause()
         isPlaying = false
     }

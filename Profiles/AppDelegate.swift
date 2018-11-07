@@ -70,6 +70,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if let rootViewController = window?.rootViewController {
+            if rootViewController.presentedViewController is DPlayerViewController {
+                return rootViewController.presentedViewController!.supportedInterfaceOrientations
+            } else if rootViewController is DPlayerViewController {
+                return rootViewController.supportedInterfaceOrientations
+            } else if let rootViewController = rootViewController as? UINavigationController, rootViewController.topViewController is DPlayerViewController {
+                return rootViewController.topViewController!.supportedInterfaceOrientations
+            } else if let rootViewController = rootViewController as? UITabBarController, let navigationController = rootViewController.selectedViewController as? UINavigationController, navigationController.topViewController is DPlayerViewController {
+                return navigationController.topViewController!.supportedInterfaceOrientations
+            }
+            
+        }
+        return [UIInterfaceOrientationMask.portrait]
+    }
 }
 

@@ -18,6 +18,19 @@ class CourseCatalogueTitleCell: UITableViewCell {
         return label
     }()
     
+    lazy fileprivate var videoTagLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot
+        label.textColor = UIConstants.Color.primaryGreen
+        label.backgroundColor = UIColor("#e5f6f6")
+        label.text = "视频"
+        label.layer.cornerRadius = 8.5
+        label.clipsToBounds = true
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -34,15 +47,29 @@ class CourseCatalogueTitleCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubview(titleLabel)
+        contentView.addSubviews([titleLabel, videoTagLabel])
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
             make.top.equalTo(32)
             make.bottom.equalTo(-16)
         }
+        videoTagLabel.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel.snp.trailing).offset(10)
+            make.centerY.equalTo(titleLabel)
+            make.width.equalTo(42)
+            make.height.equalTo(17)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    func setup(isVideoCourse: Bool) {
+        if isVideoCourse {
+            videoTagLabel.isHidden = false
+        } else {
+            videoTagLabel.isHidden = true
+        }
     }
 }

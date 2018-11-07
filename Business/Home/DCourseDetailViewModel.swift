@@ -26,8 +26,12 @@ class DCourseDetailViewModel {
             switch result {
             case let .success(response):
                 if response.statusCode == 200 {
-                    let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                    self.courseModel = CourseModel.deserialize(from: JSON)
+                    do {
+                        let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]
+                        self.courseModel = CourseModel.deserialize(from: JSON)
+                    } catch let error as NSError {
+                        print(#function, error)
+                    }
                     completion(false)
                     
                 } else {

@@ -112,7 +112,6 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DCourseDetailViewModel()
     
-    lazy fileprivate var coursePlayer = DPlayerViewController()
     
     lazy fileprivate var categoryView: UIView = {
         let view = UIView()
@@ -233,7 +232,7 @@ class DCourseDetailViewController: BaseViewController {
     let presenter: Presentr = {
         let width = ModalSize.full
         let height = ModalSize.full
-        let center = ModalCenterPosition.topCenter
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint.zero)
         let customType = PresentationType.custom(width: width, height: height, center: center)
         
         let customPresenter = Presentr(presentationType: customType)
@@ -251,7 +250,7 @@ class DCourseDetailViewController: BaseViewController {
     let evaluationPresenter: Presentr = {
         let width = ModalSize.full
         let height = ModalSize.custom(size: 440)
-        let center = ModalCenterPosition.bottomCenter
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: UIScreenHeight-440))
         let customType = PresentationType.custom(width: width, height: height, center: center)
         
         let customPresenter = Presentr(presentationType: customType)
@@ -283,6 +282,16 @@ class DCourseDetailViewController: BaseViewController {
             self.reload()
         }
         
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if children.contains(where: { (viewController) -> Bool in
+            return viewController.isKind(of: DPlayerViewController.self)
+        }) {
+            return [UIInterfaceOrientationMask.portrait, UIInterfaceOrientationMask.landscape]
+        } else {
+            return [UIInterfaceOrientationMask.portrait]
+        }
     }
     
     // MARK: - ============= Initialize View =============
@@ -925,12 +934,6 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             make.height.equalTo(62)
         }
         
-        //FIXME: debug
-        bannerView.addSubview(coursePlayer.view)
-        coursePlayer.view.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        addChild(coursePlayer)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -994,7 +997,12 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             
         } else if indexPath.section == 1 {
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueTitleCell.className(), for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: CourseCatalogueTitleCell.className(), for: indexPath) as! CourseCatalogueTitleCell
+                if let sections = viewModel.courseModel?.course_catalogues, sections.count > 0 {
+                    let model = sections[0]
+                    let isVideoCourse = model.media_attribute?.content_type?.hasPrefix("video") ?? false
+                    cell.setup(isVideoCourse: isVideoCourse)
+                }
                 return cell
             }
             
@@ -1037,8 +1045,19 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         guard indexPath.section == 1, indexPath.row > 0 else { return }
         
         if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
-            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: model.id ?? 0)
-            navigationController?.pushViewController(viewController, animated: true)
+            
+            if let contentType = model.media_attribute?.content_type, contentType.hasPrefix("video") {
+//                navigationController?.pushViewController(DPlayerViewController(), animated: true)
+                if let courseModel = viewModel.courseModel {
+                    let viewController = DPlayerViewController(course: courseModel, section: model)
+                    present(viewController, animated: true, completion: nil)
+                }
+                
+            } else {
+                let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: model.id ?? 0)
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+            
         }
     }
 }

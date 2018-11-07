@@ -501,6 +501,11 @@ class DPlayListViewController: BaseViewController {
             PlayListService.sharedInstance.player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
         }
+        if let observer = observer {
+            observer.invalidate()
+            self.observer = nil
+        }
+        
     }
 }
 

@@ -169,7 +169,7 @@ class DCourseEvaluationViewController: BaseViewController {
 //            make.top.equalTo(textView.snp.bottom).offset(80)
             make.height.equalTo(50)
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-40-32)
+                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-32)
             } else {
                 make.bottom.equalTo(-32)
             }
@@ -198,7 +198,7 @@ class DCourseEvaluationViewController: BaseViewController {
         let starBtn5 = starsContainerView.viewWithTag(5) as! UIButton
         starBtn5.isUserInteractionEnabled = false
         
-        textView.isUserInteractionEnabled = false
+        textView.isEditable = false
         
         wordsCountLabel.isHidden = true
         actionBtn.isHidden = true
@@ -214,6 +214,17 @@ class DCourseEvaluationViewController: BaseViewController {
         if let evaluationContent = commentModel.content, evaluationContent != "" {
             textView.text = evaluationContent
             textView.backgroundColor = .white
+            
+            textView.snp.remakeConstraints { make in
+                make.leading.equalTo(UIConstants.Margin.leading)
+                make.trailing.equalTo(-UIConstants.Margin.trailing)
+                make.top.equalTo(starsTitleLabel.snp.bottom).offset(40)
+                if #available(iOS 11.0, *) {
+                    make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-40-32)
+                } else {
+                    make.bottom.equalTo(-32)
+                }
+            }
         } else {
             textView.isHidden = true
         }
