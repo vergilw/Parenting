@@ -449,16 +449,23 @@ class DPlayerViewController: BaseViewController {
         if manager?.isReachableOnEthernetOrWiFi ?? false {
             reloadPlayer()
         } else if manager?.isReachableOnWWAN ?? false {
-            let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
-                self.dismissBtnAction()
-            }))
-            alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+            if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
                 self.reloadPlayer()
-            }))
-            DispatchQueue.main.async {
-                self.present(alertController, animated: true, completion: nil)
+            } else {
+                let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+                    AppCacheService.sharedInstance.autoplayOnWWAN = false
+                    self.dismissBtnAction()
+                }))
+                alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+                    AppCacheService.sharedInstance.autoplayOnWWAN = true
+                    self.reloadPlayer()
+                }))
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
             }
+            
         }
         
     }

@@ -280,16 +280,22 @@ class DCourseSectionViewController: BaseViewController {
             if manager?.isReachableOnEthernetOrWiFi ?? false {
                 self.preparePlayAudio(autoPlay: false)
             } else if manager?.isReachableOnWWAN ?? false {
-                let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
-                    
-                }))
-                alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+                if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
                     self.preparePlayAudio(autoPlay: true)
-                }))
-                DispatchQueue.main.async {
-                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+                        AppCacheService.sharedInstance.autoplayOnWWAN = false
+                    }))
+                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+                        AppCacheService.sharedInstance.autoplayOnWWAN = true
+                        self.preparePlayAudio(autoPlay: true)
+                    }))
+                    DispatchQueue.main.async {
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
+                
             }
         }
         

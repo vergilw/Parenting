@@ -8,6 +8,8 @@
 
 import Foundation
 import AVFoundation
+import MediaPlayer
+import Kingfisher
 
 class PlayListService: NSObject {
     
@@ -16,6 +18,9 @@ class PlayListService: NSObject {
     private override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: AVAudioSession.interruptionNotification, object: nil)
+        
+        setupRemoteTransportControls()
     }
     
     var player: AVPlayer = {
@@ -44,6 +49,13 @@ class PlayListService: NSObject {
                 
                 if startPlaying {
                     player.play()
+                    
+                    do {
+                        try AVAudioSession.sharedInstance().setActive(true)
+                    } catch {
+                        print(error)
+                    }
+                    
                     
                     playingCourseModel = course
                     playingSectionModels = sections
@@ -87,5 +99,112 @@ class PlayListService: NSObject {
         }
         
         playAudio(course: course, sections: sections, playingIndex: playingIndex+1)
+        self.setupNowPlaying()
+    }
+    
+    func setupRemoteTransportControls() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.addTarget { [unowned self] (event) -> MPRemoteCommandHandlerStatus in
+            if self.player.currentItem != nil, self.player.rate == 0.0 {
+                
+                self.player.play()
+                self.isPlaying = true
+                
+                self.setupNowPlaying()
+                
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        commandCenter.pauseCommand.addTarget { [unowned self] (event) -> MPRemoteCommandHandlerStatus in
+            if self.player.currentItem != nil, self.player.rate > 0.0 {
+                
+                self.player.pause()
+                self.isPlaying = false
+                
+                self.setupNowPlaying()
+                
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        commandCenter.previousTrackCommand.addTarget { [unowned self] (event) -> MPRemoteCommandHandlerStatus in
+            guard let course = self.playingCourseModel, let sections = self.playingSectionModels, self.playingIndex != -1 else {
+                return .commandFailed
+            }
+            
+            if self.playingIndex > 0 {
+                self.playAudio(course: course, sections: sections, playingIndex: self.playingIndex-1)
+                self.setupNowPlaying()
+                
+                return .success
+            } else {
+                return .noSuchContent
+            }
+        }
+        
+        commandCenter.nextTrackCommand.addTarget { [unowned self] (event) -> MPRemoteCommandHandlerStatus in
+            guard let course = self.playingCourseModel, let sections = self.playingSectionModels, self.playingIndex != -1 else {
+                return .commandFailed
+            }
+            
+            if sections.count > self.playingIndex {
+                self.playAudio(course: course, sections: sections, playingIndex: self.playingIndex+1)
+                self.setupNowPlaying()
+                
+                return .success
+            } else {
+                return .noSuchContent
+            }
+        }
+        
+    }
+    
+    func setupNowPlaying() {
+        
+        guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex != -1, let playerItem = player.currentItem else { return }
+        
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = sections[playingIndex].title
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = course.teacher?.name
+        nowPlayingInfo[MPMediaItemPropertyMediaType] = sections[playingIndex].media_attribute?.content_type
+        
+        if let image = ImageCache.default.retrieveImageInDiskCache(forKey: (course.teacher?.headshot_attribute?.service_url ?? ""), options: [.onlyFromCache]) {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] =
+                MPMediaItemArtwork(boundsSize: image.size) { size in
+                    return image
+            }
+        }
+        
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
+    func handleInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+                return
+        }
+        if type == .began {
+            // Interruption began, take appropriate actions
+            setupNowPlaying()
+        }
+        else if type == .ended {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    // Interruption Ended - playback should resume
+                } else {
+                    // Interruption Ended - playback should NOT resume
+                }
+                setupNowPlaying()
+            }
+        }
     }
 }

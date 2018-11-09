@@ -36,6 +36,7 @@
 		13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B21218065FC002B4281 /* CourseIntroductionCell.swift */; };
 		13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B2421806ED9002B4281 /* SeparatorView.swift */; };
 		13144B27218077F4002B4281 /* Course.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13144B26218077F4002B4281 /* Course.xcassets */; };
+		131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131CF01421953E5100CA7941 /* AppCacheService.swift */; };
 		1320C378217EB76600902A5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C36B217EB76600902A5C /* AppDelegate.swift */; };
 		1320C37A217EB76600902A5C /* Public.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1320C36F217EB76600902A5C /* Public.xcassets */; };
 		1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C370217EB76600902A5C /* LaunchScreen.storyboard */; };
@@ -87,6 +88,7 @@
 		13144B21218065FC002B4281 /* CourseIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseIntroductionCell.swift; sourceTree = "<group>"; };
 		13144B2421806ED9002B4281 /* SeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		13144B26218077F4002B4281 /* Course.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Course.xcassets; sourceTree = "<group>"; };
+		131CF01421953E5100CA7941 /* AppCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCacheService.swift; sourceTree = "<group>"; };
 		1320C354217EB66E00902A5C /* parenting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parenting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1320C36B217EB76600902A5C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1320C36C217EB76600902A5C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				130D46042189A77900CB4763 /* PlayListService.swift */,
+				131CF01421953E5100CA7941 /* AppCacheService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -341,6 +344,11 @@
 				TargetAttributes = {
 					1320C353217EB66E00902A5C = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -487,6 +495,7 @@
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
+				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,

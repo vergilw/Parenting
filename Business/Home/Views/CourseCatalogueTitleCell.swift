@@ -27,7 +27,6 @@ class CourseCatalogueTitleCell: UITableViewCell {
         label.layer.cornerRadius = 8.5
         label.clipsToBounds = true
         label.textAlignment = .center
-        label.isHidden = true
         return label
     }()
     
@@ -67,9 +66,9 @@ class CourseCatalogueTitleCell: UITableViewCell {
     
     func setup(isVideoCourse: Bool) {
         if isVideoCourse {
-            videoTagLabel.isHidden = false
+            videoTagLabel.text = "视频"
         } else {
-            videoTagLabel.isHidden = true
+            videoTagLabel.text = "音频"
         }
     }
 }
