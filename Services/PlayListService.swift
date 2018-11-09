@@ -32,7 +32,7 @@ class PlayListService: NSObject {
     
     @objc dynamic var isPlaying: Bool = false
     
-    func playAudio(course: CourseModel, sections: [CourseSectionModel], playingIndex: Int) {
+    func playAudio(course: CourseModel, sections: [CourseSectionModel], playingIndex: Int, startPlaying: Bool = true) {
         
         if let audioURL = sections[playingIndex].media_attribute?.service_url {
             if let playURL = URL(string: audioURL) {
@@ -41,14 +41,21 @@ class PlayListService: NSObject {
                 if currentURL != playURL {
                     player.replaceCurrentItem(with: playerItem)
                 }
-                player.play()
                 
+                if startPlaying {
+                    player.play()
+                    
+                    playingCourseModel = course
+                    playingSectionModels = sections
+                    self.playingIndex = playingIndex
+                    
+                } else {
+                    playingCourseModel = course
+                    playingSectionModels = sections
+                    self.playingIndex = playingIndex
+                }
                 
-                playingCourseModel = course
-                playingSectionModels = sections
-                self.playingIndex = playingIndex
-                isPlaying = true
-                
+                isPlaying = startPlaying
             }
         }
     }
@@ -60,12 +67,6 @@ class PlayListService: NSObject {
         
         player.pause()
         isPlaying = false
-    }
-    
-    //FIXME: Debug
-    func play() {
-        player.replaceCurrentItem(with: AVPlayerItem(url: URL(fileURLWithPath: Bundle.main.path(forResource: "demoVideo", ofType: "mp4")!)))
-        player.play()
     }
     
     func seek(_ index: Float, completion: @escaping ()->()) {

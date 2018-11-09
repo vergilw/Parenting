@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Alamofire
 
 class DCourseSectionViewController: BaseViewController {
 
@@ -145,10 +146,26 @@ class DCourseSectionViewController: BaseViewController {
     lazy fileprivate var audioSlider: UISlider = {
         let view = UISlider()
         view.minimumTrackTintColor = UIConstants.Color.primaryGreen
-        view.maximumTrackTintColor = UIConstants.Color.background
+        view.maximumTrackTintColor = .clear//UIConstants.Color.background
         view.setThumbImage(UIImage(named: "course_audioSliderThumb"), for: .normal)
         view.addTarget(self, action: #selector(sliderTouchBeganAction), for: .touchDown)
         view.addTarget(self, action: #selector(sliderTouchEndedAction), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        return view
+    }()
+    
+    lazy fileprivate var sliderBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIConstants.Color.background
+        view.layer.cornerRadius = 1
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
+    lazy fileprivate var sliderBufferView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIConstants.Color.disable
+        view.layer.cornerRadius = 1
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -209,6 +226,8 @@ class DCourseSectionViewController: BaseViewController {
     
     fileprivate var observer: NSKeyValueObservation?
     
+    fileprivate var bufferObserver: NSKeyValueObservation?
+    
     init(courseID: Int, sectionID: Int) {
         super.init(nibName: nil, bundle: nil)
         viewModel.courseID = courseID
@@ -226,12 +245,16 @@ class DCourseSectionViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
         viewModel.fetchCourseSection { (bool) in
             self.reload()
             self.courseCataloguesView.isBought = self.viewModel.courseSectionModel?.course?.is_bought
             
             self.reloadPlayPanel()
+            dispatchGroup.leave()
         }
+        dispatchGroup.enter()
         viewModel.fetchCourseSections { (bool) in
             self.courseCataloguesView.courseSectionModels = self.viewModel.courseCatalogueModels
 
@@ -249,7 +272,27 @@ class DCourseSectionViewController: BaseViewController {
                     }
                 }
             }
+            dispatchGroup.leave()
         }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
+            if manager?.isReachableOnEthernetOrWiFi ?? false {
+                self.preparePlayAudio(autoPlay: false)
+            } else if manager?.isReachableOnWWAN ?? false {
+                let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+                    
+                }))
+                alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+                    self.preparePlayAudio(autoPlay: true)
+                }))
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -273,7 +316,7 @@ class DCourseSectionViewController: BaseViewController {
         view.addSubviews([scrollView, navigationView, dismissDimBtn, courseCataloguesView])
         navigationView.addSubviews([backBarBtn, shareBarBtn, navigationTitleLabel])
         scrollView.addSubviews([backgroundImgView, cornerBgImgView, avatarImgView, courseEntranceBtn, titleLabel, tagLabel, audioPanelView, sectionTitleLabel, containerView])
-        audioPanelView.addSubviews([audioActionBtn, progressLabel, audioSlider, audioCurrentTimeLabel, audioDurationTimeLabel, playListBtn])
+        audioPanelView.addSubviews([audioActionBtn, progressLabel, sliderBgView, sliderBufferView, audioSlider, audioCurrentTimeLabel, audioDurationTimeLabel, playListBtn])
         
         scrollView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
         
@@ -375,6 +418,17 @@ class DCourseSectionViewController: BaseViewController {
             make.centerY.equalTo(audioActionBtn).offset(5)
             make.trailing.equalTo(-20)
         }
+        sliderBgView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(audioSlider)
+            make.centerY.equalTo(audioSlider).offset(1)
+            make.height.equalTo(1.5)
+        }
+        sliderBufferView.snp.makeConstraints { make in
+            make.leading.equalTo(audioSlider)
+            make.centerY.equalTo(audioSlider).offset(1)
+            make.height.equalTo(1.5)
+            make.width.equalTo(0)
+        }
         audioCurrentTimeLabel.snp.makeConstraints { make in
             make.leading.equalTo(progressLabel)
             make.top.equalTo(audioSlider.snp.bottom).offset(4)
@@ -408,6 +462,8 @@ class DCourseSectionViewController: BaseViewController {
             self?.reloadPlayPanel()
             self?.courseCataloguesView.reload()
         }
+        
+        
     }
     
     // MARK: - ============= Request =============
@@ -554,6 +610,66 @@ class DCourseSectionViewController: BaseViewController {
         audioCurrentTimeLabel.text = "00:00"
         audioSlider.value = 0
         audioActionBtn.setImage(UIImage(named: "course_playAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        
+        sliderBufferView.snp.remakeConstraints { make in
+            make.leading.equalTo(audioSlider)
+            make.centerY.equalTo(audioSlider).offset(1)
+            make.height.equalTo(1.5)
+            make.width.equalTo(0)
+        }
+        
+        if let bufferObserver = bufferObserver {
+            bufferObserver.invalidate()
+            self.bufferObserver = nil
+        }
+    }
+    
+    func preparePlayAudio(autoPlay: Bool) {
+        guard let course = viewModel.courseSectionModel?.course, let sections = viewModel.courseCatalogueModels else {
+            return
+        }
+        
+        let playingSectionModels = PlayListService.sharedInstance.playingSectionModels
+        if playingSectionModels == nil ||
+            playingSectionModels?[PlayListService.sharedInstance.playingIndex].id != viewModel.sectionID ||
+            (playingSectionModels?[PlayListService.sharedInstance.playingIndex].id == viewModel.sectionID && PlayListService.sharedInstance.isPlaying == false)  {
+            
+            if autoPlay {
+                audioActionBtn.setImage(UIImage(named: "course_pauseAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+            }
+            
+            let index = sections.firstIndex { (model) -> Bool in
+                return model.id == viewModel.courseSectionModel?.id
+            }
+            if let index = index {
+                PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index, startPlaying: autoPlay)
+                
+                bufferObserver = PlayListService.sharedInstance.player.currentItem?.observe(\.loadedTimeRanges) { [weak self] (item, changed) in
+                    guard let playerItem = PlayListService.sharedInstance.player.currentItem else { return }
+                    
+                    guard let first = playerItem.loadedTimeRanges.first else {
+                        return
+                    }
+                    let timeRange = first.timeRangeValue
+                    let startSeconds = CMTimeGetSeconds(timeRange.start)
+                    let durationSecound = CMTimeGetSeconds(timeRange.duration)
+                    let loadedTime = startSeconds + durationSecound
+                    
+                    let totalTime = CMTimeGetSeconds(playerItem.duration)
+                    
+                    //                self?.audioSlider.maximumValue = Float(loadedTime/totalTime)
+                    if let audioSlider = self?.audioSlider {
+                        self?.sliderBufferView.snp.remakeConstraints { make in
+                            make.leading.equalTo(audioSlider)
+                            make.centerY.equalTo(audioSlider).offset(1)
+                            make.height.equalTo(1.5)
+                            make.width.equalTo(audioSlider.snp.width).multipliedBy(loadedTime/totalTime)
+                        }
+                    }
+                    
+                }
+            }
+        }
     }
     
     // MARK: - ============= Action =============
@@ -629,8 +745,13 @@ class DCourseSectionViewController: BaseViewController {
             PlayListService.sharedInstance.player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
         }
-        if observer != nil {
-            observer?.invalidate()
+        if let observer = observer {
+            observer.invalidate()
+            self.observer = nil
+        }
+        if let bufferObserver = bufferObserver {
+            bufferObserver.invalidate()
+            self.bufferObserver = nil
         }
     }
 }

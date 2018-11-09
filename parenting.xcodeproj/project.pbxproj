@@ -14,6 +14,7 @@
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
+		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
 		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
 		1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201721816F180088F5BF /* DCourseDetailViewModel.swift */; };
@@ -65,6 +66,7 @@
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
+		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
 		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
 		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 			isa = PBXGroup;
 			children = (
 				1320C39B217EBFEA00902A5C /* DMeViewController.swift */,
+				130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
 				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,

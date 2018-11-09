@@ -31,17 +31,26 @@ public struct UIConstants {
     }
     
     public struct Font {
-        public static let h1: UIFont = UIFont.systemFont(ofSize: 25, weight: UIFont.Weight.bold)
-        public static let h2: UIFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.bold)
-        public static let h3: UIFont = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)
+        public static let h1: UIFont = UIFont(name: "PingFangSC-Semibold", size: 25)!
+        public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 18)!
+        public static let h3: UIFont = UIFont(name: "PingFangSC-Medium", size: 17)!
         
-        public static let body: UIFont = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
-        public static let foot: UIFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 15)!
+        public static let foot: UIFont = UIFont(name: "PingFangSC-Regular", size: 12)!
     }
     
     public struct Size {
         public static let avatar: CGSize = CGSize(width: 30, height: 30)
         
+    }
+    
+    public struct ParagraphLineHeight {
+        public static let h1: CGFloat = 38.5
+        public static let h2: CGFloat = 31
+        public static let h3: CGFloat = 29
+        
+        public static let body: CGFloat = 26
+        public static let foot: CGFloat = 22
     }
     
     public struct LineHeight {

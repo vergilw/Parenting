@@ -406,6 +406,18 @@ class DPlayerViewController: BaseViewController {
     func addNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         
+//        let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
+//        manager?.listener = { status in
+//            switch status {
+//            case .reachable(.ethernetOrWiFi):
+//
+//            case .reachable(.wwan):
+//
+//            default:
+//                <#code#>
+//            }
+//        }
+//        manager?.startListening()
     }
     
     // MARK: - ============= Request =============
