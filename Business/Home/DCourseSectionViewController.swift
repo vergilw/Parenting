@@ -484,7 +484,7 @@ class DCourseSectionViewController: BaseViewController {
 //            avatarImgView.kf.setImage(with: URL(string: avatarURL))
 //        }
         
-        titleLabel.text = viewModel.courseSectionModel?.title
+        titleLabel.text = viewModel.courseSectionModel?.course?.title
         
         tagLabel.text = viewModel.courseSectionModel?.course?.teacher?.name ?? ""
         if let tags = viewModel.courseSectionModel?.course?.teacher?.tags {
@@ -503,7 +503,7 @@ class DCourseSectionViewController: BaseViewController {
         navigationTitleLabel.text = viewModel.courseSectionModel?.subtitle
         
         
-        sectionTitleLabel.setParagraphText(viewModel.courseSectionModel?.subtitle ?? "")
+        sectionTitleLabel.setParagraphText(viewModel.courseSectionModel?.title ?? "")
         
         containerView.removeAllSubviews()
         var containerHeight: CGFloat = 0

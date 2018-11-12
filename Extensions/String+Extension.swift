@@ -33,6 +33,14 @@ extension String {
     func isEmail() -> Bool {
         return self.validate(RegEx: "^([a-z0-9_\\.-]+)@([\\da-z0-9\\.-]+)\\.([a-z\\.]{2,6})$")
     }
+    
+    func isPhone() -> Bool {
+        return self.validate(RegEx: "^[19]\\d{10}$")
+    }
+    
+    func isCode() -> Bool {
+        return self.validate(RegEx: "^\\d{4,8}$")
+    }
 
     func isNumeric() -> Bool {
         return self.validate(RegEx: "^[0-9]+$")

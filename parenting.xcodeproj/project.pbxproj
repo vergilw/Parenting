@@ -21,6 +21,12 @@
 		1311201A218170410088F5BF /* CourseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13112019218170410088F5BF /* CourseModel.swift */; };
 		1311201C218171650088F5BF /* TeacherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201B218171650088F5BF /* TeacherModel.swift */; };
 		1311201E218172F70088F5BF /* AssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201D218172F70088F5BF /* AssetModel.swift */; };
+		13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13113F642199134100B6E0FE /* AuthorizationViewController.swift */; };
+		13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13113F6621994CD900B6E0FE /* Authorization.xcassets */; };
+		13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13113F682199560200B6E0FE /* DPhoneViewController.swift */; };
+		13113F6B219970C500B6E0FE /* AuthorizationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13113F6A219970C500B6E0FE /* AuthorizationAPI.swift */; };
+		13113F6D2199736600B6E0FE /* DPhoneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13113F6C2199736600B6E0FE /* DPhoneViewModel.swift */; };
+		13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13113F6E21997D5500B6E0FE /* HUDService.swift */; };
 		131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160B62182B9590000F105 /* CourseSectionModel.swift */; };
 		131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160B82182E54C0000F105 /* PlaceholderTableViewCell.swift */; };
 		131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160BC2182EF6D0000F105 /* CourseCatalogueTitleCell.swift */; };
@@ -73,6 +79,12 @@
 		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
 		1311201B218171650088F5BF /* TeacherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherModel.swift; sourceTree = "<group>"; };
 		1311201D218172F70088F5BF /* AssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetModel.swift; sourceTree = "<group>"; };
+		13113F642199134100B6E0FE /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewController.swift; sourceTree = "<group>"; };
+		13113F6621994CD900B6E0FE /* Authorization.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Authorization.xcassets; sourceTree = "<group>"; };
+		13113F682199560200B6E0FE /* DPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPhoneViewController.swift; sourceTree = "<group>"; };
+		13113F6A219970C500B6E0FE /* AuthorizationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationAPI.swift; sourceTree = "<group>"; };
+		13113F6C2199736600B6E0FE /* DPhoneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPhoneViewModel.swift; sourceTree = "<group>"; };
+		13113F6E21997D5500B6E0FE /* HUDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDService.swift; sourceTree = "<group>"; };
 		131160B62182B9590000F105 /* CourseSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseSectionModel.swift; sourceTree = "<group>"; };
 		131160B82182E54C0000F105 /* PlaceholderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTableViewCell.swift; sourceTree = "<group>"; };
 		131160BC2182EF6D0000F105 /* CourseCatalogueTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCatalogueTitleCell.swift; sourceTree = "<group>"; };
@@ -129,6 +141,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		13113F632199131300B6E0FE /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				13113F642199134100B6E0FE /* AuthorizationViewController.swift */,
+				13113F682199560200B6E0FE /* DPhoneViewController.swift */,
+				13113F6C2199736600B6E0FE /* DPhoneViewModel.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
 		13144B1A21800D40002B4281 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,6 +249,7 @@
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
 				1320C372217EB76600902A5C /* Main.storyboard */,
 				13144B26218077F4002B4281 /* Course.xcassets */,
+				13113F6621994CD900B6E0FE /* Authorization.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -236,6 +259,7 @@
 			children = (
 				130D46042189A77900CB4763 /* PlayListService.swift */,
 				131CF01421953E5100CA7941 /* AppCacheService.swift */,
+				13113F6E21997D5500B6E0FE /* HUDService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -254,6 +278,7 @@
 			children = (
 				1320C381217EB91100902A5C /* NetworkConstants.swift */,
 				1311201421816CFE0088F5BF /* CourseAPI.swift */,
+				13113F6A219970C500B6E0FE /* AuthorizationAPI.swift */,
 			);
 			path = NetworkAPI;
 			sourceTree = "<group>";
@@ -261,6 +286,7 @@
 		1320C377217EB76600902A5C /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				13113F632199131300B6E0FE /* Authorization */,
 				13144B2321806E71002B4281 /* Common */,
 				1320C397217EBEA800902A5C /* Home */,
 				1320C398217EBEB000902A5C /* Me */,
@@ -380,6 +406,7 @@
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
 				13120E4C21913A8900404BC7 /* demoVideo.mp4 in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
+				13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */,
 				1320C37C217EB76600902A5C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -466,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
 				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
@@ -474,9 +502,11 @@
 				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
+				13113F6D2199736600B6E0FE /* DPhoneViewModel.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
+				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
@@ -493,6 +523,7 @@
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
+				13113F6B219970C500B6E0FE /* AuthorizationAPI.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
@@ -502,6 +533,7 @@
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
+				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,

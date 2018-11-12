@@ -22,24 +22,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
         
         self.window = UIWindow()
-        let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-        let homeImg = UIImage(named: "tab_playbooks")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
-        homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
-        homeNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
-        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
         
-        let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
-        let meImg = UIImage(named: "tab_authors")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
-        meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
-        meNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
-        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
+//        let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
+//        let homeImg = UIImage(named: "tab_playbooks")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
+//        homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
+//        homeNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
+//        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
+//
+//        let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
+//        let meImg = UIImage(named: "tab_authors")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
+//        meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
+//        meNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
+//        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
+//
+//        let tabBarController = UITabBarController()
+//        tabBarController.tabBar.isTranslucent = false
+//        tabBarController.tabBar.tintColor = UIColor("#333")
+//        tabBarController.tabBar.unselectedItemTintColor = UIColor("#999")
+//        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         
-        let tabBarController = UITabBarController()
-        tabBarController.tabBar.isTranslucent = false
-        tabBarController.tabBar.tintColor = UIColor("#333")
-        tabBarController.tabBar.unselectedItemTintColor = UIColor("#999")
-        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
-        self.window?.rootViewController = tabBarController
+        let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+        
+        self.window?.rootViewController = authorizationNavigationController
         self.window?.makeKeyAndVisible()
         
         IQKeyboardManager.shared.enable = true

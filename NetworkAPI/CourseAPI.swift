@@ -29,17 +29,17 @@ extension CourseAPI: TargetType {
     public var path: String {
         switch self {
         case let .course(courseID):
-            return "/courses/\(courseID)"
+            return "/app/courses/\(courseID)"
         case let .course_sections(courseID):
-            return "/courses/\(courseID)/course_catalogues"
+            return "/app/courses/\(courseID)/course_catalogues"
         case let .course_section(courseID, sectionID):
-            return "/courses/\(courseID)/course_catalogues/\(sectionID)"
+            return "/app/courses/\(courseID)/course_catalogues/\(sectionID)"
         case .comments:
-            return "/comments"
+            return "/app/comments"
         case .my_comment:
-            return "/comments"
+            return "/app/comments"
         case .post_comment:
-            return "/comments"
+            return "/app/comments"
         }
     }
     
