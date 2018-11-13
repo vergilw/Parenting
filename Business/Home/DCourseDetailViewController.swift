@@ -734,6 +734,10 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func favoriteBtnAction() {
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            present(<#T##viewControllerToPresent: UIViewController##UIViewController#>, animated: <#T##Bool#>, completion: <#T##(() -> Void)?##(() -> Void)?##() -> Void#>)
+//        }
+        
         guard let isFavorite = viewModel.courseModel?.is_favorite else {
             return
         }

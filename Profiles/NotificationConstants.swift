@@ -13,7 +13,7 @@ public extension Notification {
     public class Authorization {
         @objc public static let signInDidSuccess: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signInDidSuccess))
         
-        @objc public static let signOut: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signOut))
+        @objc public static let signOutDidSuccess: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signOutDidSuccess))
     }
 
     public class Mail {

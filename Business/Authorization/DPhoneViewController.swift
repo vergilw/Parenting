@@ -10,13 +10,23 @@ import UIKit
 
 class DPhoneViewController: BaseViewController {
 
-    lazy fileprivate var viewModel = DPhoneViewModel()
+    enum DPhoneMode {
+        case signIn
+        case binding
+    }
+    
+    lazy fileprivate var mode: DPhoneMode = .signIn
+    
+    lazy fileprivate var viewModel = DAuthorizationViewModel()
     
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIFont.systemFont(ofSize: 32)
         label.textColor = UIConstants.Color.head
         label.setParagraphText("登录氧育")
+        if mode == .binding {
+            label.setParagraphText("验证手机")
+        }
         return label
     }()
     
@@ -25,6 +35,9 @@ class DPhoneViewController: BaseViewController {
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.body
         label.setParagraphText("知识赋能早教")
+        if mode == .binding {
+            label.setParagraphText("为了您账户安全请验证手机")
+        }
         return label
     }()
     
@@ -87,7 +100,7 @@ class DPhoneViewController: BaseViewController {
         button.titleLabel?.font = UIConstants.Font.body
         button.setTitle("获取验证码", for: .normal)
         button.isEnabled = false
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(fetchCodeBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -96,6 +109,9 @@ class DPhoneViewController: BaseViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 18)
         button.setTitle("登录", for: .normal)
+        if mode == .binding {
+            button.setTitle("验证", for: .normal)
+        }
         button.backgroundColor = UIConstants.Color.disable
         button.layer.cornerRadius = 26
         button.addTarget(self, action: #selector(signInBtnAction), for: .touchUpInside)
@@ -122,14 +138,31 @@ class DPhoneViewController: BaseViewController {
     lazy fileprivate var agreementBtn: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = UIConstants.Font.foot
-        let text = "已阅读并同意氧育用户协议"
-        let attributedString = NSMutableAttributedString(string: text)
-        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot], range: NSRange(location: 0, length: text.count))
-        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育用户协议"))
-        button.setAttributedTitle(attributedString, for: .normal)
-        button.addTarget(self, action: #selector(agreementBtnAction), for: .touchUpInside)
+        if mode == .binding {
+            button.setTitleColor(UIConstants.Color.foot, for: .normal)
+            button.setTitle("因中华人民共和国网络安全法规定，请您完成手机验证", for: .normal)
+        } else {
+            let text = "已阅读并同意氧育用户协议"
+            let attributedString = NSMutableAttributedString(string: text)
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot], range: NSRange(location: 0, length: text.count))
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育用户协议"))
+            button.setAttributedTitle(attributedString, for: .normal)
+            button.addTarget(self, action: #selector(agreementBtnAction), for: .touchUpInside)
+        }
         return button
     }()
+    
+    // MARK: - ============= ViewController Cycle =============
+    
+    init(mode: DPhoneMode, wechatUID: String? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.mode = mode
+        viewModel.wechatUID = wechatUID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,12 +171,16 @@ class DPhoneViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        HUDService.sharedInstance.show(string: "两次输入密码不一致")
     }
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
         view.addSubviews([titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
+        
+        if mode == .binding && !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
+            separatorLabel.isHidden = true
+            wechatBtn.isHidden = true
+        }
         
         phoneView.addSubviews([phoneTextField, phoneLineImgView])
         codeView.addSubviews([codeTextField, fetchBtn, codeLineImgView])
@@ -199,7 +236,7 @@ class DPhoneViewController: BaseViewController {
             } else {
                 make.bottom.equalTo(view.snp.bottom).offset(-10)
             }
-            make.width.equalTo(180)
+//            make.width.equalTo(180)
             make.height.equalTo(12+20)
         }
         
@@ -242,17 +279,34 @@ class DPhoneViewController: BaseViewController {
     // MARK: - ============= Action =============
     
     @objc func fetchCodeBtnAction() {
-        
-    }
-    
-    @objc func signInBtnAction() {
-        viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (bool) in
+        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
             
         }
     }
     
+    @objc func signInBtnAction() {
+        viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (bool) in
+            if bool {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
     @objc func wechatBtnAction() {
-        
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+            if let response = response as? UMSocialAuthResponse {
+                HUDService.sharedInstance.show(string: "微信授权成功")
+                self.viewModel.signIn(wechatUID: response.uid, completion: { (bool) in
+                    if bool {
+                        self.dismiss(animated: true, completion: nil)
+                    } else {
+                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
+                    }
+                })
+            } else {
+                HUDService.sharedInstance.show(string: "微信授权失败")
+            }
+        })
     }
     
     @objc func agreementBtnAction() {

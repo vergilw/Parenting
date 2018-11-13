@@ -64,4 +64,8 @@ class BaseViewController: UIViewController {
     @objc func backBarItemAction() {
         navigationController?.popViewController(animated: true)
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }

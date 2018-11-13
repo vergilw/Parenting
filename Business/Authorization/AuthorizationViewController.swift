@@ -10,6 +10,31 @@ import UIKit
 
 class AuthorizationViewController: BaseViewController {
 
+    lazy fileprivate var viewModel = DAuthorizationViewModel()
+    
+    lazy fileprivate var bgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "authorization_homeBg")
+        imgView.contentMode = .scaleAspectFit
+        return imgView
+    }()
+    
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 40)
+        label.textColor = UIColor("#cb9370")
+//        label.text = "知识赋能早教"
+        label.numberOfLines = 0
+        let attributedString = NSMutableAttributedString(string: "知识赋能早教")
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.maximumLineHeight = 45
+        paragraph.minimumLineHeight = 45
+        attributedString.addAttributes([
+            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (45-label.font.lineHeight)/4+1.25, NSAttributedString.Key.font: label.font], range: NSRange(location: 0, length: attributedString.length))
+        label.attributedText = attributedString
+        return label
+    }()
+    
     lazy fileprivate var agreementBtn: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = UIConstants.Font.foot
@@ -142,19 +167,41 @@ class AuthorizationViewController: BaseViewController {
         shadowRadiusLabel.text = String(format: "半径 %.1f", phoneBtn.layer.shadowRadius)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
         
-        view.addSubviews([agreementBtn, phoneBtn, wechatBtn])
+        view.addSubviews([bgImgView, titleLabel, agreementBtn, phoneBtn, wechatBtn])
         
-        view.addSubviews([shadowOffsetHeightAddBtn, shadowOffsetHeightRemoveBtn, shadowOffsetLabel,
-                          shadowOpacityLabel, shadowOpacityAddBtn, shadowOpacityRemoveBtn,
-                          shadowRadiusLabel, shadowRadiusAddBtn, shadowRadiusRemoveBtn])
+//        view.addSubviews([shadowOffsetHeightAddBtn, shadowOffsetHeightRemoveBtn, shadowOffsetLabel,
+//                          shadowOpacityLabel, shadowOpacityAddBtn, shadowOpacityRemoveBtn,
+//                          shadowRadiusLabel, shadowRadiusAddBtn, shadowRadiusRemoveBtn])
+        
+        if !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
+            wechatBtn.isHidden = true
+        }
     }
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
-        
+        bgImgView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(wechatBtn)
+        }
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(46)
+            } else {
+                make.top.equalTo(46)
+            }
+            make.width.equalTo(40)
+        }
         agreementBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             if #available(iOS 11.0, *) {
@@ -181,7 +228,7 @@ class AuthorizationViewController: BaseViewController {
         }
         
         
-        
+        /*
         shadowOffsetHeightAddBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(50)
@@ -239,6 +286,7 @@ class AuthorizationViewController: BaseViewController {
             make.trailing.equalTo(shadowRadiusAddBtn.snp.leading).offset(-10)
             make.centerY.equalTo(shadowRadiusAddBtn)
         }
+ */
     }
     
     // MARK: - ============= Notification =============
@@ -256,11 +304,25 @@ class AuthorizationViewController: BaseViewController {
     // MARK: - ============= Action =============
     
     @objc func wechatBtnAction() {
-        
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+            if let response = response as? UMSocialAuthResponse {
+                HUDService.sharedInstance.show(string: "微信授权成功")
+                self.viewModel.signIn(wechatUID: response.uid, completion: { (bool) in
+                    if bool {
+                        self.dismiss(animated: true, completion: nil)
+                    } else {
+                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
+                    }
+                })
+            } else {
+                HUDService.sharedInstance.show(string: "微信授权失败")
+            }
+        })
+
     }
     
     @objc func phoneBtnAction() {
-        navigationController?.pushViewController(DPhoneViewController(), animated: true)
+        navigationController?.pushViewController(DPhoneViewController(mode: .signIn), animated: true)
     }
     
     @objc func agreementBtnAction() {

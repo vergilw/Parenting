@@ -32,6 +32,7 @@ target "parenting" do
     
     pod 'UMCCommon'
     pod 'UMCSecurityPlugins'
+    pod 'UMCShare/Social/ReducedWeChat'
 
 end
 

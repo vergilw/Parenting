@@ -16,12 +16,10 @@ class HUDService {
     
     func show(string: String) {
         let HUD = HUDView()
-        HUD.titleLabel.text = "两次输入密码不一致两次输入密码不一致两次输入密码不"
+        HUD.titleLabel.text = string
         UIApplication.shared.keyWindow?.addSubview(HUD)
         HUD.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.leading.equalTo(50)
-            make.trailing.lessThanOrEqualTo(-50)
         }
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
             HUD.removeFromSuperview()
@@ -38,6 +36,7 @@ fileprivate class HUDView: UIView {
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
         label.textAlignment = .center
+        label.preferredMaxLayoutWidth = UIScreenWidth-100
         return label
     }()
     
@@ -53,10 +52,11 @@ fileprivate class HUDView: UIView {
         
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(26)
-            make.trailing.lessThanOrEqualTo(-26)
-            make.top.equalTo(14)
-            make.bottom.lessThanOrEqualTo(-14)
+//            make.leading.equalTo(26)
+//            make.trailing.lessThanOrEqualTo(-26)
+//            make.top.equalTo(14)
+//            make.bottom.lessThanOrEqualTo(-14)
+            make.center.equalToSuperview()
         }
     }
     

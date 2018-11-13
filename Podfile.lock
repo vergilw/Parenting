@@ -28,6 +28,11 @@ PODS:
   - "UITextView+Placeholder (1.2.1)"
   - UMCCommon (1.5.2)
   - UMCSecurityPlugins (1.0.6)
+  - UMCShare/Core (6.9.4):
+    - UMCCommon
+  - UMCShare/Social/ReducedWeChat (6.9.4):
+    - UMCCommon
+    - UMCShare/Core
   - YYKit (1.0.9):
     - YYKit/no-arc (= 1.0.9)
   - YYKit/no-arc (1.0.9)
@@ -53,6 +58,7 @@ DEPENDENCIES:
   - "UITextView+Placeholder"
   - UMCCommon
   - UMCSecurityPlugins
+  - UMCShare/Social/ReducedWeChat
   - YYKit
 
 SPEC REPOS:
@@ -79,6 +85,7 @@ SPEC REPOS:
     - "UITextView+Placeholder"
     - UMCCommon
     - UMCSecurityPlugins
+    - UMCShare
     - YYKit
 
 SPEC CHECKSUMS:
@@ -104,8 +111,9 @@ SPEC CHECKSUMS:
   "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
   UMCCommon: 4392868ac47ff1b101663106bb114ba616fabbad
   UMCSecurityPlugins: 0831a08f3988f3cea9f1d3a7626cd9bee4fef150
+  UMCShare: aa233aecad67979930fe43f3a2f676023b669439
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 5a99ed6baf432ce9fb17a54d64fe531fe00d1259
+PODFILE CHECKSUM: 6de80fdda38d63f799ff77f01c2c4b118cc4c45e
 
 COCOAPODS: 1.5.3

@@ -139,7 +139,11 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
+//        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
+        
+        //FIXME: debug
+        let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+        present(authorizationNavigationController, animated: true, completion: nil)
     }
     
 }
