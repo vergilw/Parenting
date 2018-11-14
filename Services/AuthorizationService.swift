@@ -43,7 +43,7 @@ class AuthorizationService {
     }
     
     @objc func signOutDidSuccess() {
-        user = nil
+        
     }
     
     func isSignIn() -> Bool {
@@ -52,5 +52,10 @@ class AuthorizationService {
     
     func cacheSignInInfo(model: UserModel) {
         user = model
+    }
+    
+    func signOut() {
+        user = nil
+        NotificationCenter.default.post(name: Notification.Authorization.signOutDidSuccess, object: nil)
     }
 }

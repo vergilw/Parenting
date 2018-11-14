@@ -19,6 +19,9 @@
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
 		130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8B219BC26B004E1DD3 /* ActionButton.swift */; };
 		130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */; };
+		130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */; };
+		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
+		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
 		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
@@ -82,6 +85,9 @@
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		130F1C8B219BC26B004E1DD3 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
+		130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopUpItemCell.swift; sourceTree = "<group>"; };
+		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
+		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
 		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
@@ -152,9 +158,26 @@
 		130F1C8D219BF8CB004E1DD3 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
+				130F1C90219C0E5E004E1DD3 /* Views */,
 				130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */,
 			);
 			path = Payment;
+			sourceTree = "<group>";
+		};
+		130F1C90219C0E5E004E1DD3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		130F1C93219C1512004E1DD3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				130F1C94219C1549004E1DD3 /* MeItemCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		13113F632199131300B6E0FE /* Authorization */ = {
@@ -267,6 +290,7 @@
 				1320C372217EB76600902A5C /* Main.storyboard */,
 				13144B26218077F4002B4281 /* Course.xcassets */,
 				13113F6621994CD900B6E0FE /* Authorization.xcassets */,
+				130F1C96219C174E004E1DD3 /* Me.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -333,6 +357,7 @@
 		1320C398217EBEB000902A5C /* Me */ = {
 			isa = PBXGroup;
 			children = (
+				130F1C93219C1512004E1DD3 /* Views */,
 				1320C39B217EBFEA00902A5C /* DMeViewController.swift */,
 				130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */,
 			);
@@ -424,6 +449,7 @@
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
+				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
 				13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */,
 				1320C37C217EB76600902A5C /* Main.storyboard in Resources */,
@@ -537,6 +563,7 @@
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
+				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				130EF26B219A75C3008F61FA /* UserModel.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
@@ -562,6 +589,7 @@
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
+				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,

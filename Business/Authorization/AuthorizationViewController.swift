@@ -158,6 +158,8 @@ class AuthorizationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "登录"
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -170,11 +172,25 @@ class AuthorizationViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        if presentingViewController != nil {
+            let backBtn: UIButton = {
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12.5+30, height: 44)))
+                button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysOriginal), for: .normal)
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15-4, bottom: 0, right: 15+4)
+                button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
+                return button
+            }()
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
+//            navigationItem.leftMargin = 0
+        } else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
+        
     }
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
+        
         
         view.addSubviews([bgImgView, titleLabel, agreementBtn, phoneBtn, wechatBtn])
         
@@ -302,6 +318,10 @@ class AuthorizationViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    
+    @objc func dismissBtnAction() {
+        dismiss(animated: true, completion: nil)
+    }
     
     @objc func wechatBtnAction() {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in

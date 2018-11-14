@@ -53,6 +53,8 @@ class DHomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "氧育"
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -142,8 +144,10 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
 //        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
         
         //FIXME: debug
-        let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-        present(authorizationNavigationController, animated: true, completion: nil)
+//        let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//        present(authorizationNavigationController, animated: true, completion: nil)
+        
+        navigationController?.pushViewController(DPaymentViewController(), animated: true)
     }
     
 }
