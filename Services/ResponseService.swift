@@ -31,7 +31,7 @@ class ResponseService {
                         if let code = JSON["code"] as? Int, code == 200 {
                             completion(JSON)
                         } else {
-                            HUDService.sharedInstance.show(string: JSON["messages"] as! String)
+                            HUDService.sharedInstance.show(string: JSON["message"] as! String)
                             completion(nil)
                         }
                         
@@ -43,7 +43,7 @@ class ResponseService {
                 } else {
                     do {
                         let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]
-                        HUDService.sharedInstance.show(string: JSON?["messages"] as! String)
+                        HUDService.sharedInstance.show(string: JSON?["message"] as! String)
                         completion(nil)
                     } catch {
                         HUDService.sharedInstance.show(string: "服务端错误")

@@ -49,6 +49,9 @@ class DPhoneViewController: BaseViewController {
     
     lazy fileprivate var phoneTextField: UITextField = {
         let textField = UITextField()
+        if #available(iOS 11, *) {
+            textField.textContentType = .telephoneNumber
+        }
         textField.delegate = self
         textField.returnKeyType = .next
         textField.keyboardType = .phonePad
@@ -75,6 +78,9 @@ class DPhoneViewController: BaseViewController {
     
     lazy fileprivate var codeTextField: UITextField = {
         let textField = UITextField()
+        if #available(iOS 12, *) {
+            textField.textContentType = .oneTimeCode
+        }
         textField.delegate = self
         textField.returnKeyType = .done
         textField.keyboardType = .numberPad
@@ -93,8 +99,8 @@ class DPhoneViewController: BaseViewController {
         return imgView
     }()
     
-    lazy fileprivate var fetchBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var fetchBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.setTitleColor(UIConstants.Color.disable, for: .disabled)
         button.titleLabel?.font = UIConstants.Font.body
@@ -104,8 +110,8 @@ class DPhoneViewController: BaseViewController {
         return button
     }()
     
-    lazy fileprivate var actionBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var actionBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 18)
         button.setTitle("登录", for: .normal)
@@ -279,13 +285,17 @@ class DPhoneViewController: BaseViewController {
     // MARK: - ============= Action =============
     
     @objc func fetchCodeBtnAction() {
+        fetchBtn.startAnimating()
         viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
-            
+            self.fetchBtn.stopAnimating()
+            self.codeTextField.becomeFirstResponder()
         }
     }
     
     @objc func signInBtnAction() {
+        actionBtn.startAnimating()
         viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (bool) in
+            self.actionBtn.stopAnimating()
             if bool {
                 self.dismiss(animated: true, completion: nil)
             }
@@ -296,7 +306,7 @@ class DPhoneViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(wechatUID: response.uid, completion: { (bool) in
+                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (bool) in
                     if bool {
                         self.dismiss(animated: true, completion: nil)
                     } else {
@@ -331,7 +341,16 @@ extension DPhoneViewController: UITextFieldDelegate {
 //        guard textField == phoneTextField else { return true }
         guard let text = textField.text else { return true }
         
-        let resultText = NSString(string: text).replacingCharacters(in: range, with: string)
+        //auto fill phone
+        var autoFillString = string
+        if textField == phoneTextField && string.count > 1 {
+            autoFillString = string.trimmingCharacters(in: .whitespaces)
+            if autoFillString.hasPrefix("+86") {
+                autoFillString.removeFirst(3)
+            }
+        }
+        
+        let resultText = NSString(string: text).replacingCharacters(in: range, with: autoFillString)
         
         if textField == phoneTextField {
             if resultText.isPhone() {
@@ -356,6 +375,17 @@ extension DPhoneViewController: UITextFieldDelegate {
             }
         }
         
-        return true
+        if autoFillString == string {
+            if textField == phoneTextField && resultText.isPhone() {
+                textField.text = resultText
+                codeTextField.becomeFirstResponder()
+            }
+            return true
+        }
+        textField.text = autoFillString
+        if textField == phoneTextField && autoFillString.isPhone() {
+            codeTextField.becomeFirstResponder()
+        }
+        return false
     }
 }

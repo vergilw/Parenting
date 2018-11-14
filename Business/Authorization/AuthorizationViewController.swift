@@ -307,7 +307,7 @@ class AuthorizationViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(wechatUID: response.uid, completion: { (bool) in
+                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (bool) in
                     if bool {
                         self.dismiss(animated: true, completion: nil)
                     } else {

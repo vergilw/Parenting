@@ -17,7 +17,8 @@
 @import UITableView_FDTemplateLayoutCell;
 @import UITextView_Placeholder;
 
-#import <UMShare/UMShare.h>
 #import <UMCommon/UMCommon.h>
+#import <UMShare/UMShare.h>
+#import <Bugly/Bugly.h>
 
 #endif /* BridgeHeader_h */

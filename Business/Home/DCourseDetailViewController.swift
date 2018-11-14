@@ -291,7 +291,9 @@ class DCourseDetailViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        HUDService.sharedInstance.showFetchingView(target: view)
         viewModel.fetchCourse { (bool) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
             self.reload()
         }
         

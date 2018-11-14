@@ -25,6 +25,22 @@ class HUDService {
             HUD.removeFromSuperview()
         }
     }
+    
+    func showFetchingView(target view: UIView) {
+        let HUD = FetchView()
+        view.addSubview(HUD)
+        HUD.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
+    }
+    
+    func hideFetchingView(target view: UIView) {
+        if let subview = view.subviews.first(where: { (subview) -> Bool in
+            return subview.isKind(of: FetchView.self)
+        }) {
+            subview.removeFromSuperview()
+        }
+    }
 }
 
 fileprivate class HUDView: UIView {
@@ -68,5 +84,41 @@ fileprivate class HUDView: UIView {
         let size = NSString(string: titleLabel.text!).boundingRect(with: CGSize(width: UIScreenWidth-100, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : titleLabel.font], context: nil).size
         layer.cornerRadius = (size.height+28)/2
         return CGSize(width: size.width+52, height: size.height+28)
+    }
+}
+
+
+fileprivate class FetchView: UIView {
+    
+    lazy fileprivate var animationView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    lazy fileprivate var imgView: YYAnimatedImageView = {
+        let view = YYAnimatedImageView(image: YYImage(named: "public_audioAnimationItem"))
+        return view
+    }()
+    
+    init() {
+        super.init(frame: .zero)
+        
+        backgroundColor = .white
+        
+        addSubview(animationView)
+        animationView.addSubview(imgView)
+        
+        animationView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 100, height: 100))
+        }
+        imgView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
 }

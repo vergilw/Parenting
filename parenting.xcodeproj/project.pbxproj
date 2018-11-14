@@ -17,6 +17,8 @@
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
+		130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8B219BC26B004E1DD3 /* ActionButton.swift */; };
+		130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
 		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
@@ -78,6 +80,8 @@
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		130F1C8B219BC26B004E1DD3 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
 		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
@@ -145,6 +149,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		130F1C8D219BF8CB004E1DD3 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
 		13113F632199131300B6E0FE /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,6 +188,7 @@
 				13144B2421806ED9002B4281 /* SeparatorView.swift */,
 				131160B82182E54C0000F105 /* PlaceholderTableViewCell.swift */,
 				130D46002189615B00CB4763 /* ParagraphLabel.swift */,
+				130F1C8B219BC26B004E1DD3 /* ActionButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -292,6 +305,7 @@
 		1320C377217EB76600902A5C /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				130F1C8D219BF8CB004E1DD3 /* Payment */,
 				13113F632199131300B6E0FE /* Authorization */,
 				13144B2321806E71002B4281 /* Common */,
 				1320C397217EBEA800902A5C /* Home */,
@@ -513,6 +527,7 @@
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
+				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
@@ -539,6 +554,7 @@
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
+				130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,

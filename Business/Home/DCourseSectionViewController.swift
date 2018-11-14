@@ -245,6 +245,7 @@ class DCourseSectionViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        HUDService.sharedInstance.showFetchingView(target: view)
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         viewModel.fetchCourseSection { (bool) in
@@ -276,6 +277,7 @@ class DCourseSectionViewController: BaseViewController {
         }
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
             let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
             if manager?.isReachableOnEthernetOrWiFi ?? false {
                 self.preparePlayAudio(autoPlay: false)

@@ -75,6 +75,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupThirdPartyPlatforms() {
         UMConfigure.initWithAppkey("5bd6ab53b465f5473b0000e7", channel: "App Store")
         UMSocialManager.default()?.setPlaform(.wechatSession, appKey: "wxc7c60047a9c75018", appSecret: "c5168f183fd20a038df632c1d6d4157e", redirectURL: "http://mobile.umeng.com/social")
+        #if DEBUG
+        Bugly.start(withAppId: "87773979f0", developmentDevice: true, config: nil)
+        #else
+        Bugly.start(withAppId: "87773979f0")
+        #endif
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
