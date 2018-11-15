@@ -8,17 +8,18 @@
 
 import Foundation
 
-fileprivate let formatter: DateFormatter = {
-    $0.calendar = Calendar(identifier: .iso8601)
-    $0.locale = Locale(identifier: "en_US_POSIX")
-    $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-    return $0
-}(DateFormatter())
 
 extension Date {
     
+    static fileprivate let formatter: DateFormatter = {
+        $0.calendar = Calendar(identifier: .iso8601)
+        $0.locale = Locale(identifier: "en_US_POSIX")
+        $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return $0
+    }(DateFormatter())
+    
     init?(iso8601: String) {
-        if let date = formatter.date(from: iso8601) {
+        if let date = Date.formatter.date(from: iso8601) {
             self.init(timeInterval: 0, since: date)
         } else {
             return nil

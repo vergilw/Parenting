@@ -66,7 +66,7 @@ class DMeViewController: BaseViewController {
         
         let actionBtn: UIButton = {
             let button = UIButton()
-            button.addTarget(self, action: #selector(signOutBtnAction), for: .touchUpInside)
+            button.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -74,6 +74,7 @@ class DMeViewController: BaseViewController {
             let button = UIButton()
             button.clipsToBounds = true
             button.layer.cornerRadius = 35
+            button.imageView?.contentMode = .scaleAspectFill
             button.setImage(UIImage(named: "public_avatarPlaceholder")?.withRenderingMode(.alwaysOriginal), for: .normal)
             button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
             return button
@@ -102,7 +103,7 @@ class DMeViewController: BaseViewController {
         
         if AuthorizationService.sharedInstance.isSignIn() {
             avatarBtn.isUserInteractionEnabled = true
-            nameLabel.text = AuthorizationService.sharedInstance.user?.name
+            nameLabel.text = AuthorizationService.sharedInstance.user?.name ?? "名字"
             if let avatarURL = AuthorizationService.sharedInstance.user?.avatar_url {
                 avatarBtn.kf.setImage(with: URL(string: avatarURL), for: .normal)
             }
@@ -221,6 +222,10 @@ class DMeViewController: BaseViewController {
     
     @objc func avatarBtnAction() {
         
+    }
+    
+    @objc func editBtnAction() {
+        navigationController?.pushViewController(DMeEditViewController(), animated: true)
     }
 }
 

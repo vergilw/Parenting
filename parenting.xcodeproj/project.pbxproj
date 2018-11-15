@@ -50,6 +50,7 @@
 		13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B2421806ED9002B4281 /* SeparatorView.swift */; };
 		13144B27218077F4002B4281 /* Course.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13144B26218077F4002B4281 /* Course.xcassets */; };
 		131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131CF01421953E5100CA7941 /* AppCacheService.swift */; };
+		131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28A219D0DE500B55210 /* DMeEditViewController.swift */; };
 		1320C378217EB76600902A5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C36B217EB76600902A5C /* AppDelegate.swift */; };
 		1320C37A217EB76600902A5C /* Public.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1320C36F217EB76600902A5C /* Public.xcassets */; };
 		1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C370217EB76600902A5C /* LaunchScreen.storyboard */; };
@@ -115,6 +116,7 @@
 		13144B2421806ED9002B4281 /* SeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		13144B26218077F4002B4281 /* Course.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Course.xcassets; sourceTree = "<group>"; };
 		131CF01421953E5100CA7941 /* AppCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCacheService.swift; sourceTree = "<group>"; };
+		131FB28A219D0DE500B55210 /* DMeEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeEditViewController.swift; sourceTree = "<group>"; };
 		1320C354217EB66E00902A5C /* parenting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parenting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1320C36B217EB76600902A5C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1320C36C217EB76600902A5C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 				130F1C93219C1512004E1DD3 /* Views */,
 				1320C39B217EBFEA00902A5C /* DMeViewController.swift */,
 				130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */,
+				131FB28A219D0DE500B55210 /* DMeEditViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
+				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
 				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,

@@ -293,6 +293,8 @@ class DPhoneViewController: BaseViewController {
     }
     
     @objc func signInBtnAction() {
+        view.endEditing(true)
+        
         actionBtn.startAnimating()
         viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (bool) in
             self.actionBtn.stopAnimating()
