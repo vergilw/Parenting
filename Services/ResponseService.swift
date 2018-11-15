@@ -31,7 +31,7 @@ class ResponseService {
                         if let code = JSON["code"] as? Int {
                             completion(code, JSON)
                         } else {
-                            completion(0, nil)
+                            completion(0, JSON)
                         }
                         
                     } catch {

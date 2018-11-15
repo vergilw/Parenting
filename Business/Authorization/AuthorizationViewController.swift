@@ -340,9 +340,7 @@ class AuthorizationViewController: BaseViewController {
                     if code == 10002 {
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
                     } else if code == 10001 {
-                        if self.presentingViewController != nil {
-                            self.dismiss(animated: true, completion: nil)
-                        }
+                        self.dismiss(animated: true, completion: nil)
                     }
                 })
             } else {

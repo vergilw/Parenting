@@ -13,8 +13,9 @@ let AuthorizationProvider = MoyaProvider<AuthorizationAPI>()
 
 enum AuthorizationAPI {
     case fetchCode(phone: Int)
-    case signIn(phone: String, code: String, wechatUID: String?)
+    case signIn(phone: String, code: String)
     case signInWithWechat(openID: String, accessToken: String)
+    case signUpWithWechat(openID: String, phone: String, code: String)
 }
 
 extension AuthorizationAPI: TargetType {
@@ -31,6 +32,8 @@ extension AuthorizationAPI: TargetType {
             return "/app/login"
         case .signInWithWechat:
             return "/app/auth"
+        case .signUpWithWechat:
+            return "/app/auth/bind_mobile"
         }
     }
     
@@ -41,6 +44,8 @@ extension AuthorizationAPI: TargetType {
         case .signIn:
             return .post
         case .signInWithWechat:
+            return .post
+        case .signUpWithWechat:
             return .post
         }
     }
@@ -54,15 +59,14 @@ extension AuthorizationAPI: TargetType {
         case let .fetchCode(phone):
             return .requestParameters(parameters: ["mobile":phone, "device":"app"], encoding: URLEncoding.default)
 
-        case let .signIn(phone, code, wechatUID):
-            var parameters = ["account":phone, "token":code]
-            if wechatUID != nil {
-                parameters["openid"] = wechatUID
-            }
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .signIn(phone, code):
+            return .requestParameters(parameters: ["account":phone, "token":code], encoding: URLEncoding.default)
             
         case let .signInWithWechat(openID, accessToken):
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken], encoding: URLEncoding.default)
+            
+        case let .signUpWithWechat(openID, phone, code):
+            return .requestParameters(parameters: ["uid":openID, "mobile":phone, "token":code], encoding: URLEncoding.default)
         }
     }
     

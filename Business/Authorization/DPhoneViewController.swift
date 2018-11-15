@@ -298,13 +298,26 @@ class DPhoneViewController: BaseViewController {
     @objc func signInBtnAction() {
         view.endEditing(true)
         
-        actionBtn.startAnimating()
-        viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
-            self.actionBtn.stopAnimating()
-            if code == 0 {
-                self.dismiss(animated: true, completion: nil)
+        if mode == .signIn {
+            actionBtn.startAnimating()
+            viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
+                self.actionBtn.stopAnimating()
+                if code != -1 {
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+            
+        } else {
+            guard let openID = viewModel.wechatUID else { return }
+            actionBtn.startAnimating()
+            viewModel.signUp(openID: openID, phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
+                self.actionBtn.stopAnimating()
+                if code != -1 {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
         }
+        
     }
     
     @objc func wechatBtnAction() {
@@ -315,9 +328,7 @@ class DPhoneViewController: BaseViewController {
                     if code == 10002 {
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
                     } else if code == 10001 {
-                        if self.presentingViewController != nil {
-                            self.dismiss(animated: true, completion: nil)
-                        }
+                        self.dismiss(animated: true, completion: nil)
                     }
                 })
             } else {
