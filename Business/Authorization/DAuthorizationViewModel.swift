@@ -13,33 +13,32 @@ class DAuthorizationViewModel {
     
     var wechatUID: String?
     
-    func fetchCode(phone: Int, completion: @escaping (Bool)->Void) {
-        AuthorizationProvider.request(.fetchCode(phone: phone), completion: ResponseService.sharedInstance.response(completion: { JSON in
-            completion(false)
+    func fetchCode(phone: Int, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.fetchCode(phone: phone), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            completion(code)
         }))
     }
     
-    func signIn(phone: String, code: String, completion: @escaping (Bool)->Void) {
-        AuthorizationProvider.request(.signIn(phone: phone, code: code, wechatUID: wechatUID), completion: ResponseService.sharedInstance.response(completion: { JSON in
+    func signIn(phone: String, code: String, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.signIn(phone: phone, code: code, wechatUID: wechatUID), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
                 NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
-                completion(true)
-            } else {
-                completion(false)
             }
+            completion(code)
         }))
     }
     
-    func signIn(openID: String, accessToken: String, completion: @escaping (Bool)->Void) {
-        AuthorizationProvider.request(.signInWithWechat(openID: openID, accessToken: accessToken), completion: ResponseService.sharedInstance.response(completion: { JSON in
-            if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
-                AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
-                NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
-                completion(true)
-            } else {
-                completion(false)
+    func signIn(openID: String, accessToken: String, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.signInWithWechat(openID: openID, accessToken: accessToken), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            if code == 10001 {
+                if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
+                    AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
+                    NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
+                }
             }
+            completion(code)
         }))
     }
 }

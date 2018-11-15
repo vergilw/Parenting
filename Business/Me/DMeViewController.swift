@@ -14,6 +14,8 @@ class DMeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "个人中心"
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -261,5 +263,17 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        
+        if indexPath.row == 0 {
+        } else if indexPath.row == 1 {
+            navigationController?.pushViewController(DPaymentViewController(), animated: true)
+        } else if indexPath.row == 2 {
+            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
+        } else if indexPath.row == 3 {
+            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
+        } else if indexPath.row == 4 {
+            
+        } else if indexPath.row == 5 {
+        }
     }
 }

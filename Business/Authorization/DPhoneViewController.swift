@@ -183,7 +183,7 @@ class DPhoneViewController: BaseViewController {
     func initContentView() {
         view.addSubviews([titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
         
-        if mode == .binding && !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
+        if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {
             separatorLabel.isHidden = true
             wechatBtn.isHidden = true
         }
@@ -208,19 +208,22 @@ class DPhoneViewController: BaseViewController {
         phoneView.snp.makeConstraints { make in
             make.leading.equalTo(40)
             make.trailing.equalTo(-40)
-            make.top.equalTo(subtitleLabel.snp.bottom).offset(130)
+//            make.top.equalTo(subtitleLabel.snp.bottom).offset(130)
+            make.bottom.equalTo(codeView.snp.top).offset(-35)
             make.height.equalTo(32)
         }
         codeView.snp.makeConstraints { make in
             make.leading.equalTo(40)
             make.trailing.equalTo(-40)
-            make.top.equalTo(phoneView.snp.bottom).offset(35)
+//            make.top.equalTo(phoneView.snp.bottom).offset(35)
+            make.bottom.equalTo(actionBtn.snp.top).offset(-26)
             make.height.equalTo(32)
         }
         actionBtn.snp.makeConstraints { make in
             make.leading.equalTo(48)
             make.trailing.equalTo(-48)
-            make.top.equalTo(codeView.snp.bottom).offset(27)
+//            make.top.equalTo(codeView.snp.bottom).offset(27)
+            make.bottom.equalTo(separatorLabel.snp.top).offset(-80)
             make.height.equalTo(52)
         }
         wechatBtn.snp.makeConstraints { make in
@@ -296,9 +299,9 @@ class DPhoneViewController: BaseViewController {
         view.endEditing(true)
         
         actionBtn.startAnimating()
-        viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (bool) in
+        viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
             self.actionBtn.stopAnimating()
-            if bool {
+            if code == 0 {
                 self.dismiss(animated: true, completion: nil)
             }
         }
@@ -308,11 +311,13 @@ class DPhoneViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (bool) in
-                    if bool {
-                        self.dismiss(animated: true, completion: nil)
-                    } else {
+                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                    if code == 10002 {
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
+                    } else if code == 10001 {
+                        if self.presentingViewController != nil {
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     }
                 })
             } else {

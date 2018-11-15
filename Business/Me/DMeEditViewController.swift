@@ -121,6 +121,12 @@ class DMeEditViewController: BaseViewController {
         scrollView.addSubviews([avatarBtn, nameTitleLabel, nameTextField, wechatTitleLabel, wechatBtn, phoneTitleLabel, phoneTextField])
     }
     
+    func initNavigationItem() {
+        let barBtnItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(nameSaveBtnAction))
+        barBtnItem.tintColor = UIConstants.Color.primaryGreen
+        navigationItem.rightBarButtonItem = barBtnItem
+    }
+    
     // MARK: - ============= Constraints =============
     func initConstraints() {
         scrollView.snp.makeConstraints { make in
@@ -186,7 +192,13 @@ class DMeEditViewController: BaseViewController {
         }
     }
     
+    
+    
     // MARK: - ============= Action =============
+    
+    @objc func nameSaveBtnAction() {
+        
+    }
 
     @objc func avatarBtnAction() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -217,6 +229,10 @@ class DMeEditViewController: BaseViewController {
 
 
 extension DMeEditViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        initNavigationItem()
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         guard let _ = textField.text else { return true }
@@ -232,6 +248,7 @@ extension DMeEditViewController: UITextFieldDelegate {
         }
     }
 }
+
 
 extension DMeEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     

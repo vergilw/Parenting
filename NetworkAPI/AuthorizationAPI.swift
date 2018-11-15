@@ -57,7 +57,7 @@ extension AuthorizationAPI: TargetType {
         case let .signIn(phone, code, wechatUID):
             var parameters = ["account":phone, "token":code]
             if wechatUID != nil {
-                parameters["uid"] = wechatUID
+                parameters["openid"] = wechatUID
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
             

@@ -38,4 +38,13 @@ extension UIView {
         line.lineWidth = 0.5
         layer.addSublayer(line)
     }
+    
+    public func drawRoundBg(roundedRect: CGRect, cornerRadius: CGFloat, color: UIColor = .white) {
+        let sublayer = CAShapeLayer()
+        let circlePath = UIBezierPath(roundedRect: roundedRect, cornerRadius: cornerRadius)
+        sublayer.path = circlePath.cgPath
+        sublayer.fillColor = color.cgColor
+        layer.addSublayer(sublayer)
+    }
+
 }

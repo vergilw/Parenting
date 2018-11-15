@@ -172,20 +172,7 @@ class AuthorizationViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if presentingViewController != nil {
-            let backBtn: UIButton = {
-                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12.5+30, height: 44)))
-                button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysOriginal), for: .normal)
-                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15-4, bottom: 0, right: 15+4)
-                button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
-                return button
-            }()
-            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
-//            navigationItem.leftMargin = 0
-        } else {
-            navigationController?.setNavigationBarHidden(true, animated: true)
-        }
-        
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     // MARK: - ============= Initialize View =============
@@ -197,6 +184,28 @@ class AuthorizationViewController: BaseViewController {
 //        view.addSubviews([shadowOffsetHeightAddBtn, shadowOffsetHeightRemoveBtn, shadowOffsetLabel,
 //                          shadowOpacityLabel, shadowOpacityAddBtn, shadowOpacityRemoveBtn,
 //                          shadowRadiusLabel, shadowRadiusAddBtn, shadowRadiusRemoveBtn])
+        
+        if presentingViewController != nil {
+            let backBtn: UIButton = {
+                let img = UIImage(named: "public_dismissBorderBtn")!.withRenderingMode(.alwaysOriginal)
+                let button = UIButton()
+                button.setImage(img, for: .normal)
+                button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
+                return button
+            }()
+            view.addSubview(backBtn)
+            backBtn.snp.makeConstraints { make in
+                make.leading.equalToSuperview()
+                if #available(iOS 11, *) {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                } else {
+                    make.top.equalToSuperview()
+                }
+                make.width.equalTo(UIConstants.Margin.leading*2+backBtn.imageView!.image!.size.width)
+                make.height.equalTo(50)
+            }
+        }
+        
         
         if !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
             wechatBtn.isHidden = true
@@ -327,11 +336,13 @@ class AuthorizationViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (bool) in
-                    if bool {
-                        self.dismiss(animated: true, completion: nil)
-                    } else {
-                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
+                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                    if code == 10002 {
+                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
+                    } else if code == 10001 {
+                        if self.presentingViewController != nil {
+                            self.dismiss(animated: true, completion: nil)
+                        }
                     }
                 })
             } else {
