@@ -266,6 +266,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         if indexPath.row == 0 {
+            navigationController?.pushViewController(DOrdersViewController(), animated: true)
         } else if indexPath.row == 1 {
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
         } else if indexPath.row == 2 {

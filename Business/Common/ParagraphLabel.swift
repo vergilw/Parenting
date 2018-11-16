@@ -63,13 +63,13 @@ class ParagraphLabel: UILabel {
         }
         paragraph.maximumLineHeight = lineHeight
         paragraph.minimumLineHeight = lineHeight
-        
+        paragraph.alignment = textAlignment
         attributedString.addAttributes([
             NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-font.lineHeight)/4, NSAttributedString.Key.font: font], range: NSRange(location: 0, length: attributedString.length))
         attributedText = attributedString
         
         let textHeight = attributedText!.boundingRect(with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size.height
-        if textHeight >= lineHeight*2 {
+        if textHeight >= lineHeight*2 && numberOfLines != 1 {
             
             if font == UIConstants.Font.h1 {
 //            paragraph.lineSpacing = UIConstants.LineSpacing.h1 - (font.lineHeight - font.pointSize)

@@ -23,6 +23,10 @@
 		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
+		1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8DE219EA184004073FF /* DPurchaseViewController.swift */; };
+		1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E0219EB06B004073FF /* DOrdersViewController.swift */; };
+		1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E2219EBB42004073FF /* OrderCell.swift */; };
+		1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1310F8E4219EBEE9004073FF /* Payment.xcassets */; };
 		1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201421816CFE0088F5BF /* CourseAPI.swift */; };
 		1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C381217EB91100902A5C /* NetworkConstants.swift */; };
 		1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1311201721816F180088F5BF /* DCourseDetailViewModel.swift */; };
@@ -93,6 +97,10 @@
 		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
+		1310F8DE219EA184004073FF /* DPurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPurchaseViewController.swift; sourceTree = "<group>"; };
+		1310F8E0219EB06B004073FF /* DOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DOrdersViewController.swift; sourceTree = "<group>"; };
+		1310F8E2219EBB42004073FF /* OrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCell.swift; sourceTree = "<group>"; };
+		1310F8E4219EBEE9004073FF /* Payment.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Payment.xcassets; sourceTree = "<group>"; };
 		1311201421816CFE0088F5BF /* CourseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseAPI.swift; sourceTree = "<group>"; };
 		1311201721816F180088F5BF /* DCourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewModel.swift; sourceTree = "<group>"; };
 		13112019218170410088F5BF /* CourseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseModel.swift; sourceTree = "<group>"; };
@@ -168,6 +176,8 @@
 			children = (
 				130F1C90219C0E5E004E1DD3 /* Views */,
 				130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */,
+				1310F8DE219EA184004073FF /* DPurchaseViewController.swift */,
+				1310F8E0219EB06B004073FF /* DOrdersViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -176,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */,
+				1310F8E2219EBB42004073FF /* OrderCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -300,6 +311,7 @@
 				13144B26218077F4002B4281 /* Course.xcassets */,
 				13113F6621994CD900B6E0FE /* Authorization.xcassets */,
 				130F1C96219C174E004E1DD3 /* Me.xcassets */,
+				1310F8E4219EBEE9004073FF /* Payment.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -460,6 +472,7 @@
 			files = (
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
+				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
@@ -568,6 +581,7 @@
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
@@ -594,6 +608,8 @@
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
+				1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */,
+				1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */,
 				131FB295219D785600B55210 /* DMeFavoritesViewController.swift in Sources */,
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
