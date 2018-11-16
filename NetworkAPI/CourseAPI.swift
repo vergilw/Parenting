@@ -91,6 +91,9 @@ extension CourseAPI: TargetType {
     }
     
     var headers: [String: String]? {
+        if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
+            return ["Auth-Token": token]
+        }
         return nil
     }
 }

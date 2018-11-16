@@ -52,6 +52,7 @@ class AuthorizationService {
     
     func cacheSignInInfo(model: UserModel) {
         user = model
+        NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
     }
     
     func signOut() {

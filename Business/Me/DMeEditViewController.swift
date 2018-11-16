@@ -13,6 +13,8 @@ import MobileCoreServices
 
 class DMeEditViewController: BaseViewController {
 
+    lazy fileprivate var viewModel = DAuthorizationViewModel()
+
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         if #available(iOS 11, *) {
@@ -72,7 +74,7 @@ class DMeEditViewController: BaseViewController {
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 17)
         button.setTitle("未绑定微信，点击绑定", for: .normal)
         button.contentHorizontalAlignment = .left
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(bindWechatBtnAction), for: .touchUpInside)
         button.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
         return button
     }()
@@ -188,7 +190,11 @@ class DMeEditViewController: BaseViewController {
             if let mobile = model.mobile {
                 phoneTextField.text = String(mobile)
             }
-//            if model.
+            if let model = AuthorizationService.sharedInstance.user, let wechat = model.wechat_name {
+                wechatBtn.setTitle(wechat, for: .normal)
+            } else {
+                wechatBtn.setTitle("未绑定微信，点击绑定", for: .normal)
+            }
         }
     }
     
@@ -224,6 +230,26 @@ class DMeEditViewController: BaseViewController {
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func bindWechatBtnAction() {
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+            if let response = response as? UMSocialAuthResponse {
+                HUDService.sharedInstance.show(string: "微信授权成功")
+                self.viewModel.bindWechat(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                    if code != -1 {
+                        HUDService.sharedInstance.show(string: "微信绑定成功")
+                        
+                        self.reload()
+                        
+                    } else {
+                        HUDService.sharedInstance.show(string: "微信绑定失败")
+                    }
+                })
+            } else {
+                HUDService.sharedInstance.show(string: "微信授权失败")
+            }
+        })
     }
 }
 

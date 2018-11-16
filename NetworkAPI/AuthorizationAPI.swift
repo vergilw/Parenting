@@ -16,6 +16,7 @@ enum AuthorizationAPI {
     case signIn(phone: String, code: String)
     case signInWithWechat(openID: String, accessToken: String)
     case signUpWithWechat(openID: String, phone: String, code: String)
+    case bindWechat(parameters: [String: Any])
 }
 
 extension AuthorizationAPI: TargetType {
@@ -31,9 +32,11 @@ extension AuthorizationAPI: TargetType {
         case .signIn:
             return "/app/login"
         case .signInWithWechat:
-            return "/app/auth"
+            return "/app/wechats"
         case .signUpWithWechat:
-            return "/app/auth/bind_mobile"
+            return "/app/wechats/bind_mobile"
+        case .bindWechat:
+            return "/app/login/bind_wechat"
         }
     }
     
@@ -46,6 +49,8 @@ extension AuthorizationAPI: TargetType {
         case .signInWithWechat:
             return .post
         case .signUpWithWechat:
+            return .post
+        case .bindWechat:
             return .post
         }
     }
@@ -60,13 +65,16 @@ extension AuthorizationAPI: TargetType {
             return .requestParameters(parameters: ["mobile":phone, "device":"app"], encoding: URLEncoding.default)
 
         case let .signIn(phone, code):
-            return .requestParameters(parameters: ["account":phone, "token":code], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["mobile":phone, "token":code], encoding: URLEncoding.default)
             
         case let .signInWithWechat(openID, accessToken):
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken], encoding: URLEncoding.default)
             
         case let .signUpWithWechat(openID, phone, code):
             return .requestParameters(parameters: ["uid":openID, "mobile":phone, "token":code], encoding: URLEncoding.default)
+            
+        case let .bindWechat(parameters):
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
     
@@ -75,6 +83,9 @@ extension AuthorizationAPI: TargetType {
     }
     
     var headers: [String: String]? {
+        if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
+            return ["Auth-Token": token]
+        }
         return nil
     }
 }

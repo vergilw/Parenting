@@ -15,6 +15,10 @@ public extension Notification {
         
         @objc public static let signOutDidSuccess: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signOutDidSuccess))
     }
+    
+    public class User {
+        @objc public static let userInfoDidChange: Notification.Name = Notification.Name(String(describing: User.self) + #keyPath(userInfoDidChange))
+    }
 
     public class Mail {
         @objc public static let mailModelsCountDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailModelsCountDidChange))

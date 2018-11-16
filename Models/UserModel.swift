@@ -15,6 +15,7 @@ class UserModel: HandyJSON {
     var mobile: Int?
     var avatar_url: String?
     var name: String?
+    var wechat_name: String?
     
     required init() {
         

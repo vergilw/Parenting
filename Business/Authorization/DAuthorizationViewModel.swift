@@ -51,4 +51,14 @@ class DAuthorizationViewModel {
             completion(code)
         }))
     }
+    
+    func bindWechat(openID: String, accessToken: String, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.bindWechat(parameters: ["access_token": accessToken, "openid": openID]), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            
+            if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
+                AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
+            }
+            completion(code)
+        }))
+    }
 }
