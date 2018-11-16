@@ -67,6 +67,41 @@ class DOrdersViewController: BaseViewController {
         
         view.addSubviews([categoryView, tableView])
         categoryView.addSubviews([nonpaymentBtn, paymentBtn, categoryIndicatorImgView])
+        
+        initHeaderView()
+    }
+    
+    func initHeaderView() {
+        guard orderMode == .nonpayment else {
+            tableView.tableHeaderView = nil
+            return
+        }
+        
+        let headerView: UIView = {
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 37)))
+            return view
+        }()
+        
+        let titleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = UIConstants.Color.foot
+            
+            let text = "未支付订单将在2小时后自动取消"
+            let attributedString = NSMutableAttributedString(string: text)
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryOrange], range: NSString(string: "未支付订单将在2小时后自动取消").range(of: "2"))
+            label.attributedText = attributedString
+            
+            return label
+        }()
+        headerView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(20)
+            make.height.equalTo(12)
+        }
+        
+        tableView.tableHeaderView = headerView
     }
     
     // MARK: - ============= Constraints =============
@@ -104,7 +139,8 @@ class DOrdersViewController: BaseViewController {
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        
+        initHeaderView()
+        tableView.reloadData()
     }
     
     // MARK: - ============= Action =============
@@ -133,7 +169,7 @@ class DOrdersViewController: BaseViewController {
         } else if sender == paymentBtn {
             orderMode = .payment
         }
-        tableView.reloadData()
+        reload()
     }
 }
 
