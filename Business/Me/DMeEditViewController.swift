@@ -208,27 +208,27 @@ class DMeEditViewController: BaseViewController {
 
     @objc func avatarBtnAction() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Photos", style: .default, handler: { alertAction in
+        alertController.addAction(UIAlertAction(title: "照片", style: .default, handler: { alertAction in
             let imgPicker = UIImagePickerController()
             imgPicker.sourceType = .photoLibrary
             imgPicker.allowsEditing = true
             imgPicker.delegate = self
             self.present(imgPicker, animated: true, completion: nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Camera", style: .default, handler: { alertAction in
+        alertController.addAction(UIAlertAction(title: "拍摄", style: .default, handler: { alertAction in
             let imgPicker = UIImagePickerController()
             imgPicker.sourceType = .camera
             imgPicker.allowsEditing = true
             imgPicker.delegate = self
             self.present(imgPicker, animated: true, completion: nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Files", style: .default, handler: { alertAction in
+        alertController.addAction(UIAlertAction(title: "文件", style: .default, handler: { alertAction in
             //            let types: NSArray = NSArray(object: kUTTypePDF as NSString)
             let documentPicker = UIDocumentPickerViewController(documentTypes: [kUTTypeImage] as [String], in: UIDocumentPickerMode.import)
             documentPicker.delegate = self
             self.present(documentPicker, animated: true, completion: nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     

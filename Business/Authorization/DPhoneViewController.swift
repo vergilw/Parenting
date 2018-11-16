@@ -107,6 +107,7 @@ class DPhoneViewController: BaseViewController {
         button.setTitle("获取验证码", for: .normal)
         button.isEnabled = false
         button.addTarget(self, action: #selector(fetchCodeBtnAction), for: .touchUpInside)
+        
         return button
     }()
     
@@ -158,6 +159,8 @@ class DPhoneViewController: BaseViewController {
         return button
     }()
     
+    fileprivate var passcodeTimer: Timer?
+    
     // MARK: - ============= ViewController Cycle =============
     
     init(mode: DPhoneMode, wechatUID: String? = nil) {
@@ -177,6 +180,7 @@ class DPhoneViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        reloadPasscodeTimer()
     }
     
     // MARK: - ============= Initialize View =============
@@ -285,14 +289,44 @@ class DPhoneViewController: BaseViewController {
         
     }
     
+    func reloadPasscodeTimer() {
+        if let timer = passcodeTimer {
+            timer.invalidate()
+            passcodeTimer = nil
+        }
+        
+        if AppCacheService.sharedInstance.lastFetchingPasscodeDate != nil {
+            fetchBtn.isEnabled = false
+            passcodeTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
+                let interval = AppCacheService.sharedInstance.lastFetchingPasscodeDate?.timeIntervalSinceNow ?? 0
+                if interval <= -60 {
+                    self?.passcodeTimer?.invalidate()
+                    self?.passcodeTimer = nil
+                    if self?.phoneTextField.text?.isPhone() ?? false {
+                        self?.fetchBtn.isEnabled = true
+                    }
+                    self?.fetchBtn.setTitle("获取验证码", for: .normal)
+                    AppCacheService.sharedInstance.lastFetchingPasscodeDate = nil
+                } else {
+                    self?.fetchBtn.setTitle(String(format: "已发送%.0fs", interval+60), for: .normal)
+                }
+            })
+            passcodeTimer?.fire()
+        }
+        
+    }
+    
     // MARK: - ============= Action =============
     
     @objc func fetchCodeBtnAction() {
-        fetchBtn.startAnimating()
-        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
-            self.fetchBtn.stopAnimating()
-            self.codeTextField.becomeFirstResponder()
-        }
+//        fetchBtn.startAnimating()
+//        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
+//            self.fetchBtn.stopAnimating()
+//            self.codeTextField.becomeFirstResponder()
+        
+            AppCacheService.sharedInstance.lastFetchingPasscodeDate = Date()
+            self.reloadPasscodeTimer()
+//        }
     }
     
     @objc func signInBtnAction() {
@@ -340,6 +374,13 @@ class DPhoneViewController: BaseViewController {
     @objc func agreementBtnAction() {
         navigationController?.pushViewController(DAgreementViewController(), animated: true)
     }
+    
+    deinit {
+        if let timer = passcodeTimer {
+            timer.invalidate()
+            passcodeTimer = nil
+        }
+    }
 }
 
 extension DPhoneViewController: UITextFieldDelegate {
@@ -372,7 +413,9 @@ extension DPhoneViewController: UITextFieldDelegate {
         
         if textField == phoneTextField {
             if resultText.isPhone() {
-                fetchBtn.isEnabled = true
+                if AppCacheService.sharedInstance.lastFetchingPasscodeDate == nil {
+                    fetchBtn.isEnabled = true
+                }
             } else {
                 fetchBtn.isEnabled = false
             }
