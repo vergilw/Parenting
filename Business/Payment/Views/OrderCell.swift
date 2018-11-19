@@ -23,7 +23,7 @@ class OrderCell: UITableViewCell {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
         imgView.clipsToBounds = true
-        let processor = RoundCornerImageProcessor(cornerRadius: 4, targetSize: CGSize(width: 112, height: 63))
+        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 112*2, height: 63*2))
         imgView.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), options: [.processor(processor)])
         
         return imgView

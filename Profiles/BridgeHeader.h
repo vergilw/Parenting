@@ -16,6 +16,7 @@
 @import iCarousel;
 @import UITableView_FDTemplateLayoutCell;
 @import UITextView_Placeholder;
+@import TYCyclePagerView;
 
 #import <UMCommon/UMCommon.h>
 #import <UMShare/UMShare.h>

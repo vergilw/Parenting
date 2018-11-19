@@ -18,7 +18,6 @@ target "parenting" do
     pod 'ObjectMapper'
     pod 'Kingfisher'
     pod 'UINavigationItem+Margin'
-    pod 'iCarousel'
     pod 'Presentr'
 
     pod 'MBProgressHUD'
@@ -29,6 +28,7 @@ target "parenting" do
     pod 'GTSDK'
     pod 'UITableView+FDTemplateLayoutCell'
     pod 'UITextView+Placeholder'
+    pod 'TYCyclePagerView'
     
     pod 'UMCCommon'
     pod 'UMCSecurityPlugins'

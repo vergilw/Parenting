@@ -23,6 +23,7 @@ PODS:
     - Realm (= 3.11.1)
   - Result (3.2.4)
   - SnapKit (4.0.1)
+  - TYCyclePagerView (1.1.0)
   - "UINavigationItem+Margin (2.1.1)"
   - "UITableView+FDTemplateLayoutCell (1.6)"
   - "UITextView+Placeholder (1.2.1)"
@@ -53,6 +54,7 @@ DEPENDENCIES:
   - Presentr
   - RealmSwift
   - SnapKit
+  - TYCyclePagerView
   - "UINavigationItem+Margin"
   - "UITableView+FDTemplateLayoutCell"
   - "UITextView+Placeholder"
@@ -80,6 +82,7 @@ SPEC REPOS:
     - RealmSwift
     - Result
     - SnapKit
+    - TYCyclePagerView
     - "UINavigationItem+Margin"
     - "UITableView+FDTemplateLayoutCell"
     - "UITextView+Placeholder"
@@ -106,6 +109,7 @@ SPEC CHECKSUMS:
   RealmSwift: c9580133e73ef40ed340401af2dbc9a5790dfea7
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
+  TYCyclePagerView: b70858c9b5d0e80e1e3129ff5ceb027eb0f76d44
   "UINavigationItem+Margin": 7368d506fb2f7daa0c0489846cc8c2384ab1ab6d
   "UITableView+FDTemplateLayoutCell": 5c949b4a5059c404b442926c0e80f81d10a2d66f
   "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
@@ -114,6 +118,6 @@ SPEC CHECKSUMS:
   UMCShare: aa233aecad67979930fe43f3a2f676023b669439
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 6de80fdda38d63f799ff77f01c2c4b118cc4c45e
+PODFILE CHECKSUM: d03b9f7327d64e2f7a8f3a040edc111e7acba2fc
 
 COCOAPODS: 1.5.3

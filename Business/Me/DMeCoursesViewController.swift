@@ -67,6 +67,7 @@ extension DMeCoursesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCell.className(), for: indexPath) as! CourseCell
+        cell.setup(mode: CourseCell.CellDisplayMode.owned)
         return cell
     }
     

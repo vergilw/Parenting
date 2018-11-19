@@ -35,6 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     @objc func setupRootViewController() {
         
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .highlighted)
+        
         if self.window?.rootViewController != nil {
             guard let rootViewController = self.window?.rootViewController, !rootViewController.isKind(of: UITabBarController.self) else {
                 return
@@ -42,21 +45,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-        let homeImg = UIImage(named: "tab_playbooks")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
+        let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
         homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
-        homeNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
-        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
+        homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
+        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
-        let meImg = UIImage(named: "tab_authors")?.withRenderingMode(.alwaysTemplate).byResize(to: CGSize(width: 24, height: 24))
+        let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
         meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
-        meNavigationController.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .medium)], for: .normal)
-        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -1)
+        meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
+        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let tabBarController = UITabBarController()
         tabBarController.tabBar.isTranslucent = false
-        tabBarController.tabBar.tintColor = UIColor("#333")
-        tabBarController.tabBar.unselectedItemTintColor = UIColor("#999")
         tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         
         self.window?.rootViewController = tabBarController
