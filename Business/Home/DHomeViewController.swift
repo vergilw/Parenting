@@ -137,6 +137,12 @@ class DHomeViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        scrollView.mj_header = CustomMJHeader(refreshingBlock: { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                self?.scrollView.mj_header.endRefreshing()
+            }
+        })
+        
         scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, tableView, bottomBannerView])
         searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])

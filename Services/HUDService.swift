@@ -97,7 +97,7 @@ fileprivate class FetchView: UIView {
     }()
     
     lazy fileprivate var imgView: YYAnimatedImageView = {
-        let view = YYAnimatedImageView(image: YYImage(named: "public_audioAnimationItem"))
+        let view = YYAnimatedImageView(image: YYImage(named: "public_loadingAnimation.gif"))
         return view
     }()
     
@@ -120,5 +120,55 @@ fileprivate class FetchView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+}
+
+
+class CustomMJHeader: MJRefreshHeader {
+    
+    lazy fileprivate var imgView: YYAnimatedImageView = {
+        let view = YYAnimatedImageView(image: YYImage(named: "public_loadingAnimation.gif"))
+        view.autoPlayAnimatedImage = false
+        addSubview(view)
+        return view
+    }()
+    
+    override func prepare() {
+        super.prepare()
+    }
+    
+    override func placeSubviews() {
+        super.placeSubviews()
+        
+        //FIXME: safeArea is nil
+        if #available(iOS 11, *) {
+            let safeTop = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight
+            imgView.origin = CGPoint(x: mj_w/2-22, y: mj_h/2-22-safeTop/2)
+        } else {
+            imgView.origin = CGPoint(x: mj_w/2-22, y: mj_h/2-22-UIStatusBarHeight)
+        }
+        imgView.size = CGSize(width: 44, height: 44)
+    }
+    
+    fileprivate var refreshState: MJRefreshState = .idle
+    
+    override var state: MJRefreshState {
+        get {
+            return refreshState
+        }
+        set {
+            super.state = newValue
+            refreshState = newValue
+            if newValue == .idle {
+                imgView.stopAnimating()
+                imgView.currentAnimatedImageIndex = 0
+            } else if newValue == .refreshing {
+                imgView.startAnimating()
+            } else {
+                imgView.stopAnimating()
+            }
+            
+            print(newValue.rawValue)
+        }
     }
 }
