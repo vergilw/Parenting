@@ -9,9 +9,9 @@
 import Foundation
 
 //#if DEBUG
-    var ServerHost = "http://test.beichensanjiaozhou.com"
+//    var ServerHost = "http://test.beichensanjiaozhou.com"
 //#else
 
-//    var ServerHost = "http://m.1314-edu.com"
+    var ServerHost = "http://m.1314-edu.com"
 //#endif
 

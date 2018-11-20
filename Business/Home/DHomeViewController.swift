@@ -63,7 +63,7 @@ class DHomeViewController: BaseViewController {
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("氧育精彩故事", for: .normal)
         button.contentHorizontalAlignment = .left
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(teacherStoriesBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -82,14 +82,14 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var coursesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.sectionInset = UIEdgeInsets(top: 30, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         layout.minimumLineSpacing = 32
-        layout.minimumInteritemSpacing = 10
+        layout.minimumInteritemSpacing = 12
+        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+        layout.itemSize = CGSize(width: width, height: width/16.0*9+12+52+8+20)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(HomeSectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeSectionHeader.className())
         view.register(MoreFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className())
-        view.register(TeacherHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TeacherHeaderView.className())
-        
         view.register(PickedCourseCell.self, forCellWithReuseIdentifier: PickedCourseCell.className())
         view.backgroundColor = .white
         view.dataSource = self
@@ -98,10 +98,14 @@ class DHomeViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var bottomBannerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .yellow
-        return view
+    lazy fileprivate var bottomBannerView: UIButton = {
+        let button = UIButton()
+        button.imageView?.contentMode = .scaleAspectFill
+        let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width, height: 102*2))
+        button.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
+//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        return button
     }()
 
     override func viewDidLoad() {
@@ -125,7 +129,15 @@ class DHomeViewController: BaseViewController {
     func initContentView() {
         
         view.addSubview(scrollView)
-        scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, bottomBannerView])
+        
+        let itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+        let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
+        tableView.rowHeight = item1Height
+        tableView.register(TeacherCoursesCell.self, forCellReuseIdentifier: TeacherCoursesCell.className())
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, tableView, bottomBannerView])
         searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
     }
@@ -161,10 +173,10 @@ class DHomeViewController: BaseViewController {
         
         let section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
         let section0FooterHeight: CGFloat = 64 + 42
-//        let section1HeaderHeight: CGFloat = 96
+        let section1HeaderHeight: CGFloat = 96
         let itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         let item0Height: CGFloat = itemWidth/16.0*9 + 12 + 52 + 8 + 20
-//        let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
+        let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
         let collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + 32 + section0FooterHeight
         
         coursesCollectionView.snp.makeConstraints { make in
@@ -173,12 +185,17 @@ class DHomeViewController: BaseViewController {
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(collectionHeight)
         }
-        bottomBannerView.snp.makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
             make.top.equalTo(coursesCollectionView.snp.bottom)
+            make.height.equalTo((section1HeaderHeight+item1Height)*3)
+        }
+        bottomBannerView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(scrollView)
+            make.top.equalTo(tableView.snp.bottom).offset(52)
             make.width.equalTo(UIScreen.main.bounds.size.width)
-            make.height.equalTo(200)
-            make.bottom.equalTo(-90)
+            make.height.equalTo(102)
+            make.bottom.equalTo(-UIConstants.Margin.bottom)
         }
         
         //search view
@@ -223,44 +240,39 @@ class DHomeViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    @objc func teacherStoriesBtnAction() {
+        navigationController?.pushViewController(DTeacherStoriesViewController(), animated: true)
+    }
 }
 
 
 extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section == 0 {
+        if collectionView == coursesCollectionView {
             return CGSize(width: UIScreenWidth, height: 25 + 8 + 18 + 32)
-        } else if section == 1 {
-            return CGSize(width: UIScreenWidth, height: 96)
         }
         return .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if section == 0 {
+        if collectionView == coursesCollectionView {
             return CGSize(width: UIScreenWidth, height: 64+42)
         }
         return .zero
     }
-    
+ 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if indexPath.section == 0 {
+        if collectionView == coursesCollectionView {
             if kind == UICollectionView.elementKindSectionHeader {
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeSectionHeader.className(), for: indexPath)
                 return view
             } else if kind == UICollectionView.elementKindSectionFooter {
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className(), for: indexPath)
-                return view
-            }
-        } else if indexPath.section == 1 {
-            if kind == UICollectionView.elementKindSectionHeader {
-                let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TeacherHeaderView.className(), for: indexPath) as! TeacherHeaderView
-                view.setup()
                 return view
             }
         }
@@ -269,17 +281,6 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 4
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 0 {
-            let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-            return CGSize(width: width, height: width/16.0*9+12+52+8+20)
-        } else if indexPath.section == 1 {
-            let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-            return CGSize(width: width, height: width/16.0*9+12+52)
-        }
-        return UICollectionViewFlowLayout.automaticSize
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -299,6 +300,45 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
 }
+
+
+extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 96
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderViewID")
+        if view == nil {
+            view = UITableViewHeaderFooterView(reuseIdentifier: "HeaderViewID")
+            view?.contentView.backgroundColor = .white
+            let headerView: TeacherHeaderView = {
+                let view = TeacherHeaderView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 96)))
+                view.setup()
+                return view
+            }()
+            view?.addSubview(headerView)
+            headerView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
+        return view
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TeacherCoursesCell.className(), for: indexPath)
+        return cell
+    }
+}
+
 
 fileprivate class HomeSectionHeader: UICollectionReusableView {
     

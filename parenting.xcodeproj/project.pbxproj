@@ -11,6 +11,11 @@
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
 		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
 		130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */; };
+		130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */; };
+		130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */; };
+		130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */; };
+		130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */; };
+		130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -85,6 +90,11 @@
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
 		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseEvaluationViewController.swift; sourceTree = "<group>"; };
+		130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewLayout.swift; sourceTree = "<group>"; };
+		130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCoursesCell.swift; sourceTree = "<group>"; };
+		130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTeacherStoriesViewController.swift; sourceTree = "<group>"; };
+		130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherStoriesCell.swift; sourceTree = "<group>"; };
+		130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTeacherStoryDetailViewController.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -221,6 +231,9 @@
 				131160C221831AC70000F105 /* CourseEvaluationCell.swift */,
 				1312C40521884B030008AB81 /* CourseCataloguesView.swift */,
 				130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */,
+				130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */,
+				130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */,
+				130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -371,6 +384,8 @@
 				130D46022189A5DB00CB4763 /* DPlayListViewController.swift */,
 				130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */,
 				13120E47219131D800404BC7 /* DPlayerViewController.swift */,
+				130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */,
+				130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -574,6 +589,7 @@
 				131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
+				130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */,
 				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
@@ -583,6 +599,8 @@
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
+				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
@@ -590,6 +608,8 @@
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
 				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,
+				130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */,
+				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
