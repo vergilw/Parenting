@@ -8,6 +8,7 @@
 
 import Foundation
 import Moya
+import HandyJSON
 
 let CourseProvider = MoyaProvider<CourseAPI>()
 
@@ -37,7 +38,7 @@ extension CourseAPI: TargetType {
         case .comments:
             return "/app/comments"
         case .my_comment:
-            return "/app/comments"
+            return "/app/comments/my"
         case .post_comment:
             return "/app/comments"
         }
@@ -75,11 +76,11 @@ extension CourseAPI: TargetType {
         case let .comments(courseID, page):
             return .requestParameters(parameters: ["type":"course", "type_id":courseID, "page":page], encoding: URLEncoding.default)
         case let .my_comment(courseID):
-            return .requestParameters(parameters: ["type":"course", "type_id":courseID, "user_id":1], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["type":"course", "type_id":courseID], encoding: URLEncoding.default)
         case let .post_comment(courseID, starsCount, content):
-            var parameters: [String: Any] = ["commentable_type":"course", "commentable_id":courseID, "star":starsCount]
+            var parameters: [String: Any] = ["[comment]commentable_type":"Course", "[comment]commentable_id":courseID, "[comment]star":starsCount]
             if let content = content {
-                parameters["content"] = content
+                parameters["[comment]content"] = content
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
 

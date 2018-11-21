@@ -23,7 +23,7 @@ class DHomeViewController: BaseViewController {
         let button = UIButton()
         button.layer.cornerRadius = 21
         button.backgroundColor = UIConstants.Color.background
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(searchBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -98,6 +98,12 @@ class DHomeViewController: BaseViewController {
         return view
     }()
     
+    lazy fileprivate var teacherBannerBtn: UIButton = {
+        let button = UIButton()
+//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var bottomBannerView: UIButton = {
         let button = UIButton()
         button.imageView?.contentMode = .scaleAspectFill
@@ -143,7 +149,7 @@ class DHomeViewController: BaseViewController {
             }
         })
         
-        scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, tableView, bottomBannerView])
+        scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
         searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
     }
@@ -159,7 +165,7 @@ class DHomeViewController: BaseViewController {
             if #available(iOS 11, *) {
                 make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
             } else {
-                make.top.equalTo(7.5+UIStatusBarHeight)
+                make.top.equalTo(7.5)
             }
             make.height.equalTo(42)
         }
@@ -179,7 +185,7 @@ class DHomeViewController: BaseViewController {
         
         let section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
         let section0FooterHeight: CGFloat = 64 + 42
-        let section1HeaderHeight: CGFloat = 96
+        let section1HeaderHeight: CGFloat = 64+25
         let itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         let item0Height: CGFloat = itemWidth/16.0*9 + 12 + 52 + 8 + 20
         let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
@@ -191,10 +197,16 @@ class DHomeViewController: BaseViewController {
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(collectionHeight)
         }
+        teacherBannerBtn.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(coursesCollectionView.snp.bottom).offset(24)
+            make.height.equalTo(100)
+        }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(coursesCollectionView.snp.bottom)
-            make.height.equalTo((section1HeaderHeight+item1Height)*3)
+            make.top.equalTo(teacherBannerBtn.snp.bottom).offset(24)
+            make.height.equalTo((section1HeaderHeight+item1Height))
         }
         bottomBannerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
@@ -243,9 +255,17 @@ class DHomeViewController: BaseViewController {
     @objc func reload() {
         tableView.reloadData()
         pageControl.numberOfPages = 6
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2, height: 100*2))
+        teacherBannerBtn.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
     }
     
     // MARK: - ============= Action =============
+    @objc func searchBtnAction() {
+        let navigationController = BaseNavigationController(rootViewController: DSearchViewController())
+        present(navigationController, animated: true, completion: nil)
+    }
+    
     @objc func teacherStoriesBtnAction() {
         navigationController?.pushViewController(DTeacherStoriesViewController(), animated: true)
     }
@@ -310,11 +330,11 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
 
 extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 96
+        return 64+25
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -322,19 +342,32 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
         if view == nil {
             view = UITableViewHeaderFooterView(reuseIdentifier: "HeaderViewID")
             view?.contentView.backgroundColor = .white
-            let headerView: TeacherHeaderView = {
-                let view = TeacherHeaderView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 96)))
-                view.setup()
-                return view
+//            let headerView: TeacherHeaderView = {
+//                let view = TeacherHeaderView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 96)))
+//                view.setup()
+//                return view
+//            }()
+//            view?.addSubview(headerView)
+//            headerView.snp.makeConstraints { make in
+//                make.edges.equalToSuperview()
+//            }
+            let titleLabel: UILabel = {
+                let label = UILabel()
+                label.font = UIConstants.Font.h1
+                label.textColor = UIConstants.Color.head
+                label.text = "最新课程"
+                return label
             }()
-            view?.addSubview(headerView)
-            headerView.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
+            view?.addSubview(titleLabel)
+            titleLabel.snp.makeConstraints { make in
+                make.leading.equalTo(UIConstants.Margin.leading)
+                make.centerY.equalToSuperview()
             }
         }
+        
         return view
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }

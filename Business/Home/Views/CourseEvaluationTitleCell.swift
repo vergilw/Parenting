@@ -10,7 +10,7 @@ import UIKit
 
 class CourseEvaluationTitleCell: UITableViewCell {
 
-    public var evaluationBlock: (()->())?
+    public var evaluationBlock: ((ActionButton)->())?
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
@@ -20,8 +20,8 @@ class CourseEvaluationTitleCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var actionBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var actionBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIConstants.Font.body
         button.setTitle("我要评价", for: .normal)
@@ -75,7 +75,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
     
     @objc func evaluationBtnAction() {
         if let block = evaluationBlock {
-            block()
+            block(actionBtn)
         }
     }
 }

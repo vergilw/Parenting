@@ -44,6 +44,7 @@ class PlayListService: NSObject {
                 let currentURL = (player.currentItem?.asset as? AVURLAsset)?.url
                 let playerItem = AVPlayerItem(url: playURL)
                 if currentURL != playURL {
+                    player.pause()
                     player.replaceCurrentItem(with: playerItem)
                 }
                 

@@ -59,6 +59,8 @@
 		13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B21218065FC002B4281 /* CourseIntroductionCell.swift */; };
 		13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B2421806ED9002B4281 /* SeparatorView.swift */; };
 		13144B27218077F4002B4281 /* Course.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13144B26218077F4002B4281 /* Course.xcassets */; };
+		1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1316742021A53CC400643BF0 /* DSearchViewController.swift */; };
+		1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1316742221A54B2300643BF0 /* SearchHistoryCell.swift */; };
 		131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131CF01421953E5100CA7941 /* AppCacheService.swift */; };
 		131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28A219D0DE500B55210 /* DMeEditViewController.swift */; };
 		131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28C219D51DD00B55210 /* CourseCell.swift */; };
@@ -138,6 +140,8 @@
 		13144B21218065FC002B4281 /* CourseIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseIntroductionCell.swift; sourceTree = "<group>"; };
 		13144B2421806ED9002B4281 /* SeparatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		13144B26218077F4002B4281 /* Course.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Course.xcassets; sourceTree = "<group>"; };
+		1316742021A53CC400643BF0 /* DSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSearchViewController.swift; sourceTree = "<group>"; };
+		1316742221A54B2300643BF0 /* SearchHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCell.swift; sourceTree = "<group>"; };
 		131CF01421953E5100CA7941 /* AppCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCacheService.swift; sourceTree = "<group>"; };
 		131FB28A219D0DE500B55210 /* DMeEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeEditViewController.swift; sourceTree = "<group>"; };
 		131FB28C219D51DD00B55210 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 				130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */,
 				130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */,
 				130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */,
+				1316742221A54B2300643BF0 /* SearchHistoryCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -389,6 +394,7 @@
 				13120E47219131D800404BC7 /* DPlayerViewController.swift */,
 				130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */,
 				130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */,
+				1316742021A53CC400643BF0 /* DSearchViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -603,6 +609,7 @@
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
@@ -648,6 +655,7 @@
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
 				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
+				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,

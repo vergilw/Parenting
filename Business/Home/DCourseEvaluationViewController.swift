@@ -11,6 +11,8 @@ import UITextView_Placeholder
 
 class DCourseEvaluationViewController: BaseViewController {
 
+    fileprivate var courseID: Int = 0
+    
     fileprivate var commentModel: CommentModel?
     
     lazy fileprivate var titleLabel: UILabel = {
@@ -84,9 +86,10 @@ class DCourseEvaluationViewController: BaseViewController {
     
     fileprivate var completionBlock: ((CommentModel)->())?
     
-    init(model: CommentModel?, completion: @escaping (_ model: CommentModel)->()) {
+    init(courseID: Int, model: CommentModel?, completion: @escaping (_ model: CommentModel)->()) {
         super.init(nibName: nil, bundle: nil)
         
+        self.courseID = courseID
         commentModel = model
         
         completionBlock = completion
@@ -281,21 +284,21 @@ class DCourseEvaluationViewController: BaseViewController {
             return
         }
         
-        //FIXME: debug model
-        let model = CommentModel()
-        model.star = selectedStarsCount
-        model.content = textView.text
-        if let block = completionBlock {
-            block(model)
-        }
+        CourseProvider.request(.post_comment(courseID: courseID, starsCount: selectedStarsCount, content: textView.text), completion: ResponseService.sharedInstance.response(completion: { [weak self] (code, JSON) in
+            if code != -1 {
+                HUDService.sharedInstance.show(string: "您已成功提交评价")
+                //let model = CommentModel.deserialize(from: JSON),
+                if let block = self?.completionBlock {
+                    let model = CommentModel()
+                    model.star = self?.selectedStarsCount
+                    model.content = self?.textView.text
+                    block(model)
+                }
+                self?.dismissBtnAction()
+            }
+        }))
         
         
-        let HUD = MBProgressHUD.showAdded(to: view.window!, animated: true)
-        HUD.mode = .text
-        HUD.detailsLabel.text = "您已成功提交评价"
-        HUD.hide(animated: true, afterDelay: 1.5)
-        
-        dismissBtnAction()
     }
 }
 

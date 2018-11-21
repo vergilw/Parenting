@@ -294,7 +294,9 @@ class DCourseDetailViewController: BaseViewController {
         HUDService.sharedInstance.showFetchingView(target: view)
         viewModel.fetchCourse { (bool) in
             HUDService.sharedInstance.hideFetchingView(target: self.view)
-            self.reload()
+            if bool {
+                self.reload()
+            }
         }
         
     }
@@ -327,8 +329,8 @@ class DCourseDetailViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.viewModel.fetchComments { (bool) in
-                if bool {
+            self?.viewModel.fetchComments { (status, next) in
+                if next || !status {
                     self?.tableView.mj_footer.endRefreshing()
                 } else {
                     self?.tableView.mj_footer.endRefreshingWithNoMoreData()
@@ -770,12 +772,28 @@ class DCourseDetailViewController: BaseViewController {
         present(alertController, animated: true, completion: nil)
     }
     
-    @objc func displayMyEvaluation() {
-        let viewController = DCourseEvaluationViewController(model: viewModel.myCommentModel) { [weak self] (model) in
-            self?.viewModel.myCommentModel = model
-            self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
+    @objc func displayMyEvaluation(button: ActionButton) {
+        
+        if viewModel.myCommentModel == nil {
+            button.startAnimating()
+            viewModel.fetchMyComment(completion: { (bool) in
+                button.stopAnimating()
+                if bool {
+                    let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
+                        self?.viewModel.myCommentModel = model
+                        self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
+                    }
+                    self.customPresentViewController(self.evaluationPresenter, viewController: viewController, animated: true)
+                }
+            })
+            
+        } else {
+            let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
+                self?.viewModel.myCommentModel = model
+                self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
+            }
+            self.customPresentViewController(self.evaluationPresenter, viewController: viewController, animated: true)
         }
-        customPresentViewController(evaluationPresenter, viewController: viewController, animated: true)
     }
     
     /*
@@ -1040,8 +1058,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationTitleCell.className(), for: indexPath) as! CourseEvaluationTitleCell
-                cell.evaluationBlock = { [weak self] in
-                    self?.displayMyEvaluation()
+                cell.evaluationBlock = { [weak self] (button) in
+                    self?.displayMyEvaluation(button: button)
                 }
                 if viewModel.courseModel?.is_comment == true || viewModel.myCommentModel != nil {
                     cell.setup(isEvaluate: true)

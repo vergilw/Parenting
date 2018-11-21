@@ -19,44 +19,27 @@ class DCourseSectionViewModel {
     public var courseCatalogueModels: [CourseSectionModel]?
     
     func fetchCourseSection(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course_section(courseID: courseID, sectionID: sectionID)) { result in
-            switch result {
-            case let .success(response):
-                if response.statusCode == 200 {
-                    let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                    self.courseSectionModel = CourseSectionModel.deserialize(from: JSON)
-                    completion(false)
-                    
-                } else {
-                    //                    let error = try? JSON(data: response.data)
-                    //                    let errorCode = error?["code"].stringValue
-                    //                    print(error)
-                }
-            case let .failure(error):
-                //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
-                print("failure")
+        
+        CourseProvider.request(.course_section(courseID: courseID, sectionID: sectionID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if code != -1 {
+                self.courseSectionModel = CourseSectionModel.deserialize(from: JSON)
+                completion(true)
+            } else {
+                completion(false)
             }
-        }
+        }))
+        
     }
     
     func fetchCourseSections(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course_sections(courseID: courseID)) { result in
-            switch result {
-            case let .success(response):
-                if response.statusCode == 200 {
-                    let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                    self.courseCatalogueModels = CourseModel.deserialize(from: JSON)?.course_catalogues
-                    completion(false)
-                    
-                } else {
-                    //                    let error = try? JSON(data: response.data)
-                    //                    let errorCode = error?["code"].stringValue
-                    //                    print(error)
-                }
-            case let .failure(error):
-                //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
-                print("failure")
+        CourseProvider.request(.course_sections(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if code != -1 {
+                self.courseCatalogueModels = CourseModel.deserialize(from: JSON)?.course_catalogues
+                completion(true)
+            } else {
+                completion(false)
             }
-        }
+        }))
+        
     }
 }

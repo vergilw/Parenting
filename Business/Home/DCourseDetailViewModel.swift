@@ -22,71 +22,51 @@ class DCourseDetailViewModel {
     lazy fileprivate var commentPage: Int = 1
     
     func fetchCourse(completion: @escaping (Bool)->Void) {
-        CourseProvider.request(.course(courseID: courseID)) { result in
-            switch result {
-            case let .success(response):
-                if response.statusCode == 200 {
-                    do {
-                        let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]
-                        self.courseModel = CourseModel.deserialize(from: JSON)
-                    } catch let error as NSError {
-                        print(#function, error)
-                    }
-                    completion(false)
-                    
-                } else {
-//                    let error = try? JSON(data: response.data)
-                    //                    let errorCode = error?["code"].stringValue
-//                    print(error)
-                    
-                    completion(false)
-                }
-            case let .failure(error):
-                //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
-                print("failure")
-                
+        CourseProvider.request(.course(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if code != -1 {
+                self.courseModel = CourseModel.deserialize(from: JSON)
+                completion(true)
+            } else {
                 completion(false)
             }
-        }
+        }))
     }
     
-    func fetchComments(completion: @escaping (Bool)->Void) {
-        
-        CourseProvider.request(.comments(courseID: courseID, page: commentPage)) { result in
-            switch result {
-            case let .success(response):
-                if response.statusCode == 200 {
-                    let JSON = try! JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                    
-                    if self.commentModel == nil {
-                        self.commentModel = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
-                    } else {
-                        let models = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
-                        self.commentModel?.append(contentsOf: models!)
-                    }
-                    
-                    if let pageData = JSON["page_data"] as? [String: Any], let totalPages = pageData["total_pages"] as? Int {
-                        if totalPages > self.commentPage {
-                            self.commentPage += 1
-                            completion(true)
-                        } else {
-                            completion(false)
-                        }
-                    } else {
-                        completion(false)
-                    }
-                    
+    func fetchComments(completion: @escaping (_ status: Bool, _ next: Bool)->Void) {
+        CourseProvider.request(.comments(courseID: courseID, page: commentPage), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if let JSON = JSON, code != -1 {
+                if self.commentModel == nil {
+                    self.commentModel = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
                 } else {
-                    //                    let error = try? JSON(data: response.data)
-                    //                    let errorCode = error?["code"].stringValue
-                    //                    print(error)
-                    completion(true)
+                    let models = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
+                    self.commentModel?.append(contentsOf: models!)
                 }
-            case let .failure(error):
-                //                HUDService.sharedInstance.show(targetView: self.view, text: error.localizedDescription)
-                print("failure")
-                completion(true)
+                
+                if let pageData = JSON["page_data"] as? [String: Any], let totalPages = pageData["total_pages"] as? Int {
+                    if totalPages > self.commentPage {
+                        self.commentPage += 1
+                        completion(true, true)
+                    } else {
+                        completion(true, false)
+                    }
+                } else {
+                    completion(true, false)
+                }
+                
+            } else {
+                completion(false, false)
             }
-        }
+        }))
+    }
+    
+    func fetchMyComment(completion: @escaping (Bool)->Void) {
+        CourseProvider.request(.my_comment(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if code != -1 {
+                self.myCommentModel = CommentModel.deserialize(from: JSON?["comments"] as? [String: Any])
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }))
     }
 }

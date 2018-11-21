@@ -278,27 +278,27 @@ class DCourseSectionViewController: BaseViewController {
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
             HUDService.sharedInstance.hideFetchingView(target: self.view)
-            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
-            if manager?.isReachableOnEthernetOrWiFi ?? false {
-                self.preparePlayAudio(autoPlay: false)
-            } else if manager?.isReachableOnWWAN ?? false {
-                if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
-                    self.preparePlayAudio(autoPlay: true)
-                } else {
-                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
-                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
-                        AppCacheService.sharedInstance.autoplayOnWWAN = false
-                    }))
-                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
-                        AppCacheService.sharedInstance.autoplayOnWWAN = true
-                        self.preparePlayAudio(autoPlay: true)
-                    }))
-                    DispatchQueue.main.async {
-                        self.present(alertController, animated: true, completion: nil)
-                    }
-                }
-                
-            }
+//            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
+//            if manager?.isReachableOnEthernetOrWiFi ?? false {
+//                self.preparePlayAudio(autoPlay: false)
+//            } else if manager?.isReachableOnWWAN ?? false {
+//                if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
+//                    self.preparePlayAudio(autoPlay: true)
+//                } else {
+//                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+//                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+//                        AppCacheService.sharedInstance.autoplayOnWWAN = false
+//                    }))
+//                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+//                        AppCacheService.sharedInstance.autoplayOnWWAN = true
+//                        self.preparePlayAudio(autoPlay: true)
+//                    }))
+//                    DispatchQueue.main.async {
+//                        self.present(alertController, animated: true, completion: nil)
+//                    }
+//                }
+//
+//            }
         }
         
     }
@@ -652,30 +652,33 @@ class DCourseSectionViewController: BaseViewController {
             if let index = index {
                 PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index, startPlaying: autoPlay)
                 
-                bufferObserver = PlayListService.sharedInstance.player.currentItem?.observe(\.loadedTimeRanges) { [weak self] (item, changed) in
-                    guard let playerItem = PlayListService.sharedInstance.player.currentItem else { return }
-                    
-                    guard let first = playerItem.loadedTimeRanges.first else {
-                        return
-                    }
-                    let timeRange = first.timeRangeValue
-                    let startSeconds = CMTimeGetSeconds(timeRange.start)
-                    let durationSecound = CMTimeGetSeconds(timeRange.duration)
-                    let loadedTime = startSeconds + durationSecound
-                    
-                    let totalTime = CMTimeGetSeconds(playerItem.duration)
-                    
-                    //                self?.audioSlider.maximumValue = Float(loadedTime/totalTime)
-                    if let audioSlider = self?.audioSlider {
-                        self?.sliderBufferView.snp.remakeConstraints { make in
-                            make.leading.equalTo(audioSlider)
-                            make.centerY.equalTo(audioSlider).offset(1)
-                            make.height.equalTo(1.5)
-                            make.width.equalTo(audioSlider.snp.width).multipliedBy(loadedTime/totalTime)
+                if bufferObserver == nil {
+                    bufferObserver = PlayListService.sharedInstance.player.currentItem?.observe(\.loadedTimeRanges) { [weak self] (item, changed) in
+                        guard let playerItem = PlayListService.sharedInstance.player.currentItem else { return }
+                        
+                        guard let first = playerItem.loadedTimeRanges.first else {
+                            return
                         }
+                        let timeRange = first.timeRangeValue
+                        let startSeconds = CMTimeGetSeconds(timeRange.start)
+                        let durationSecound = CMTimeGetSeconds(timeRange.duration)
+                        let loadedTime = startSeconds + durationSecound
+                        print(playerItem)
+                        let totalTime = CMTimeGetSeconds(playerItem.duration)
+                        
+                        //                self?.audioSlider.maximumValue = Float(loadedTime/totalTime)
+                        if let audioSlider = self?.audioSlider {
+                            self?.sliderBufferView.snp.remakeConstraints { make in
+                                make.leading.equalTo(audioSlider)
+                                make.centerY.equalTo(audioSlider).offset(1)
+                                make.height.equalTo(1.5)
+                                make.width.equalTo(audioSlider.snp.width).multipliedBy(loadedTime/totalTime)
+                            }
+                        }
+                        
                     }
-                    
                 }
+                
             }
         }
     }
@@ -683,7 +686,7 @@ class DCourseSectionViewController: BaseViewController {
     // MARK: - ============= Action =============
 
     @objc func audioActionBtnAction() {
-        guard let course = viewModel.courseSectionModel?.course, let sections = viewModel.courseCatalogueModels else {
+        guard let _ = viewModel.courseSectionModel?.course, let _ = viewModel.courseCatalogueModels else {
             return
         }
         
@@ -692,14 +695,36 @@ class DCourseSectionViewController: BaseViewController {
             playingSectionModels?[PlayListService.sharedInstance.playingIndex].id != viewModel.sectionID ||
             (playingSectionModels?[PlayListService.sharedInstance.playingIndex].id == viewModel.sectionID && PlayListService.sharedInstance.isPlaying == false)  {
             
-            audioActionBtn.setImage(UIImage(named: "course_pauseAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
+            if manager?.isReachableOnWWAN ?? false {
+                if let _ = AppCacheService.sharedInstance.autoplayOnWWAN {
+                    self.preparePlayAudio(autoPlay: true)
+                } else {
+                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+                        AppCacheService.sharedInstance.autoplayOnWWAN = false
+                    }))
+                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+                        AppCacheService.sharedInstance.autoplayOnWWAN = true
+                        self.preparePlayAudio(autoPlay: true)
+                    }))
+                    DispatchQueue.main.async {
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                }
+                
+            } else {
+                self.preparePlayAudio(autoPlay: true)
+            }
             
-            let index = sections.firstIndex { (model) -> Bool in
-                return model.id == viewModel.courseSectionModel?.id
-            }
-            if let index = index {
-                PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index)
-            }
+//            audioActionBtn.setImage(UIImage(named: "course_pauseAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
+//
+//            let index = sections.firstIndex { (model) -> Bool in
+//                return model.id == viewModel.courseSectionModel?.id
+//            }
+//            if let index = index {
+//                PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index)
+//            }
             
         } else {
             PlayListService.sharedInstance.pauseAudio()

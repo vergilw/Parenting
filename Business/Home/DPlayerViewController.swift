@@ -499,6 +499,7 @@ class DPlayerViewController: BaseViewController {
                 guard seconds >= 0 else { return }
                 let timeInterval: TimeInterval = TimeInterval(seconds)
                 let date = Date(timeIntervalSince1970: timeInterval)
+                
                 self?.audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
                 
                 let pauseImg = UIImage(named: "course_videoPause")?.withRenderingMode(.alwaysOriginal)

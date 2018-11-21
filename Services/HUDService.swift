@@ -111,7 +111,7 @@ fileprivate class FetchView: UIView {
         
         animationView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.size.equalTo(CGSize(width: 100, height: 100))
+            make.size.equalTo(CGSize(width: 29, height: 38))
         }
         imgView.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -135,19 +135,24 @@ class CustomMJHeader: MJRefreshHeader {
     
     override func prepare() {
         super.prepare()
+        
+        if #available(iOS 11, *) {
+            let safeTop = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight
+            mj_h = MJRefreshHeaderHeight + safeTop
+        }
+        
     }
     
     override func placeSubviews() {
         super.placeSubviews()
         
-        //FIXME: safeArea is nil
         if #available(iOS 11, *) {
             let safeTop = UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight
-            imgView.origin = CGPoint(x: mj_w/2-22, y: mj_h/2-22-safeTop/2)
+            imgView.origin = CGPoint(x: mj_w/2-29/2, y: mj_h/2-38/2+safeTop/2)
         } else {
-            imgView.origin = CGPoint(x: mj_w/2-22, y: mj_h/2-22-UIStatusBarHeight)
+            imgView.origin = CGPoint(x: mj_w/2-29/2, y: mj_h/2-38/2-UIStatusBarHeight)
         }
-        imgView.size = CGSize(width: 44, height: 44)
+        imgView.size = CGSize(width: 29, height: 38)
     }
     
     fileprivate var refreshState: MJRefreshState = .idle
@@ -168,7 +173,6 @@ class CustomMJHeader: MJRefreshHeader {
                 imgView.stopAnimating()
             }
             
-            print(newValue.rawValue)
         }
     }
 }
