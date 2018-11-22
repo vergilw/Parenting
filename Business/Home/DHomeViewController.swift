@@ -107,9 +107,6 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var bottomBannerView: UIButton = {
         let button = UIButton()
         button.imageView?.contentMode = .scaleAspectFill
-        let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width, height: 102*2))
-        button.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
 //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
         return button
     }()
@@ -173,7 +170,7 @@ class DHomeViewController: BaseViewController {
             make.leading.equalTo(0)
             make.trailing.equalTo(scrollView)
             make.top.equalTo(searchBtn.snp.bottom).offset(16)
-            make.width.equalTo(UIScreen.main.bounds.size.width)
+            make.width.equalTo(UIScreenWidth)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
         }
         storyView.snp.makeConstraints { make in
@@ -201,7 +198,7 @@ class DHomeViewController: BaseViewController {
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(coursesCollectionView.snp.bottom).offset(24)
-            make.height.equalTo(100)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
         }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
@@ -209,10 +206,11 @@ class DHomeViewController: BaseViewController {
             make.height.equalTo((section1HeaderHeight+item1Height))
         }
         bottomBannerView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(scrollView)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(tableView.snp.bottom).offset(52)
             make.width.equalTo(UIScreen.main.bounds.size.width)
-            make.height.equalTo(102)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
             make.bottom.equalTo(-UIConstants.Margin.bottom)
         }
         
@@ -256,8 +254,12 @@ class DHomeViewController: BaseViewController {
         tableView.reloadData()
         pageControl.numberOfPages = 6
         
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2, height: 100*2))
+        let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*5*2))
         teacherBannerBtn.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
+        
+        
+        bottomBannerView.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
     }
     
     // MARK: - ============= Action =============
@@ -298,7 +300,10 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeSectionHeader.className(), for: indexPath)
                 return view
             } else if kind == UICollectionView.elementKindSectionFooter {
-                let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className(), for: indexPath)
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className(), for: indexPath) as! MoreFooterView
+                view.actionBlock = { [weak self] in
+                    self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                }
                 return view
             }
         }
@@ -316,13 +321,9 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
         navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
-        
-        //FIXME: debug
-//        let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-//        present(authorizationNavigationController, animated: true, completion: nil)
-        
-        
     }
     
 }
@@ -421,6 +422,8 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
 
 fileprivate class MoreFooterView: UICollectionReusableView {
     
+    var actionBlock: (()->())?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -432,7 +435,7 @@ fileprivate class MoreFooterView: UICollectionReusableView {
             button.layer.cornerRadius = 21
             button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
             button.layer.borderWidth = 0.5
-//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -448,6 +451,12 @@ fileprivate class MoreFooterView: UICollectionReusableView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    @objc func actionBtnAction() {
+        if let block = actionBlock {
+            block()
+        }
     }
 }
 

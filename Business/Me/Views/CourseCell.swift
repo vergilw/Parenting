@@ -19,6 +19,8 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var displayMode: CellDisplayMode = .default
     
+    var actionBlock: (()->())?
+    
     lazy fileprivate var panelView: UIView = {
         let view = UIView()
         view.drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-10, height: 132)), cornerRadius: 4)
@@ -67,18 +69,20 @@ class CourseCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var priceLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var priceLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
         label.text = "¥0.0"
         return label
     }()
     
-    lazy fileprivate var actionBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var actionBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
         button.setImage(UIImage(named: "course_favoriteSelected")?.withRenderingMode(.alwaysOriginal), for: .normal)
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -133,7 +137,7 @@ class CourseCell: UITableViewCell {
             make.top.equalTo(12)
         }
         priceLabel.snp.makeConstraints { make in
-            make.leading.equalTo(previewImgView.snp.trailing).offset(12)
+            make.trailing.equalTo(-12)
             make.centerY.equalTo(avatarImgView)
         }
         actionBtn.snp.makeConstraints { make in
@@ -178,12 +182,12 @@ class CourseCell: UITableViewCell {
         if mode == .default {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
-            priceLabel.text = "¥39.8"
+            priceLabel.setPriceText("¥39.8", symbolFont: UIConstants.Font.body)
             
         } else if mode == .favirotes {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
-            priceLabel.text = "¥39.8"
+            priceLabel.setPriceText("¥39.8", symbolFont: UIConstants.Font.body)
             
         } else if mode == .owned {
             priceLabel.textColor = UIConstants.Color.primaryGreen
@@ -191,5 +195,16 @@ class CourseCell: UITableViewCell {
             priceLabel.text = "开始学习"
         }
         
+    }
+    
+    @objc func actionBtnAction() {
+        actionBtn.startAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+            
+            self.actionBtn.stopAnimating()
+            self.actionBtn.setImage(UIImage(named: "course_favoriteNormal")?.withRenderingMode(.alwaysOriginal), for: .normal)
+            HUDService.sharedInstance.show(string: "成功取消收藏")
+        }
     }
 }

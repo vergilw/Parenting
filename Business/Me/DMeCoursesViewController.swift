@@ -73,5 +73,7 @@ extension DMeCoursesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
     }
 }

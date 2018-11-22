@@ -41,6 +41,14 @@ class HUDService {
             subview.removeFromSuperview()
         }
     }
+    
+    func showNoNetworkView(target view: UIView, retry block: ()->()) {
+        let HUD = ResultView()
+        view.addSubview(HUD)
+        HUD.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
+    }
 }
 
 fileprivate class HUDView: UIView {
@@ -123,6 +131,56 @@ fileprivate class FetchView: UIView {
     }
 }
 
+
+fileprivate class ResultView: UIView {
+    
+    lazy fileprivate var stackView: UIStackView = {
+        let view = UIStackView()
+        view.alignment = .center
+        view.axis = .vertical
+        view.distribution = .fillProportionally
+        view.spacing = 32
+        return view
+    }()
+    
+    lazy fileprivate var iconImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "public_noNetworkImg")
+        return imgView
+    }()
+    
+    lazy fileprivate var titleLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
+        label.font = UIConstants.Font.foot
+        label.textColor = UIConstants.Color.head
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+        label.setSymbolText("氧育现在很方，你的网络好像开小差了\n请点击 刷新一下", symbolText: "刷新一下", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.primaryGreen])
+        return label
+    }()
+    
+    init() {
+        super.init(frame: .zero)
+        
+        backgroundColor = .white
+        
+        addSubview(stackView)
+        stackView.addSubviews([iconImgView, titleLabel])
+        
+        stackView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.width.equalTo(UIScreenWidth)
+            make.centerY.equalToSuperview().multipliedBy((1-0.618)/0.5)
+        }
+        stackView.addArrangedSubview(iconImgView)
+        stackView.addArrangedSubview(titleLabel)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+}
 
 class CustomMJHeader: MJRefreshHeader {
     

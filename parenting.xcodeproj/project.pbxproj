@@ -29,6 +29,12 @@
 		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
+		131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F521A63BB100F79E92 /* DSettingsViewController.swift */; };
+		131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F721A63D7400F79E92 /* DAboutViewController.swift */; };
+		131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F921A63D8000F79E92 /* DFeedbackViewController.swift */; };
+		131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FB21A6436A00F79E92 /* DCoursesViewController.swift */; };
+		131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */; };
+		1310680021A64B5500F79E92 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FF21A64B5500F79E92 /* TransactionCell.swift */; };
 		1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8DE219EA184004073FF /* DPurchaseViewController.swift */; };
 		1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E0219EB06B004073FF /* DOrdersViewController.swift */; };
 		1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E2219EBB42004073FF /* OrderCell.swift */; };
@@ -111,6 +117,12 @@
 		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
+		131067F521A63BB100F79E92 /* DSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSettingsViewController.swift; sourceTree = "<group>"; };
+		131067F721A63D7400F79E92 /* DAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAboutViewController.swift; sourceTree = "<group>"; };
+		131067F921A63D8000F79E92 /* DFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFeedbackViewController.swift; sourceTree = "<group>"; };
+		131067FB21A6436A00F79E92 /* DCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewController.swift; sourceTree = "<group>"; };
+		131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTransactionsViewController.swift; sourceTree = "<group>"; };
+		131067FF21A64B5500F79E92 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
 		1310F8DE219EA184004073FF /* DPurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPurchaseViewController.swift; sourceTree = "<group>"; };
 		1310F8E0219EB06B004073FF /* DOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DOrdersViewController.swift; sourceTree = "<group>"; };
 		1310F8E2219EBB42004073FF /* OrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCell.swift; sourceTree = "<group>"; };
@@ -212,6 +224,7 @@
 			children = (
 				130F1C94219C1549004E1DD3 /* MeItemCell.swift */,
 				131FB28C219D51DD00B55210 /* CourseCell.swift */,
+				131067FF21A64B5500F79E92 /* TransactionCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -395,6 +408,7 @@
 				130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */,
 				130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */,
 				1316742021A53CC400643BF0 /* DSearchViewController.swift */,
+				131067FB21A6436A00F79E92 /* DCoursesViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -408,6 +422,10 @@
 				131FB28A219D0DE500B55210 /* DMeEditViewController.swift */,
 				131FB28E219D5A1500B55210 /* DMeCoursesViewController.swift */,
 				131FB294219D785600B55210 /* DMeFavoritesViewController.swift */,
+				131067F521A63BB100F79E92 /* DSettingsViewController.swift */,
+				131067F721A63D7400F79E92 /* DAboutViewController.swift */,
+				131067F921A63D8000F79E92 /* DFeedbackViewController.swift */,
+				131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -590,12 +608,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */,
 				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
 				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
+				131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */,
 				131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
@@ -605,6 +625,7 @@
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
 				13113F6D2199736600B6E0FE /* DAuthorizationViewModel.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
+				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
@@ -613,6 +634,7 @@
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
+				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
@@ -622,6 +644,7 @@
 				130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */,
 				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
+				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
 				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
@@ -653,6 +676,7 @@
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
+				1310680021A64B5500F79E92 /* TransactionCell.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
 				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,

@@ -1,19 +1,19 @@
 //
-//  DMeFavoritesViewController.swift
+//  DCoursesViewController.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/15.
+//  Created by Vergil.Wang on 2018/11/22.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import UIKit
 
-class DMeFavoritesViewController: BaseViewController {
+class DCoursesViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "我的收藏夹"
+        navigationItem.title = "课程列表"
         
         initContentView()
         initConstraints()
@@ -21,7 +21,7 @@ class DMeFavoritesViewController: BaseViewController {
     }
     
     // MARK: - ============= Initialize View =============
-    func initContentView() {
+    fileprivate func initContentView() {
         tableView.backgroundColor = UIConstants.Color.background
         tableView.rowHeight = 172
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
@@ -32,14 +32,14 @@ class DMeFavoritesViewController: BaseViewController {
     }
     
     // MARK: - ============= Constraints =============
-    func initConstraints() {
+    fileprivate func initConstraints() {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
     
     // MARK: - ============= Notification =============
-    func addNotificationObservers() {
+    fileprivate func addNotificationObservers() {
         
     }
     
@@ -51,11 +51,11 @@ class DMeFavoritesViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-    
+
 }
 
 
-extension DMeFavoritesViewController: UITableViewDataSource, UITableViewDelegate {
+extension DCoursesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -67,7 +67,7 @@ extension DMeFavoritesViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCell.className(), for: indexPath) as! CourseCell
-        cell.setup(mode: CourseCell.CellDisplayMode.favirotes)
+        cell.setup(mode: CourseCell.CellDisplayMode.default)
         return cell
     }
     

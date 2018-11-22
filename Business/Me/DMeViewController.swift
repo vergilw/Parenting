@@ -274,8 +274,9 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.row == 3 {
             navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
         } else if indexPath.row == 4 {
-            
+            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
         } else if indexPath.row == 5 {
+            navigationController?.pushViewController(DSettingsViewController(), animated: true)
         }
     }
 }

@@ -1,41 +1,36 @@
 //
-//  DTeacherStoriesViewController.swift
+//  DSettingsViewController.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/20.
+//  Created by Vergil.Wang on 2018/11/22.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import UIKit
 
-class DTeacherStoriesViewController: BaseViewController {
+class DSettingsViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "氧育故事"
+        navigationItem.title = "其他"
         
         initContentView()
         initConstraints()
         addNotificationObservers()
-        
-//        HUDService.sharedInstance.showNoNetworkView(target: view) {
-//
-//        }
     }
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        tableView.rowHeight = 211
+        tableView.rowHeight = 75
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         tableView.separatorStyle = .singleLine
-        tableView.separatorColor = .white
-        tableView.register(TeacherStoriesCell.self, forCellReuseIdentifier: TeacherStoriesCell.className())
+        tableView.separatorColor = UIConstants.Color.separator
+        tableView.register(MeItemCell.self, forCellReuseIdentifier: MeItemCell.className())
         tableView.dataSource = self
         tableView.delegate = self
         
         view.addSubview(tableView)
-        
-        
     }
     
     // MARK: - ============= Constraints =============
@@ -62,25 +57,37 @@ class DTeacherStoriesViewController: BaseViewController {
 }
 
 
-extension DTeacherStoriesViewController: UITableViewDataSource, UITableViewDelegate {
+extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TeacherStoriesCell.className(), for: indexPath) as! TeacherStoriesCell
-        cell.setup()
+        let cell = tableView.dequeueReusableCell(withIdentifier: MeItemCell.className(), for: indexPath) as! MeItemCell
+        if indexPath.row == 0 {
+            cell.setup(title: "关于氧育")
+        } else if indexPath.row == 1 {
+            cell.setup(title: "清除缓存", value: "320MB")
+        } else if indexPath.row == 2 {
+            cell.setup(title: "意见反馈")
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DTeacherStoryDetailViewController(), animated: true)
+        if indexPath.row == 0 {
+            navigationController?.pushViewController(DAboutViewController(), animated: true)
+        } else if indexPath.row == 1 {
+//            navigationController?.pushViewController(DPaymentViewController(), animated: true)
+        } else if indexPath.row == 2 {
+            navigationController?.pushViewController(DFeedbackViewController(), animated: true)
+        }
     }
 }

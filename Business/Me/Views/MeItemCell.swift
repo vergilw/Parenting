@@ -67,8 +67,25 @@ class MeItemCell: UITableViewCell {
         fatalError()
     }
     
-    func setup(img: UIImage, title: String) {
-        iconImgView.image = img
+    func setup(img: UIImage? = nil, title: String, value: String? = nil) {
+        if img != nil {
+            iconImgView.image = img
+            
+            iconImgView.isHidden = false
+            titleLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(UIConstants.Margin.leading+32)
+                make.centerY.equalToSuperview()
+            }
+        } else {
+            iconImgView.image = img
+            
+            iconImgView.isHidden = true
+            titleLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(UIConstants.Margin.leading)
+                make.centerY.equalToSuperview()
+            }
+        }
+        
         titleLabel.text = title
     }
 }

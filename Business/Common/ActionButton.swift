@@ -32,6 +32,10 @@ class ActionButton: UIButton {
         fatalError()
     }
     
+    func setIndicatorStyle(style: UIActivityIndicatorView.Style) {
+        activityView.style = style
+    }
+    
     func startAnimating() {
         isUserInteractionEnabled = false
         

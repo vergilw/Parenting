@@ -61,8 +61,8 @@ class OrderCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var priceLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var priceLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
         label.text = "¥0.0"
@@ -181,10 +181,7 @@ class OrderCell: UITableViewCell {
             orderMode = mode
         }
         
-        
-        let text = "订单号：236815484212"
-        let attributedString = NSMutableAttributedString(string: text)
-        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.body], range: NSRange(location: 0, length: "订单号：".count))
-        orderNumberLabel.attributedText = attributedString
+        priceLabel.setPriceText("¥0.0", symbolFont: UIConstants.Font.body)
+        orderNumberLabel.setSymbolText("订单号：236815484212", symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
     }
 }
