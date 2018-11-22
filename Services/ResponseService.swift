@@ -51,7 +51,7 @@ class ResponseService {
                 }
             case .failure(_):
                 HUDService.sharedInstance.show(string: "网络异常")
-                completion(-1, nil)
+                completion(-2, nil)
             }
         }
         return returnCompletion

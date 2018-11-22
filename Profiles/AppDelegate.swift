@@ -58,6 +58,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let tabBarController = UITabBarController()
         tabBarController.tabBar.isTranslucent = false
+        
+        tabBarController.tabBar.backgroundImage = UIImage(color: .white)
+        tabBarController.tabBar.shadowImage = UIImage()
+        
+        tabBarController.tabBar.layer.shadowOffset = CGSize(width: 0, height: -3.0)
+        tabBarController.tabBar.layer.shadowOpacity = 0.05
+        tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
+        
         tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         
         self.window?.rootViewController = tabBarController

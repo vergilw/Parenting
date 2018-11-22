@@ -35,6 +35,8 @@
 		131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FB21A6436A00F79E92 /* DCoursesViewController.swift */; };
 		131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */; };
 		1310680021A64B5500F79E92 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067FF21A64B5500F79E92 /* TransactionCell.swift */; };
+		1310680221A696D600F79E92 /* BannerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310680121A696D600F79E92 /* BannerModel.swift */; };
+		1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310680321A6974A00F79E92 /* DHomeViewModel.swift */; };
 		1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8DE219EA184004073FF /* DPurchaseViewController.swift */; };
 		1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E0219EB06B004073FF /* DOrdersViewController.swift */; };
 		1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1310F8E2219EBB42004073FF /* OrderCell.swift */; };
@@ -123,6 +125,8 @@
 		131067FB21A6436A00F79E92 /* DCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewController.swift; sourceTree = "<group>"; };
 		131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTransactionsViewController.swift; sourceTree = "<group>"; };
 		131067FF21A64B5500F79E92 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
+		1310680121A696D600F79E92 /* BannerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerModel.swift; sourceTree = "<group>"; };
+		1310680321A6974A00F79E92 /* DHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHomeViewModel.swift; sourceTree = "<group>"; };
 		1310F8DE219EA184004073FF /* DPurchaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPurchaseViewController.swift; sourceTree = "<group>"; };
 		1310F8E0219EB06B004073FF /* DOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DOrdersViewController.swift; sourceTree = "<group>"; };
 		1310F8E2219EBB42004073FF /* OrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCell.swift; sourceTree = "<group>"; };
@@ -303,6 +307,7 @@
 				131160B62182B9590000F105 /* CourseSectionModel.swift */,
 				130B80B6218FF0750076BB50 /* CommentModel.swift */,
 				130EF26A219A75C3008F61FA /* UserModel.swift */,
+				1310680121A696D600F79E92 /* BannerModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -398,6 +403,7 @@
 			children = (
 				13144B1A21800D40002B4281 /* Views */,
 				1320C399217EBF3700902A5C /* DHomeViewController.swift */,
+				1310680321A6974A00F79E92 /* DHomeViewModel.swift */,
 				13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */,
 				1311201721816F180088F5BF /* DCourseDetailViewModel.swift */,
 				131160C02183008B0000F105 /* DCourseSectionViewController.swift */,
@@ -651,6 +657,7 @@
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				130EF26B219A75C3008F61FA /* UserModel.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
+				1310680221A696D600F79E92 /* BannerModel.swift in Sources */,
 				1320C38F217EB93A00902A5C /* ObjectMapper+Extension.swift in Sources */,
 				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
@@ -682,6 +689,7 @@
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
+				1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -23,7 +23,7 @@ class DCourseDetailViewModel {
     
     func fetchCourse(completion: @escaping (Bool)->Void) {
         CourseProvider.request(.course(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code != -1 {
+            if code >= 0 {
                 self.courseModel = CourseModel.deserialize(from: JSON)
                 completion(true)
             } else {

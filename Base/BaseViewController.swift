@@ -16,12 +16,15 @@ class BaseViewController: UIViewController {
         $0.separatorStyle = .none
         $0.rowHeight = UITableView.automaticDimension
         $0.tableFooterView = UIView()
+        $0.tableFooterView = UIView()
         if #available(iOS 11, *) {
             $0.contentInsetAdjustmentBehavior = .never
             $0.estimatedRowHeight = 0
             $0.estimatedSectionHeaderHeight = 0
             $0.estimatedSectionFooterHeight = 0
         }
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = false
         return $0
     }(UITableView.init(frame: .zero, style: .plain))
     

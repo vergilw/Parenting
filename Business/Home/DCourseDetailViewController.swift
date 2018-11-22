@@ -291,14 +291,7 @@ class DCourseDetailViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        HUDService.sharedInstance.showFetchingView(target: view)
-        viewModel.fetchCourse { (bool) in
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
-            if bool {
-                self.reload()
-            }
-        }
-        
+        fetchData()
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -495,6 +488,20 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        self.viewModel.fetchCourse { (status) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if status {
+                self.reload()
+            } else {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {

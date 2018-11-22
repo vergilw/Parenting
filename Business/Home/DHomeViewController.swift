@@ -11,11 +11,14 @@ import Kingfisher
 
 class DHomeViewController: BaseViewController {
     
+    lazy fileprivate var viewModel = DHomeViewModel()
+    
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         if #available(iOS 11, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
         }
+        scrollView.showsVerticalScrollIndicator = false
         return scrollView
     }()
     
@@ -119,6 +122,7 @@ class DHomeViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        fetchBannersData()
         reload()
     }
     
@@ -248,11 +252,16 @@ class DHomeViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchBannersData() {
+        viewModel.fetchBanners { (bool) in
+            self.pageControl.numberOfPages = self.viewModel.bannerModels?.count ?? 0
+            self.carouselView.reloadData()
+        }
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
         tableView.reloadData()
-        pageControl.numberOfPages = 6
         
         let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
         let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*5*2))
@@ -517,7 +526,7 @@ fileprivate class TeacherHeaderView: UICollectionReusableView {
 
 extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDelegate {
     func numberOfItems(in pageView: TYCyclePagerView) -> Int {
-        return 6
+        return viewModel.bannerModels?.count ?? 0
     }
     
     func pagerView(_ pagerView: TYCyclePagerView, cellForItemAt index: Int) -> UICollectionViewCell {
@@ -535,10 +544,14 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
                 make.edges.equalToSuperview()
             }
         }
-        imgView = view.viewWithTag(1) as? UIImageView ?? nil
-        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width, height: width/16.0*9))
-        imgView?.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), options: [.processor(processor)])
+        
+        if let URLString = viewModel.bannerModels?[index].image_attribute?.service_url {
+            imgView = view.viewWithTag(1) as? UIImageView ?? nil
+            let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width, height: width/16.0*9))
+            imgView?.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
+        
         return view
     }
     

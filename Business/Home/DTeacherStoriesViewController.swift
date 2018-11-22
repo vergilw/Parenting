@@ -19,9 +19,7 @@ class DTeacherStoriesViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-//        HUDService.sharedInstance.showNoNetworkView(target: view) {
-//
-//        }
+        
     }
     
     // MARK: - ============= Initialize View =============

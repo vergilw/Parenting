@@ -24,6 +24,7 @@ class TeacherCoursesCell: UITableViewCell {
         view.delegate = self
         view.backgroundColor = .white
         view.alwaysBounceHorizontal = true
+        view.showsHorizontalScrollIndicator = false
         return view
     }()
     

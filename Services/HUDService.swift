@@ -42,12 +42,13 @@ class HUDService {
         }
     }
     
-    func showNoNetworkView(target view: UIView, retry block: ()->()) {
+    func showNoNetworkView(target view: UIView, retry block: @escaping ()->()) {
         let HUD = ResultView()
         view.addSubview(HUD)
         HUD.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
+        HUD.actionBlock = block
     }
 }
 
@@ -122,7 +123,7 @@ fileprivate class FetchView: UIView {
             make.size.equalTo(CGSize(width: 29, height: 38))
         }
         imgView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
     
@@ -134,12 +135,21 @@ fileprivate class FetchView: UIView {
 
 fileprivate class ResultView: UIView {
     
+    fileprivate var actionBlock: (()->())?
+    
+    lazy fileprivate var actionBtn: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var stackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .center
         view.axis = .vertical
         view.distribution = .fillProportionally
         view.spacing = 32
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -165,9 +175,12 @@ fileprivate class ResultView: UIView {
         
         backgroundColor = .white
         
-        addSubview(stackView)
+        addSubviews([actionBtn, stackView])
         stackView.addSubviews([iconImgView, titleLabel])
         
+        actionBtn.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         stackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(UIScreenWidth)
@@ -179,6 +192,13 @@ fileprivate class ResultView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    @objc func actionBtnAction() {
+        if let block = actionBlock {
+            block()
+        }
+        removeFromSuperview()
     }
 }
 

@@ -13,6 +13,13 @@ class BaseNavigationController: UINavigationController, UINavigationControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationBar.shadowImage = UIImage(color: UIConstants.Color.separator, size: CGSize(width: UIScreenWidth, height: 0.5))
+        
+//        navigationBar.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+//        navigationBar.layer.shadowOpacity = 0.1
+////        navigationBar.layer.shadowRadius = 11
+//        navigationBar.layer.shadowColor = UIColor.black.cgColor
+        
         interactivePopGestureRecognizer?.delegate = self
 
         navigationBar.barTintColor = .white
