@@ -163,9 +163,9 @@ class DSearchViewController: BaseViewController {
         topView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             if #available(iOS 11, *) {
-                make.height.equalTo(90+(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight))
+                make.height.equalTo(90+(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)+7.5)
             } else {
-                make.height.equalTo(90)
+                make.height.equalTo(90+UIStatusBarHeight+7.5)
             }
         }
         tableView.snp.makeConstraints { make in
@@ -180,9 +180,9 @@ class DSearchViewController: BaseViewController {
         searchView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             if #available(iOS 11, *) {
-                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight))
+                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)+7.5)
             } else {
-                make.top.equalTo(0)
+                make.top.equalTo(UIStatusBarHeight+7.5)
             }
             make.height.equalTo(42)
         }

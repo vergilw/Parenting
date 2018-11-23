@@ -24,6 +24,7 @@ class CourseModel: HandyJSON {
     var audition: Bool?
     var course_catalogues: [CourseSectionModel]?
     var is_comment: Bool?
+    var recommended_cover_attribute: AssetModel?
     
     required init() {
         

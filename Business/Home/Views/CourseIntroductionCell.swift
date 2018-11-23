@@ -220,7 +220,7 @@ class CourseIntroductionCell: UITableViewCell {
             teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
         }
         
-        if let tags = model.teacher?.tags {
+        if let tags = model.teacher?.tags, tags.count > 0 {
             let tagString = tags.joined(separator: " | ")
             teacherTagLabel.text = tagString
         }

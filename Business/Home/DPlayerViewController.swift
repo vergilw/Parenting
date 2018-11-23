@@ -431,7 +431,7 @@ class DPlayerViewController: BaseViewController {
         courseNameLabel.text = courseModel?.title
         
         nameLabel.text = courseModel?.teacher?.name ?? ""
-        if let tags = courseModel?.teacher?.tags {
+        if let tags = courseModel?.teacher?.tags, tags.count > 0 {
             let tagString = tags.joined(separator: " | ")
             nameLabel.text = nameLabel.text?.appendingFormat(" : %@", tagString)
         }

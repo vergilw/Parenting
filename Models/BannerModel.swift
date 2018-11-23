@@ -15,6 +15,7 @@ class BannerModel: HandyJSON {
     var sort: Int?
     var image_attribute: AssetModel?
     var target_type: String?
+    var target_id: Int?
     
     required init() {}
 }

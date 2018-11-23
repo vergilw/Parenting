@@ -489,7 +489,7 @@ class DCourseSectionViewController: BaseViewController {
         titleLabel.text = viewModel.courseSectionModel?.course?.title
         
         tagLabel.text = viewModel.courseSectionModel?.course?.teacher?.name ?? ""
-        if let tags = viewModel.courseSectionModel?.course?.teacher?.tags {
+        if let tags = viewModel.courseSectionModel?.course?.teacher?.tags, tags.count > 0 {
             let tagString = tags.joined(separator: " | ")
             tagLabel.text = tagLabel.text?.appendingFormat(" : %@", tagString)
         }

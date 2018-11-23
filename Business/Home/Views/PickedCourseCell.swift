@@ -31,8 +31,9 @@ class PickedCourseCell: UICollectionViewCell {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.head
-        label.numberOfLines = 0
-        label.preferredMaxLayoutWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+//        label.lineBreakMode = .byCharWrapping
+//        label.numberOfLines = 1
+//        label.preferredMaxLayoutWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         return label
     }()
 
@@ -95,14 +96,26 @@ class PickedCourseCell: UICollectionViewCell {
         fatalError()
     }
     
-    func setup() {
+    func setup(model: CourseModel) {
         
-        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2*2
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width, height: width/16.0*9))
-        previewImgView.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), options: [.processor(processor)])
+        if let URLString = model.cover_attribute?.service_url {
+            let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
+            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
         
-        footnoteLabel.setParagraphText("1314人已学习")
-        titleLabel.setParagraphText("科学护肤指南，找到你的专属护肤方案")
-        nameLabel.text = "Acmde丨全职妈妈"
+        if let URLString = model.teacher?.headshot_attribute?.service_url {
+            let processor = RoundCornerImageProcessor(cornerRadius: 20, targetSize: CGSize(width: 40, height: 40))
+            avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
+        
+        footnoteLabel.setParagraphText(String((model.students_count ?? 0)) + "人已学习")
+        titleLabel.setParagraphText(model.title ?? "")
+        
+        nameLabel.text = model.teacher?.name ?? ""
+        if let tags = model.teacher?.tags, tags.count > 0 {
+            let tagString = tags.joined(separator: " | ")
+            nameLabel.text = nameLabel.text?.appendingFormat(" : %@", tagString)
+        }
     }
 }

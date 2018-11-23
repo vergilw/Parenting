@@ -10,6 +10,10 @@ import UIKit
 
 class TeacherCoursesCell: UITableViewCell {
 
+    var courseModels: [CourseModel]?
+    
+    var selectedClosure: ((Int)->())?
+    
     lazy fileprivate var teachersCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -55,6 +59,10 @@ class TeacherCoursesCell: UITableViewCell {
         fatalError()
     }
 
+    func setup(models: [CourseModel]) {
+        courseModels = models
+        teachersCollectionView.reloadData()
+    }
 }
 
 
@@ -65,17 +73,26 @@ extension TeacherCoursesCell: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return courseModels?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PickedCourseCell.className(), for: indexPath) as! PickedCourseCell
-        cell.setup()
+        if let model = courseModels?[indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         
+        if let model = courseModels?[indexPath.row], let courseID = model.id {
+            if let closure = selectedClosure {
+                closure(courseID)
+            }
+            
+        }
     }
     
 }

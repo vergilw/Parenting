@@ -89,7 +89,7 @@ class DHomeViewController: BaseViewController {
         layout.minimumLineSpacing = 32
         layout.minimumInteritemSpacing = 12
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        layout.itemSize = CGSize(width: width, height: width/16.0*9+12+52+8+20)
+        layout.itemSize = CGSize(width: width, height: width/16.0*9+12+15+8+20)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(HomeSectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeSectionHeader.className())
         view.register(MoreFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className())
@@ -103,14 +103,15 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var teacherBannerBtn: UIButton = {
         let button = UIButton()
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(teacherRecommendedBtnAction), for: .touchUpInside)
         return button
     }()
     
     lazy fileprivate var bottomBannerView: UIButton = {
         let button = UIButton()
         button.imageView?.contentMode = .scaleAspectFill
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(bottomBannerBtnAction), for: .touchUpInside)
+        button.isUserInteractionEnabled = false
         return button
     }()
 
@@ -122,8 +123,7 @@ class DHomeViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        fetchBannersData()
-        reload()
+        fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -252,23 +252,38 @@ class DHomeViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
-    fileprivate func fetchBannersData() {
-        viewModel.fetchBanners { (bool) in
-            self.pageControl.numberOfPages = self.viewModel.bannerModels?.count ?? 0
-            self.carouselView.reloadData()
+    fileprivate func fetchData() {
+        viewModel.fetchHomeData { (bool) in
+            if bool {
+                self.reload()
+            } else {
+                
+            }
         }
     }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
+        
+        pageControl.numberOfPages = viewModel.bannerModels?.count ?? 0
+        carouselView.reloadData()
+        
+        coursesCollectionView.reloadData()
+        
+        if let teacherModel = viewModel.recommendedCourseModel, let URLString = teacherModel.recommended_cover_attribute?.service_url {
+            let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*5*2))
+            teacherBannerBtn.kf.setImage(with: URL(string: URLString), for: .normal, options: [.processor(processor)])
+        }
+        
         tableView.reloadData()
         
-        let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*5*2))
-        teacherBannerBtn.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
+        if let bannerModel = viewModel.bottomBannerModel, let URLString = bannerModel.image_attribute?.service_url {
+            let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*5*2))
+            bottomBannerView.kf.setImage(with: URL(string: URLString), for: .normal, options: [.processor(processor)])
+        }
         
-        
-        bottomBannerView.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), for: .normal, options: [.processor(processor)])
     }
     
     // MARK: - ============= Action =============
@@ -279,6 +294,20 @@ class DHomeViewController: BaseViewController {
     
     @objc func teacherStoriesBtnAction() {
         navigationController?.pushViewController(DTeacherStoriesViewController(), animated: true)
+    }
+    
+    @objc func teacherRecommendedBtnAction() {
+        if let model = viewModel.recommendedCourseModel, let courseID = model.id {
+            navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
+    }
+    
+    @objc func bottomBannerBtnAction() {
+        if let model = viewModel.bottomBannerModel {
+            if let courseID = model.target_id, model.target_type == "Course" {
+                navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+            }
+        }
     }
 }
 
@@ -320,19 +349,24 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return viewModel.hottestCourseModels?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PickedCourseCell.className(), for: indexPath) as! PickedCourseCell
-        cell.setup()
+        if let model = viewModel.hottestCourseModels?[indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
+        if let model = viewModel.hottestCourseModels?[indexPath.row], let courseID = model.id {
+            navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
+        
     }
     
 }
@@ -383,7 +417,13 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TeacherCoursesCell.className(), for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: TeacherCoursesCell.className(), for: indexPath) as! TeacherCoursesCell
+        if let models = viewModel.newestCourseModels {
+            cell.setup(models: models)
+        }
+        cell.selectedClosure = { [weak self] courseID in
+            self?.navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
         return cell
     }
 }
@@ -566,5 +606,14 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
     
     func pagerViewDidScroll(_ pageView: TYCyclePagerView) {
         pageControl.currentPage = pageView.curIndex
+    }
+    
+    func pagerView(_ pageView: TYCyclePagerView, didSelectedItemCell cell: UICollectionViewCell, at index: Int) {
+        
+        if let model = viewModel.bannerModels?[index] {
+            if let courseID = model.target_id, model.target_type == "Course" {
+                navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+            }
+        }
     }
 }

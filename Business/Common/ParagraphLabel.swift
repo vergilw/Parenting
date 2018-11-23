@@ -30,9 +30,9 @@ class ParagraphLabel: UILabel {
 //        return super.intrinsicContentSize
 //    }
 
-    public func setParagraphText(_ text: String) {
+    public func setParagraphText(_ text: String, isMultiline: Bool = false) {
         
-        setSymbolText(text, symbolText: nil, symbolAttributes: nil)
+        setSymbolText(text, symbolText: nil, symbolAttributes: nil, isMultiline: isMultiline)
         /*
 //        guard numberOfLines != 1 else {
 //            assertionFailure("numberOfLines is 1")
@@ -125,7 +125,7 @@ class ParagraphLabel: UILabel {
     }
     
     
-    public func setSymbolText(_ text: String, symbolText: String?, symbolAttributes: [NSAttributedString.Key : Any]?) {
+    public func setSymbolText(_ text: String, symbolText: String?, symbolAttributes: [NSAttributedString.Key : Any]?, isMultiline: Bool = false) {
         
         if let originalFont = originalFont {
             font = originalFont
@@ -170,7 +170,7 @@ class ParagraphLabel: UILabel {
         
         
         let textHeight = attributedText!.boundingRect(with: CGSize(width: preferredMaxLayoutWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size.height
-        if textHeight >= lineHeight*2 && numberOfLines != 1 {
+        if (textHeight >= lineHeight*2 && numberOfLines != 1) || isMultiline {
             
             if font == UIConstants.Font.h1 {
                 lineHeight = UIConstants.ParagraphLineHeight.h1

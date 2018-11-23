@@ -150,7 +150,7 @@ class CourseCell: UITableViewCell {
         fatalError()
     }
     
-    func setup(mode: CellDisplayMode) {
+    func setup(mode: CellDisplayMode, model: CourseModel? = nil) {
         if mode != displayMode {
             if mode == .default {
                 actionBtn.isHidden = true
@@ -182,7 +182,28 @@ class CourseCell: UITableViewCell {
         if mode == .default {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
-            priceLabel.setPriceText("¥39.8", symbolFont: UIConstants.Font.body)
+            if let price = model?.price {
+                priceLabel.setPriceText("¥"+String(price), symbolFont: UIConstants.Font.body)
+            }
+            
+            if let URLString = model?.cover_attribute?.service_url {
+                let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+                let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
+                previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+            }
+            
+            if let URLString = model?.teacher?.headshot_attribute?.service_url {
+                let processor = RoundCornerImageProcessor(cornerRadius: 22, targetSize: CGSize(width: 44, height: 44))
+                avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+            }
+            
+            titleLabel.setParagraphText(model?.title ?? "", isMultiline: true)
+            
+            nameLabel.text = model?.teacher?.name ?? ""
+            if let tags = model?.teacher?.tags, tags.count > 0 {
+                let tagString = tags.joined(separator: " | ")
+                nameLabel.text = nameLabel.text?.appendingFormat(" : %@", tagString)
+            }
             
         } else if mode == .favirotes {
             priceLabel.textColor = UIColor("#ef5226")
