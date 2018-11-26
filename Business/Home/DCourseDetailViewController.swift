@@ -489,18 +489,19 @@ class DCourseDetailViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
+        //FIXME: debug no network
         
-        HUDService.sharedInstance.showFetchingView(target: self.view)
-        self.viewModel.fetchCourse { (status) in
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
-            if status {
-                self.reload()
-            } else {
+//        HUDService.sharedInstance.showFetchingView(target: self.view)
+//        self.viewModel.fetchCourse { (status) in
+//            HUDService.sharedInstance.hideFetchingView(target: self.view)
+//            if status {
+//                self.reload()
+//            } else {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchData()
                 }
-            }
-        }
+//            }
+//        }
     }
     
     // MARK: - ============= Reload =============

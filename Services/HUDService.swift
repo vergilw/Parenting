@@ -29,8 +29,16 @@ class HUDService {
     func showFetchingView(target view: UIView) {
         let HUD = FetchView()
         view.addSubview(HUD)
-        HUD.snp.makeConstraints { make in
-            make.edges.equalTo(view)
+        if let scrollView = view as? UIScrollView {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(scrollView.bounds.size)
+                make.leading.equalTo(scrollView.contentOffset.x)
+                make.top.equalTo(scrollView.contentOffset.y)
+            }
+        } else {
+            HUD.snp.makeConstraints { make in
+                make.edges.equalTo(view)
+            }
         }
     }
     

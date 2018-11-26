@@ -12,23 +12,14 @@ class DCoursesViewController: BaseViewController {
 
     lazy fileprivate var viewModel = DCourseViewModel()
     
-    //FIXME: instead collectionview use scrollview
-    lazy fileprivate var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-//        layout.itemSize = UICollectionViewFlowLayout.automaticSize
-//        layout.estimatedItemSize = CGSize(width: 122, height: 46)
-        layout.itemSize = CGSize(width: 122, height: 46)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.className())
-        view.dataSource = self
-        view.delegate = self
-        view.backgroundColor = .white
-        view.alwaysBounceHorizontal = true
-        return view
+    lazy fileprivate var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        if #available(iOS 11, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+        scrollView.isPagingEnabled = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
     
     lazy fileprivate var categoryIndicatorImgView: UIImageView = {
@@ -56,20 +47,70 @@ class DCoursesViewController: BaseViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.viewModel.fetchCourses(completion: { (code, next) in
+                if code < 0 || next {
+                    self?.tableView.mj_footer.endRefreshing()
+                } else {
+                    self?.tableView.mj_footer.endRefreshingWithNoMoreData()
+                }
+                self?.tableView.reloadData()
+            })
+        })
+//        let footer = tableView.mj_footer as! MJRefreshAutoStateFooter
+//        footer.setTitle("没有更多", for: .noMoreData)
         
-        view.addSubviews([collectionView, tableView])
-        collectionView.addSubview(categoryIndicatorImgView)
+        view.addSubviews([scrollView, tableView])
+        scrollView.addSubview(categoryIndicatorImgView)
+    }
+    
+    fileprivate func initCategoryView() {
+        
+        var width = 0
+        
+        for i in 0..<(viewModel.categoryModels?.count ?? 0) {
+            guard let model = viewModel.categoryModels?[i] else { continue }
+            
+            let button: UIButton = {
+                let button = UIButton()
+                button.setTitleColor(UIConstants.Color.body, for: .normal)
+                button.titleLabel?.font = UIConstants.Font.body
+                button.setTitle(model.name, for: .normal)
+                button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
+                button.tag = i+1
+                return button
+            }()
+            
+            scrollView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.leading.equalTo(width)
+                if i == (viewModel.categoryModels?.count)! - 1 {
+                    make.trailing.equalToSuperview()
+                }
+                make.width.equalTo(92)
+                make.height.equalTo(46)
+                make.top.bottom.equalToSuperview()
+            }
+            width += 92
+        }
+        
+        categoryIndicatorImgView.snp.remakeConstraints { make in
+            make.centerX.equalTo(46)
+            make.height.equalTo(1.5)
+            make.width.equalTo(29)
+            make.bottom.equalTo(scrollView)
+        }
     }
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
-        collectionView.snp.makeConstraints { make in
+        scrollView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
             make.height.equalTo(46)
         }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(collectionView.snp.bottom)
+            make.top.equalTo(scrollView.snp.bottom)
         }
     }
     
@@ -80,35 +121,57 @@ class DCoursesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        viewModel.fetchCategory { (status) in
-            if status {
-                self.collectionView.reloadData()
+        HUDService.sharedInstance.showFetchingView(target: self.tableView)
+        viewModel.fetchCategory { (code) in
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+            if code >= 0 {
+                self.initCategoryView()
                 
-                self.collectionView.layoutIfNeeded()
+//                self.viewModel.fetchCourses { (status, next) in
+//                    if code >= 0 {
+//                        self.tableView.reloadData()
+//                    }
+//                }
+                self.fetchCourses()
                 
-                if let item = self.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) {
-                    let rect = self.view.convert(item.frame, from: self.collectionView)
-                    self.categoryIndicatorImgView.snp.remakeConstraints { make in
-                        make.centerX.equalTo(rect.origin.x+rect.size.width/2)
-                        make.height.equalTo(1.5)
-                        make.width.equalTo(29)
-                        make.bottom.equalTo(self.collectionView)
-                    }
-                }
-                
-                self.viewModel.fetchCourses { (status, next) in
-                    if status {
-                        self.tableView.reloadData()
-                    }
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
+                    self?.fetchData()
                 }
             }
         }
     }
     
     fileprivate func fetchCourses() {
-        self.viewModel.fetchCourses { (status, next) in
-            if status {
+        HUDService.sharedInstance.showFetchingView(target: self.tableView)
+        self.viewModel.fetchCourses { (code, next) in
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+            if code >= 0 {
                 self.tableView.reloadData()
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
+                    self?.fetchCourses()
+                }
+            }
+        }
+    }
+    
+    fileprivate func refetchCourses(categoryID: Int) {
+        HUDService.sharedInstance.showFetchingView(target: self.tableView)
+        viewModel.refetchCourses(categoryID: categoryID) { (code, next) in
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+            if code >= 0 {
+                self.tableView.reloadData()
+                if next {
+                    self.tableView.mj_footer.isHidden = false
+                    self.tableView.mj_footer.resetNoMoreData()
+                } else {
+                    self.tableView.mj_footer.isHidden = true
+                }
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
+                    self?.refetchCourses(categoryID: categoryID)
+                }
             }
         }
     }
@@ -117,8 +180,38 @@ class DCoursesViewController: BaseViewController {
     @objc func reload() {
     }
     
+    @objc func recoverCategoryStyle() {
+        for button in scrollView.subviews {
+            guard let button = button as? UIButton else { continue }
+            
+            button.titleLabel?.font = UIConstants.Font.body
+            button.setTitleColor(UIConstants.Color.body, for: .normal)
+        }
+        
+    }
+    
     // MARK: - ============= Action =============
-
+    @objc func categoryBtnAction(sender: UIButton) {
+        categoryIndicatorImgView.snp.remakeConstraints { make in
+            make.centerX.equalTo(sender)
+            make.width.equalTo(29)
+            make.height.equalTo(1.5)
+            make.bottom.equalToSuperview()
+        }
+        
+        UIView.animate(withDuration: 0.35, animations: {
+            self.scrollView.layoutIfNeeded()
+        })
+        
+        recoverCategoryStyle()
+        
+        sender.setTitleColor(UIConstants.Color.head, for: .normal)
+        sender.titleLabel?.font = UIConstants.Font.h2
+        
+        if let model = viewModel.categoryModels?[sender.tag-1], let categoryID = model.id {
+            refetchCourses(categoryID: categoryID)
+        }
+    }
 }
 
 
@@ -149,89 +242,3 @@ extension DCoursesViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-
-extension DCoursesViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.categoryModels?.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.className(), for: indexPath) as! CategoryCell
-        if let model = viewModel.categoryModels?[indexPath.row] {
-            cell.setup(model: model)
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        collectionView.deselectItem(at: indexPath, animated: true)
-        if let item = self.collectionView.cellForItem(at: indexPath) {
-            let rect = self.view.convert(item.frame, from: self.collectionView)
-            self.categoryIndicatorImgView.snp.remakeConstraints { make in
-                make.centerX.equalTo(rect.origin.x+rect.size.width/2)
-                make.height.equalTo(1.5)
-                make.width.equalTo(29)
-                make.bottom.equalTo(self.collectionView)
-            }
-            UIView.animate(withDuration: 0.35, animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-        
-        if let model = viewModel.categoryModels?[indexPath.row], let categoryID = model.id {
-            viewModel.categoryID = categoryID
-            fetchCourses()
-        }
-    }
-    
-}
-
-
-fileprivate class CategoryCell: UICollectionViewCell {
-    
-    lazy fileprivate var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIConstants.Font.body
-        label.textColor = UIConstants.Color.body
-        return label
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        contentView.addSubview(titleLabel)
-        
-        titleLabel.snp.makeConstraints { make in
-//            make.top.bottom.equalToSuperview()
-//            make.leading.equalTo(16)
-//            make.trailing.equalTo(-16)
-//            make.height.equalTo(46)
-            make.center.equalToSuperview()
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override var isSelected: Bool {
-        didSet {
-            if isSelected {
-                titleLabel.font = UIConstants.Font.h2
-                titleLabel.textColor = UIConstants.Color.head
-            } else {
-                titleLabel.font = UIConstants.Font.body
-                titleLabel.textColor = UIConstants.Color.body
-            }
-        }
-    }
-    
-    func setup(model: CourseCategoryModel) {
-        titleLabel.text = model.name
-    }
-}
