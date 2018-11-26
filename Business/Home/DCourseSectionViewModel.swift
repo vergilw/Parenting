@@ -18,27 +18,25 @@ class DCourseSectionViewModel {
 
     public var courseCatalogueModels: [CourseSectionModel]?
     
-    func fetchCourseSection(completion: @escaping (Bool)->Void) {
+    func fetchCourseSection(completion: @escaping (Int)->Void) {
         
         CourseProvider.request(.course_section(courseID: courseID, sectionID: sectionID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code != -1 {
+            
+            if let JSON = JSON {
                 self.courseSectionModel = CourseSectionModel.deserialize(from: JSON)
-                completion(true)
-            } else {
-                completion(false)
             }
+            completion(code)
         }))
         
     }
     
-    func fetchCourseSections(completion: @escaping (Bool)->Void) {
+    func fetchCourseSections(completion: @escaping (Int)->Void) {
         CourseProvider.request(.course_sections(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code != -1 {
+            
+            if let JSON = JSON {
                 self.courseCatalogueModels = CourseModel.deserialize(from: JSON)?.course_catalogues
-                completion(true)
-            } else {
-                completion(false)
             }
+            completion(code)
         }))
         
     }

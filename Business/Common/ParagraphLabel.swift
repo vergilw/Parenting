@@ -158,6 +158,7 @@ class ParagraphLabel: UILabel {
         paragraph.maximumLineHeight = lineHeight
         paragraph.minimumLineHeight = lineHeight
         paragraph.alignment = textAlignment
+        paragraph.lineBreakMode = .byCharWrapping
         
         attributedString.addAttributes([
             NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-font.lineHeight)/4, NSAttributedString.Key.font: font], range: NSRange(location: 0, length: attributedString.length))

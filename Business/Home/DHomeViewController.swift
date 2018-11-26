@@ -145,9 +145,7 @@ class DHomeViewController: BaseViewController {
         tableView.delegate = self
         
         scrollView.mj_header = CustomMJHeader(refreshingBlock: { [weak self] in
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                self?.scrollView.mj_header.endRefreshing()
-            }
+            self?.fetchData()
         })
         
         scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
@@ -253,11 +251,18 @@ class DHomeViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        viewModel.fetchHomeData { (bool) in
-            if bool {
+        if !scrollView.mj_header.isRefreshing {
+            HUDService.sharedInstance.showFetchingView(target: self.view)
+        }
+        viewModel.fetchHomeData { (code) in
+            self.scrollView.mj_header.endRefreshing()
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
                 self.reload()
-            } else {
-                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
             }
         }
     }

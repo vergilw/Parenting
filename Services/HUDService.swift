@@ -27,6 +27,12 @@ class HUDService {
     }
     
     func showFetchingView(target view: UIView) {
+        guard !view.subviews.contains(where: { (subview) -> Bool in
+            return subview.isKind(of: FetchView.self)
+        }) else {
+            return
+        }
+        
         let HUD = FetchView()
         view.addSubview(HUD)
         if let scrollView = view as? UIScrollView {
@@ -46,12 +52,28 @@ class HUDService {
         if let subview = view.subviews.first(where: { (subview) -> Bool in
             return subview.isKind(of: FetchView.self)
         }) {
-            subview.removeFromSuperview()
+            subview.alpha = 1.0
+            UIView.animate(withDuration: 0.35, animations: {
+                subview.alpha = 0.0
+            }) { (bool) in
+                subview.removeFromSuperview()
+            }
+            
         }
     }
     
     func showNoNetworkView(target view: UIView, retry block: @escaping ()->()) {
         let HUD = ResultView()
+        view.addSubview(HUD)
+        HUD.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
+        HUD.actionBlock = block
+    }
+    
+    func showNoDataView(target view: UIView, redirect block: @escaping ()->()) {
+        let HUD = ResultView()
+        HUD.setupNoData()
         view.addSubview(HUD)
         HUD.snp.makeConstraints { make in
             make.edges.equalTo(view)
@@ -118,12 +140,21 @@ fileprivate class FetchView: UIView {
         return view
     }()
     
+    lazy fileprivate var backBarBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = UIConstants.Color.head
+        button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
+        button.isHidden = true
+        return button
+    }()
+    
     init() {
         super.init(frame: .zero)
         
         backgroundColor = .white
         
-        addSubview(animationView)
+        addSubviews([animationView, backBarBtn])
         animationView.addSubview(imgView)
         
         animationView.snp.makeConstraints { make in
@@ -133,15 +164,65 @@ fileprivate class FetchView: UIView {
         imgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        backBarBtn.snp.makeConstraints { make in
+            make.leading.equalTo(0)
+            if #available(iOS 11, *) {
+                make.top.equalTo(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)
+            } else {
+                make.top.equalTo(UIStatusBarHeight)
+            }
+            make.width.equalTo(62.5)
+            make.height.equalTo(44)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
+    
+    override func didMoveToSuperview() {
+        var viewController: UIViewController?
+        var view: UIView? = self
+        repeat {
+            if view?.next?.isKind(of: UIViewController.self) ?? false {
+                viewController = view?.next as? UIViewController
+                break
+            }
+            view = view?.superview
+        } while view != nil
+        
+        //FIXME: isNavigationBarHidden not correct (viewwillappear)
+        if viewController?.navigationController?.isNavigationBarHidden ?? true {
+            backBarBtn.isHidden = false
+        }
+    }
+    
+    @objc func dismissBtnAction() {
+        var viewController: UIViewController?
+        var view: UIView? = self
+        repeat {
+            if view?.next?.isKind(of: UIViewController.self) ?? false {
+                viewController = view?.next as? UIViewController
+                break
+            }
+            view = view?.superview
+        } while view != nil
+        
+        if let navigationController = viewController?.navigationController {
+            navigationController.popViewController(animated: true)
+        }
+    }
 }
 
 
 fileprivate class ResultView: UIView {
+    
+    enum ResultMode {
+        case noNetwork
+        case noData
+    }
+    
+    fileprivate var mode: ResultMode = .noNetwork
     
     fileprivate var actionBlock: (()->())?
     
@@ -157,7 +238,6 @@ fileprivate class ResultView: UIView {
         view.axis = .vertical
         view.distribution = .fillProportionally
         view.spacing = 32
-        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -178,13 +258,25 @@ fileprivate class ResultView: UIView {
         return label
     }()
     
+    lazy fileprivate var solutionBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)!
+        button.setTitle("   查看解决方案   ", for: .normal)
+        button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
+        button.layer.borderWidth = 0.5
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(solutionBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     init() {
         super.init(frame: .zero)
         
         backgroundColor = .white
         
         addSubviews([actionBtn, stackView])
-        stackView.addSubviews([iconImgView, titleLabel])
+        stackView.addSubviews([iconImgView, titleLabel, solutionBtn])
         
         actionBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -196,17 +288,51 @@ fileprivate class ResultView: UIView {
         }
         stackView.addArrangedSubview(iconImgView)
         stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(solutionBtn)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
     
+    func setupNoData() {
+        mode = .noData
+        iconImgView.image = UIImage(named: "public_noDataImg")
+        titleLabel.setParagraphText("糟糕！这里什么都没有")
+        solutionBtn.setTitle("   随便逛逛   ", for: .normal)
+    }
+    
     @objc func actionBtnAction() {
+        guard mode == .noNetwork else { return }
+        
         if let block = actionBlock {
             block()
         }
         removeFromSuperview()
+    }
+    
+    @objc func solutionBtnAction() {
+        if mode == .noNetwork {
+            var viewController: UIViewController?
+            var view: UIView? = self
+            repeat {
+                if view?.next?.isKind(of: UIViewController.self) ?? false {
+                    viewController = view?.next as? UIViewController
+                    break
+                }
+                view = view?.superview
+            } while view != nil
+            
+            if let navigationController = viewController?.navigationController {
+                navigationController.pushViewController(SolutionViewController(), animated: true)
+            }
+            
+        } else if mode == .noData {
+            if let block = actionBlock {
+                block()
+            }
+        }
+        
     }
 }
 

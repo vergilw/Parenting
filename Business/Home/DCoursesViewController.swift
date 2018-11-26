@@ -123,21 +123,19 @@ class DCoursesViewController: BaseViewController {
     fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.tableView)
         viewModel.fetchCategory { (code) in
-            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+            
             if code >= 0 {
                 self.initCategoryView()
-                
-//                self.viewModel.fetchCourses { (status, next) in
-//                    if code >= 0 {
-//                        self.tableView.reloadData()
-//                    }
-//                }
                 self.fetchCourses()
                 
             } else if code == -2 {
+                HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+                
                 HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
                     self?.fetchData()
                 }
+            } else {
+                HUDService.sharedInstance.hideFetchingView(target: self.tableView)
             }
         }
     }

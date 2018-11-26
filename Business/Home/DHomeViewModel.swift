@@ -20,39 +20,36 @@ class DHomeViewModel {
     
     var recommendedCourseModel: CourseModel?
     
-    func fetchHomeData(completion: @escaping (Bool)->Void) {
+    func fetchHomeData(completion: @escaping (Int)->Void) {
         
         CommonProvider.request(.home, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code >= 0 {
-                if let data = JSON?["data"] as? [String: Any] {
-                    if let ads = data["ads"] as? [String: Any] {
-                        if let banners = ads["banner"] as? [[String: Any]] {
-                            self.bannerModels = [BannerModel].deserialize(from: banners) as? [BannerModel]
-                        }
-                        if let banners = ads["bottom"] as? [[String: Any]] {
-                            if let models = [BannerModel].deserialize(from: banners) as? [BannerModel], models.count > 0 {
-                                self.bottomBannerModel = models.first
-                            }
-                        }
+            
+            if let data = JSON?["data"] as? [String: Any] {
+                if let ads = data["ads"] as? [String: Any] {
+                    if let banners = ads["banner"] as? [[String: Any]] {
+                        self.bannerModels = [BannerModel].deserialize(from: banners) as? [BannerModel]
                     }
-                    
-                    if let ads = data["courses"] as? [String: Any] {
-                        if let courses = ads["hottest"] as? [[String: Any]] {
-                            self.hottestCourseModels = [CourseModel].deserialize(from: courses) as? [CourseModel]
-                        }
-                        if let courses = ads["newest"] as? [[String: Any]] {
-                            self.newestCourseModels = [CourseModel].deserialize(from: courses) as? [CourseModel]
-                        }
-                        if let courses = ads["recommended"] as? [String: Any] {
-                            self.recommendedCourseModel = CourseModel.deserialize(from: courses)
+                    if let banners = ads["bottom"] as? [[String: Any]] {
+                        if let models = [BannerModel].deserialize(from: banners) as? [BannerModel], models.count > 0 {
+                            self.bottomBannerModel = models.first
                         }
                     }
                 }
                 
-                completion(true)
-            } else {
-                completion(false)
+                if let ads = data["courses"] as? [String: Any] {
+                    if let courses = ads["hottest"] as? [[String: Any]] {
+                        self.hottestCourseModels = [CourseModel].deserialize(from: courses) as? [CourseModel]
+                    }
+                    if let courses = ads["newest"] as? [[String: Any]] {
+                        self.newestCourseModels = [CourseModel].deserialize(from: courses) as? [CourseModel]
+                    }
+                    if let courses = ads["recommended"] as? [String: Any] {
+                        self.recommendedCourseModel = CourseModel.deserialize(from: courses)
+                    }
+                }
             }
+            
+            completion(code)
         }))
         
         

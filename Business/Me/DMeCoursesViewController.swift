@@ -18,6 +18,8 @@ class DMeCoursesViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -44,6 +46,11 @@ class DMeCoursesViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    func fetchData() {
+        HUDService.sharedInstance.showNoDataView(target: view) {
+            self.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+        }
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {

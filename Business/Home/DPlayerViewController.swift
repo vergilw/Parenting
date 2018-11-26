@@ -27,7 +27,7 @@ class DPlayerViewController: BaseViewController {
     lazy fileprivate var dismissBtn: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = UIConstants.Color.body
+        button.tintColor = .white
         button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
         return button
     }()
@@ -310,7 +310,7 @@ class DPlayerViewController: BaseViewController {
 //        }
         let size = dismissBtn.currentImage!.size
         dismissBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(0)
+            make.leading.equalTo(0)
             make.top.equalTo(0)
             make.width.equalTo(size.width+UIConstants.Margin.leading*2)
             make.height.equalTo(size.height+UIConstants.Margin.top*2)
@@ -335,13 +335,13 @@ class DPlayerViewController: BaseViewController {
         }
         courseNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(nameLabel)
-            make.trailing.greaterThanOrEqualTo(tagLabel.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(nameLabel.snp.bottom).offset(9)
             make.height.equalTo(12)
         }
         sectionNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.greaterThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(UIScreenHeight/2+(9.0/16*UIScreenWidth)/2+20)
         }
     }

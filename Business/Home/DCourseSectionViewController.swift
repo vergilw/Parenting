@@ -245,62 +245,7 @@ class DCourseSectionViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        HUDService.sharedInstance.showFetchingView(target: view)
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        viewModel.fetchCourseSection { (bool) in
-            self.reload()
-            self.courseCataloguesView.isBought = self.viewModel.courseSectionModel?.course?.is_bought
-            
-            self.reloadPlayPanel()
-            dispatchGroup.leave()
-        }
-        dispatchGroup.enter()
-        viewModel.fetchCourseSections { (bool) in
-            self.courseCataloguesView.courseSectionModels = self.viewModel.courseCatalogueModels
-
-            self.courseCataloguesView.tableView.reloadData()
-            self.courseCataloguesView.tableView.layoutIfNeeded()
-            
-            if self.courseCataloguesView.tableView.contentSize.height < UIScreenHeight - self.courseCataloguesView.dismissArrowBtn.bounds.size.height {
-                self.courseCataloguesView.snp.remakeConstraints { make in
-                    make.leading.trailing.equalToSuperview()
-                    make.bottom.equalTo(self.view.snp.top)
-                    if #available(iOS 11.0, *) {
-                        make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height + (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0))
-                    } else {
-                        make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height)
-                    }
-                }
-            }
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: DispatchQueue.main) {
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
-//            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
-//            if manager?.isReachableOnEthernetOrWiFi ?? false {
-//                self.preparePlayAudio(autoPlay: false)
-//            } else if manager?.isReachableOnWWAN ?? false {
-//                if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
-//                    self.preparePlayAudio(autoPlay: true)
-//                } else {
-//                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
-//                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
-//                        AppCacheService.sharedInstance.autoplayOnWWAN = false
-//                    }))
-//                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
-//                        AppCacheService.sharedInstance.autoplayOnWWAN = true
-//                        self.preparePlayAudio(autoPlay: true)
-//                    }))
-//                    DispatchQueue.main.async {
-//                        self.present(alertController, animated: true, completion: nil)
-//                    }
-//                }
-//
-//            }
-        }
-        
+        fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -475,6 +420,85 @@ class DCourseSectionViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: view)
+        
+        var statusCode: Int = 0
+        
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        viewModel.fetchCourseSection { (code) in
+            if code >= 0 {
+                self.reload()
+                self.courseCataloguesView.isBought = self.viewModel.courseSectionModel?.course?.is_bought
+                
+                self.reloadPlayPanel()
+            } else if code == -2 {
+                statusCode = code
+            }
+            
+            dispatchGroup.leave()
+        }
+        dispatchGroup.enter()
+        viewModel.fetchCourseSections { (code) in
+            if code >= 0 {
+                self.courseCataloguesView.courseSectionModels = self.viewModel.courseCatalogueModels
+                
+                self.courseCataloguesView.tableView.reloadData()
+                self.courseCataloguesView.tableView.layoutIfNeeded()
+                
+                if self.courseCataloguesView.tableView.contentSize.height < UIScreenHeight - self.courseCataloguesView.dismissArrowBtn.bounds.size.height {
+                    self.courseCataloguesView.snp.remakeConstraints { make in
+                        make.leading.trailing.equalToSuperview()
+                        make.bottom.equalTo(self.view.snp.top)
+                        if #available(iOS 11.0, *) {
+                            make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height + (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0))
+                        } else {
+                            make.height.equalTo(self.courseCataloguesView.tableView.contentSize.height + self.courseCataloguesView.dismissArrowBtn.bounds.size.height)
+                        }
+                    }
+                }
+            } else if code == -2 {
+                statusCode = code
+            }
+            
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
+            if statusCode == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+            
+            
+            //            let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
+            //            if manager?.isReachableOnEthernetOrWiFi ?? false {
+            //                self.preparePlayAudio(autoPlay: false)
+            //            } else if manager?.isReachableOnWWAN ?? false {
+            //                if let autoplay = AppCacheService.sharedInstance.autoplayOnWWAN, autoplay == true {
+            //                    self.preparePlayAudio(autoPlay: true)
+            //                } else {
+            //                    let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
+            //                    alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
+            //                        AppCacheService.sharedInstance.autoplayOnWWAN = false
+            //                    }))
+            //                    alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
+            //                        AppCacheService.sharedInstance.autoplayOnWWAN = true
+            //                        self.preparePlayAudio(autoPlay: true)
+            //                    }))
+            //                    DispatchQueue.main.async {
+            //                        self.present(alertController, animated: true, completion: nil)
+            //                    }
+            //                }
+            //
+            //            }
+        }
+
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {

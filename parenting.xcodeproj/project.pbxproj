@@ -73,6 +73,7 @@
 		1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1316742021A53CC400643BF0 /* DSearchViewController.swift */; };
 		1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1316742221A54B2300643BF0 /* SearchHistoryCell.swift */; };
 		131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131CF01421953E5100CA7941 /* AppCacheService.swift */; };
+		131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131F015621ABC77D004F5F0F /* SolutionViewController.swift */; };
 		131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28A219D0DE500B55210 /* DMeEditViewController.swift */; };
 		131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28C219D51DD00B55210 /* CourseCell.swift */; };
 		131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28E219D5A1500B55210 /* DMeCoursesViewController.swift */; };
@@ -165,6 +166,7 @@
 		1316742021A53CC400643BF0 /* DSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSearchViewController.swift; sourceTree = "<group>"; };
 		1316742221A54B2300643BF0 /* SearchHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCell.swift; sourceTree = "<group>"; };
 		131CF01421953E5100CA7941 /* AppCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCacheService.swift; sourceTree = "<group>"; };
+		131F015621ABC77D004F5F0F /* SolutionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolutionViewController.swift; sourceTree = "<group>"; };
 		131FB28A219D0DE500B55210 /* DMeEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeEditViewController.swift; sourceTree = "<group>"; };
 		131FB28C219D51DD00B55210 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
 		131FB28E219D5A1500B55210 /* DMeCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeCoursesViewController.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				131160B82182E54C0000F105 /* PlaceholderTableViewCell.swift */,
 				130D46002189615B00CB4763 /* ParagraphLabel.swift */,
 				130F1C8B219BC26B004E1DD3 /* ActionButton.swift */,
+				131F015621ABC77D004F5F0F /* SolutionViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
+				131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
 				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,
 				130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */,
