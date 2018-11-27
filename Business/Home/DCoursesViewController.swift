@@ -57,6 +57,7 @@ class DCoursesViewController: BaseViewController {
                 self?.tableView.reloadData()
             })
         })
+        tableView.mj_footer.isHidden = true
 //        let footer = tableView.mj_footer as! MJRefreshAutoStateFooter
 //        footer.setTitle("没有更多", for: .noMoreData)
         
@@ -104,6 +105,15 @@ class DCoursesViewController: BaseViewController {
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
+//        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+//        scrollView.heightAnchor.constraint(equalToConstant: 46).isActive = true
+//
+//        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+//        tableView.topAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
         scrollView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
             make.height.equalTo(46)
@@ -121,16 +131,16 @@ class DCoursesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.tableView)
+        HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: UIScreenHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46)))
         viewModel.fetchCategory { (code) in
-            
+
             if code >= 0 {
                 self.initCategoryView()
                 self.fetchCourses()
-                
+
             } else if code == -2 {
                 HUDService.sharedInstance.hideFetchingView(target: self.tableView)
-                
+
                 HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
                     self?.fetchData()
                 }

@@ -319,14 +319,14 @@ class DPhoneViewController: BaseViewController {
     // MARK: - ============= Action =============
     
     @objc func fetchCodeBtnAction() {
-//        fetchBtn.startAnimating()
-//        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
-//            self.fetchBtn.stopAnimating()
-//            self.codeTextField.becomeFirstResponder()
+        fetchBtn.startAnimating()
+        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
+            self.fetchBtn.stopAnimating()
+            self.codeTextField.becomeFirstResponder()
         
             AppCacheService.sharedInstance.lastFetchingPasscodeDate = Date()
             self.reloadPasscodeTimer()
-//        }
+        }
     }
     
     @objc func signInBtnAction() {

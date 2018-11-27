@@ -21,13 +21,14 @@ class TeacherCoursesCell: UITableViewCell {
         layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 12
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        layout.itemSize = CGSize(width: width, height: width/16.0*9+12+52)
+        layout.itemSize = CGSize(width: width, height: width/16.0*9+10+37)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(PickedCourseCell.self, forCellWithReuseIdentifier: PickedCourseCell.className())
         view.dataSource = self
         view.delegate = self
         view.backgroundColor = .white
         view.alwaysBounceHorizontal = true
+        view.alwaysBounceVertical = false
         view.showsHorizontalScrollIndicator = false
         return view
     }()
@@ -79,7 +80,7 @@ extension TeacherCoursesCell: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PickedCourseCell.className(), for: indexPath) as! PickedCourseCell
         if let model = courseModels?[indexPath.row] {
-            cell.setup(model: model)
+            cell.setup(model: model, mode: .latest)
         }
         return cell
     }

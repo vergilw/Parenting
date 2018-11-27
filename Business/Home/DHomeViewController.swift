@@ -13,6 +13,15 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DHomeViewModel()
     
+    lazy fileprivate var section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
+    lazy fileprivate var section0FooterHeight: CGFloat = 64 + 42
+    lazy fileprivate var section1HeaderHeight: CGFloat = 32 + 25
+    lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+    lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
+    lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 10 + 37
+    lazy fileprivate var item0Spacing: CGFloat = 25
+    lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
+    
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         if #available(iOS 11, *) {
@@ -137,10 +146,11 @@ class DHomeViewController: BaseViewController {
         
         view.addSubview(scrollView)
         
-        let itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
         tableView.rowHeight = item1Height
         tableView.register(TeacherCoursesCell.self, forCellReuseIdentifier: TeacherCoursesCell.className())
+        tableView.alwaysBounceVertical = false
+        tableView.alwaysBounceVertical = false
+        tableView.bounces = false
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -182,13 +192,7 @@ class DHomeViewController: BaseViewController {
             make.height.equalTo(52)
         }
         
-        let section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
-        let section0FooterHeight: CGFloat = 64 + 42
-        let section1HeaderHeight: CGFloat = 64+25
-        let itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        let item0Height: CGFloat = itemWidth/16.0*9 + 12 + 52 + 8 + 20
-        let item1Height: CGFloat = itemWidth/16.0*9 + 12 + 52
-        let collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + 32 + section0FooterHeight
+        
         
         coursesCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
@@ -199,7 +203,7 @@ class DHomeViewController: BaseViewController {
         teacherBannerBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(coursesCollectionView.snp.bottom).offset(24)
+            make.top.equalTo(coursesCollectionView.snp.bottom).offset(0)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
         }
         tableView.snp.makeConstraints { make in
@@ -360,7 +364,7 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PickedCourseCell.className(), for: indexPath) as! PickedCourseCell
         if let model = viewModel.hottestCourseModels?[indexPath.row] {
-            cell.setup(model: model)
+            cell.setup(model: model, mode: .picked)
         }
         return cell
     }
@@ -383,7 +387,7 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 64+25
+        return section1HeaderHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

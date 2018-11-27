@@ -26,7 +26,7 @@ class HUDService {
         }
     }
     
-    func showFetchingView(target view: UIView) {
+    func showFetchingView(target view: UIView, frame: CGRect = .zero) {
         guard !view.subviews.contains(where: { (subview) -> Bool in
             return subview.isKind(of: FetchView.self)
         }) else {
@@ -35,7 +35,14 @@ class HUDService {
         
         let HUD = FetchView()
         view.addSubview(HUD)
-        if let scrollView = view as? UIScrollView {
+        
+        if frame != .zero {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(frame.size)
+                make.leading.equalTo(frame.origin.x)
+                make.top.equalTo(frame.origin.y)
+            }
+        } else if let scrollView = view as? UIScrollView {
             HUD.snp.makeConstraints { make in
                 make.size.equalTo(scrollView.bounds.size)
                 make.leading.equalTo(scrollView.contentOffset.x)
@@ -46,6 +53,7 @@ class HUDService {
                 make.edges.equalTo(view)
             }
         }
+        
     }
     
     func hideFetchingView(target view: UIView) {
@@ -180,7 +188,24 @@ fileprivate class FetchView: UIView {
         fatalError()
     }
     
-    override func didMoveToSuperview() {
+//    override func didMoveToSuperview() {
+//        var viewController: UIViewController?
+//        var view: UIView? = self
+//        repeat {
+//            if view?.next?.isKind(of: UIViewController.self) ?? false {
+//                viewController = view?.next as? UIViewController
+//                break
+//            }
+//            view = view?.superview
+//        } while view != nil
+//
+//        //FIXME: isNavigationBarHidden not correct (viewwillappear)
+//        if viewController?.navigationController?.isNavigationBarHidden ?? true {
+//            backBarBtn.isHidden = false
+//        }
+//    }
+    
+    override func didMoveToWindow() {
         var viewController: UIViewController?
         var view: UIView? = self
         repeat {

@@ -184,6 +184,7 @@ class CourseCell: UITableViewCell {
             priceLabel.font = UIConstants.Font.h2
             if let price = model?.price {
                 priceLabel.setPriceText("¥"+String(price), symbolFont: UIConstants.Font.body)
+//                priceLabel.setParagraphText(String(price))
             }
             
             if let URLString = model?.cover_attribute?.service_url {
@@ -197,7 +198,7 @@ class CourseCell: UITableViewCell {
                 avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
             }
             
-            titleLabel.setParagraphText(model?.title ?? "", isMultiline: true)
+            titleLabel.setParagraphText(model?.title ?? "")
             
             nameLabel.text = model?.teacher?.name ?? ""
             if let tags = model?.teacher?.tags, tags.count > 0 {
