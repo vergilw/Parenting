@@ -962,7 +962,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 make.height.equalTo(25)
             }
         } else if let price = viewModel.courseModel?.price {
-            tagLabel.setPriceText(String(format: "¥%.0f", price), symbolFont: UIConstants.Font.body)
+            tagLabel.setParagraphText(String(format: "%.2f", price))
             tagLabel.textColor = UIColor("#ef5226")
             tagLabel.backgroundColor = .white
             tagLabel.snp.remakeConstraints { make in

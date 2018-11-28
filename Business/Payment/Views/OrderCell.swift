@@ -181,7 +181,7 @@ class OrderCell: UITableViewCell {
             orderMode = mode
         }
         
-        priceLabel.setPriceText("¥0.0", symbolFont: UIConstants.Font.body)
+        priceLabel.setParagraphText("0.0")
         orderNumberLabel.setSymbolText("订单号：236815484212", symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
     }
 }

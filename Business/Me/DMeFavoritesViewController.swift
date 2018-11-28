@@ -23,7 +23,7 @@ class DMeFavoritesViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = 172
+        tableView.rowHeight = CourseCell.cellHeight()
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
         tableView.delegate = self

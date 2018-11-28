@@ -21,9 +21,14 @@ class PickedCourseCell: UICollectionViewCell {
     lazy fileprivate var previewImgView: UIImageView = {
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: width/16.0*9)))
-//        imgView.image = UIImage(named: <#T##String#>)
         imgView.contentMode = .scaleAspectFill
-        imgView.clipsToBounds = true
+        return imgView
+    }()
+    
+    lazy fileprivate var gradientShadowImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "me_courseGradientShadow")
+        imgView.contentMode = .scaleToFill
         return imgView
     }()
     
@@ -64,11 +69,11 @@ class PickedCourseCell: UICollectionViewCell {
         
         contentView.addSubviews([previewImgView, titleLabel, nameLabel])
         
-        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        let height = width/16.0*9
-        previewImgView.drawGradientBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: height-10-12-10), size: CGSize(width: width, height: (10+12+10))), colors: [UIColor(white: 1.0, alpha: 0.0).cgColor, UIColor(white: 0.0, alpha: 0.2).cgColor])
+//        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+//        let height = width/16.0*9
+//        previewImgView.drawGradientBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: height-10-12-10), size: CGSize(width: width, height: (10+12+10))), colors: [UIColor(white: 1.0, alpha: 0.0).cgColor, UIColor(white: 0.0, alpha: 0.2).cgColor])
         
-        previewImgView.addSubview(footnoteLabel)
+        previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
         
         initConstraints()
     }
@@ -82,6 +87,9 @@ class PickedCourseCell: UICollectionViewCell {
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(10)
             make.bottom.equalTo(-10)
+        }
+        gradientShadowImgView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalTo(previewImgView)
         }
 //        avatarImgView.snp.makeConstraints { make in
 //            make.leading.equalToSuperview()

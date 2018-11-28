@@ -14,6 +14,7 @@ class CourseCatalogueCell: UITableViewCell {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.foot
+        label.numberOfLines = 0
         return label
     }()
     
@@ -55,7 +56,8 @@ class CourseCatalogueCell: UITableViewCell {
         label.backgroundColor = UIColor(hex6: 0xf05053, alpha: 0.1)
         label.isHidden = true
         label.textAlignment = .center
-        label.layer.cornerRadius = 2.5
+        label.layer.cornerRadius = 8.5
+        label.clipsToBounds = true
         return label
     }()
     
@@ -85,7 +87,7 @@ class CourseCatalogueCell: UITableViewCell {
         sequenceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
 //            make.trailing.equalTo(titleLabel.snp.leading).offset(-10)
-            make.top.equalTo(16)
+            make.firstBaseline.equalTo(titleLabel)
         }
         listeningIndicatorImgView.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -94,7 +96,7 @@ class CourseCatalogueCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(54)
             make.trailing.greaterThanOrEqualTo(-25)
-            make.top.equalTo(sequenceLabel)
+            make.top.equalTo(16)
         }
         timeImgView.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)

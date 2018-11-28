@@ -70,6 +70,8 @@ class DPaymentViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
+        view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
+        
         view.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, footnoteLabel])
     }
     

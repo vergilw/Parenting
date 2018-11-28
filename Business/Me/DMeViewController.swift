@@ -21,6 +21,12 @@ class DMeViewController: BaseViewController {
         addNotificationObservers()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
         tableView.rowHeight = 75

@@ -20,7 +20,7 @@ enum CourseAPI {
     case my_comment(courseID: Int)
     case post_comment(courseID: Int, starsCount: Int, content: String?)
     case course_category
-    case courses(categoryID: Int, page: Int)
+    case courses(categoryID: Int?, page: Int)
 }
 
 extension CourseAPI: TargetType {
@@ -96,7 +96,11 @@ extension CourseAPI: TargetType {
         case .course_category:
             return .requestPlain
         case let .courses(categoryID, page):
-            return .requestParameters(parameters: ["course_category_id":categoryID, "page":page, "per_page":"10"], encoding: URLEncoding.default)
+            if let categoryID = categoryID {
+                return .requestParameters(parameters: ["course_category_id":categoryID, "page":page, "per_page":"10"], encoding: URLEncoding.default)
+            } else {
+                return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
+            }
         }
     }
     

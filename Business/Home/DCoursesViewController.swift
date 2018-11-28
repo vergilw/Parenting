@@ -14,10 +14,12 @@ class DCoursesViewController: BaseViewController {
     
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        view.backgroundColor = .white
         if #available(iOS 11, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
         }
-        scrollView.isPagingEnabled = true
+        scrollView.contentInset = UIEdgeInsets(top: 0, left: 9, bottom: 0, right: 9)
+//        scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
@@ -42,8 +44,11 @@ class DCoursesViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
+        view.backgroundColor = UIConstants.Color.background
+        
         tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = 172
+        tableView.rowHeight = CourseCell.cellHeight()
+        tableView.contentInset = UIEdgeInsets(top: UIConstants.Margin.leading-10, left: 0, bottom: UIConstants.Margin.leading-10, right: 0)
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
         tableView.delegate = self
@@ -67,36 +72,54 @@ class DCoursesViewController: BaseViewController {
     
     fileprivate func initCategoryView() {
         
-        var width = 0
+        var width: CGFloat = 0
+        var i = -1
+        var model: CourseCategoryModel?
         
-        for i in 0..<(viewModel.categoryModels?.count ?? 0) {
-            guard let model = viewModel.categoryModels?[i] else { continue }
+        repeat {
+//            guard let model = viewModel.categoryModels?[i] else { break }
             
             let button: UIButton = {
                 let button = UIButton()
                 button.setTitleColor(UIConstants.Color.body, for: .normal)
                 button.titleLabel?.font = UIConstants.Font.body
-                button.setTitle(model.name, for: .normal)
+                if let string = model?.name {
+                    button.setTitle(string, for: .normal)
+                } else {
+                    button.setTitle("全部", for: .normal)
+                    button.setTitleColor(UIConstants.Color.head, for: .normal)
+                    button.titleLabel?.font = UIConstants.Font.h2
+                }
                 button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
                 button.tag = i+1
                 return button
             }()
             
             scrollView.addSubview(button)
+            
+            let size = NSString(string: button.titleLabel?.text ?? "").size(for: button.titleLabel!.font, size: CGSize(width: UIScreenWidth, height: 36), mode: NSLineBreakMode.byTruncatingTail)
             button.snp.makeConstraints { make in
                 make.leading.equalTo(width)
                 if i == (viewModel.categoryModels?.count)! - 1 {
                     make.trailing.equalToSuperview()
                 }
-                make.width.equalTo(92)
+                make.width.equalTo(size.width+32)
                 make.height.equalTo(46)
                 make.top.bottom.equalToSuperview()
             }
-            width += 92
-        }
+            width += size.width+32
+            i += 1
+            if viewModel.categoryModels?.count ?? 0 > i {
+                model = viewModel.categoryModels?[i]
+            } else {
+                break
+            }
+            
+        } while (model != nil)
         
+        let size = NSString(string: "全部").size(for: UIConstants.Font.body, size: CGSize(width: UIScreenWidth, height: 36), mode: NSLineBreakMode.byTruncatingTail)
         categoryIndicatorImgView.snp.remakeConstraints { make in
-            make.centerX.equalTo(46)
+            make.centerX.equalTo((size.width+32)/2)
             make.height.equalTo(1.5)
             make.width.equalTo(29)
             make.bottom.equalTo(scrollView)
@@ -131,7 +154,7 @@ class DCoursesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: UIScreenHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46)))
+        HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: CGPoint(x: 0, y: -tableView.contentInset.top), size: CGSize(width: UIScreenWidth, height: UIScreenHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46)))
         viewModel.fetchCategory { (code) in
 
             if code >= 0 {
@@ -164,7 +187,7 @@ class DCoursesViewController: BaseViewController {
         }
     }
     
-    fileprivate func refetchCourses(categoryID: Int) {
+    fileprivate func refetchCourses(categoryID: Int?) {
         HUDService.sharedInstance.showFetchingView(target: self.tableView)
         viewModel.refetchCourses(categoryID: categoryID) { (code, next) in
             HUDService.sharedInstance.hideFetchingView(target: self.tableView)
@@ -216,8 +239,10 @@ class DCoursesViewController: BaseViewController {
         sender.setTitleColor(UIConstants.Color.head, for: .normal)
         sender.titleLabel?.font = UIConstants.Font.h2
         
-        if let model = viewModel.categoryModels?[sender.tag-1], let categoryID = model.id {
+        if let model = viewModel.categoryModels?[exist: sender.tag-1], let categoryID = model.id {
             refetchCourses(categoryID: categoryID)
+        } else if sender.tag == 0 {
+            refetchCourses(categoryID: nil)
         }
     }
 }

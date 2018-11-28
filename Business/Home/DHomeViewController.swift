@@ -72,7 +72,7 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var storyView: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.h2
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
         button.setTitle("氧育精彩故事", for: .normal)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(teacherStoriesBtnAction), for: .touchUpInside)
@@ -81,7 +81,7 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var storyIndicatorImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "public_arrowIndicator")
+        imgView.image = UIImage(named: "public_borderIndicator")
         return imgView
     }()
     
@@ -445,16 +445,16 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         
         let titleLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 25, weight: .bold)
-            label.textColor = .black
+            label.font = UIConstants.Font.h2
+            label.textColor = UIConstants.Color.head
             label.text = "在家核心早教课"
             return label
         }()
         
         let footnoteLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 18)
-            label.textColor = .black
+            label.font = UIFont(name: "PingFangSC-Regular", size: 18)
+            label.textColor = UIConstants.Color.body
             label.text = "品质和经过验证的精选课程"
             return label
         }()
@@ -488,7 +488,7 @@ fileprivate class MoreFooterView: UICollectionReusableView {
         let moreBtn: UIButton = {
             let button = UIButton()
             button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.h2
+            button.titleLabel?.font = UIConstants.Font.h2_regular
             button.setTitle("查看更多", for: .normal)
             button.layer.cornerRadius = 21
             button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor

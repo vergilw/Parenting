@@ -215,7 +215,7 @@ class DTransactionsViewController: BaseViewController {
         attributedString.addAttributes([NSAttributedString.Key.font : UIConstants.Font.foot], range: NSRange(location: attributedString.length-1, length: 1))
         courseNumberLabel.attributedText = attributedString
         
-        incomeLabel.setPriceText("¥2654", symbolFont: UIConstants.Font.body)
+        incomeLabel.setParagraphText("2654")
     }
     
     // MARK: - ============= Action =============
@@ -263,6 +263,18 @@ fileprivate class HeaderView: UITableViewHeaderFooterView {
     
     lazy fileprivate var transactionsMode: DTransactionsViewController.DTransactionsMode = .course
     
+    lazy fileprivate var topBgImg: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIConstants.Color.primaryGreen
+        return imgView
+    }()
+    
+    lazy fileprivate var bottomBgImg: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = .white
+        return imgView
+    }()
+    
     lazy fileprivate var courseBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
@@ -296,7 +308,11 @@ fileprivate class HeaderView: UITableViewHeaderFooterView {
         layer.shadowRadius = 11
         layer.shadowColor = UIColor.black.cgColor
         
+        addSubviews([topBgImg, bottomBgImg])
+        
+        drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 40)), cornerRadius: UIConstants.cornerRadius, color: .white)
         addSubviews([courseBtn, detailsBtn, categoryIndicatorImgView])
+        
         initConstraints()
     }
     
@@ -305,6 +321,14 @@ fileprivate class HeaderView: UITableViewHeaderFooterView {
     }
     
     fileprivate func initConstraints() {
+        topBgImg.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+        }
+        bottomBgImg.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(topBgImg.snp.bottom)
+            make.height.equalTo(topBgImg)
+        }
         courseBtn.snp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview()
         }

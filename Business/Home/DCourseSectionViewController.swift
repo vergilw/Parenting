@@ -95,7 +95,7 @@ class DCourseSectionViewController: BaseViewController {
         button.setTitle("进入课程 ", for: .normal)
         button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(.alwaysTemplate), for: .normal)
         button.tintColor = .white
-        button.layer.cornerRadius = UIConstants.cornerRadius
+        button.layer.cornerRadius = 12.5
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 0.5
         button.addTarget(self, action: #selector(courseEntranceBtnAction), for: .touchUpInside)

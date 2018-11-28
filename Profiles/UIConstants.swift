@@ -33,10 +33,15 @@ public struct UIConstants {
     public struct Font {
         public static let h1: UIFont = UIFont(name: "PingFangSC-Semibold", size: 25)!
         public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 18)!
+        public static let h2_regular: UIFont = UIFont(name: "PingFangSC-Regular", size: 18)!
         public static let h3: UIFont = UIFont(name: "PingFangSC-Medium", size: 17)!
         
         public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 15)!
         public static let foot: UIFont = UIFont(name: "PingFangSC-Regular", size: 12)!
+        
+//        func h2(weight: UIFont.Weight) -> UIFont {
+//            return UIFont(name: "PingFangSC-Regular", size: 18)!
+//        }
     }
     
     public struct Size {

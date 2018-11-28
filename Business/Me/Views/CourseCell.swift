@@ -23,13 +23,21 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var panelView: UIView = {
         let view = UIView()
-        view.drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-10, height: 132)), cornerRadius: 4)
+        view.drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-10, height: CourseCell.cellHeight()-40)), cornerRadius: 4)
         return view
     }()
     
     lazy fileprivate var shadowImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "me_coursePreviewShadow")
+        imgView.contentMode = .scaleToFill
+        return imgView
+    }()
+    
+    lazy fileprivate var gradientShadowImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "me_courseGradientShadow")
+        imgView.contentMode = .scaleToFill
         return imgView
     }()
     
@@ -37,10 +45,15 @@ class CourseCell: UITableViewCell {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
 //        imgView.clipsToBounds = true
-        let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 160*2, height: 90*2))
-        imgView.kf.setImage(with: URL(string: "http://cloud.1314-edu.com/yVstTMQcm6uYCt5an9HpPxgJ"), options: [.processor(processor)])
         
         return imgView
+    }()
+    
+    lazy fileprivate var footnoteLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
+        label.font = UIConstants.Font.foot
+        label.textColor = .white
+        return label
     }()
     
     lazy fileprivate var avatarImgView: UIImageView = {
@@ -63,6 +76,7 @@ class CourseCell: UITableViewCell {
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 2
+        label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-160-24
         label.setParagraphText("如何规划幼儿英引引导成长的历...")
         
@@ -106,22 +120,43 @@ class CourseCell: UITableViewCell {
         contentView.addSubview(panelView)
         panelView.addSubviews([shadowImgView, previewImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn])
         
+        previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
+        
+        initConstraints()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    fileprivate func initConstraints() {
         panelView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading+10)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(20)
             make.bottom.equalTo(-20)
         }
+        footnoteLabel.snp.makeConstraints { make in
+            make.leading.equalTo(10)
+            make.bottom.equalTo(-10)
+        }
         shadowImgView.snp.makeConstraints { make in
             make.centerX.equalTo(previewImgView)
             make.top.equalTo(previewImgView.snp.top).offset(-3.5)
+            make.width.equalTo(previewImgView.snp.width).multipliedBy(175.0/160.0)
+            make.height.equalTo(previewImgView.snp.height).multipliedBy(105.0/90.0)
+        }
+        gradientShadowImgView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalTo(previewImgView)
         }
         previewImgView.snp.makeConstraints { make in
             make.leading.equalTo(-10)
             make.top.equalTo(-10)
-            make.width.equalTo(160)
-            make.height.equalTo(90)
+            let imgWidth = CourseCell.previewImgWidth()
+            make.width.equalTo(imgWidth)
+            make.height.equalTo(imgWidth/16.0*9)
         }
+        
         avatarImgView.snp.makeConstraints { make in
             make.leading.equalTo(16)
             make.top.equalTo(previewImgView.snp.bottom).offset(12)
@@ -144,10 +179,6 @@ class CourseCell: UITableViewCell {
             make.trailing.bottom.equalToSuperview()
             make.size.equalTo(CGSize(width: 52, height: 62))
         }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
     }
     
     func setup(mode: CellDisplayMode, model: CourseModel? = nil) {
@@ -183,12 +214,11 @@ class CourseCell: UITableViewCell {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
             if let price = model?.price {
-                priceLabel.setPriceText("¥"+String(price), symbolFont: UIConstants.Font.body)
-//                priceLabel.setParagraphText(String(price))
+                priceLabel.setParagraphText(String(price))
             }
             
             if let URLString = model?.cover_attribute?.service_url {
-                let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+                let width: CGFloat = CourseCell.previewImgWidth()
                 let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
                 previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
             }
@@ -209,12 +239,17 @@ class CourseCell: UITableViewCell {
         } else if mode == .favirotes {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
-            priceLabel.setPriceText("¥39.8", symbolFont: UIConstants.Font.body)
+            priceLabel.setParagraphText("39.8")
             
         } else if mode == .owned {
             priceLabel.textColor = UIConstants.Color.primaryGreen
             priceLabel.font = UIConstants.Font.body
             priceLabel.text = "开始学习"
+        }
+        
+        
+        if let count = model?.students_count {
+            footnoteLabel.setParagraphText(String(count) + "人已学习")
         }
         
     }
@@ -228,5 +263,16 @@ class CourseCell: UITableViewCell {
             self.actionBtn.setImage(UIImage(named: "course_favoriteNormal")?.withRenderingMode(.alwaysOriginal), for: .normal)
             HUDService.sharedInstance.show(string: "成功取消收藏")
         }
+    }
+    
+    fileprivate class func previewImgWidth() -> CGFloat {
+        let titleWidth: CGFloat = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing - 24 - 160
+        let offset: CGFloat = (titleWidth + 1).truncatingRemainder(dividingBy: 17+1)
+        let imgWidth: CGFloat = 160+offset-1
+        return imgWidth
+    }
+    
+    class func cellHeight() -> CGFloat {
+        return 10 + previewImgWidth()/16.0*9 + 12 + 22 + 20 + 20
     }
 }

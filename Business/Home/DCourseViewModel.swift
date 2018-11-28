@@ -10,7 +10,7 @@ import HandyJSON
 
 class DCourseViewModel {
     
-    var categoryID: Int = 0
+    var categoryID: Int?
     
     var categoryModels: [CourseCategoryModel]?
     
@@ -23,16 +23,16 @@ class DCourseViewModel {
             
             if let data = JSON?["data"] as? [[String: Any]] {
                 self.categoryModels = [CourseCategoryModel].deserialize(from: data) as? [CourseCategoryModel]
-                if let first = self.categoryModels?.first, let categoryID = first.id {
-                    self.categoryID = categoryID
-                }
+//                if let first = self.categoryModels?.first, let categoryID = first.id {
+//                    self.categoryID = categoryID
+//                }
             }
             
             completion(code)
         }))
     }
     
-    func refetchCourses(categoryID: Int, completion: @escaping (_ code: Int, _ next: Bool)->Void) {
+    func refetchCourses(categoryID: Int?, completion: @escaping (_ code: Int, _ next: Bool)->Void) {
         
         CourseProvider.request(.courses(categoryID: categoryID, page: 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             

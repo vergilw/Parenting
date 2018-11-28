@@ -117,7 +117,7 @@ class TransactionCell: UITableViewCell {
             titleLabel.setParagraphText("如何规划幼儿英引导引...")
             headnoteLabel.setParagraphText("共342人购买")
             descLabel.setParagraphText("已有1342次学习")
-            priceLabel.setPriceText("¥29.9", symbolFont: UIConstants.Font.body)
+            priceLabel.setParagraphText("29.9")
             
         } else if mode == .details {
             titleLabel.setParagraphText("如何规划幼儿英引导引...")
