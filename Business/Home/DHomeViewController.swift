@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import Presentr
 
 class DHomeViewController: BaseViewController {
     
@@ -51,6 +52,24 @@ class DHomeViewController: BaseViewController {
         label.textColor = UIConstants.Color.body
         label.text = "培养孩子独立丨智力发育想..."
         return label
+    }()
+    
+    let audioBarBtn: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
+        
+        let img = YYImage(named: "public_audioAnimationItem")
+        let imgView = YYAnimatedImageView(image: img)
+        
+        button.addSubview(imgView)
+        imgView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.centerX.equalToSuperview().offset(-5)
+            make.width.equalTo(22)
+            make.height.equalTo(22)
+        }
+        return button
     }()
     
     lazy fileprivate var carouselView: TYCyclePagerView = {
@@ -123,6 +142,8 @@ class DHomeViewController: BaseViewController {
         button.isUserInteractionEnabled = false
         return button
     }()
+    
+    fileprivate var observer: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,8 +178,7 @@ class DHomeViewController: BaseViewController {
         scrollView.mj_header = CustomMJHeader(refreshingBlock: { [weak self] in
             self?.fetchData()
         })
-        
-        scrollView.addSubviews([searchBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
         searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
     }
@@ -177,6 +197,17 @@ class DHomeViewController: BaseViewController {
                 make.top.equalTo(7.5)
             }
             make.height.equalTo(42)
+        }
+        audioBarBtn.snp.remakeConstraints { make in
+            make.leading.equalTo(searchBtn.snp.trailing)
+            make.trailing.equalToSuperview()
+            if #available(iOS 11, *) {
+                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
+            } else {
+                make.top.equalTo(7.5)
+            }
+            make.height.equalTo(42)
+            make.width.equalTo(15+22+25)
         }
         carouselView.snp.makeConstraints { make in
             make.leading.equalTo(0)
@@ -243,14 +274,16 @@ class DHomeViewController: BaseViewController {
             make.centerY.equalToSuperview()
         }
         storyAvatarsView.snp.makeConstraints { make in
-            make.trailing.equalTo(storyIndicatorImgView.snp.leading).offset(10)
+            make.trailing.equalTo(storyIndicatorImgView.snp.leading).offset(-10)
             make.top.bottom.equalToSuperview()
         }
     }
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
+            self?.reloadSearchBar()
+        }
     }
     
     // MARK: - ============= Request =============
@@ -293,6 +326,65 @@ class DHomeViewController: BaseViewController {
             bottomBannerView.kf.setImage(with: URL(string: URLString), for: .normal, options: [.processor(processor)])
         }
         
+        //setup story avatars
+        storyAvatarsView.removeAllSubviews()
+        var containerWidth: CGFloat = 0
+        for i in 0..<(viewModel.storyModels?.count ?? 0) {
+            guard let model = viewModel.storyModels?[exist: i] else { break }
+            guard let URLString = model.avatar else { continue }
+            
+            let imgView: UIImageView = {
+                let imgView = UIImageView()
+                imgView.kf.setImage(with: URL(string: URLString))
+                imgView.contentMode = .scaleAspectFill
+                imgView.layer.cornerRadius = 15
+                imgView.layer.borderWidth = 1.5
+                imgView.layer.borderColor = UIColor.white.cgColor
+                imgView.clipsToBounds = true
+                return imgView
+            }()
+            storyAvatarsView.addSubview(imgView)
+            
+            imgView.snp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+                make.trailing.equalToSuperview().offset(-containerWidth)
+                make.width.equalTo(30)
+            }
+            containerWidth += 30 - 10
+        }
+        storyAvatarsView.snp.remakeConstraints { make in
+            make.trailing.equalTo(storyIndicatorImgView.snp.leading).offset(-10)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(30)
+        }
+    }
+    
+    func reloadSearchBar() {
+        if PlayListService.sharedInstance.playingIndex != -1 {
+            
+            audioBarBtn.isHidden = false
+            
+            if let animatedImgView = audioBarBtn.subviews.first(where: { (subview) -> Bool in
+                return subview.isKind(of: YYAnimatedImageView.self)
+            }) as? YYAnimatedImageView {
+                
+                if PlayListService.sharedInstance.isPlaying {
+                    animatedImgView.startAnimating()
+                } else {
+                    animatedImgView.stopAnimating()
+                }
+            }
+            
+            searchBtn.snp.remakeConstraints { make in
+                make.leading.equalTo(UIConstants.Margin.leading)
+                if #available(iOS 11, *) {
+                    make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
+                } else {
+                    make.top.equalTo(7.5)
+                }
+                make.height.equalTo(42)
+            }
+        }
     }
     
     // MARK: - ============= Action =============
@@ -316,6 +408,25 @@ class DHomeViewController: BaseViewController {
             if let courseID = model.target_id, model.target_type == "Course" {
                 navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
             }
+        }
+    }
+    
+    @objc func audioPanelBarItemAction() {
+        
+        let viewController = DPlayListViewController()
+        viewController.selectedCourseBlock = { [weak self] (courseID) in
+            self?.navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
+        viewController.selectedSectionBlock = { [weak self] (courseID, sectionID) in
+            self?.navigationController?.pushViewController(DCourseSectionViewController(courseID: courseID, sectionID: sectionID), animated: true)
+        }
+        customPresentViewController(PlayListService.sharedInstance.presenter, viewController: viewController, animated: true)
+    }
+    
+    deinit {
+        if observer != nil {
+            observer?.invalidate()
+            observer = nil
         }
     }
 }

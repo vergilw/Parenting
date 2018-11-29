@@ -10,6 +10,7 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 import Kingfisher
+import Presentr
 
 class PlayListService: NSObject {
     
@@ -36,6 +37,24 @@ class PlayListService: NSObject {
     var playingIndex: Int = -1
     
     @objc dynamic var isPlaying: Bool = false
+    
+    let presenter: Presentr = {
+        let width = ModalSize.full
+        let height = ModalSize.full
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint.zero)
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVerticalFromTop
+        customPresenter.dismissTransitionType = .coverVerticalFromTop
+        customPresenter.roundCorners = true
+        customPresenter.cornerRadius = 5
+        customPresenter.backgroundColor = .black
+        customPresenter.backgroundOpacity = 0.5
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .top
+        return customPresenter
+    }()
     
     func playAudio(course: CourseModel, sections: [CourseSectionModel], playingIndex: Int, startPlaying: Bool = true) {
         

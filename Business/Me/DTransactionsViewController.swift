@@ -310,7 +310,7 @@ fileprivate class HeaderView: UITableViewHeaderFooterView {
         
         addSubviews([topBgImg, bottomBgImg])
         
-        drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 40)), cornerRadius: UIConstants.cornerRadius, color: .white)
+        drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 40)), cornerRadius: 5, color: .white)
         addSubviews([courseBtn, detailsBtn, categoryIndicatorImgView])
         
         initConstraints()

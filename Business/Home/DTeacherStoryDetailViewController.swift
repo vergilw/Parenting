@@ -7,9 +7,14 @@
 //
 
 import UIKit
+import HandyJSON
 
 class DTeacherStoryDetailViewController: BaseViewController {
 
+    var storyID: Int = 0
+    
+    fileprivate var storyModel: StoryModel?
+    
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         if #available(iOS 11, *) {
@@ -74,6 +79,15 @@ class DTeacherStoryDetailViewController: BaseViewController {
         return view
     }()
     
+    init(storyID: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.storyID = storyID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -83,7 +97,7 @@ class DTeacherStoryDetailViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        reload()
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -148,13 +162,71 @@ class DTeacherStoryDetailViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        StoryProvider.request(.story(storyID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["data"] as? [String: Any] {
+                    self.storyModel = StoryModel.deserialize(from: data)
+                    self.reload()
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        titleLabel.setParagraphText("一个育儿专家，是怎么把教父母如何哄宝宝睡觉变成一门大生意的？")
-        teacherNameLabel.setParagraphText("橙子老师")
-        teacherTagLabel.setParagraphText("全职妈妈丨心理咨询")
-        teacherBriefLabel.setParagraphText("沈从文是现代著名作家、历史文物研究家、京派小说代表人物。14岁时，他投身行伍，浪迹湘川黔边境地区。这里的介绍不超过100个中文字.")
+        
+        if let avatarURL = storyModel?.story_teller?.avatar {
+            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
+        }
+        
+        titleLabel.setParagraphText(storyModel?.title ?? "")
+        teacherNameLabel.setParagraphText(storyModel?.story_teller?.name ?? "")
+        
+        if let tags = storyModel?.story_teller?.tags, tags.count > 0 {
+            let tagString = tags.joined(separator: " | ")
+            teacherTagLabel.setParagraphText(tagString)
+        }
+        
+        teacherBriefLabel.setParagraphText(storyModel?.story_teller?.description ?? "")
+        
+        containerView.removeAllSubviews()
+        var containerHeight: CGFloat = 0
+        for i in 0..<(storyModel?.content_images?.count ?? 0) {
+            guard let model = storyModel?.content_images?[exist: i] else { break }
+            guard let height = model.height, let width = model.width else { continue }
+            guard let URLString = model.service_url else { continue }
+            
+            let imgView: UIImageView = {
+                let imgView = UIImageView()
+                imgView.kf.setImage(with: URL(string: URLString))
+                imgView.contentMode = .scaleToFill
+                return imgView
+            }()
+            containerView.addSubview(imgView)
+            
+            let layoutHeight = CGFloat(height)/CGFloat(width)*(UIScreenWidth)
+            imgView.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview()
+                make.top.equalTo(containerHeight)
+                make.height.equalTo(layoutHeight)
+            }
+            containerHeight += layoutHeight
+        }
+        containerView.snp.remakeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(separatorImgView.snp.bottom).offset(32)
+            make.bottom.equalTo(-UIConstants.Margin.bottom)
+            make.height.equalTo(containerHeight)
+        }
         
     }
     

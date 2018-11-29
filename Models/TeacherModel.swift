@@ -15,6 +15,7 @@ class TeacherModel: HandyJSON {
     var description: String?
     var headshot_attribute: AssetModel?
     var tags: [String]?
+    var avatar: String?
     
     required init() {
         

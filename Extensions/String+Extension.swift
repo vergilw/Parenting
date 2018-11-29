@@ -80,6 +80,16 @@ extension String {
         return decoded ?? self
     }
     
+    static let priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        formatter.roundingMode = .ceiling
+        return formatter
+    }()
+    
+    
     /*
     /// Hashing algorithm for hashing a string instance.
     ///

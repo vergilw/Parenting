@@ -69,4 +69,15 @@ class DCourseDetailViewModel {
             }
         }))
     }
+    
+    func toggleFavorites(completion: @escaping (Int, Bool)->Void) {
+        CourseProvider.request(.course_toggle_favorites(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if let isFavorite = JSON?["is_favorite"] as? Bool {
+                completion(code, isFavorite)
+            } else {
+                completion(code, false)
+            }
+        }))
+    }
 }

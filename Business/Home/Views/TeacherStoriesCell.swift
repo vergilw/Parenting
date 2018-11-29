@@ -12,7 +12,7 @@ class TeacherStoriesCell: UITableViewCell {
 
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.contentMode = .scaleAspectFill
+        imgView.contentMode = .scaleAspectFit
         return imgView
     }()
     
@@ -83,9 +83,20 @@ class TeacherStoriesCell: UITableViewCell {
         fatalError()
     }
 
-    func setup() {
-        titleLabel.setParagraphText("一个育儿专家，是怎么把教父母如何哄宝宝睡觉变成…")
-        nameLabel.setParagraphText("Ndesw")
-        tagLabel.setParagraphText("全职妈妈丨心理咨询")
+    func setup(model: StoryModel) {
+        
+        if var URLString = model.cover_image?.service_url {
+            URLString += "?thumbnail/\(UIScreenWidth)x\(UIScreenWidth/16.0*9)"
+            previewImgView.kf.setImage(with: URL(string: URLString))
+        }
+        
+        titleLabel.setParagraphText(model.title ?? "")
+        nameLabel.setParagraphText(model.story_teller?.name ?? "")
+        
+        if let tags = model.story_teller?.tags, tags.count > 0 {
+            let tagString = tags.joined(separator: " | ")
+            tagLabel.setParagraphText(tagString)
+        }
+        
     }
 }

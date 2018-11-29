@@ -168,10 +168,9 @@ class DCourseDetailViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var favoriteBtn: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(UIConstants.Color.foot, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.foot
+    lazy fileprivate var favoriteBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
         button.addTarget(self, action: #selector(favoriteBtnAction), for: .touchUpInside)
         return button
     }()
@@ -727,7 +726,7 @@ class DCourseDetailViewController: BaseViewController {
         
         let viewController = DPlayListViewController()
         viewController.selectedCourseBlock = { [weak self] (courseID) in
-            self?.navigationController?.pushViewController(DCourseDetailViewController(courseID: self?.viewModel.courseID ?? 0), animated: true)
+            self?.navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
         }
         viewController.selectedSectionBlock = { [weak self] (courseID, sectionID) in
             self?.navigationController?.pushViewController(DCourseSectionViewController(courseID: courseID, sectionID: sectionID), animated: true)
@@ -751,18 +750,63 @@ class DCourseDetailViewController: BaseViewController {
 //            present(<#T##viewControllerToPresent: UIViewController##UIViewController#>, animated: <#T##Bool#>, completion: <#T##(() -> Void)?##(() -> Void)?##() -> Void#>)
 //        }
         
-        guard let isFavorite = viewModel.courseModel?.is_favorite else {
-            return
-        }
-        viewModel.courseModel?.is_favorite = !isFavorite
+//        guard let isFavorite = viewModel.courseModel?.is_favorite else {
+//            return
+//        }
         
-        if viewModel.courseModel?.is_favorite == true {
-            favoriteImgView.image = UIImage(named: "course_favoriteSelected")
-            favoriteLabel.text = "已收藏"
-        } else {
-            favoriteImgView.image = UIImage(named: "course_favoriteNormal")
-            favoriteLabel.text = "收藏"
+        self.favoriteImgView.isHidden = true
+        self.favoriteLabel.isHidden = true
+        favoriteBtn.startAnimating()
+        
+        viewModel.toggleFavorites { (code, status) in
+            self.favoriteBtn.stopAnimating()
+            
+            self.viewModel.courseModel?.is_favorite = status
+            
+            if self.viewModel.courseModel?.is_favorite == true {
+                self.favoriteImgView.image = UIImage(named: "course_favoriteSelected")
+                self.favoriteLabel.text = "已收藏"
+            } else {
+                self.favoriteImgView.image = UIImage(named: "course_favoriteNormal")
+                self.favoriteLabel.text = "收藏"
+            }
+            
+            self.favoriteImgView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.favoriteImgView.isHidden = false
+            self.favoriteLabel.isHidden = false
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.curveLinear, animations: {
+                self.favoriteImgView.transform = CGAffineTransform.identity
+            }, completion: { (bool) in
+                
+            })
         }
+        
+        /*
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+            
+            self.favoriteBtn.stopAnimating()
+            
+            self.viewModel.courseModel?.is_favorite = !isFavorite
+            
+            if self.viewModel.courseModel?.is_favorite == true {
+                self.favoriteImgView.image = UIImage(named: "course_favoriteSelected")
+                self.favoriteLabel.text = "已收藏"
+            } else {
+                self.favoriteImgView.image = UIImage(named: "course_favoriteNormal")
+                self.favoriteLabel.text = "收藏"
+            }
+            
+            self.favoriteImgView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.favoriteImgView.isHidden = false
+            self.favoriteLabel.isHidden = false
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.curveLinear, animations: {
+                self.favoriteImgView.transform = CGAffineTransform.identity
+            }, completion: { (bool) in
+                
+            })
+        }
+        */
+        
     }
     
     @objc func auditionBtnAction() {
@@ -962,7 +1006,9 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 make.height.equalTo(25)
             }
         } else if let price = viewModel.courseModel?.price {
-            tagLabel.setParagraphText(String(format: "%.2f", price))
+            
+            let string = String.priceFormatter.string(from: NSNumber(value: price))
+            tagLabel.setParagraphText(string ?? "")
             tagLabel.textColor = UIColor("#ef5226")
             tagLabel.backgroundColor = .white
             tagLabel.snp.remakeConstraints { make in

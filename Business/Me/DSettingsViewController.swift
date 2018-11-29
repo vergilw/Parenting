@@ -73,6 +73,7 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
             cell.setup(title: "关于氧育")
         } else if indexPath.row == 1 {
             cell.setup(title: "清除缓存", value: "320MB")
+            //TODO: NSByteCountFormatter
         } else if indexPath.row == 2 {
             cell.setup(title: "意见反馈")
         }

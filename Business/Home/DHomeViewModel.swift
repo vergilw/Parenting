@@ -20,6 +20,8 @@ class DHomeViewModel {
     
     var recommendedCourseModel: CourseModel?
     
+    var storyModels: [StoryModel]?
+    
     func fetchHomeData(completion: @escaping (Int)->Void) {
         
         CommonProvider.request(.home, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
@@ -46,6 +48,10 @@ class DHomeViewModel {
                     if let courses = ads["recommended"] as? [String: Any] {
                         self.recommendedCourseModel = CourseModel.deserialize(from: courses)
                     }
+                }
+                
+                if let stories = data["story_tellers"] as? [[String: Any]] {
+                    self.storyModels = [StoryModel].deserialize(from: stories) as? [StoryModel]
                 }
             }
             

@@ -10,7 +10,7 @@ import UIKit
 
 class DCoursesViewController: BaseViewController {
 
-    lazy fileprivate var viewModel = DCourseViewModel()
+    lazy fileprivate var viewModel = DCoursesViewModel()
     
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -117,7 +117,7 @@ class DCoursesViewController: BaseViewController {
             
         } while (model != nil)
         
-        let size = NSString(string: "全部").size(for: UIConstants.Font.body, size: CGSize(width: UIScreenWidth, height: 36), mode: NSLineBreakMode.byTruncatingTail)
+        let size = NSString(string: "全部").size(for: UIConstants.Font.h2, size: CGSize(width: UIScreenWidth, height: 36), mode: NSLineBreakMode.byTruncatingTail)
         categoryIndicatorImgView.snp.remakeConstraints { make in
             make.centerX.equalTo((size.width+32)/2)
             make.height.equalTo(1.5)

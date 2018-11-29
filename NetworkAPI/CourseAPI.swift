@@ -21,6 +21,8 @@ enum CourseAPI {
     case post_comment(courseID: Int, starsCount: Int, content: String?)
     case course_category
     case courses(categoryID: Int?, page: Int)
+    case course_toggle_favorites(courseID: Int)
+    case course_favorites(Int)
 }
 
 extension CourseAPI: TargetType {
@@ -47,6 +49,10 @@ extension CourseAPI: TargetType {
             return "/app/course_categories.json"
         case .courses:
             return "/app/courses.json"
+        case let .course_toggle_favorites(courseID):
+            return "/app/courses/\(courseID)/toggle_favorite"
+        case .course_favorites:
+            return "/app/favorites/courses.json"
         }
     }
     
@@ -67,6 +73,10 @@ extension CourseAPI: TargetType {
         case .course_category:
             return .get
         case .courses:
+            return .get
+        case .course_toggle_favorites:
+            return .post
+        case .course_favorites:
             return .get
         }
     }
@@ -101,6 +111,10 @@ extension CourseAPI: TargetType {
             } else {
                 return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
             }
+        case .course_toggle_favorites:
+            return .requestPlain
+        case let .course_favorites(page):
+            return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
         }
     }
     

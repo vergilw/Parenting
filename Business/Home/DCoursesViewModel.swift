@@ -1,5 +1,5 @@
 //
-//  DCourseViewModel.swift
+//  DCoursesViewModel.swift
 //  parenting
 //
 //  Created by Vergil.Wang on 2018/11/23.
@@ -8,7 +8,7 @@
 
 import HandyJSON
 
-class DCourseViewModel {
+class DCoursesViewModel {
     
     var categoryID: Int?
     

@@ -687,8 +687,8 @@ class DCourseSectionViewController: BaseViewController {
                         let startSeconds = CMTimeGetSeconds(timeRange.start)
                         let durationSecound = CMTimeGetSeconds(timeRange.duration)
                         let loadedTime = startSeconds + durationSecound
-                        print(playerItem)
                         let totalTime = CMTimeGetSeconds(playerItem.duration)
+                        guard !totalTime.isNaN else { return }
                         
                         //                self?.audioSlider.maximumValue = Float(loadedTime/totalTime)
                         if let audioSlider = self?.audioSlider {
