@@ -10,6 +10,11 @@ import UIKit
 
 class DMeFavoritesViewController: BaseViewController {
 
+    
+    fileprivate var favoritesModels: [CourseModel]?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,6 +23,8 @@ class DMeFavoritesViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -27,6 +34,10 @@ class DMeFavoritesViewController: BaseViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.fetchData()
+        })
+        tableView.mj_footer.isHidden = true
         
         view.addSubview(tableView)
     }
@@ -44,6 +55,35 @@ class DMeFavoritesViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        CourseProvider.request(.course_favorites(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["data"] as? [[String: Any]] {
+                    self.favoritesModels = [CourseModel].deserialize(from: data) as? [CourseModel]
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -62,12 +102,37 @@ extension DMeFavoritesViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return favoritesModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCell.className(), for: indexPath) as! CourseCell
-        cell.setup(mode: CourseCell.CellDisplayMode.favirotes)
+        if let model = favoritesModels?[exist: indexPath.row], let courseID = model.id {
+            cell.setup(mode: CourseCell.CellDisplayMode.favirotes, model: model)
+            cell.actionBlock = { [weak self] button in
+                button.startAnimating()
+                
+                CourseProvider.request(.course_toggle_favorites(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                    
+                    if let isFavorite = JSON?["is_favorite"] as? Bool {
+                        button.stopAnimating()
+                        
+                        model.is_favorite = isFavorite
+                        
+                        if model.is_favorite == true {
+                            button.setImage(UIImage(named: "course_favoriteSelected"), for: .normal)
+                        } else {
+                            button.setImage(UIImage(named: "course_favoriteNormal"), for: .normal)
+                        }
+                        
+                        button.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.curveLinear, animations: {
+                            button.transform = CGAffineTransform.identity
+                        }, completion: nil)
+                    }
+                }))
+            }
+        }
         return cell
     }
     

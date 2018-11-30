@@ -135,7 +135,7 @@ fileprivate class HUDView: UIView {
 }
 
 
-fileprivate class FetchView: UIView {
+class FetchView: UIView {
     
     lazy fileprivate var animationView: UIView = {
         let view = UIView()

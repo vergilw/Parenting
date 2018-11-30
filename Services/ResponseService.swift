@@ -39,6 +39,12 @@ class ResponseService {
                         completion(-1, nil)
                     }
                     
+                } else if response.statusCode == 401 {
+                    AuthorizationService.sharedInstance.signOut()
+                    let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                    UIApplication.shared.keyWindow?.rootViewController?.present(authorizationNavigationController, animated: true, completion: nil)
+                    completion(-1, nil)
+                    
                 } else {
                     do {
                         let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]

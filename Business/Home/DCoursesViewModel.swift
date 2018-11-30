@@ -14,7 +14,7 @@ class DCoursesViewModel {
     
     var categoryModels: [CourseCategoryModel]?
     
-    var courseModels: [CourseModel]?
+    var coursesModels: [[CourseModel]]?
     
     lazy fileprivate var pageNumber: Int = 1
     
@@ -32,62 +32,64 @@ class DCoursesViewModel {
         }))
     }
     
-    func refetchCourses(categoryID: Int?, completion: @escaping (_ code: Int, _ next: Bool)->Void) {
+    func refetchCourses(categoryID: Int?, completion: @escaping (_ code: Int, _ next: Bool, _ models: [CourseModel]?)->Void) {
         
         CourseProvider.request(.courses(categoryID: categoryID, page: 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             guard let JSONArr = JSON?["data"] as? [[String: Any]], code >= 0 else {
-                completion(code, false)
+                completion(code, false, nil)
                 return
             }
             
             self.categoryID = categoryID
             self.pageNumber = 1
             
-            if let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel] {
-                self.courseModels = models
-            }
+            let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel]
+//            if let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel] {
+//                self.courseModels = models
+//            }
             
             if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                 if totalPages > self.pageNumber {
                     self.pageNumber += 1
-                    completion(code, true)
+                    completion(code, true, models)
                 } else {
-                    completion(code, false)
+                    completion(code, false, models)
                 }
             } else {
-                completion(code, false)
+                completion(code, false, models)
             }
             
             
         }))
     }
     
-    func fetchCourses(completion: @escaping (_ code: Int, _ next: Bool)->Void) {
+    func fetchCourses(completion: @escaping (_ code: Int, _ next: Bool, _ models: [CourseModel]?)->Void) {
         CourseProvider.request(.courses(categoryID: categoryID, page: pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             guard let JSONArr = JSON?["data"] as? [[String: Any]], code >= 0 else {
-                completion(code, false)
+                completion(code, false, nil)
                 return
             }
             
-            if let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel] {
-                if self.courseModels == nil {
-                    self.courseModels = models
-                } else {
-                    self.courseModels?.append(contentsOf: models)
-                }
-            }
+            let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel]
+//            if let models = [CourseModel].deserialize(from: JSONArr) as? [CourseModel] {
+//                if self.courseModels == nil {
+//                    self.courseModels = models
+//                } else {
+//                    self.courseModels?.append(contentsOf: models)
+//                }
+//            }
             
             if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                 if totalPages > self.pageNumber {
                     self.pageNumber += 1
-                    completion(code, true)
+                    completion(code, true, models)
                 } else {
-                    completion(code, false)
+                    completion(code, false, models)
                 }
             } else {
-                completion(code, false)
+                completion(code, false, models)
             }
             
         }))

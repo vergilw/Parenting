@@ -278,6 +278,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.row == 2 {
             navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.row == 3 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
             navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
         } else if indexPath.row == 4 {
             navigationController?.pushViewController(DTransactionsViewController(), animated: true)

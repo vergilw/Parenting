@@ -19,7 +19,7 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var displayMode: CellDisplayMode = .default
     
-    var actionBlock: (()->())?
+    var actionBlock: ((ActionButton)->())?
     
     lazy fileprivate var panelView: UIView = {
         let view = UIView()
@@ -95,6 +95,7 @@ class CourseCell: UITableViewCell {
         let button = ActionButton()
         button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
         button.setImage(UIImage(named: "course_favoriteSelected")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: -8, left: 0, bottom: 8, right: 0)
         button.isHidden = true
         button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
         return button
@@ -177,7 +178,7 @@ class CourseCell: UITableViewCell {
         }
         actionBtn.snp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
-            make.size.equalTo(CGSize(width: 52, height: 62))
+            make.size.equalTo(CGSize(width: 52, height: 12+20+20))
         }
     }
     
@@ -217,29 +218,12 @@ class CourseCell: UITableViewCell {
                 priceLabel.setParagraphText(String(price))
             }
             
-            if let URLString = model?.cover_attribute?.service_url {
-                let width: CGFloat = CourseCell.previewImgWidth()
-                let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
-                previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
-            }
-            
-            if let URLString = model?.teacher?.headshot_attribute?.service_url {
-                let processor = RoundCornerImageProcessor(cornerRadius: 22, targetSize: CGSize(width: 44, height: 44))
-                avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
-            }
-            
-            titleLabel.setParagraphText(model?.title ?? "")
-            
-            nameLabel.text = model?.teacher?.name ?? ""
-            if let tags = model?.teacher?.tags, tags.count > 0 {
-                let tagString = tags.joined(separator: " | ")
-                nameLabel.text = nameLabel.text?.appendingFormat(" : %@", tagString)
-            }
-            
         } else if mode == .favirotes {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
-            priceLabel.setParagraphText("39.8")
+            if let price = model?.price {
+                priceLabel.setParagraphText(String(price))
+            }
             
         } else if mode == .owned {
             priceLabel.textColor = UIConstants.Color.primaryGreen
@@ -248,6 +232,25 @@ class CourseCell: UITableViewCell {
         }
         
         
+        if let URLString = model?.cover_attribute?.service_url {
+            let width: CGFloat = CourseCell.previewImgWidth()
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
+            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
+        
+        if let URLString = model?.teacher?.headshot_attribute?.service_url {
+            let processor = RoundCornerImageProcessor(cornerRadius: 22, targetSize: CGSize(width: 44, height: 44))
+            avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
+        
+        titleLabel.setParagraphText(model?.title ?? "")
+        
+        nameLabel.text = model?.teacher?.name ?? ""
+        if let tags = model?.teacher?.tags, tags.count > 0 {
+            let tagString = tags.joined(separator: " | ")
+            nameLabel.text = nameLabel.text?.appendingFormat(" : %@", tagString)
+        }
+        
         if let count = model?.students_count {
             footnoteLabel.setParagraphText(String(count) + "人已学习")
         }
@@ -255,13 +258,16 @@ class CourseCell: UITableViewCell {
     }
     
     @objc func actionBtnAction() {
-        actionBtn.startAnimating()
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
-            
-            self.actionBtn.stopAnimating()
-            self.actionBtn.setImage(UIImage(named: "course_favoriteNormal")?.withRenderingMode(.alwaysOriginal), for: .normal)
-            HUDService.sharedInstance.show(string: "成功取消收藏")
+//        actionBtn.startAnimating()
+//
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
+//
+//            self.actionBtn.stopAnimating()
+//            self.actionBtn.setImage(UIImage(named: "course_favoriteNormal")?.withRenderingMode(.alwaysOriginal), for: .normal)
+//            HUDService.sharedInstance.show(string: "成功取消收藏")
+//        }
+        if let closure = actionBlock {
+            closure(actionBtn)
         }
     }
     
