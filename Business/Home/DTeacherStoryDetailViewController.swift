@@ -36,6 +36,8 @@ class DTeacherStoryDetailViewController: BaseViewController {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
         imgView.image = UIImage(named: "public_avatarPlaceholder")
+        imgView.layer.cornerRadius = 23
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -65,6 +67,7 @@ class DTeacherStoryDetailViewController: BaseViewController {
         label.textColor = UIConstants.Color.subhead
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-30
+        label.lineBreakMode = .byCharWrapping
         return label
     }()
     
@@ -185,6 +188,7 @@ class DTeacherStoryDetailViewController: BaseViewController {
     @objc func reload() {
         
         if let avatarURL = storyModel?.story_teller?.avatar {
+//            avatarURL += "?imageMogr2/thumbnail/50x"
             teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
         }
         

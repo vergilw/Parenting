@@ -86,7 +86,7 @@ class TeacherStoriesCell: UITableViewCell {
     func setup(model: StoryModel) {
         
         if var URLString = model.cover_image?.service_url {
-            URLString += "?thumbnail/\(UIScreenWidth)x\(UIScreenWidth/16.0*9)"
+            URLString += "?imageMogr2/thumbnail/\(UIScreenWidth)x\(UIScreenWidth/16.0*9)"
             previewImgView.kf.setImage(with: URL(string: URLString))
         }
         

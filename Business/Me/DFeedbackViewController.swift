@@ -27,6 +27,7 @@ class DFeedbackViewController: BaseViewController {
         textView.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         textView.font = UIConstants.Font.body
         textView.placeholder = "输入反馈或建议..."
+        textView.delegate = self
         return textView
     }()
     
@@ -45,7 +46,8 @@ class DFeedbackViewController: BaseViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("提交反馈", for: .normal)
-        button.backgroundColor = UIConstants.Color.primaryGreen
+        button.backgroundColor = UIConstants.Color.disable
+        button.isEnabled = false
         button.layer.cornerRadius = 21
         button.addTarget(self, action: #selector(submitBtnAction), for: .touchUpInside)
         return button
@@ -131,8 +133,32 @@ class DFeedbackViewController: BaseViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
             
             self.actionBtn.stopAnimating()
-            HUDService.sharedInstance.show(string: "您已成功提交反馈")
+            
+            self.textView.isEditable = false
+            self.textView.textColor = UIConstants.Color.foot
+            self.actionBtn.isEnabled = false
+            self.actionBtn.backgroundColor = UIConstants.Color.disable
+            
+            let alertController = UIAlertController(title: nil, message: "感谢，我们已收到您的反馈信息", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            
+//            HUDService.sharedInstance.show(string: "您已成功提交反馈")
         }
     }
 }
 
+
+extension DFeedbackViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        
+        if textView.text?.count ?? 0 > 0 {
+            actionBtn.isEnabled = true
+            actionBtn.backgroundColor = UIConstants.Color.primaryGreen
+        } else {
+            actionBtn.isEnabled = false
+            actionBtn.backgroundColor = UIConstants.Color.disable
+        }
+        
+    }
+}

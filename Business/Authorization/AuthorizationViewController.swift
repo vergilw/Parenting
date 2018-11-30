@@ -340,6 +340,7 @@ class AuthorizationViewController: BaseViewController {
                     if code == 10002 {
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
                     } else if code == 10001 {
+                        HUDService.sharedInstance.show(string: "登录成功")
                         self.dismiss(animated: true, completion: nil)
                     }
                 })

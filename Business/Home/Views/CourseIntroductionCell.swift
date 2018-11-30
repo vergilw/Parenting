@@ -72,6 +72,7 @@ class CourseIntroductionCell: UITableViewCell {
         label.textColor = UIConstants.Color.body
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-30
+        label.lineBreakMode = .byCharWrapping
         return label
     }()
     
@@ -107,6 +108,7 @@ class CourseIntroductionCell: UITableViewCell {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = UIConstants.LineSpacing.body - (label.font.lineHeight - label.font.pointSize)
         paragraph.paragraphSpacing = 19
+        paragraph.lineBreakMode = .byCharWrapping
         attributedString.addAttributes([
             NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: label.font], range: NSRange(location: 0, length: attributedString.length))
         label.attributedText = attributedString

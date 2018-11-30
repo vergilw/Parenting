@@ -331,22 +331,33 @@ class DPhoneViewController: BaseViewController {
     
     @objc func signInBtnAction() {
         view.endEditing(true)
-        
+
         if mode == .signIn {
             actionBtn.startAnimating()
             viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
                 self.actionBtn.stopAnimating()
-                if code != -1 {
+                if code >= 0 {
+                    HUDService.sharedInstance.show(string: "登录成功")
                     self.dismiss(animated: true, completion: nil)
                 }
             }
-            
+
         } else {
             guard let openID = viewModel.wechatUID else { return }
             actionBtn.startAnimating()
             viewModel.signUp(openID: openID, phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
                 self.actionBtn.stopAnimating()
-                if code != -1 {
+
+                if code == 10004 {
+                    let alertController = UIAlertController(title: nil, message: "手机号\(self.phoneTextField.text!)已注册，请直接登录", preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.cancel, handler: { alertAction in
+                        self.navigationController?.pushViewController(DPhoneViewController(mode: .signIn), animated: true)
+                    }))
+                    self.present(alertController, animated: true, completion: nil)
+                    
+                    
+                } else if code >= 0 {
+                    HUDService.sharedInstance.show(string: "登录成功")
                     self.dismiss(animated: true, completion: nil)
                 }
             }
@@ -362,6 +373,7 @@ class DPhoneViewController: BaseViewController {
                     if code == 10002 {
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
                     } else if code == 10001 {
+                        HUDService.sharedInstance.show(string: "登录成功")
                         self.dismiss(animated: true, completion: nil)
                     }
                 })

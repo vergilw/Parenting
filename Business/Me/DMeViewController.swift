@@ -222,6 +222,7 @@ class DMeViewController: BaseViewController {
     // MARK: - ============= Action =============
     @objc func signOutBtnAction() {
         AuthorizationService.sharedInstance.signOut()
+        HUDService.sharedInstance.show(string: "退出成功")
     }
     
     @objc func signInBtnAction() {
