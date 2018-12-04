@@ -159,7 +159,9 @@ class DCoursesViewController: BaseViewController {
                     tableView.estimatedSectionFooterHeight = 0
                 }
                 
-                tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+                tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak tableView] in
+                    guard let tableView = tableView else { return }
+                    
                     self?.viewModel.fetchCourses(completion: { (code, next, models) in
                         if code < 0 || next {
                             tableView.mj_footer.endRefreshing()

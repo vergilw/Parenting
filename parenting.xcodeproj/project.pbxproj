@@ -91,7 +91,6 @@
 		1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C384217EB93900902A5C /* NSObject+Extension.swift */; };
 		1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C385217EB93A00902A5C /* UIColor+Extension.swift */; };
 		1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C386217EB93A00902A5C /* Date+Extension.swift */; };
-		1320C38F217EB93A00902A5C /* ObjectMapper+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C387217EB93A00902A5C /* ObjectMapper+Extension.swift */; };
 		1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C388217EB93A00902A5C /* UIDevice+Extension.swift */; };
 		1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C389217EB93A00902A5C /* Array+Extension.swift */; };
 		1320C395217EB95200902A5C /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C392217EB95200902A5C /* UIConstants.swift */; };
@@ -99,6 +98,31 @@
 		1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C399217EBF3700902A5C /* DHomeViewController.swift */; };
 		1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C39B217EBFEA00902A5C /* DMeViewController.swift */; };
 		1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */; };
+		132A492521B52AF700038027 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132A492421B52AF700038027 /* AppService.swift */; };
+		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
+		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
+		13B7F6F221B67745001BF15D /* UploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F121B67745001BF15D /* UploadService.swift */; };
+		13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F921B68727001BF15D /* QNUploadManager.m */; };
+		13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6FA21B68727001BF15D /* QNConfiguration.m */; };
+		13B7F72C21B68728001BF15D /* QNResumeUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6FC21B68727001BF15D /* QNResumeUpload.m */; };
+		13B7F72D21B68728001BF15D /* QNUpToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6FE21B68727001BF15D /* QNUpToken.m */; };
+		13B7F72E21B68728001BF15D /* QNFormUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70121B68727001BF15D /* QNFormUpload.m */; };
+		13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70221B68727001BF15D /* QNUploadOption.m */; };
+		13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70421B68727001BF15D /* QNPHAssetResource.m */; };
+		13B7F73121B68728001BF15D /* QNCrc32.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70521B68727001BF15D /* QNCrc32.m */; };
+		13B7F73221B68728001BF15D /* QNUrlSafeBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70821B68727001BF15D /* QNUrlSafeBase64.m */; };
+		13B7F73321B68728001BF15D /* QNFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70C21B68727001BF15D /* QNFile.m */; };
+		13B7F73421B68728001BF15D /* QNEtag.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70D21B68727001BF15D /* QNEtag.m */; };
+		13B7F73521B68728001BF15D /* QNSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F70F21B68727001BF15D /* QNSystem.m */; };
+		13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71221B68727001BF15D /* QNAsyncRun.m */; };
+		13B7F73721B68728001BF15D /* QNALAssetFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71421B68727001BF15D /* QNALAssetFile.m */; };
+		13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71521B68727001BF15D /* QNPHAssetFile.m */; };
+		13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71621B68727001BF15D /* QN_GTM_Base64.m */; };
+		13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71C21B68727001BF15D /* QNUserAgent.m */; };
+		13B7F73B21B68728001BF15D /* QNResponseInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F71E21B68727001BF15D /* QNResponseInfo.m */; };
+		13B7F73C21B68728001BF15D /* QNSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72021B68728001BF15D /* QNSessionManager.m */; };
+		13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72321B68728001BF15D /* QNFileRecorder.m */; };
+		13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72921B68728001BF15D /* QNPipeline.m */; };
 		99D84AC96BCF9FFE3687D6E3 /* Pods_parenting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */; };
 /* End PBXBuildFile section */
 
@@ -189,7 +213,6 @@
 		1320C384217EB93900902A5C /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		1320C385217EB93A00902A5C /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		1320C386217EB93A00902A5C /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
-		1320C387217EB93A00902A5C /* ObjectMapper+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObjectMapper+Extension.swift"; sourceTree = "<group>"; };
 		1320C388217EB93A00902A5C /* UIDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
 		1320C389217EB93A00902A5C /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		1320C392217EB95200902A5C /* UIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
@@ -198,6 +221,59 @@
 		1320C399217EBF3700902A5C /* DHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHomeViewController.swift; sourceTree = "<group>"; };
 		1320C39B217EBFEA00902A5C /* DMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeViewController.swift; sourceTree = "<group>"; };
 		1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseSectionViewModel.swift; sourceTree = "<group>"; };
+		132A492421B52AF700038027 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
+		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		13B7F6EC21B65D18001BF15D /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		13B7F6F121B67745001BF15D /* UploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadService.swift; sourceTree = "<group>"; };
+		13B7F6F621B68727001BF15D /* QNResumeUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNResumeUpload.h; sourceTree = "<group>"; };
+		13B7F6F721B68727001BF15D /* QNUploadOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUploadOption.h; sourceTree = "<group>"; };
+		13B7F6F821B68727001BF15D /* QNFormUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNFormUpload.h; sourceTree = "<group>"; };
+		13B7F6F921B68727001BF15D /* QNUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUploadManager.m; sourceTree = "<group>"; };
+		13B7F6FA21B68727001BF15D /* QNConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNConfiguration.m; sourceTree = "<group>"; };
+		13B7F6FB21B68727001BF15D /* QNUpToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUpToken.h; sourceTree = "<group>"; };
+		13B7F6FC21B68727001BF15D /* QNResumeUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNResumeUpload.m; sourceTree = "<group>"; };
+		13B7F6FD21B68727001BF15D /* QNUploadOption+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QNUploadOption+Private.h"; sourceTree = "<group>"; };
+		13B7F6FE21B68727001BF15D /* QNUpToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUpToken.m; sourceTree = "<group>"; };
+		13B7F6FF21B68727001BF15D /* QNConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNConfiguration.h; sourceTree = "<group>"; };
+		13B7F70021B68727001BF15D /* QNUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUploadManager.h; sourceTree = "<group>"; };
+		13B7F70121B68727001BF15D /* QNFormUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNFormUpload.m; sourceTree = "<group>"; };
+		13B7F70221B68727001BF15D /* QNUploadOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUploadOption.m; sourceTree = "<group>"; };
+		13B7F70421B68727001BF15D /* QNPHAssetResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNPHAssetResource.m; sourceTree = "<group>"; };
+		13B7F70521B68727001BF15D /* QNCrc32.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNCrc32.m; sourceTree = "<group>"; };
+		13B7F70621B68727001BF15D /* QNFileDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNFileDelegate.h; sourceTree = "<group>"; };
+		13B7F70721B68727001BF15D /* QNALAssetFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNALAssetFile.h; sourceTree = "<group>"; };
+		13B7F70821B68727001BF15D /* QNUrlSafeBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUrlSafeBase64.m; sourceTree = "<group>"; };
+		13B7F70921B68727001BF15D /* QNAsyncRun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNAsyncRun.h; sourceTree = "<group>"; };
+		13B7F70A21B68727001BF15D /* QN_GTM_Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QN_GTM_Base64.h; sourceTree = "<group>"; };
+		13B7F70B21B68727001BF15D /* QNPHAssetFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNPHAssetFile.h; sourceTree = "<group>"; };
+		13B7F70C21B68727001BF15D /* QNFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNFile.m; sourceTree = "<group>"; };
+		13B7F70D21B68727001BF15D /* QNEtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNEtag.m; sourceTree = "<group>"; };
+		13B7F70E21B68727001BF15D /* QNVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNVersion.h; sourceTree = "<group>"; };
+		13B7F70F21B68727001BF15D /* QNSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNSystem.m; sourceTree = "<group>"; };
+		13B7F71021B68727001BF15D /* QNCrc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNCrc32.h; sourceTree = "<group>"; };
+		13B7F71121B68727001BF15D /* QNPHAssetResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNPHAssetResource.h; sourceTree = "<group>"; };
+		13B7F71221B68727001BF15D /* QNAsyncRun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNAsyncRun.m; sourceTree = "<group>"; };
+		13B7F71321B68727001BF15D /* QNUrlSafeBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUrlSafeBase64.h; sourceTree = "<group>"; };
+		13B7F71421B68727001BF15D /* QNALAssetFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNALAssetFile.m; sourceTree = "<group>"; };
+		13B7F71521B68727001BF15D /* QNPHAssetFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNPHAssetFile.m; sourceTree = "<group>"; };
+		13B7F71621B68727001BF15D /* QN_GTM_Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QN_GTM_Base64.m; sourceTree = "<group>"; };
+		13B7F71721B68727001BF15D /* QNSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNSystem.h; sourceTree = "<group>"; };
+		13B7F71821B68727001BF15D /* QNEtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNEtag.h; sourceTree = "<group>"; };
+		13B7F71921B68727001BF15D /* QNFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNFile.h; sourceTree = "<group>"; };
+		13B7F71B21B68727001BF15D /* QNResponseInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNResponseInfo.h; sourceTree = "<group>"; };
+		13B7F71C21B68727001BF15D /* QNUserAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNUserAgent.m; sourceTree = "<group>"; };
+		13B7F71D21B68727001BF15D /* QNSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNSessionManager.h; sourceTree = "<group>"; };
+		13B7F71E21B68727001BF15D /* QNResponseInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNResponseInfo.m; sourceTree = "<group>"; };
+		13B7F71F21B68727001BF15D /* QNHttpDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNHttpDelegate.h; sourceTree = "<group>"; };
+		13B7F72021B68728001BF15D /* QNSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNSessionManager.m; sourceTree = "<group>"; };
+		13B7F72121B68728001BF15D /* QNUserAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUserAgent.h; sourceTree = "<group>"; };
+		13B7F72321B68728001BF15D /* QNFileRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNFileRecorder.m; sourceTree = "<group>"; };
+		13B7F72421B68728001BF15D /* QNFileRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNFileRecorder.h; sourceTree = "<group>"; };
+		13B7F72521B68728001BF15D /* QNRecorderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNRecorderDelegate.h; sourceTree = "<group>"; };
+		13B7F72621B68728001BF15D /* QiniuSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuSDK.h; sourceTree = "<group>"; };
+		13B7F72821B68728001BF15D /* QNPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNPipeline.h; sourceTree = "<group>"; };
+		13B7F72921B68728001BF15D /* QNPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNPipeline.m; sourceTree = "<group>"; };
 		40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.debug.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.debug.xcconfig"; sourceTree = "<group>"; };
 		A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.release.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.release.xcconfig"; sourceTree = "<group>"; };
 		F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_parenting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -209,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99D84AC96BCF9FFE3687D6E3 /* Pods_parenting.framework in Frameworks */,
+				13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +374,7 @@
 				1320C376217EB76600902A5C /* NetworkAPI */,
 				1320C36E217EB76600902A5C /* Resources */,
 				1320C374217EB76600902A5C /* Services */,
+				13B7F6F321B68709001BF15D /* Vendors */,
 				1320C355217EB66E00902A5C /* Products */,
 				926285033E11C20FED1C0FDE /* Pods */,
 				9B5D10BD068BDD6B7882BEAA /* Frameworks */,
@@ -345,7 +423,6 @@
 				1320C389217EB93A00902A5C /* Array+Extension.swift */,
 				1320C386217EB93A00902A5C /* Date+Extension.swift */,
 				1320C384217EB93900902A5C /* NSObject+Extension.swift */,
-				1320C387217EB93A00902A5C /* ObjectMapper+Extension.swift */,
 				1320C382217EB93900902A5C /* String+Extension.swift */,
 				1320C385217EB93A00902A5C /* UIColor+Extension.swift */,
 				1320C388217EB93A00902A5C /* UIDevice+Extension.swift */,
@@ -366,6 +443,7 @@
 				13113F6621994CD900B6E0FE /* Authorization.xcassets */,
 				130F1C96219C174E004E1DD3 /* Me.xcassets */,
 				1310F8E4219EBEE9004073FF /* Payment.xcassets */,
+				137A82B921B529040099A070 /* parenting.entitlements */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -378,6 +456,9 @@
 				13113F6E21997D5500B6E0FE /* HUDService.swift */,
 				130EF266219A5E6E008F61FA /* ResponseService.swift */,
 				130EF268219A73BA008F61FA /* AuthorizationService.swift */,
+				132A492421B52AF700038027 /* AppService.swift */,
+				13B7F6EC21B65D18001BF15D /* PaymentService.swift */,
+				13B7F6F121B67745001BF15D /* UploadService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -454,6 +535,109 @@
 			path = Me;
 			sourceTree = "<group>";
 		};
+		13B7F6F321B68709001BF15D /* Vendors */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F6F421B68727001BF15D /* QiniuSDK */,
+			);
+			path = Vendors;
+			sourceTree = "<group>";
+		};
+		13B7F6F421B68727001BF15D /* QiniuSDK */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F6F521B68727001BF15D /* Storage */,
+				13B7F70321B68727001BF15D /* Common */,
+				13B7F71A21B68727001BF15D /* Http */,
+				13B7F72221B68728001BF15D /* Recorder */,
+				13B7F72621B68728001BF15D /* QiniuSDK.h */,
+				13B7F72721B68728001BF15D /* BigData */,
+			);
+			path = QiniuSDK;
+			sourceTree = "<group>";
+		};
+		13B7F6F521B68727001BF15D /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F6F621B68727001BF15D /* QNResumeUpload.h */,
+				13B7F6F721B68727001BF15D /* QNUploadOption.h */,
+				13B7F6F821B68727001BF15D /* QNFormUpload.h */,
+				13B7F6F921B68727001BF15D /* QNUploadManager.m */,
+				13B7F6FA21B68727001BF15D /* QNConfiguration.m */,
+				13B7F6FB21B68727001BF15D /* QNUpToken.h */,
+				13B7F6FC21B68727001BF15D /* QNResumeUpload.m */,
+				13B7F6FD21B68727001BF15D /* QNUploadOption+Private.h */,
+				13B7F6FE21B68727001BF15D /* QNUpToken.m */,
+				13B7F6FF21B68727001BF15D /* QNConfiguration.h */,
+				13B7F70021B68727001BF15D /* QNUploadManager.h */,
+				13B7F70121B68727001BF15D /* QNFormUpload.m */,
+				13B7F70221B68727001BF15D /* QNUploadOption.m */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		13B7F70321B68727001BF15D /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F70421B68727001BF15D /* QNPHAssetResource.m */,
+				13B7F70521B68727001BF15D /* QNCrc32.m */,
+				13B7F70621B68727001BF15D /* QNFileDelegate.h */,
+				13B7F70721B68727001BF15D /* QNALAssetFile.h */,
+				13B7F70821B68727001BF15D /* QNUrlSafeBase64.m */,
+				13B7F70921B68727001BF15D /* QNAsyncRun.h */,
+				13B7F70A21B68727001BF15D /* QN_GTM_Base64.h */,
+				13B7F70B21B68727001BF15D /* QNPHAssetFile.h */,
+				13B7F70C21B68727001BF15D /* QNFile.m */,
+				13B7F70D21B68727001BF15D /* QNEtag.m */,
+				13B7F70E21B68727001BF15D /* QNVersion.h */,
+				13B7F70F21B68727001BF15D /* QNSystem.m */,
+				13B7F71021B68727001BF15D /* QNCrc32.h */,
+				13B7F71121B68727001BF15D /* QNPHAssetResource.h */,
+				13B7F71221B68727001BF15D /* QNAsyncRun.m */,
+				13B7F71321B68727001BF15D /* QNUrlSafeBase64.h */,
+				13B7F71421B68727001BF15D /* QNALAssetFile.m */,
+				13B7F71521B68727001BF15D /* QNPHAssetFile.m */,
+				13B7F71621B68727001BF15D /* QN_GTM_Base64.m */,
+				13B7F71721B68727001BF15D /* QNSystem.h */,
+				13B7F71821B68727001BF15D /* QNEtag.h */,
+				13B7F71921B68727001BF15D /* QNFile.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		13B7F71A21B68727001BF15D /* Http */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F71B21B68727001BF15D /* QNResponseInfo.h */,
+				13B7F71C21B68727001BF15D /* QNUserAgent.m */,
+				13B7F71D21B68727001BF15D /* QNSessionManager.h */,
+				13B7F71E21B68727001BF15D /* QNResponseInfo.m */,
+				13B7F71F21B68727001BF15D /* QNHttpDelegate.h */,
+				13B7F72021B68728001BF15D /* QNSessionManager.m */,
+				13B7F72121B68728001BF15D /* QNUserAgent.h */,
+			);
+			path = Http;
+			sourceTree = "<group>";
+		};
+		13B7F72221B68728001BF15D /* Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F72321B68728001BF15D /* QNFileRecorder.m */,
+				13B7F72421B68728001BF15D /* QNFileRecorder.h */,
+				13B7F72521B68728001BF15D /* QNRecorderDelegate.h */,
+			);
+			path = Recorder;
+			sourceTree = "<group>";
+		};
+		13B7F72721B68728001BF15D /* BigData */ = {
+			isa = PBXGroup;
+			children = (
+				13B7F72821B68728001BF15D /* QNPipeline.h */,
+				13B7F72921B68728001BF15D /* QNPipeline.m */,
+			);
+			path = BigData;
+			sourceTree = "<group>";
+		};
 		926285033E11C20FED1C0FDE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -466,6 +650,7 @@
 		9B5D10BD068BDD6B7882BEAA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13B7F6EA21B657D5001BF15D /* StoreKit.framework */,
 				F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */,
 			);
 			name = Frameworks;
@@ -506,7 +691,19 @@
 					1320C353217EB66E00902A5C = {
 						CreatedOnToolsVersion = 10.0;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -559,14 +756,13 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-parenting/Pods-parenting-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/DZNEmptyDataSet/DZNEmptyDataSet.framework",
+				"${BUILT_PRODUCTS_DIR}/FBRetainCycleDetector/FBRetainCycleDetector.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/MLeaksFinder/MLeaksFinder.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Presentr/Presentr.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
@@ -581,14 +777,13 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DZNEmptyDataSet.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBRetainCycleDetector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MLeaksFinder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Presentr.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
@@ -632,6 +827,7 @@
 			files = (
 				131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */,
 				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
+				13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
@@ -649,42 +845,54 @@
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
 				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
+				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
 				130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				13B7F72D21B68728001BF15D /* QNUpToken.m in Sources */,
 				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
+				13B7F73221B68728001BF15D /* QNUrlSafeBase64.m in Sources */,
+				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
 				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
+				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
 				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,
+				13B7F73121B68728001BF15D /* QNCrc32.m in Sources */,
 				130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */,
+				13B7F73C21B68728001BF15D /* QNSessionManager.m in Sources */,
 				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
+				132A492521B52AF700038027 /* AppService.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
+				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,
+				13B7F73321B68728001BF15D /* QNFile.m in Sources */,
 				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				130EF26B219A75C3008F61FA /* UserModel.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
 				1310680221A696D600F79E92 /* BannerModel.swift in Sources */,
-				1320C38F217EB93A00902A5C /* ObjectMapper+Extension.swift in Sources */,
+				13B7F73721B68728001BF15D /* QNALAssetFile.m in Sources */,
 				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
+				13B7F72E21B68728001BF15D /* QNFormUpload.m in Sources */,
 				13113F6B219970C500B6E0FE /* AuthorizationAPI.swift in Sources */,
 				13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */,
+				13B7F73B21B68728001BF15D /* QNResponseInfo.m in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
@@ -693,15 +901,20 @@
 				1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */,
 				1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */,
 				131FB295219D785600B55210 /* DMeFavoritesViewController.swift in Sources */,
+				13B7F72C21B68728001BF15D /* QNResumeUpload.m in Sources */,
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */,
+				13B7F6F221B67745001BF15D /* UploadService.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
+				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
+				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
+				13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				1310680021A64B5500F79E92 /* TransactionCell.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
@@ -709,9 +922,14 @@
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */,
 				130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */,
+				13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */,
+				13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */,
+				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
 				1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */,
+				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
+				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -859,9 +1077,10 @@
 			baseConfigurationReference = 40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UNCVGCAK5K;
+				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -881,9 +1100,10 @@
 			baseConfigurationReference = A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UNCVGCAK5K;
+				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

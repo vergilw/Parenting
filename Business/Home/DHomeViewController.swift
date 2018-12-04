@@ -556,7 +556,7 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         
         let titleLabel: UILabel = {
             let label = UILabel()
-            label.font = UIConstants.Font.h2
+            label.font = UIConstants.Font.h1
             label.textColor = UIConstants.Color.head
             label.text = "在家核心早教课"
             return label

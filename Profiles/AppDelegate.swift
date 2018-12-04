@@ -9,6 +9,7 @@
 import UIKit
 import IQKeyboardManagerSwift
 import AVFoundation
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,11 +31,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupAudioSession()
         setupThirdPartyPlatforms()
         
+        SKPaymentQueue.default().add(PaymentService.sharedInstance)
+        
         return true
     }
     
     @objc func setupRootViewController() {
         
+        UITextField.appearance().tintColor = UIConstants.Color.primaryGreen
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .highlighted)
         

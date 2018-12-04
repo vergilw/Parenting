@@ -47,8 +47,8 @@ class DMeCoursesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     func fetchData() {
-        HUDService.sharedInstance.showNoDataView(target: view) {
-            self.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+        HUDService.sharedInstance.showNoDataView(target: view) { [weak self] in
+            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
         }
     }
     

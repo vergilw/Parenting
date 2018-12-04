@@ -15,24 +15,23 @@ target "parenting" do
     pod 'IQKeyboardManagerSwift'
     pod 'Moya'
     pod 'HandyJSON'
-    pod 'ObjectMapper'
     pod 'Kingfisher'
     pod 'UINavigationItem+Margin'
     pod 'Presentr'
+    pod 'MLeaksFinder'
 
-    pod 'MBProgressHUD'
-    pod 'DZNEmptyDataSet'
-    pod 'Bugly' 
     pod 'YYKit'
     pod 'MJRefresh'
-    pod 'GTSDK'
     pod 'UITableView+FDTemplateLayoutCell'
     pod 'UITextView+Placeholder'
     pod 'TYCyclePagerView'
     
+    pod 'GTSDK'
+    pod 'Bugly' 
     pod 'UMCCommon'
     pod 'UMCSecurityPlugins'
     pod 'UMCShare/Social/ReducedWeChat'
+    #pod "Qiniu"
 
 end
 

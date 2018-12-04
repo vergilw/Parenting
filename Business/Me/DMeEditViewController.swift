@@ -233,14 +233,14 @@ class DMeEditViewController: BaseViewController {
     }
     
     @objc func bindWechatBtnAction() {
-        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.bindWechat(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                self?.viewModel.bindWechat(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
                     if code != -1 {
                         HUDService.sharedInstance.show(string: "微信绑定成功")
                         
-                        self.reload()
+                        self?.reload()
                         
                     } else {
                         HUDService.sharedInstance.show(string: "微信绑定失败")
@@ -282,8 +282,13 @@ extension DMeEditViewController: UIImagePickerControllerDelegate, UINavigationCo
         
         picker.dismiss(animated: true, completion: nil)
         
-        //        let imgData = UIImageJPEGRepresentation(info[UIImagePickerControllerOriginalImage] as! UIImage, 0.7)!
         avatarBtn.setImage(info[UIImagePickerController.InfoKey.editedImage] as? UIImage, for: .normal)
+        
+        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage, let imgData = image.jpegData(compressionQuality: 0.75) {
+            UploadService.sharedInstance.upload(data: imgData)
+        }
+        
+        
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

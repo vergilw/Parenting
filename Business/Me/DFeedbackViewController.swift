@@ -109,42 +109,28 @@ class DFeedbackViewController: BaseViewController {
     @objc func submitBtnAction() {
         view.endEditing(true)
         
-        let text = textView.text.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
+        let text = textView.text ?? ""//.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
         
         guard text.count != 0 else {
-            let HUD = MBProgressHUD.showAdded(to: view, animated: true)
-            HUD.mode = .text
-            HUD.detailsLabel.text = "内容不能为空"
-            HUD.hide(animated: true, afterDelay: 1.5)
+            HUDService.sharedInstance.show(string: "内容不能为空")
             return
         }
         
-//        CourseProvider.request(.post_comment(courseID: courseID, starsCount: selectedStarsCount, content: textView.text), completion: ResponseService.sharedInstance.response(completion: { [weak self] (code, JSON) in
-//            if code != -1 {
-//                HUDService.sharedInstance.show(string: "您已成功提交反馈")
-        
-//                self?.dismissBtnAction()
-//            }
-//        }))
-        
-        
         actionBtn.startAnimating()
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
-            
+        CommonProvider.request(.feedback(text), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             self.actionBtn.stopAnimating()
             
-            self.textView.isEditable = false
-            self.textView.textColor = UIConstants.Color.foot
-            self.actionBtn.isEnabled = false
-            self.actionBtn.backgroundColor = UIConstants.Color.disable
-            
-            let alertController = UIAlertController(title: nil, message: "感谢，我们已收到您的反馈信息", preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
-            self.present(alertController, animated: true, completion: nil)
-            
-//            HUDService.sharedInstance.show(string: "您已成功提交反馈")
-        }
+            if code >= 0 {
+                self.textView.isEditable = false
+                self.textView.textColor = UIConstants.Color.foot
+                self.actionBtn.isEnabled = false
+                self.actionBtn.backgroundColor = UIConstants.Color.disable
+                
+                let alertController = UIAlertController(title: nil, message: "感谢，我们已收到您的反馈信息", preferredStyle: UIAlertController.Style.alert)
+                alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }))
     }
 }
 

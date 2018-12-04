@@ -123,9 +123,10 @@ extension CourseAPI: TargetType {
     }
     
     var headers: [String: String]? {
+        var headers = ["Accept-Language": "zh-CN"]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
-            return ["Auth-Token": token]
+            headers["Auth-Token"] = token
         }
-        return nil
+        return headers
     }
 }

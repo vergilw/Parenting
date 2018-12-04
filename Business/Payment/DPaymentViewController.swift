@@ -136,6 +136,12 @@ extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        PaymentService.sharedInstance.validateProductIdentifiers {
+            if let product = PaymentService.sharedInstance.products.first {
+                PaymentService.sharedInstance.creatingPaymentRequest(product: product)
+            }
+            
+        }
     }
     
 }

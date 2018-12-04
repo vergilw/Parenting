@@ -333,15 +333,15 @@ class AuthorizationViewController: BaseViewController {
     }
     
     @objc func wechatBtnAction() {
-        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
                     if code == 10002 {
-                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
+                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
                     } else if code == 10001 {
                         HUDService.sharedInstance.show(string: "登录成功")
-                        self.dismiss(animated: true, completion: nil)
+                        self?.dismiss(animated: true, completion: nil)
                     }
                 })
             } else {

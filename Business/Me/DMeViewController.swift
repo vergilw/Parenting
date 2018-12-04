@@ -39,7 +39,7 @@ class DMeViewController: BaseViewController {
         
         view.addSubview(tableView)
         initHeaderView()
-        initFooterView()
+        
     }
     
     func initHeaderView() {
@@ -165,37 +165,7 @@ class DMeViewController: BaseViewController {
         tableView.tableHeaderView = headerView
     }
     
-    func initFooterView() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            tableView.tableFooterView = nil
-            return
-        }
-        
-        let footerView: UIView = {
-            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 72)))
-            view.backgroundColor = .white
-            view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 0), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 0))
-            return view
-        }()
-        
-        let actionBtn: UIButton = {
-            let button = UIButton()
-            button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.h2
-            button.setTitle("退出", for: .normal)
-            button.addTarget(self, action: #selector(signOutBtnAction), for: .touchUpInside)
-            return button
-        }()
-        
-        footerView.addSubview(actionBtn)
-        
-        actionBtn.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalTo(CGSize(width: 50, height: 30))
-        }
-        
-        tableView.tableFooterView = footerView
-    }
+    
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
@@ -216,14 +186,10 @@ class DMeViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         initHeaderView()
-        initFooterView()
+        
     }
     
     // MARK: - ============= Action =============
-    @objc func signOutBtnAction() {
-        AuthorizationService.sharedInstance.signOut()
-        HUDService.sharedInstance.show(string: "退出成功")
-    }
     
     @objc func signInBtnAction() {
         let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
@@ -263,7 +229,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.row == 4 {
             cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "讲师入口")
         } else if indexPath.row == 5 {
-            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "其他")
+            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         }
         return cell
     }

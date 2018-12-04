@@ -10,8 +10,6 @@
 #define BridgeHeader_h
 
 @import YYKit;
-@import MBProgressHUD;
-@import DZNEmptyDataSet;
 @import MJRefresh;
 @import UITableView_FDTemplateLayoutCell;
 @import UITextView_Placeholder;
@@ -20,5 +18,6 @@
 #import <UMCommon/UMCommon.h>
 #import <UMShare/UMShare.h>
 #import <Bugly/Bugly.h>
+#import "QiniuSDK.h"
 
 #endif /* BridgeHeader_h */

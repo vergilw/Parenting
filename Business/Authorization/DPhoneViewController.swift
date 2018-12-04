@@ -23,7 +23,7 @@ class DPhoneViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIFont.systemFont(ofSize: 32)
         label.textColor = UIConstants.Color.head
-        label.setParagraphText("登录氧育")
+        label.setParagraphText("手机快速登录氧育")
         if mode == .binding {
             label.setParagraphText("验证手机")
         }
@@ -191,6 +191,10 @@ class DPhoneViewController: BaseViewController {
             separatorLabel.isHidden = true
             wechatBtn.isHidden = true
         }
+        if !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
+            separatorLabel.isHidden = true
+            wechatBtn.isHidden = true
+        }
         
         phoneView.addSubviews([phoneTextField, phoneLineImgView])
         codeView.addSubviews([codeTextField, fetchBtn, codeLineImgView])
@@ -342,7 +346,7 @@ class DPhoneViewController: BaseViewController {
                 }
             }
 
-        } else {
+        } else if mode == .binding {
             guard let openID = viewModel.wechatUID else { return }
             actionBtn.startAnimating()
             viewModel.signUp(openID: openID, phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
@@ -366,15 +370,15 @@ class DPhoneViewController: BaseViewController {
     }
     
     @objc func wechatBtnAction() {
-        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { (response, error) in
+        UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
                     if code == 10002 {
-                        self.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
+                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
                     } else if code == 10001 {
                         HUDService.sharedInstance.show(string: "登录成功")
-                        self.dismiss(animated: true, completion: nil)
+                        self?.dismiss(animated: true, completion: nil)
                     }
                 })
             } else {

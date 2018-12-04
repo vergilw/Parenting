@@ -277,10 +277,7 @@ class DCourseEvaluationViewController: BaseViewController {
     
     @objc func submitBtnAction() {
         guard selectedStarsCount != 0 else {
-            let HUD = MBProgressHUD.showAdded(to: view, animated: true)
-            HUD.mode = .text
-            HUD.detailsLabel.text = "请先评星"
-            HUD.hide(animated: true, afterDelay: 1.5)
+            HUDService.sharedInstance.show(string: "请先评星")
             return
         }
         

@@ -75,6 +75,12 @@ class DMeFavoritesViewController: BaseViewController {
                             self.tableView.mj_footer.isHidden = true
                         }
                     }
+                    
+                    if self.favoritesModels?.count ?? 0 == 0 {
+                        HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                        }
+                    }
                 }
                 
             } else if code == -2 {

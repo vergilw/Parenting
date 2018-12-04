@@ -13,7 +13,7 @@ class DSettingsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "其他"
+        navigationItem.title = "设置"
         
         initContentView()
         initConstraints()
@@ -31,6 +31,39 @@ class DSettingsViewController: BaseViewController {
         tableView.delegate = self
         
         view.addSubview(tableView)
+        initFooterView()
+    }
+    
+    func initFooterView() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            tableView.tableFooterView = UIView()
+            return
+        }
+        
+        let footerView: UIView = {
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 72)))
+            view.backgroundColor = .white
+            view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 0), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 0))
+            return view
+        }()
+        
+        let actionBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.h2
+            button.setTitle("退出", for: .normal)
+            button.addTarget(self, action: #selector(signOutBtnAction), for: .touchUpInside)
+            return button
+        }()
+        
+        footerView.addSubview(actionBtn)
+        
+        actionBtn.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 50, height: 30))
+        }
+        
+        tableView.tableFooterView = footerView
     }
     
     // MARK: - ============= Constraints =============
@@ -42,18 +75,22 @@ class DSettingsViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signOutDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        
+        initFooterView()
     }
     
+    
     // MARK: - ============= Action =============
-
+    @objc func signOutBtnAction() {
+        AuthorizationService.sharedInstance.signOut()
+        HUDService.sharedInstance.show(string: "退出成功")
+    }
 }
 
 
@@ -88,6 +125,11 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.row == 1 {
 //            navigationController?.pushViewController(DPaymentViewController(), animated: true)
         } else if indexPath.row == 2 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
             navigationController?.pushViewController(DFeedbackViewController(), animated: true)
         }
     }
