@@ -15,12 +15,12 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var viewModel = DHomeViewModel()
     
     lazy fileprivate var section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
-    lazy fileprivate var section0FooterHeight: CGFloat = 64 + 42
-    lazy fileprivate var section1HeaderHeight: CGFloat = 32 + 25
+    lazy fileprivate var section0FooterHeight: CGFloat = 10 + 42 + 60
+    lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 30
     lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
     lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
     lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 10 + 37
-    lazy fileprivate var item0Spacing: CGFloat = 25
+    lazy fileprivate var item0Spacing: CGFloat = 22
     lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
     
     lazy fileprivate var scrollView: UIScrollView = {
@@ -114,10 +114,10 @@ class DHomeViewController: BaseViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
-        layout.minimumLineSpacing = 32
+        layout.minimumLineSpacing = item0Spacing
         layout.minimumInteritemSpacing = 12
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        layout.itemSize = CGSize(width: width, height: width/16.0*9+12+15+8+20)
+        layout.itemSize = CGSize(width: itemWidth, height: item0Height)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(HomeSectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomeSectionHeader.className())
         view.register(MoreFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: MoreFooterView.className())
@@ -148,6 +148,7 @@ class DHomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "氧育亲子"
         
         initContentView()
         initConstraints()
@@ -156,11 +157,11 @@ class DHomeViewController: BaseViewController {
         fetchData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationController?.setNavigationBarHidden(true, animated: true)
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        navigationController?.setNavigationBarHidden(true, animated: true)
+//    }
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
@@ -178,9 +179,42 @@ class DHomeViewController: BaseViewController {
         scrollView.mj_header = CustomMJHeader(refreshingBlock: { [weak self] in
             self?.fetchData()
         })
-        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
+//        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+//        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
+    }
+    
+    func initNavigationItem() {
+        
+        if PlayListService.sharedInstance.playingIndex != -1 {
+            
+            let audioBarBtn: UIButton = {
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
+                button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
+                
+                let img = YYImage(named: "public_audioAnimationItem")
+                let imgView = YYAnimatedImageView(image: img)
+                
+                button.addSubview(imgView)
+                imgView.snp.makeConstraints { make in
+                    make.center.equalToSuperview()
+                    make.width.equalTo(22)
+                    make.height.equalTo(22)
+                }
+                
+                if !PlayListService.sharedInstance.isPlaying {
+                    imgView.autoPlayAnimatedImage = false
+                    imgView.stopAnimating()
+                }
+                
+                return button
+            }()
+            
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: audioBarBtn)
+            navigationItem.rightMargin = 25
+        }
+        
     }
     
     // MARK: - ============= Constraints =============
@@ -188,31 +222,31 @@ class DHomeViewController: BaseViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
-        searchBtn.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            if #available(iOS 11, *) {
-                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
-            } else {
-                make.top.equalTo(7.5)
-            }
-            make.height.equalTo(42)
-        }
-        audioBarBtn.snp.remakeConstraints { make in
-            make.leading.equalTo(searchBtn.snp.trailing)
-            make.trailing.equalToSuperview()
-            if #available(iOS 11, *) {
-                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
-            } else {
-                make.top.equalTo(7.5)
-            }
-            make.height.equalTo(42)
-            make.width.equalTo(15+22+25)
-        }
+//        searchBtn.snp.makeConstraints { make in
+//            make.leading.equalTo(UIConstants.Margin.leading)
+//            make.trailing.equalTo(-UIConstants.Margin.trailing)
+//            if #available(iOS 11, *) {
+//                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
+//            } else {
+//                make.top.equalTo(7.5)
+//            }
+//            make.height.equalTo(42)
+//        }
+//        audioBarBtn.snp.remakeConstraints { make in
+//            make.leading.equalTo(searchBtn.snp.trailing)
+//            make.trailing.equalToSuperview()
+//            if #available(iOS 11, *) {
+//                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
+//            } else {
+//                make.top.equalTo(7.5)
+//            }
+//            make.height.equalTo(42)
+//            make.width.equalTo(15+22+25)
+//        }
         carouselView.snp.makeConstraints { make in
             make.leading.equalTo(0)
             make.trailing.equalTo(scrollView)
-            make.top.equalTo(searchBtn.snp.bottom).offset(16)
+            make.top.equalTo(20)
             make.width.equalTo(UIScreenWidth)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
         }
@@ -227,7 +261,7 @@ class DHomeViewController: BaseViewController {
         
         coursesCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(storyView.snp.bottom).offset(54)
+            make.top.equalTo(storyView.snp.bottom).offset(29)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(collectionHeight)
         }
@@ -239,28 +273,28 @@ class DHomeViewController: BaseViewController {
         }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(teacherBannerBtn.snp.bottom).offset(24)
+            make.top.equalTo(teacherBannerBtn.snp.bottom).offset(60)
             make.height.equalTo((section1HeaderHeight+item1Height))
         }
         bottomBannerView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(tableView.snp.bottom).offset(52)
+            make.top.equalTo(tableView.snp.bottom).offset(40)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
             make.bottom.equalTo(-UIConstants.Margin.bottom)
         }
         
         //search view
-        searchIconImgView.snp.makeConstraints { make in
-            make.leading.equalTo(21)
-            make.centerY.equalToSuperview()
-        }
-        searchTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(searchIconImgView.snp.trailing).offset(8)
-            make.trailing.lessThanOrEqualTo(-21)
-            make.centerY.equalToSuperview()
-        }
+//        searchIconImgView.snp.makeConstraints { make in
+//            make.leading.equalTo(21)
+//            make.centerY.equalToSuperview()
+//        }
+//        searchTitleLabel.snp.makeConstraints { make in
+//            make.leading.equalTo(searchIconImgView.snp.trailing).offset(8)
+//            make.trailing.lessThanOrEqualTo(-21)
+//            make.centerY.equalToSuperview()
+//        }
         
         //banner view
         pageControl.snp.makeConstraints { make in
@@ -282,7 +316,7 @@ class DHomeViewController: BaseViewController {
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
-            self?.reloadSearchBar()
+            self?.initNavigationItem()
         }
     }
     
@@ -515,17 +549,17 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
 //            headerView.snp.makeConstraints { make in
 //                make.edges.equalToSuperview()
 //            }
-            let titleLabel: UILabel = {
-                let label = UILabel()
+            let titleLabel: ParagraphLabel = {
+                let label = ParagraphLabel()
                 label.font = UIConstants.Font.h1
                 label.textColor = UIConstants.Color.head
-                label.text = "最新课程"
+                label.setParagraphText("最新课程")
                 return label
             }()
             view?.addSubview(titleLabel)
             titleLabel.snp.makeConstraints { make in
                 make.leading.equalTo(UIConstants.Margin.leading)
-                make.centerY.equalToSuperview()
+                make.top.equalTo(1)
             }
         }
         
@@ -612,7 +646,7 @@ fileprivate class MoreFooterView: UICollectionReusableView {
         
         moreBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.centerY.equalToSuperview()
+            make.top.equalTo(10)
             make.width.equalTo(158)
             make.height.equalTo(42)
         }

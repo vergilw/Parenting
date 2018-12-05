@@ -1,22 +1,21 @@
 //
-//  StoryAPI.swift
+//  PaymentAPI.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/29.
+//  Created by Vergil.Wang on 2018/12/5.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import Moya
 import HandyJSON
 
-let StoryProvider = MoyaProvider<StoryAPI>()
+let PaymentProvider = MoyaProvider<PaymentAPI>()
 
-enum StoryAPI {
-    case stories(Int)
-    case story(Int)
+enum PaymentAPI {
+    case advances
 }
 
-extension StoryAPI: TargetType {
+extension PaymentAPI: TargetType {
     
     public var baseURL: URL {
         return URL(string: ServerHost)!
@@ -24,18 +23,14 @@ extension StoryAPI: TargetType {
     
     public var path: String {
         switch self {
-        case .stories:
-            return "/app/user_stories.json"
-        case let .story(storyID):
-            return "/app/user_stories/" + String(storyID) + ".json"
+        case .advances:
+            return "/app/advances"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .stories:
-            return .get
-        case .story:
+        case .advances:
             return .get
         }
     }
@@ -46,9 +41,7 @@ extension StoryAPI: TargetType {
     
     var task: Task {
         switch self {
-        case let .stories(page):
-            return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
-        case .story:
+        case .advances:
             return .requestPlain
         }
     }

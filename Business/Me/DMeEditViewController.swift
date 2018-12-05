@@ -23,14 +23,25 @@ class DMeEditViewController: BaseViewController {
         return scrollView
     }()
     
-    lazy fileprivate var avatarBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var avatarBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorColor(UIConstants.Color.primaryGreen)
         button.layer.cornerRadius = 66
         button.clipsToBounds = true
         button.imageView?.contentMode = .scaleAspectFill
         button.backgroundColor = UIConstants.Color.background
         button.setImage(UIImage(named: "me_editCamera")?.withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy fileprivate var saveBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorColor(UIConstants.Color.primaryRed)
+        button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.h3
+        button.setTitle("保存", for: .normal)
+        button.addTarget(self, action: #selector(nameSaveBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -48,8 +59,8 @@ class DMeEditViewController: BaseViewController {
             textField.textContentType = .name
         }
         textField.delegate = self
-        textField.returnKeyType = .next
-        textField.keyboardType = .phonePad
+        textField.returnKeyType = .done
+        textField.keyboardType = .namePhonePad
         textField.clearButtonMode = .whileEditing
         textField.font = UIFont(name: "PingFangSC-Regular", size: 17)
         textField.textColor = UIConstants.Color.head
@@ -124,8 +135,11 @@ class DMeEditViewController: BaseViewController {
     }
     
     func initNavigationItem() {
-        let barBtnItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(nameSaveBtnAction))
-        barBtnItem.tintColor = UIConstants.Color.primaryGreen
+//        let barBtnItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(nameSaveBtnAction))
+//        barBtnItem.tintColor = UIConstants.Color.primaryGreen
+        
+        let barBtnItem = UIBarButtonItem(customView: saveBtn)
+        barBtnItem.width = 50
         navigationItem.rightBarButtonItem = barBtnItem
     }
     
@@ -190,7 +204,7 @@ class DMeEditViewController: BaseViewController {
             if let mobile = model.mobile {
                 phoneTextField.text = String(mobile)
             }
-            if let model = AuthorizationService.sharedInstance.user, let wechat = model.wechat_name {
+            if let wechat = model.wechat_name {
                 wechatBtn.setTitle(wechat, for: .normal)
             } else {
                 wechatBtn.setTitle("未绑定微信，点击绑定", for: .normal)
@@ -202,8 +216,50 @@ class DMeEditViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     
-    @objc func nameSaveBtnAction() {
+    @objc override func backBarItemAction() {
+        view.endEditing(true)
         
+        if nameTextField.text != AuthorizationService.sharedInstance.user?.name {
+            let alertController = UIAlertController(title: nil, message: "您有未保存的资料，确定不保存吗？", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alertController, animated: true, completion: nil)
+            
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc func nameSaveBtnAction() {
+        view.endEditing(true)
+        
+        let text = nameTextField.text?.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
+        
+        guard text?.count ?? 0 != 0 else {
+            HUDService.sharedInstance.show(string: "名字不能为空")
+            return
+        }
+        
+        saveBtn.startAnimating()
+        
+        UserProvider.request(.user(text, nil), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            self.saveBtn.stopAnimating()
+
+            if code >= 0 {
+                if let JSON = JSON, let name = JSON["name"] as? String {
+                    self.nameTextField.text = name
+                    
+                    if let model = AuthorizationService.sharedInstance.user {
+                        model.name = name
+                        AuthorizationService.sharedInstance.user = model
+                        NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
+                    }
+                    HUDService.sharedInstance.show(string: "名字修改成功")
+                }
+            }
+        }))
     }
 
     @objc func avatarBtnAction() {
@@ -255,6 +311,7 @@ class DMeEditViewController: BaseViewController {
 
 
 extension DMeEditViewController: UITextFieldDelegate {
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         initNavigationItem()
     }
@@ -282,10 +339,34 @@ extension DMeEditViewController: UIImagePickerControllerDelegate, UINavigationCo
         
         picker.dismiss(animated: true, completion: nil)
         
-        avatarBtn.setImage(info[UIImagePickerController.InfoKey.editedImage] as? UIImage, for: .normal)
+//        avatarBtn.setImage(info[UIImagePickerController.InfoKey.editedImage] as? UIImage, for: .normal)
+        
+        avatarBtn.startAnimating()
         
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage, let imgData = image.jpegData(compressionQuality: 0.75) {
-            UploadService.sharedInstance.upload(data: imgData)
+            UploadService.sharedInstance.upload(data: imgData, complete: { [weak self] avatarKey in
+                if let avatarKey = avatarKey {
+                    
+                    UserProvider.request(.user(nil, avatarKey), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                        self?.avatarBtn.stopAnimating()
+                        
+                        if code >= 0 {
+                            if let JSON = JSON, let avatarURL = JSON["avatar_url"] as? String {
+                                self?.avatarBtn.kf.setImage(with: URL(string: avatarURL), for: .normal)
+                                
+                                if let model = AuthorizationService.sharedInstance.user {
+                                    model.avatar_url = avatarURL
+                                    AuthorizationService.sharedInstance.user = model
+                                    NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
+                                }
+                                HUDService.sharedInstance.show(string: "头像修改成功")
+                            }
+                        }
+                    }))
+                } else {
+                    self?.avatarBtn.stopAnimating()
+                }
+            })
         }
         
         

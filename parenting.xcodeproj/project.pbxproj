@@ -61,6 +61,9 @@
 		131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160BE2182F2480000F105 /* CourseEvaluationTitleCell.swift */; };
 		131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160C02183008B0000F105 /* DCourseSectionViewController.swift */; };
 		131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131160C221831AC70000F105 /* CourseEvaluationCell.swift */; };
+		131170A221B75C1600C178BB /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131170A121B75C1600C178BB /* UserAPI.swift */; };
+		131170A421B774ED00C178BB /* PaymentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131170A321B774ED00C178BB /* PaymentAPI.swift */; };
+		131170A621B77A0800C178BB /* AdvanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131170A521B77A0800C178BB /* AdvanceModel.swift */; };
 		13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13120E47219131D800404BC7 /* DPlayerViewController.swift */; };
 		1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C40521884B030008AB81 /* CourseCataloguesView.swift */; };
 		13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AA921A7DA2A009BD77A /* CommonAPI.swift */; };
@@ -180,6 +183,9 @@
 		131160BE2182F2480000F105 /* CourseEvaluationTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseEvaluationTitleCell.swift; sourceTree = "<group>"; };
 		131160C02183008B0000F105 /* DCourseSectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseSectionViewController.swift; sourceTree = "<group>"; };
 		131160C221831AC70000F105 /* CourseEvaluationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseEvaluationCell.swift; sourceTree = "<group>"; };
+		131170A121B75C1600C178BB /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
+		131170A321B774ED00C178BB /* PaymentAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAPI.swift; sourceTree = "<group>"; };
+		131170A521B77A0800C178BB /* AdvanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceModel.swift; sourceTree = "<group>"; };
 		13120E47219131D800404BC7 /* DPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayerViewController.swift; sourceTree = "<group>"; };
 		1312C40521884B030008AB81 /* CourseCataloguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCataloguesView.swift; sourceTree = "<group>"; };
 		13133AA921A7DA2A009BD77A /* CommonAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonAPI.swift; sourceTree = "<group>"; };
@@ -401,6 +407,7 @@
 				1310680121A696D600F79E92 /* BannerModel.swift */,
 				13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */,
 				130D8B6221AFB978003E7645 /* StoryModel.swift */,
+				131170A521B77A0800C178BB /* AdvanceModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -480,6 +487,8 @@
 				1311201421816CFE0088F5BF /* CourseAPI.swift */,
 				13113F6A219970C500B6E0FE /* AuthorizationAPI.swift */,
 				130D8B6421AFBCD5003E7645 /* StoryAPI.swift */,
+				131170A121B75C1600C178BB /* UserAPI.swift */,
+				131170A321B774ED00C178BB /* PaymentAPI.swift */,
 			);
 			path = NetworkAPI;
 			sourceTree = "<group>";
@@ -830,12 +839,14 @@
 				13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
+				131170A621B77A0800C178BB /* AdvanceModel.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
 				1311201621816EB20088F5BF /* NetworkConstants.swift in Sources */,
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */,
 				131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
+				131170A421B774ED00C178BB /* PaymentAPI.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */,
 				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
@@ -886,6 +897,7 @@
 				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
+				131170A221B75C1600C178BB /* UserAPI.swift in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,

@@ -34,4 +34,8 @@ class TopUpItemCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
+    
+    func setup(model: AdvanceModel) {
+        titleLabel.text = model.name
+    }
 }

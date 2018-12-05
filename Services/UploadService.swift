@@ -12,7 +12,7 @@ class UploadService {
     
     private init() { }
     
-    func upload(data: Data) {
+    func upload(data: Data, complete: @escaping ((String?) -> ())) {
         
         CommonProvider.request(.uploadToken(data.count, mimeType(imageData: data)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
@@ -26,7 +26,9 @@ class UploadService {
                     })
                     manager!.put(data, key: key, token: token, complete: { (response, key, data) in
                         if response?.isOK ?? false {
-                            print(data, response)
+                            complete(JSON?["signed_id"] as? String)
+                        } else {
+                            complete(nil)
                         }
                     }, option: option!)
                 }

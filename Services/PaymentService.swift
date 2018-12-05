@@ -25,12 +25,26 @@ class PaymentService: NSObject {
     
     var validateComplete: (()->())?
     
-    func validateProductIdentifiers(complete: @escaping ()->()) {
+    func validateProductIdentifiers(models: [AdvanceModel], complete: @escaping ()->()) {
         validateComplete = complete
+        
+        productIdentifiers = extractProductIdentifiers(models: models)
         
         let productsRequest = SKProductsRequest(productIdentifiers: Set(productIdentifiers))
         productsRequest.delegate = self
         productsRequest.start()
+    }
+    
+    func extractProductIdentifiers(models: [AdvanceModel]) -> [String] {
+        var identifiers: [String] = [String]()
+        
+        for model in models {
+            if let productIdentifier = model.apple_product_id {
+                identifiers.append(productIdentifier)
+            }
+        }
+        
+        return identifiers
     }
     
     func creatingPaymentRequest(product: SKProduct) {

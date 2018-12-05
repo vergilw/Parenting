@@ -1,22 +1,21 @@
 //
-//  StoryAPI.swift
+//  UserAPI.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/29.
+//  Created by Vergil.Wang on 2018/12/5.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import Moya
 import HandyJSON
 
-let StoryProvider = MoyaProvider<StoryAPI>()
+let UserProvider = MoyaProvider<UserAPI>()
 
-enum StoryAPI {
-    case stories(Int)
-    case story(Int)
+enum UserAPI {
+    case user(String?, String?)
 }
 
-extension StoryAPI: TargetType {
+extension UserAPI: TargetType {
     
     public var baseURL: URL {
         return URL(string: ServerHost)!
@@ -24,19 +23,15 @@ extension StoryAPI: TargetType {
     
     public var path: String {
         switch self {
-        case .stories:
-            return "/app/user_stories.json"
-        case let .story(storyID):
-            return "/app/user_stories/" + String(storyID) + ".json"
+        case .user:
+            return "/app/profile"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .stories:
-            return .get
-        case .story:
-            return .get
+        case .user:
+            return .put
         }
     }
     
@@ -46,10 +41,15 @@ extension StoryAPI: TargetType {
     
     var task: Task {
         switch self {
-        case let .stories(page):
-            return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
-        case .story:
-            return .requestPlain
+        case let .user(name, avatar):
+            var parameters: [String: Any] = [String: Any]()
+            if let name = name {
+                parameters["user"] = ["name": name]
+            }
+            if let avatar = avatar {
+                parameters["user"] = ["avatar": avatar]
+            }
+            return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         }
     }
     

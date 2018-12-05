@@ -36,6 +36,10 @@ class ActionButton: UIButton {
         activityView.style = style
     }
     
+    func setIndicatorColor(_ color: UIColor) {
+        activityView.color = color
+    }
+    
     func startAnimating() {
         isUserInteractionEnabled = false
         

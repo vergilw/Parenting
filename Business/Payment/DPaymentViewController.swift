@@ -10,6 +10,8 @@ import UIKit
 
 class DPaymentViewController: BaseViewController {
 
+    lazy fileprivate var advanceModels: [AdvanceModel]? = nil
+    
     lazy fileprivate var balanceTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.h2
@@ -66,6 +68,8 @@ class DPaymentViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -107,6 +111,25 @@ class DPaymentViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        PaymentProvider.request(.advances, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["advances"] as? [[String: Any]] {
+                    self.advanceModels = [AdvanceModel].deserialize(from: data) as? [AdvanceModel]
+                    self.collectionView.reloadData()
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+        
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -125,22 +148,24 @@ extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return advanceModels?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopUpItemCell.className(), for: indexPath) as! TopUpItemCell
-        //        cell.setup(attachment: attachments[indexPath.row])
+        if let model = advanceModels?[indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        PaymentService.sharedInstance.validateProductIdentifiers {
+        guard let models = advanceModels else { return }
+        PaymentService.sharedInstance.validateProductIdentifiers(models: models) {
             if let product = PaymentService.sharedInstance.products.first {
                 PaymentService.sharedInstance.creatingPaymentRequest(product: product)
             }
-            
         }
     }
     

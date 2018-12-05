@@ -88,8 +88,13 @@ class DSettingsViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func signOutBtnAction() {
-        AuthorizationService.sharedInstance.signOut()
-        HUDService.sharedInstance.show(string: "退出成功")
+        let alertController = UIAlertController(title: nil, message: "确定退出登录吗？", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+            AuthorizationService.sharedInstance.signOut()
+            HUDService.sharedInstance.show(string: "退出成功")
+        }))
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

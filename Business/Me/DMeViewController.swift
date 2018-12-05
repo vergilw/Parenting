@@ -163,6 +163,7 @@ class DMeViewController: BaseViewController {
         }
         
         tableView.tableHeaderView = headerView
+        tableView.layoutIfNeeded()
     }
     
     
@@ -241,6 +242,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == 0 {
             navigationController?.pushViewController(DOrdersViewController(), animated: true)
         } else if indexPath.row == 1 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
         } else if indexPath.row == 2 {
             navigationController?.pushViewController(DMeCoursesViewController(), animated: true)

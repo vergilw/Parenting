@@ -12,17 +12,30 @@ class HUDService {
     
     static let sharedInstance = HUDService()
     
+    fileprivate var HUDContainers: [HUDView] = [HUDView]()
+    
     private init() { }
     
     func show(string: String) {
+        for view in HUDContainers {
+            view.removeFromSuperview()
+        }
+        HUDContainers.removeAll()
+        
         let HUD = HUDView()
         HUD.titleLabel.text = string
         UIApplication.shared.keyWindow?.addSubview(HUD)
         HUD.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        HUDContainers.append(HUD)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            HUD.removeFromSuperview()
+            if let _ = HUD.superview {
+                HUD.removeFromSuperview()
+            }
+            if let index = self.HUDContainers.firstIndex(of: HUD) {
+                self.HUDContainers.remove(at: index)
+            }
         }
     }
     
