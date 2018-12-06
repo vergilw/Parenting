@@ -102,6 +102,7 @@
 		1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C39B217EBFEA00902A5C /* DMeViewController.swift */; };
 		1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */; };
 		132A492521B52AF700038027 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132A492421B52AF700038027 /* AppService.swift */; };
+		13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13796B3021B7D15A00E0C3D9 /* ShareView.swift */; };
 		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
 		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
 		13B7F6F221B67745001BF15D /* UploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F121B67745001BF15D /* UploadService.swift */; };
@@ -228,6 +229,7 @@
 		1320C39B217EBFEA00902A5C /* DMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeViewController.swift; sourceTree = "<group>"; };
 		1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseSectionViewModel.swift; sourceTree = "<group>"; };
 		132A492421B52AF700038027 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		13796B3021B7D15A00E0C3D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
 		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		13B7F6EC21B65D18001BF15D /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				130D46002189615B00CB4763 /* ParagraphLabel.swift */,
 				130F1C8B219BC26B004E1DD3 /* ActionButton.swift */,
 				131F015621ABC77D004F5F0F /* SolutionViewController.swift */,
+				13796B3021B7D15A00E0C3D9 /* ShareView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -924,6 +927,7 @@
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
 				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
+				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */,
@@ -1091,7 +1095,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1100,7 +1104,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = DevProvisioningProfiles;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1114,7 +1118,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1123,7 +1127,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = DevProvisioningProfiles;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

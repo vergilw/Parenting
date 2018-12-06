@@ -128,6 +128,12 @@ class DMeEditViewController: BaseViewController {
         reload()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        view.endEditing(true)
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
         view.addSubview(scrollView)

@@ -718,7 +718,65 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func shareBarItemAction() {
+        guard let shareURL = viewModel.courseModel?.share_url else {
+            HUDService.sharedInstance.show(string: "分享信息缺失")
+            return
+        }
         
+        let title: String = self.viewModel.courseModel?.title ?? ""
+        let descr: String = self.viewModel.courseModel?.sub_title ?? ""
+        let imgURL: String = self.viewModel.courseModel?.cover_attribute?.service_url ?? ""
+        
+        let shareView = ShareView()
+        shareView.shareClosure = { [weak shareView] shareType in
+            if shareType == .wechatSession {
+                
+                let shareObj = UMShareWebpageObject.shareObject(withTitle: title, descr: descr, thumImage: imgURL)
+                shareObj?.webpageUrl = shareURL
+                let msgObj = UMSocialMessageObject(mediaObject: shareObj)
+                UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatSession, messageObject: msgObj, currentViewController: self, completion: { (result, error) in
+                    if let response = result as? UMSocialShareResponse {
+                        if let status = response.originalResponse as? Int, status == 0 {
+                            HUDService.sharedInstance.show(string: "分享完成")
+                        } else {
+                            HUDService.sharedInstance.show(string: "分享失败")
+                        }
+                    } else {
+                        HUDService.sharedInstance.show(string: "分享失败")
+                    }
+                    shareView?.removeFromSuperview()
+                })
+                
+            } else if shareType == .wechatTimeLine {
+                
+                let shareObj = UMShareWebpageObject.shareObject(withTitle: title, descr: descr, thumImage: imgURL)
+                shareObj?.webpageUrl = shareURL
+                let msgObj = UMSocialMessageObject(mediaObject: shareObj)
+                UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatTimeLine, messageObject: msgObj, currentViewController: self, completion: { (result, error) in
+                    if let response = result as? UMSocialShareResponse {
+                        if let status = response.originalResponse as? Int, status == 0 {
+                            HUDService.sharedInstance.show(string: "分享完成")
+                        } else {
+                            HUDService.sharedInstance.show(string: "分享失败")
+                        }
+                    } else {
+                        HUDService.sharedInstance.show(string: "分享失败")
+                    }
+                    shareView?.removeFromSuperview()
+                })
+                
+            } else if shareType.rawValue ==  1001 {
+                UIPasteboard.general.string = shareURL
+                HUDService.sharedInstance.show(string: "已复制")
+                shareView?.removeFromSuperview()
+            }
+        }
+        view.addSubview(shareView)
+        shareView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        view.layoutIfNeeded()
+        shareView.present()
     }
     
     @objc func audioPanelBarItemAction() {

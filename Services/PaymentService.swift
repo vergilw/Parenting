@@ -13,10 +13,6 @@ class PaymentService: NSObject {
     static let sharedInstance = PaymentService()
     
     private override init() {
-        productIdentifiers = ["com.otof.yangyu.8",
-                              "com.otof.yangyu.68",
-                              "com.otof.yangyu.88"
-        ]
     }
     
     var productIdentifiers: [String] = [String]()
@@ -81,17 +77,12 @@ extension PaymentService: SKPaymentTransactionObserver {
         for transaction in transactions {
             if transaction.transactionState == .purchased {
                 if let receiptURL = Bundle.main.appStoreReceiptURL {
-//                    do {
-                        if let receiptData = try? Data(contentsOf: receiptURL) {
-                            print(String(data: receiptData, encoding: String.Encoding.utf8))
-                        }
-//                        print(String(data: receipt, encoding: String.Encoding.utf8))
-                    
-//                    } catch {
-//                        print(error)
-//                    }
-                
+                    if let receiptData = try? Data(contentsOf: receiptURL) {
+                        validateReceipt(receiptData.base64EncodedString())
+                    }
                 }
+            } else if transaction.transactionState == .failed {
+                SKPaymentQueue.default().finishTransaction(transaction)
             }
         }
     }
@@ -99,5 +90,14 @@ extension PaymentService: SKPaymentTransactionObserver {
 
     func paymentQueue(_ queue: SKPaymentQueue, shouldAddStorePayment payment: SKPayment, for product: SKProduct) -> Bool {
         return true
+    }
+    
+    func validateReceipt(_ string: String) {
+        PaymentProvider.request(.advance_receipt(string), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                HUDService.sharedInstance.show(string: "充值成功")
+            }
+        }))
     }
 }

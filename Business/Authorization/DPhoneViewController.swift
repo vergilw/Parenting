@@ -183,6 +183,12 @@ class DPhoneViewController: BaseViewController {
         reloadPasscodeTimer()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        view.endEditing(true)
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
         view.addSubviews([titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
@@ -312,7 +318,7 @@ class DPhoneViewController: BaseViewController {
                     self?.fetchBtn.setTitle("获取验证码", for: .normal)
                     AppCacheService.sharedInstance.lastFetchingPasscodeDate = nil
                 } else {
-                    self?.fetchBtn.setTitle(String(format: "已发送%.0fs", interval+60), for: .normal)
+                    self?.fetchBtn.setTitle(String(format: "重发%.0fs", interval+60), for: .normal)
                 }
             })
             passcodeTimer?.fire()

@@ -13,6 +13,8 @@ let PaymentProvider = MoyaProvider<PaymentAPI>()
 
 enum PaymentAPI {
     case advances
+    case advance(Int)
+    case advance_receipt(String)
 }
 
 extension PaymentAPI: TargetType {
@@ -25,6 +27,10 @@ extension PaymentAPI: TargetType {
         switch self {
         case .advances:
             return "/app/advances"
+        case let .advance(advanceID):
+            return "/app/advances/\(advanceID)/order"
+        case .advance_receipt:
+            return "/app/advances/apple_pay"
         }
     }
     
@@ -32,6 +38,10 @@ extension PaymentAPI: TargetType {
         switch self {
         case .advances:
             return .get
+        case .advance:
+            return .get
+        case .advance_receipt:
+            return .post
         }
     }
     
@@ -43,6 +53,10 @@ extension PaymentAPI: TargetType {
         switch self {
         case .advances:
             return .requestPlain
+        case .advance:
+            return .requestPlain
+        case let .advance_receipt(receipt):
+            return .requestParameters(parameters: ["receipt-data": receipt], encoding: JSONEncoding.default)
         }
     }
     

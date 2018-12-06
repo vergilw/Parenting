@@ -51,6 +51,23 @@ class DPaymentViewController: BaseViewController {
         return view
     }()
     
+    lazy fileprivate var indicatorBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorColor(UIConstants.Color.primaryGreen)
+        button.isHidden = true
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
+        let effectView = UIVisualEffectView(effect: blurEffect)
+        button.addSubview(effectView)
+        button.sendSubviewToBack(effectView)
+        effectView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+        }
+        return button
+    }()
+    
     lazy fileprivate var footnoteLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
@@ -76,7 +93,7 @@ class DPaymentViewController: BaseViewController {
     func initContentView() {
         view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
         
-        view.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, footnoteLabel])
+        view.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
     }
     
     // MARK: - ============= Constraints =============
@@ -97,6 +114,9 @@ class DPaymentViewController: BaseViewController {
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(topUpTitleLabel.snp.bottom).offset(32)
             make.height.equalTo(150)
+        }
+        indicatorBtn.snp.makeConstraints { make in
+            make.edges.equalTo(collectionView)
         }
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -162,8 +182,24 @@ extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         guard let models = advanceModels else { return }
+        
+        
+//        PaymentProvider.request(.advances, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+//
+//
+//            if code >= 0 {
+//
+//            }
+//        }))
+        
+        indicatorBtn.startAnimating()
+        indicatorBtn.isHidden = false
         PaymentService.sharedInstance.validateProductIdentifiers(models: models) {
-            if let product = PaymentService.sharedInstance.products.first {
+            self.indicatorBtn.isHidden = true
+            self.indicatorBtn.stopAnimating()
+            if let product = PaymentService.sharedInstance.products.first(where: { (product) -> Bool in
+                return product.productIdentifier == models[exist: indexPath.row]?.apple_product_id
+            }) {
                 PaymentService.sharedInstance.creatingPaymentRequest(product: product)
             }
         }

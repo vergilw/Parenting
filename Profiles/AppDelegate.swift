@@ -10,6 +10,7 @@ import UIKit
 import IQKeyboardManagerSwift
 import AVFoundation
 import StoreKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -88,11 +89,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupThirdPartyPlatforms() {
         UMConfigure.initWithAppkey("5bd6ab53b465f5473b0000e7", channel: "App Store")
         UMSocialManager.default()?.setPlaform(.wechatSession, appKey: "wxc7c60047a9c75018", appSecret: "c5168f183fd20a038df632c1d6d4157e", redirectURL: "http://mobile.umeng.com/social")
+        UMSocialGlobal.shareInstance()?.isUsingHttpsWhenShareContent = false
+        
         #if DEBUG
         Bugly.start(withAppId: "87773979f0", developmentDevice: true, config: nil)
         #else
         Bugly.start(withAppId: "87773979f0")
         #endif
+        
+        GeTuiSdk.start(withAppId: "VVsqPhssZX5kMkwXeMOp2", appKey: "1moSQ8HVzE6jbWhH0YRcI7", appSecret: "Sy2GYDFe9X8AEnhgbpbG76", delegate: self)
+        registerRemoteNotification()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -123,3 +129,60 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
+// MARK: - ============= APNS =============
+
+extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
+    
+    func registerRemoteNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        center.requestAuthorization(options: [.badge, .sound, .alert, .carPlay]) { (granted, error) in
+            
+        }
+        
+        UIApplication.shared.registerForRemoteNotifications()
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
+        GeTuiSdk.registerDeviceToken(token)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.badge, .sound, .alert])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        GeTuiSdk.handleRemoteNotification(response.notification.request.content.userInfo)
+        
+        completionHandler()
+    }
+    
+    func geTuiSdkDidRegisterClient(_ clientId: String!) {
+        print(#function + clientId)
+    }
+    
+    func geTuiSdkDidReceivePayloadData(_ payloadData: Data!, andTaskId taskId: String!, andMsgId msgId: String!, andOffLine offLine: Bool, fromGtAppId appId: String!) {
+        
+        guard let JSON = try? JSONSerialization.jsonObject(with: payloadData, options: JSONSerialization.ReadingOptions()) as? [String: Any] else {
+            return
+        }
+        guard let aps = JSON?["aps"] as? [String: Any], let alert = aps["alert"] as? [String: String] else {
+            return
+        }
+        if UIApplication.shared.applicationState == .inactive ||
+            UIApplication.shared.applicationState == .background {
+            let notiObj = UNMutableNotificationContent()
+            notiObj.title = alert["title"] ?? "氧育"
+            if let subtitle = alert["subtitle"] {
+                notiObj.subtitle = subtitle
+            }
+            notiObj.body = alert["body"] ?? ""
+            notiObj.badge = NSNumber(string: (aps["badge"] as? String) ?? "")
+            notiObj.categoryIdentifier = UUID.init().uuidString
+            
+            let request = UNNotificationRequest.init(identifier: notiObj.categoryIdentifier, content: notiObj, trigger: nil)
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+}

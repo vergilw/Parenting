@@ -279,6 +279,12 @@ fileprivate class ResultView: UIView {
         return view
     }()
     
+    lazy fileprivate var stackActionBtn: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var iconImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "public_noNetworkImg")
@@ -314,9 +320,12 @@ fileprivate class ResultView: UIView {
         backgroundColor = .white
         
         addSubviews([actionBtn, stackView])
-        stackView.addSubviews([iconImgView, titleLabel, solutionBtn])
+        stackView.addSubviews([stackActionBtn])
         
         actionBtn.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        stackActionBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         stackView.snp.makeConstraints { make in

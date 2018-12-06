@@ -25,6 +25,7 @@ class CourseModel: HandyJSON {
     var course_catalogues: [CourseSectionModel]?
     var is_comment: Bool?
     var recommended_cover_attribute: AssetModel?
+    var share_url: String?
     
     required init() {
         

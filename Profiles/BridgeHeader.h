@@ -15,9 +15,11 @@
 @import UITextView_Placeholder;
 @import TYCyclePagerView;
 
+
 #import <UMCommon/UMCommon.h>
 #import <UMShare/UMShare.h>
 #import <Bugly/Bugly.h>
 #import "QiniuSDK.h"
+#import "GTSDK/GeTuiSdk.h"
 
 #endif /* BridgeHeader_h */
