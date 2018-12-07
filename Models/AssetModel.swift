@@ -22,10 +22,10 @@ class AssetModel: HandyJSON {
     
     func mapping(mapper: HelpingMapper) {
         mapper <<<
-            self.height <-- "metadata.height"
+            self.height <-- ["metadata.height", "height"]
         
         mapper <<<
-            self.width <-- "metadata.width"
+            self.width <-- ["metadata.width", "width"]
     }
     
 //    required convenience init?(map: Map) {

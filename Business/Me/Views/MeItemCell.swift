@@ -29,6 +29,13 @@ class MeItemCell: UITableViewCell {
         return imgView
     }()
     
+    lazy fileprivate var valueLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.foot
+        return label
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -45,7 +52,7 @@ class MeItemCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews([iconImgView, titleLabel, indicatorImgView])
+        contentView.addSubviews([iconImgView, titleLabel, indicatorImgView, valueLabel])
         
         iconImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -60,6 +67,11 @@ class MeItemCell: UITableViewCell {
         indicatorImgView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalTo(-UIConstants.Margin.trailing)
+        }
+        
+        valueLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(indicatorImgView.snp.leading).offset(-10)
         }
     }
     
@@ -84,6 +96,13 @@ class MeItemCell: UITableViewCell {
                 make.leading.equalTo(UIConstants.Margin.leading)
                 make.centerY.equalToSuperview()
             }
+        }
+        
+        if value != nil {
+            valueLabel.text = value
+            valueLabel.isHidden = false
+        } else {
+            valueLabel.isHidden = true
         }
         
         titleLabel.text = title

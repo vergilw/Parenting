@@ -20,11 +20,11 @@ class DPaymentViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var balanceValueLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var balanceValueLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h1
         label.textColor = UIConstants.Color.disable
-        label.text = "0.00"
+        label.setParagraphText("0.00")
         return label
     }()
     
@@ -86,7 +86,9 @@ class DPaymentViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        reload()
         fetchData()
+        AuthorizationService.sharedInstance.updateUserInfo()
     }
     
     // MARK: - ============= Initialize View =============
@@ -127,7 +129,7 @@ class DPaymentViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -153,6 +155,11 @@ class DPaymentViewController: BaseViewController {
     
     // MARK: - ============= Reload =============
     @objc func reload() {
+        if let balance = AuthorizationService.sharedInstance.user?.balance {
+            let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
+            balanceValueLabel.setParagraphText(string ?? "0.00")
+            balanceValueLabel.textColor = UIConstants.Color.primaryOrange
+        }
         
     }
     
@@ -183,25 +190,19 @@ extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDe
         
         guard let models = advanceModels else { return }
         
-        
-//        PaymentProvider.request(.advances, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-//
-//
-//            if code >= 0 {
-//
-//            }
-//        }))
-        
-        indicatorBtn.startAnimating()
-        indicatorBtn.isHidden = false
-        PaymentService.sharedInstance.validateProductIdentifiers(models: models) {
-            self.indicatorBtn.isHidden = true
-            self.indicatorBtn.stopAnimating()
-            if let product = PaymentService.sharedInstance.products.first(where: { (product) -> Bool in
-                return product.productIdentifier == models[exist: indexPath.row]?.apple_product_id
-            }) {
-                PaymentService.sharedInstance.creatingPaymentRequest(product: product)
-            }
+        if let model = advanceModels?[exist: indexPath.row], let productID = model.apple_product_id {
+            indicatorBtn.startAnimating()
+            indicatorBtn.isHidden = false
+            PaymentService.sharedInstance.purchaseProduct(productID: productID, models: models, complete: { (status) in
+                self.indicatorBtn.isHidden = true
+                self.indicatorBtn.stopAnimating()
+                
+                if status {
+                    HUDService.sharedInstance.show(string: "购买成功")
+                } else {
+                    HUDService.sharedInstance.show(string: "购买失败")
+                }
+            })
         }
     }
     

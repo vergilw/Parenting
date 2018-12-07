@@ -16,9 +16,15 @@ class UserModel: HandyJSON {
     var avatar_url: String?
     var name: String?
     var wechat_name: String?
+    var balance: String?
     
     required init() {
         
+    }
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.balance <-- ["wallet.ios_balance", "ios_balance"]
     }
     
     /*

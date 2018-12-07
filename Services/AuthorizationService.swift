@@ -59,4 +59,13 @@ class AuthorizationService {
         user = nil
         NotificationCenter.default.post(name: Notification.Authorization.signOutDidSuccess, object: nil)
     }
+    
+    func updateUserInfo() {
+        UserProvider.request(.user, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
+                AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
+            }
+        }))
+    }
 }

@@ -19,6 +19,7 @@ class DMeViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        AuthorizationService.sharedInstance.updateUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,6 +189,8 @@ class DMeViewController: BaseViewController {
     @objc func reload() {
         initHeaderView()
         
+        //update balance display
+        tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: UITableView.RowAnimation.none)
     }
     
     // MARK: - ============= Action =============
@@ -222,7 +225,12 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == 0 {
             cell.setup(img: UIImage(named: "me_itemOrder")!, title: "我的订单")
         } else if indexPath.row == 1 {
-            cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心")
+            var value: String?
+            if let balance = AuthorizationService.sharedInstance.user?.balance {
+                let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
+                value = string
+            }
+            cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
         } else if indexPath.row == 2 {
             cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
         } else if indexPath.row == 3 {

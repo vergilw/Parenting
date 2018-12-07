@@ -12,7 +12,8 @@ import HandyJSON
 let UserProvider = MoyaProvider<UserAPI>()
 
 enum UserAPI {
-    case user(String?, String?)
+    case updateUser(String?, String?)
+    case user
 }
 
 extension UserAPI: TargetType {
@@ -23,6 +24,8 @@ extension UserAPI: TargetType {
     
     public var path: String {
         switch self {
+        case .updateUser:
+            return "/app/profile"
         case .user:
             return "/app/profile"
         }
@@ -30,8 +33,10 @@ extension UserAPI: TargetType {
     
     public var method: Moya.Method {
         switch self {
-        case .user:
+        case .updateUser:
             return .put
+        case .user:
+            return .get
         }
     }
     
@@ -41,7 +46,7 @@ extension UserAPI: TargetType {
     
     var task: Task {
         switch self {
-        case let .user(name, avatar):
+        case let .updateUser(name, avatar):
             var parameters: [String: Any] = [String: Any]()
             if let name = name {
                 parameters["user"] = ["name": name]
@@ -50,7 +55,10 @@ extension UserAPI: TargetType {
                 parameters["user"] = ["avatar": avatar]
             }
             return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+        case .user:
+            return .requestPlain
         }
+        
     }
     
     var validationType: ValidationType {
