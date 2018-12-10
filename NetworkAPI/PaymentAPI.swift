@@ -15,6 +15,10 @@ enum PaymentAPI {
     case advances
     case advance(Int)
     case advance_receipt(String)
+    case course_order(Int)
+    case order(Int)
+    case orders(String, Int)
+    case order_pay(Int)
 }
 
 extension PaymentAPI: TargetType {
@@ -31,6 +35,14 @@ extension PaymentAPI: TargetType {
             return "/app/advances/\(advanceID)/order"
         case .advance_receipt:
             return "/app/advances/apple_pay"
+        case let .course_order(courseID):
+            return "/app/courses/\(courseID)/order"
+        case let .order(orderID):
+            return "/app/my/orders/\(orderID)"
+        case .orders:
+            return "/app/my/orders"
+        case let .order_pay(orderID):
+            return "/app/my/orders/\(orderID)/wallet_pay"
         }
     }
     
@@ -41,6 +53,14 @@ extension PaymentAPI: TargetType {
         case .advance:
             return .get
         case .advance_receipt:
+            return .post
+        case .course_order:
+            return .post
+        case .order:
+            return .get
+        case .orders:
+            return .get
+        case .order_pay:
             return .post
         }
     }
@@ -57,6 +77,19 @@ extension PaymentAPI: TargetType {
             return .requestPlain
         case let .advance_receipt(receipt):
             return .requestParameters(parameters: ["receipt-data": receipt], encoding: JSONEncoding.default)
+        case .course_order:
+            return .requestPlain
+        case .order:
+            return .requestPlain
+        case let .orders(status, page):
+            return .requestParameters(parameters: ["good_type":"Course", "status":status, "page":page, "per_page":"10"], encoding: URLEncoding.default)
+        case .order_pay:
+            let deviceParameters = ["os_name": UIDevice.current.systemName,
+             "os_version": UIDevice.current.systemVersion,
+             "device_model": UIDevice.current.machineModel ?? "",
+             "app_version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
+             "device_id": AppService.sharedInstance.uniqueIdentifier]
+            return .requestParameters(parameters: ["device_info": deviceParameters], encoding: JSONEncoding.default)
         }
     }
     

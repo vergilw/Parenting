@@ -767,7 +767,7 @@ class DCourseDetailViewController: BaseViewController {
                 
             } else if shareType.rawValue ==  1001 {
                 UIPasteboard.general.string = shareURL
-                HUDService.sharedInstance.show(string: "已复制")
+                HUDService.sharedInstance.show(string: "已将链接复制至剪贴板")
                 shareView?.removeFromSuperview()
             }
         }
@@ -870,22 +870,61 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func auditionBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
         
     }
     
     @objc func toolActionBtnAction() {
         guard viewModel.courseModel?.is_bought == false else { return }
         
-        let alertController = UIAlertController(title: "是否购买？", message: nil, preferredStyle: UIAlertController.Style.alert)
-        alertController.addAction(UIAlertAction(title: "true", style: UIAlertAction.Style.default, handler: { (_) in
-            self.viewModel.courseModel?.is_bought = true
-            self.reload()
+        PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let order = JSON?["order"] as? [String: Any], let orderID = order["id"] as? Int {
+                    
+                    let viewController = DPurchaseViewController(orderID: orderID)
+                    viewController.completeClosure = {
+                        guard var viewControllers = self.navigationController?.viewControllers, let index = viewControllers.firstIndex(where: { (viewController) -> Bool in
+                            return viewController.isKind(of: DPurchaseViewController.self)
+                        }) else {
+                            return
+                        }
+                        
+                        viewControllers.remove(at: index)
+                        self.navigationController?.setViewControllers(viewControllers, animated: true)
+                        
+                        self.fetchData()
+                    }
+                    self.navigationController?.pushViewController(viewController, animated: true)
+                }
+                
+            }
         }))
-        alertController.addAction(UIAlertAction(title: "false", style: UIAlertAction.Style.cancel, handler: nil))
+        
+        /*
+        let alertController = UIAlertController(title: "是否购买？", message: nil, preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "是", style: UIAlertAction.Style.default, handler: { (_) in
+            
+            
+//            self.viewModel.courseModel?.is_bought = true
+//            self.reload()
+        }))
+        alertController.addAction(UIAlertAction(title: "否", style: UIAlertAction.Style.cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
+ */
     }
     
     @objc func displayMyEvaluation(button: ActionButton) {
+        
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
         
         if viewModel.myCommentModel == nil {
             button.startAnimating()

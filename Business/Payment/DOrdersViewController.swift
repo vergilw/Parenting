@@ -10,6 +10,10 @@ import UIKit
 
 class DOrdersViewController: BaseViewController {
 
+    fileprivate var orderModels: [OrderModel]?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     enum DOrdersMode {
         case nonpayment
         case payment
@@ -47,6 +51,8 @@ class DOrdersViewController: BaseViewController {
         return imgView
     }()
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,6 +61,8 @@ class DOrdersViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -64,6 +72,10 @@ class DOrdersViewController: BaseViewController {
         tableView.register(OrderCell.self, forCellReuseIdentifier: OrderCell.className())
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.fetchMoreData()
+        })
+        tableView.mj_footer.isHidden = true
         
         view.addSubviews([categoryView, tableView])
         categoryView.addSubviews([nonpaymentBtn, paymentBtn, categoryIndicatorImgView])
@@ -132,10 +144,91 @@ class DOrdersViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchData), name: Notification.Payment.payCourseDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
+    @objc fileprivate func fetchData() {
+        var orderStatus = "unpaid"
+        if orderMode == .payment {
+            orderStatus = "paid"
+        }
+        pageNumber = 1
+        
+        var HUDHeight: CGFloat = 0
+        if #available(iOS 11, *) {
+            HUDHeight = UIScreenHeight-(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        } else {
+            HUDHeight = UIScreenHeight-UIStatusBarHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        }
+        HUDService.sharedInstance.showFetchingView(target: tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
+        HUDService.sharedInstance.hideResultView(target: tableView)
+        
+        PaymentProvider.request(.orders(orderStatus, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
+            if code >= 0 {
+                if let data = JSON?["orders"] as? [[String: Any]] {
+                    self.orderModels = [OrderModel].deserialize(from: data) as? [OrderModel]
+                    self.reload()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                    
+                    if self.orderModels?.count ?? 0 == 0 {
+                        HUDService.sharedInstance.showNoDataView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
+                            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                        }
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        var orderStatus = "unpaid"
+        if orderMode == .payment {
+            orderStatus = "paid"
+        }
+        
+        HUDService.sharedInstance.showFetchingView(target: tableView)
+        
+        PaymentProvider.request(.orders(orderStatus, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["orders"] as? [[String: Any]] {
+                    if let models = [OrderModel].deserialize(from: data) as? [OrderModel] {
+                        self.orderModels?.append(contentsOf: models)
+                        self.tableView.reloadData()
+                    }
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                }
+                
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -169,7 +262,8 @@ class DOrdersViewController: BaseViewController {
         } else if sender == paymentBtn {
             orderMode = .payment
         }
-        reload()
+        
+        fetchData()
     }
 }
 
@@ -181,18 +275,44 @@ extension DOrdersViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return orderModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: OrderCell.className(), for: indexPath) as! OrderCell
-        cell.setup(mode: orderMode)
+        if let model = orderModels?[exist: indexPath.row] {
+            cell.setup(mode: orderMode, model: model)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DPurchaseViewController(), animated: true)
+        if let model = orderModels?[exist: indexPath.row], let orderID = model.id, let courseID = model.order_items?[exist: 0]?.course?.id {
+            if orderMode == .nonpayment {
+                
+                let viewController = DPurchaseViewController(orderID: orderID)
+                viewController.completeClosure = {
+                    guard var viewControllers = self.navigationController?.viewControllers, let index = viewControllers.firstIndex(where: { (viewController) -> Bool in
+                        return viewController.isKind(of: DPurchaseViewController.self)
+                    }) else {
+                        return
+                    }
+                    
+                    viewControllers.remove(at: index)
+                    
+                    let pushViewController = DCourseDetailViewController(courseID: courseID)
+                    viewControllers.append(pushViewController)
+                    self.navigationController?.setViewControllers(viewControllers, animated: true)
+                }
+                navigationController?.pushViewController(viewController, animated: true)
+                
+            } else if orderMode == .payment {
+                navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+            }
+            
+        }
+        
     }
 }

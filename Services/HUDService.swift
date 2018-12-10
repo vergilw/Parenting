@@ -83,23 +83,61 @@ class HUDService {
         }
     }
     
-    func showNoNetworkView(target view: UIView, retry block: @escaping ()->()) {
+    func showNoNetworkView(target view: UIView, frame: CGRect = .zero, retry block: @escaping ()->()) {
         let HUD = ResultView()
         view.addSubview(HUD)
-        HUD.snp.makeConstraints { make in
-            make.edges.equalTo(view)
-        }
         HUD.actionBlock = block
+        
+        if frame != .zero {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(frame.size)
+                make.leading.equalTo(frame.origin.x)
+                make.top.equalTo(frame.origin.y)
+            }
+        } else if let scrollView = view as? UIScrollView {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(scrollView.bounds.size)
+                make.leading.equalTo(scrollView.contentOffset.x)
+                make.top.equalTo(scrollView.contentOffset.y)
+            }
+        } else {
+            HUD.snp.makeConstraints { make in
+                make.edges.equalTo(view)
+            }
+        }
     }
     
-    func showNoDataView(target view: UIView, redirect block: @escaping ()->()) {
+    func showNoDataView(target view: UIView, frame: CGRect = .zero, redirect block: @escaping ()->()) {
         let HUD = ResultView()
         HUD.setupNoData()
         view.addSubview(HUD)
-        HUD.snp.makeConstraints { make in
-            make.edges.equalTo(view)
-        }
         HUD.actionBlock = block
+        
+        if frame != .zero {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(frame.size)
+                make.leading.equalTo(frame.origin.x)
+                make.top.equalTo(frame.origin.y)
+            }
+        } else if let scrollView = view as? UIScrollView {
+            HUD.snp.makeConstraints { make in
+                make.size.equalTo(scrollView.bounds.size)
+                make.leading.equalTo(scrollView.contentOffset.x)
+                make.top.equalTo(scrollView.contentOffset.y)
+            }
+        } else {
+            HUD.snp.makeConstraints { make in
+                make.edges.equalTo(view)
+            }
+        }
+    }
+    
+    func hideResultView(target view: UIView) {
+        if let subview = view.subviews.first(where: { (subview) -> Bool in
+            return subview.isKind(of: ResultView.self)
+        }) {
+            subview.removeFromSuperview()
+        }
     }
 }
 

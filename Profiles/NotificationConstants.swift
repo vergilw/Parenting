@@ -19,17 +19,9 @@ public extension Notification {
     public class User {
         @objc public static let userInfoDidChange: Notification.Name = Notification.Name(String(describing: User.self) + #keyPath(userInfoDidChange))
     }
-
-    public class Mail {
-        @objc public static let mailModelsCountDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailModelsCountDidChange))
-        
-        @objc public static let mailModelsValueDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailModelsValueDidChange))
-        
-        @objc public static let mailboxModelsCountDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailboxModelsCountDidChange))
-        
-        @objc public static let mailboxModelsValueDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailboxModelsValueDidChange))
-        
-        @objc public static let mailboxSelectDidChange: Notification.Name = Notification.Name(String(describing: Mail.self) + #keyPath(mailboxSelectDidChange))
+    
+    public class Payment {
+        @objc public static let payCourseDidSuccess: Notification.Name = Notification.Name(String(describing: User.self) + #keyPath(payCourseDidSuccess))
     }
     
     public class Setting {

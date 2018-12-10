@@ -7,9 +7,16 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DPurchaseViewController: BaseViewController {
 
+    public var orderID: Int = 0
+    
+    var orderModel: OrderModel?
+    
+    var completeClosure: (() -> Void)?
+    
     lazy fileprivate var statusLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h1
@@ -20,7 +27,6 @@ class DPurchaseViewController: BaseViewController {
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
-        imgView.layer.cornerRadius = 4
         return imgView
     }()
     
@@ -48,8 +54,8 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var priceLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var priceLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
         label.textAlignment = .right
@@ -64,8 +70,8 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var balanceValueLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var balanceValueLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.textAlignment = .right
@@ -107,16 +113,25 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var actionBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var actionBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("确认支付", for: .normal)
         button.backgroundColor = UIConstants.Color.primaryRed
         button.layer.cornerRadius = 26
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(payBtnAction), for: .touchUpInside)
         return button
     }()
+    
+    init(orderID: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.orderID = orderID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +142,7 @@ class DPurchaseViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        reload()
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -135,7 +150,7 @@ class DPurchaseViewController: BaseViewController {
         view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 230), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 230))
         view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 338), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 338))
         
-        view.addSubviews([statusLabel, previewImgView, courseNameLabel, courseTeacherLabel, orderNumberLabel, priceLabel, balanceTitleLabel, balanceValueLabel, timeTitleLabel, timeValueLabel, timeFootnoteLabel, footnoteLabel, actionBtn])
+        view.addSubviews([statusLabel, previewImgView, courseNameLabel, courseTeacherLabel, orderNumberLabel, priceLabel, balanceTitleLabel, balanceValueLabel, timeTitleLabel, timeValueLabel, timeFootnoteLabel, actionBtn])
     }
     
     // MARK: - ============= Constraints =============
@@ -186,15 +201,14 @@ class DPurchaseViewController: BaseViewController {
             make.top.equalTo(timeValueLabel.snp.bottom).offset(7)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
         }
-        footnoteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(timeFootnoteLabel.snp.bottom).offset(32)
-        }
+//        footnoteLabel.snp.makeConstraints { make in
+//            make.leading.equalTo(UIConstants.Margin.leading)
+//            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+//            make.top.equalTo(timeFootnoteLabel.snp.bottom).offset(32)
+//        }
         actionBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading+25)
             make.trailing.equalTo(-UIConstants.Margin.trailing-25)
-//            make.top.equalTo(footnoteLabel.snp.bottom).offset(105)
             make.height.equalTo(52)
             if #available(iOS 11, *) {
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-48)
@@ -206,30 +220,98 @@ class DPurchaseViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        PaymentProvider.request(.order(orderID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["order"] as? [String: Any] {
+                    self.orderModel = OrderModel.deserialize(from: data)
+                    self.reload()
+                }
+
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        statusLabel.setParagraphText("未支付")
-        previewImgView.backgroundColor = .gray
-        courseNameLabel.setParagraphText("如何规划幼儿英引导幼如引导幼如何幼...")
-        courseTeacherLabel.setParagraphText("Gcide丨全职妈妈")
+        statusLabel.setParagraphText(orderModel?.payment_status ?? "")
         
-        let text = "订单号：236815484212"
-        let attributedString = NSMutableAttributedString(string: text)
-        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.body], range: NSRange(location: 0, length: "订单号：".count))
-        orderNumberLabel.attributedText = attributedString
+        if let URLString = orderModel?.order_items?[exist: 0]?.course?.cover_attribute?.service_url {
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 160*2, height: 160/16.0*9*2))
+            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
         
-        balanceValueLabel.text = "¥29.9"
-        priceLabel.text = "¥28.0"
-        timeValueLabel.setParagraphText("2018.10.30 08:25")
+        courseNameLabel.setParagraphText(orderModel?.order_items?[exist: 0]?.course?.title ?? "")
         
+        var tagString = orderModel?.order_items?[exist: 0]?.course?.teacher?.name ?? ""
+        if let tags = orderModel?.order_items?[exist: 0]?.course?.teacher?.tags, tags.count > 0 {
+            let string = tags.joined(separator: " | ")
+            tagString = tagString.appendingFormat(" : %@", string)
+        }
+        courseTeacherLabel.setParagraphText(tagString)
         
+        let orderString = "订单号：" + (orderModel?.uuid ?? "")
+        orderNumberLabel.setSymbolText(orderString, symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
+        
+//        let balanceString: String = String.priceFormatter.string(from: (NSNumber(string: orderModel?.balance ?? "") ?? NSNumber())) ?? ""
+//        balanceValueLabel.setParagraphText(balanceString)
+        
+        if let balance = AuthorizationService.sharedInstance.user?.balance {
+            let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
+            balanceValueLabel.setParagraphText(string ?? "0.00")
+        }
+        
+        let priceString: String = String.priceFormatter.string(from: (NSNumber(string: orderModel?.amount ?? "") ?? NSNumber())) ?? ""
+        priceLabel.setParagraphText(priceString)
+        
+        timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
     }
     
     // MARK: - ============= Action =============
+    
+    @objc func payBtnAction() {
+        guard let balance = AuthorizationService.sharedInstance.user?.balance, let price = orderModel?.order_items?[exist: 0]?.course?.price, let orderID = orderModel?.id else {
+            return
+        }
+        
+        let balanceInt = NSString(string: balance).floatValue
+        guard balanceInt > price else {
+            let alertController = UIAlertController(title: nil, message: "您的余额不足，请先充值", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+                let navigationController = BaseNavigationController(rootViewController: DPaymentViewController())
+                self.present(navigationController, animated: true, completion: nil)
+//                self.navigationController?.pushViewController(DPaymentViewController(), animated: true)
+            }))
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        }
+    
+        actionBtn.startAnimating()
+        PaymentProvider.request(.order_pay(orderID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            self.actionBtn.stopAnimating()
 
+            if code >= 0 {
+                HUDService.sharedInstance.show(string: "购买成功")
+
+                NotificationCenter.default.post(name: Notification.Payment.payCourseDidSuccess, object: nil)
+
+                if let closure = self.completeClosure {
+                    closure()
+                }
+            }
+        }))
+    }
 }

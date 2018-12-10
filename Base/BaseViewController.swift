@@ -35,9 +35,9 @@ class BaseViewController: UIViewController {
         
         if let nav = navigationController, nav.viewControllers.first != self {
             let backBtn: UIButton = {
-                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12.5+30, height: 44)))
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12+30, height: 44)))
                 button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysOriginal), for: .normal)
-                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15-4, bottom: 0, right: 15+4)
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
                 button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
                 return button
             }()
@@ -67,7 +67,25 @@ class BaseViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @objc func dimissBarItemAction() {
+        dismiss(animated: true, completion: nil)
+    }
+
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func initDismissBtn() {
+        
+        let backBtn: UIButton = {
+            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 25+15+25, height: 44)))
+            button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            button.tintColor = UIConstants.Color.head
+            button.addTarget(self, action: #selector(dimissBarItemAction), for: .touchUpInside)
+            return button
+        }()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
+        navigationItem.leftMargin = 0
     }
 }

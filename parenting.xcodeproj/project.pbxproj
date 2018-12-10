@@ -65,6 +65,7 @@
 		131170A421B774ED00C178BB /* PaymentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131170A321B774ED00C178BB /* PaymentAPI.swift */; };
 		131170A621B77A0800C178BB /* AdvanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131170A521B77A0800C178BB /* AdvanceModel.swift */; };
 		13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13120E47219131D800404BC7 /* DPlayerViewController.swift */; };
+		13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13128B8C21BE0ACC00251B6F /* ModelTransform.swift */; };
 		1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C40521884B030008AB81 /* CourseCataloguesView.swift */; };
 		13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AA921A7DA2A009BD77A /* CommonAPI.swift */; };
 		13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */; };
@@ -102,6 +103,7 @@
 		1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C39B217EBFEA00902A5C /* DMeViewController.swift */; };
 		1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */; };
 		132A492521B52AF700038027 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132A492421B52AF700038027 /* AppService.swift */; };
+		132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132C920B21BA81F2002148E1 /* OrderModel.swift */; };
 		13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13796B3021B7D15A00E0C3D9 /* ShareView.swift */; };
 		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
 		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
@@ -188,6 +190,7 @@
 		131170A321B774ED00C178BB /* PaymentAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAPI.swift; sourceTree = "<group>"; };
 		131170A521B77A0800C178BB /* AdvanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceModel.swift; sourceTree = "<group>"; };
 		13120E47219131D800404BC7 /* DPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayerViewController.swift; sourceTree = "<group>"; };
+		13128B8C21BE0ACC00251B6F /* ModelTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTransform.swift; sourceTree = "<group>"; };
 		1312C40521884B030008AB81 /* CourseCataloguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCataloguesView.swift; sourceTree = "<group>"; };
 		13133AA921A7DA2A009BD77A /* CommonAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonAPI.swift; sourceTree = "<group>"; };
 		13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewModel.swift; sourceTree = "<group>"; };
@@ -229,6 +232,7 @@
 		1320C39B217EBFEA00902A5C /* DMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeViewController.swift; sourceTree = "<group>"; };
 		1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseSectionViewModel.swift; sourceTree = "<group>"; };
 		132A492421B52AF700038027 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		132C920B21BA81F2002148E1 /* OrderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModel.swift; sourceTree = "<group>"; };
 		13796B3021B7D15A00E0C3D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
 		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -411,6 +415,8 @@
 				13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */,
 				130D8B6221AFB978003E7645 /* StoryModel.swift */,
 				131170A521B77A0800C178BB /* AdvanceModel.swift */,
+				132C920B21BA81F2002148E1 /* OrderModel.swift */,
+				13128B8C21BE0ACC00251B6F /* ModelTransform.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -897,6 +903,7 @@
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
 				1310680221A696D600F79E92 /* BannerModel.swift in Sources */,
 				13B7F73721B68728001BF15D /* QNALAssetFile.m in Sources */,
+				13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */,
 				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
@@ -946,6 +953,7 @@
 				1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */,
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
+				132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

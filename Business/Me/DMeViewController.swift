@@ -19,7 +19,11 @@ class DMeViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
-        AuthorizationService.sharedInstance.updateUserInfo()
+        
+        if AuthorizationService.sharedInstance.isSignIn() {
+            AuthorizationService.sharedInstance.updateUserInfo()
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -248,6 +252,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         if indexPath.row == 0 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
             navigationController?.pushViewController(DOrdersViewController(), animated: true)
         } else if indexPath.row == 1 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
@@ -257,6 +266,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
         } else if indexPath.row == 2 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
             navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.row == 3 {
             guard AuthorizationService.sharedInstance.isSignIn() else {

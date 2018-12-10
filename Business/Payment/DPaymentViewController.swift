@@ -82,6 +82,10 @@ class DPaymentViewController: BaseViewController {
 
         navigationItem.title = "支付中心"
         
+        if presentingViewController != nil {
+            initDismissBtn()
+        }
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -164,7 +168,6 @@ class DPaymentViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-
 }
 
 
@@ -198,9 +201,16 @@ extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDe
                 self.indicatorBtn.stopAnimating()
                 
                 if status {
-                    HUDService.sharedInstance.show(string: "购买成功")
+                    HUDService.sharedInstance.show(string: "已成功充值")
+                    if self.presentingViewController != nil {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    
                 } else {
-                    HUDService.sharedInstance.show(string: "购买失败")
+//                    HUDService.sharedInstance.show(string: "充值失败")
+                    let alertController = UIAlertController(title: nil, message: "未能成功充值，请稍后重试", preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
                 }
             })
         }

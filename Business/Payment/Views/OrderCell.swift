@@ -35,8 +35,8 @@ class OrderCell: UITableViewCell {
         return imgView
     }()
     
-    lazy fileprivate var timeLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var timeLabel: ParagraphLabel = {
+        let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.text = "2018.10.30 08:25"
@@ -152,7 +152,7 @@ class OrderCell: UITableViewCell {
         fatalError()
     }
     
-    func setup(mode: DOrdersViewController.DOrdersMode) {
+    func setup(mode: DOrdersViewController.DOrdersMode, model: OrderModel) {
         if mode != orderMode {
             if mode == .nonpayment {
                 actionBtn.isHidden = false
@@ -181,7 +181,23 @@ class OrderCell: UITableViewCell {
             orderMode = mode
         }
         
-        priceLabel.setParagraphText("0.0")
-        orderNumberLabel.setSymbolText("订单号：236815484212", symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
+        titleLabel.setParagraphText(model.order_items?[exist: 0]?.course?.title ?? "")
+        
+        if let URLString = model.order_items?[exist: 0]?.course?.cover_attribute?.service_url {
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 160*2, height: 160/16.0*9*2))
+            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+        }
+        
+        let priceString: String = String.priceFormatter.string(from: (NSNumber(string: model.amount ?? "") ?? NSNumber())) ?? ""
+        priceLabel.setParagraphText(priceString)
+        
+        if mode == .nonpayment {
+            
+        } else if mode == .payment {
+            let orderString = "订单号：" + (model.uuid ?? "")
+            orderNumberLabel.setSymbolText(orderString, symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
+        }
+        
+        timeLabel.setParagraphText((model.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
     }
 }

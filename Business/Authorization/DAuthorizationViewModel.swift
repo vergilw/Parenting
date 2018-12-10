@@ -25,6 +25,7 @@ class DAuthorizationViewModel {
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
                 NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
+                AuthorizationService.sharedInstance.updateUserInfo()
             }
             completion(code)
         }))
@@ -36,6 +37,7 @@ class DAuthorizationViewModel {
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
                 NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
+                AuthorizationService.sharedInstance.updateUserInfo()
             }
             completion(code)
         }))
@@ -47,6 +49,7 @@ class DAuthorizationViewModel {
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
                 NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
+                AuthorizationService.sharedInstance.updateUserInfo()
             }
             completion(code)
         }))
