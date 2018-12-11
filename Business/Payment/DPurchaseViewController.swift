@@ -245,7 +245,7 @@ class DPurchaseViewController: BaseViewController {
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        statusLabel.setParagraphText(orderModel?.payment_status ?? "")
+        statusLabel.setParagraphText(orderModel?.payment_status_text ?? "")
         
         if let URLString = orderModel?.order_items?[exist: 0]?.course?.cover_attribute?.service_url {
             let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 160*2, height: 160/16.0*9*2))
@@ -276,6 +276,10 @@ class DPurchaseViewController: BaseViewController {
         priceLabel.setParagraphText(priceString)
         
         timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
+        
+        if <#condition#> {
+            actionBtn
+        }
     }
     
     // MARK: - ============= Action =============

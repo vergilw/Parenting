@@ -34,6 +34,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
         
+        
+        
+        //FIXME: Umeng
+        
+        let deviceID = UMConfigure.deviceIDForIntegration()
+        print(deviceID)
+        //此函数在UMCommon.framework版本1.4.2及以上版本，在UMConfigure.h的头文件中加入。
+        //如果用户用组件化SDK,需要升级最新的UMCommon.framework版本。
+        
+        
+        
         return true
     }
     
@@ -185,4 +196,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
             UNUserNotificationCenter.current().add(request)
         }
     }
+    
 }

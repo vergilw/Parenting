@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DSettingsViewController: BaseViewController {
 
+    var cacheSizeString: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,6 +21,8 @@ class DSettingsViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        reload()
     }
     
     // MARK: - ============= Initialize View =============
@@ -83,6 +88,13 @@ class DSettingsViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         initFooterView()
+        ImageCache.default.calculateDiskCacheSize { (size) in
+            let formatter = ByteCountFormatter()
+            formatter.countStyle = .binary
+            formatter.allowsNonnumericFormatting = false
+            self.cacheSizeString = formatter.string(fromByteCount: Int64(size))
+            self.tableView.reloadData()
+        }
     }
     
     
@@ -114,8 +126,7 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == 0 {
             cell.setup(title: "关于氧育")
         } else if indexPath.row == 1 {
-            cell.setup(title: "清除缓存", value: "320MB")
-            //TODO: NSByteCountFormatter
+            cell.setup(title: "清除缓存", value: cacheSizeString ?? "")
         } else if indexPath.row == 2 {
             cell.setup(title: "意见反馈")
         }
@@ -127,8 +138,18 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
         
         if indexPath.row == 0 {
             navigationController?.pushViewController(DAboutViewController(), animated: true)
+            
         } else if indexPath.row == 1 {
-//            navigationController?.pushViewController(DPaymentViewController(), animated: true)
+            let alertController = UIAlertController(title: nil, message: "清理后部分图片数据需要重新下载，确定删除吗？", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+                ImageCache.default.clearDiskCache(completion: {
+                    HUDService.sharedInstance.show(string: "清理完成")
+                    self.reload()
+                })
+            }))
+            self.present(alertController, animated: true, completion: nil)
+            
         } else if indexPath.row == 2 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())

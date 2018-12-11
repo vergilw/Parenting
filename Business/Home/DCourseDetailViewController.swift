@@ -876,46 +876,50 @@ class DCourseDetailViewController: BaseViewController {
             return
         }
         
+        
+        guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
+        
+        if let index = sections.firstIndex(where: { (section) -> Bool in
+            return section.audition == true
+        }) {
+            PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index)
+        }
+        
     }
     
     @objc func toolActionBtnAction() {
-        guard viewModel.courseModel?.is_bought == false else { return }
         
-        PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        if viewModel.courseModel?.is_bought == false {
             
-            if code >= 0 {
-                if let order = JSON?["order"] as? [String: Any], let orderID = order["id"] as? Int {
-                    
-                    let viewController = DPurchaseViewController(orderID: orderID)
-                    viewController.completeClosure = {
-                        guard var viewControllers = self.navigationController?.viewControllers, let index = viewControllers.firstIndex(where: { (viewController) -> Bool in
-                            return viewController.isKind(of: DPurchaseViewController.self)
-                        }) else {
-                            return
-                        }
-                        
-                        viewControllers.remove(at: index)
-                        self.navigationController?.setViewControllers(viewControllers, animated: true)
-                        
-                        self.fetchData()
-                    }
-                    self.navigationController?.pushViewController(viewController, animated: true)
-                }
+            PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                 
-            }
-        }))
+                if code >= 0 {
+                    if let order = JSON?["order"] as? [String: Any], let orderID = order["id"] as? Int {
+                        
+                        let viewController = DPurchaseViewController(orderID: orderID)
+                        viewController.completeClosure = {
+                            guard var viewControllers = self.navigationController?.viewControllers, let index = viewControllers.firstIndex(where: { (viewController) -> Bool in
+                                return viewController.isKind(of: DPurchaseViewController.self)
+                            }) else {
+                                return
+                            }
+                            
+                            viewControllers.remove(at: index)
+                            self.navigationController?.setViewControllers(viewControllers, animated: true)
+                            
+                            self.fetchData()
+                        }
+                        self.navigationController?.pushViewController(viewController, animated: true)
+                    }
+                    
+                }
+            }))
+            
+        } else {
+            guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
+            PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: 0)
+        }
         
-        /*
-        let alertController = UIAlertController(title: "是否购买？", message: nil, preferredStyle: UIAlertController.Style.alert)
-        alertController.addAction(UIAlertAction(title: "是", style: UIAlertAction.Style.default, handler: { (_) in
-            
-            
-//            self.viewModel.courseModel?.is_bought = true
-//            self.reload()
-        }))
-        alertController.addAction(UIAlertAction(title: "否", style: UIAlertAction.Style.cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
- */
     }
     
     @objc func displayMyEvaluation(button: ActionButton) {
@@ -923,6 +927,11 @@ class DCourseDetailViewController: BaseViewController {
         guard AuthorizationService.sharedInstance.isSignIn() else {
             let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
             present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
+        guard viewModel.courseModel?.is_bought == true else {
+            HUDService.sharedInstance.show(string: "购买课程后才能评论")
             return
         }
         

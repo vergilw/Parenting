@@ -14,6 +14,7 @@ class OrderModel: HandyJSON {
     var uuid: String?
     var amount: String?
     var payment_status: String?
+    var payment_status_text: String?
     var created_at: Date?
     var balance: String?
     var order_items: [OrderItemModel]?
