@@ -16,7 +16,7 @@ class DPaymentViewController: BaseViewController {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "虚拟币余额"
+        label.text = "氧育币余额"
         return label
     }()
     
@@ -73,7 +73,7 @@ class DPaymentViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("iOS与安卓设备因平台政策问题，充值后仅供苹果设备使用；\n虚拟币只能用于购买氧育APP内的商品；\n虚拟币充值后不可提现、转赠；")
+        label.setParagraphText("iOS与安卓设备因平台政策问题，充值后仅供苹果设备使用；\n氧育币只能用于购买氧育APP内的商品；\n氧育币充值后不可提现、转赠；")
         return label
     }()
     

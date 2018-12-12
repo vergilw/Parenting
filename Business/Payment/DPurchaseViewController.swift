@@ -35,8 +35,8 @@ class DPurchaseViewController: BaseViewController {
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 2
-        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-160-12
-        label.textAlignment = .right
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-previewImgWidth()-12
+//        label.lineBreakMode = .byCharWrapping
         return label
     }()
     
@@ -51,6 +51,7 @@ class DPurchaseViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.head
+        label.numberOfLines = 0
         return label
     }()
     
@@ -99,7 +100,7 @@ class DPurchaseViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.textAlignment = .right
-        label.setParagraphText("24小时未付款自动取消订单")
+        label.setParagraphText("2小时未付款自动取消订单")
         return label
     }()
     
@@ -162,20 +163,22 @@ class DPurchaseViewController: BaseViewController {
         previewImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(statusLabel.snp.bottom).offset(42)
-            make.size.equalTo(CGSize(width: 160, height: 90))
+            make.size.equalTo(CGSize(width: previewImgWidth(), height: previewImgWidth()/160.0*90))
         }
         courseNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(12)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(previewImgView)
+//            make.height.lessThanOrEqualTo(62)
         }
         courseTeacherLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+//            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.leading.equalTo(previewImgView.snp.trailing).offset(12)
             make.top.equalTo(courseNameLabel.snp.bottom).offset(2.5)
         }
         orderNumberLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(previewImgView.snp.bottom).offset(12)
+            make.top.equalTo(previewImgView.snp.bottom).offset(12-5)
         }
         priceLabel.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
@@ -216,6 +219,13 @@ class DPurchaseViewController: BaseViewController {
                 make.bottom.equalTo(-48)
             }
         }
+    }
+    
+    func previewImgWidth() -> CGFloat {
+        let titleWidth: CGFloat = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing - 12 - 160
+        let offset: CGFloat = (titleWidth + 1).truncatingRemainder(dividingBy: 17+1)
+        let imgWidth: CGFloat = 160+offset-1
+        return imgWidth
     }
     
     // MARK: - ============= Notification =============
@@ -277,8 +287,10 @@ class DPurchaseViewController: BaseViewController {
         
         timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
         
-        if <#condition#> {
-            actionBtn
+        if orderModel?.payment_status == "unpaid" || orderModel?.payment_status == "part_paid" {
+            actionBtn.isHidden = false
+        } else {
+            actionBtn.isHidden = true
         }
     }
     

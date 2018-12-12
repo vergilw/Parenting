@@ -128,7 +128,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
-        button.setTitle("课程介绍", for: .normal)
+        button.setTitle("简介", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
     }()
@@ -137,7 +137,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
         button.titleLabel?.font = UIConstants.Font.body
-        button.setTitle("课程目录", for: .normal)
+        button.setTitle("目录", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
     }()
@@ -146,7 +146,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
         button.titleLabel?.font = UIConstants.Font.body
-        button.setTitle("互动", for: .normal)
+        button.setTitle("留言", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
     }()
@@ -318,6 +318,7 @@ class DCourseDetailViewController: BaseViewController {
         tableView.register(CourseCatalogueTitleCell.self, forCellReuseIdentifier: CourseCatalogueTitleCell.className())
         tableView.register(CourseEvaluationTitleCell.self, forCellReuseIdentifier: CourseEvaluationTitleCell.className())
         tableView.register(CourseEvaluationCell.self, forCellReuseIdentifier: CourseEvaluationCell.className())
+        tableView.register(EvaluationNoDataCell.self, forCellReuseIdentifier: EvaluationNoDataCell.className())
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
@@ -326,6 +327,11 @@ class DCourseDetailViewController: BaseViewController {
                     self?.tableView.mj_footer.endRefreshing()
                 } else {
                     self?.tableView.mj_footer.endRefreshingWithNoMoreData()
+                }
+                if let count = self?.viewModel.commentModel?.count, count > 0 {
+                    self?.tableView.mj_footer.isHidden = false
+                } else {
+                    self?.tableView.mj_footer.isHidden = true
                 }
                 self?.reload()
             }
@@ -518,7 +524,7 @@ class DCourseDetailViewController: BaseViewController {
             favoriteLabel.text = "收藏"
         }
         
-        if viewModel.courseModel?.audition == true || viewModel.courseModel?.is_bought == true {
+        if viewModel.courseModel?.price == 0 || viewModel.courseModel?.is_bought == true {
             toolActionBtn.backgroundColor = UIConstants.Color.primaryGreen
             toolActionBtn.setTitle("立即学习", for: .normal)
             auditionBtn.isHidden = true
@@ -555,6 +561,7 @@ class DCourseDetailViewController: BaseViewController {
         }
         
         reloadCategoryView()
+        
     }
     
     func reloadNavigationItem() {
@@ -883,13 +890,17 @@ class DCourseDetailViewController: BaseViewController {
             return section.audition == true
         }) {
             PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: index)
+            
+            guard let sectionID = sections[exist: index]?.id else { return }
+            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: sectionID)
+            navigationController?.pushViewController(viewController, animated: true)
         }
         
     }
     
     @objc func toolActionBtnAction() {
         
-        if viewModel.courseModel?.is_bought == false {
+        if viewModel.courseModel?.is_bought == false && viewModel.courseModel?.price != 0 {
             
             PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                 
@@ -918,6 +929,10 @@ class DCourseDetailViewController: BaseViewController {
         } else {
             guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
             PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: 0)
+            
+            guard let sectionID = sections[exist: 0]?.id else { return }
+            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: sectionID)
+            navigationController?.pushViewController(viewController, animated: true)
         }
         
     }
@@ -1102,8 +1117,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 make.trailing.equalTo(-25)
                 make.centerY.equalTo(footnoteLabel)
             }
-        } else if viewModel.courseModel?.audition == true {
-            tagLabel.text = "免费试听"
+        } else if viewModel.courseModel?.price == 0 {
+            tagLabel.text = "免费课程"
             tagLabel.font = UIConstants.Font.body
             tagLabel.textColor = UIConstants.Color.primaryRed
             tagLabel.backgroundColor = UIColor(hex6: 0xf05053, alpha: 0.1)
@@ -1165,11 +1180,16 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                     
                 })
             } else {
-                return tableView.fd_heightForCell(withIdentifier: CourseEvaluationCell.className(), cacheBy: indexPath, configuration: { (cell) in
-                    if let cell = cell as? CourseEvaluationCell, let model = self.viewModel.commentModel?[indexPath.row-1] {
-                        cell.setup(model: model)
-                    }
-                })
+                if let count = viewModel.commentModel?.count, count > 0 {
+                    return tableView.fd_heightForCell(withIdentifier: CourseEvaluationCell.className(), cacheBy: indexPath, configuration: { (cell) in
+                        if let cell = cell as? CourseEvaluationCell, let model = self.viewModel.commentModel?[indexPath.row-1] {
+                            cell.setup(model: model)
+                        }
+                    })
+                    
+                } else {
+                    return 385
+                }
             }
         }
         
@@ -1182,7 +1202,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         } else if section == 1 {
             return (viewModel.courseModel?.course_catalogues?.count ?? 0) + 1
         } else if section == 2 {
-            return (viewModel.commentModel?.count ?? 0) + 1
+            guard viewModel.commentModel != nil else { return 1 }
+            
+            if let count = viewModel.commentModel?.count, count > 0 {
+                return count + 1
+            } else {
+                return 2
+            }
         }
         return 0
     }
@@ -1229,11 +1255,18 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                 }
                 return cell
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell
-            if let model = viewModel.commentModel?[indexPath.row-1] {
-                cell.setup(model: model)
+            
+            if let count = viewModel.commentModel?.count, count > 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: CourseEvaluationCell.className(), for: indexPath) as! CourseEvaluationCell
+                if let model = viewModel.commentModel?[indexPath.row-1] {
+                    cell.setup(model: model)
+                }
+                return cell
+                
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: EvaluationNoDataCell.className(), for: indexPath) as! EvaluationNoDataCell
+                return cell
             }
-            return cell
         }
         
         return UITableViewCell()

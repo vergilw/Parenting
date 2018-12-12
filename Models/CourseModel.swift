@@ -21,7 +21,7 @@ class CourseModel: HandyJSON {
     var content_images_attribute: [AssetModel]?
     var is_bought: Bool?
     var is_favorite: Bool?
-    var audition: Bool?
+//    var audition: Bool?
     var course_catalogues: [CourseSectionModel]?
     var is_comment: Bool?
     var recommended_cover_attribute: AssetModel?

@@ -93,7 +93,7 @@ class DHomeViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
-        button.setTitle("氧育精彩故事", for: .normal)
+        button.setTitle("氧育者故事", for: .normal)
         button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(teacherStoriesBtnAction), for: .touchUpInside)
         return button
@@ -593,15 +593,15 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
             let label = UILabel()
             label.font = UIConstants.Font.h1
             label.textColor = UIConstants.Color.head
-            label.text = "在家核心早教课"
+            label.text = "精选课程"
             return label
         }()
         
         let footnoteLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont(name: "PingFangSC-Regular", size: 18)
+            label.font = UIFont(name: "PingFangSC-Regular", size: 15)
             label.textColor = UIConstants.Color.body
-            label.text = "品质和经过验证的精选课程"
+            label.text = "让孩子更优秀的秘密，百万家长的选择推荐"
             return label
         }()
         
@@ -768,6 +768,8 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
         if let model = viewModel.bannerModels?[index] {
             if let courseID = model.target_id, model.target_type == "Course" {
                 navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+            } else if let storyID = model.target_id, model.target_type == "Story" {
+                navigationController?.pushViewController(DTeacherStoryDetailViewController(storyID: storyID), animated: true)
             }
         }
     }

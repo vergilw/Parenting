@@ -356,7 +356,10 @@ class AuthorizationViewController: BaseViewController {
     }
     
     @objc func agreementBtnAction() {
-        navigationController?.pushViewController(DAgreementViewController(), animated: true)
+        let viewController = WebViewController()
+        viewController.navigationItem.title = "协议与隐私政策"
+        viewController.url = URL(string: "https://pic1cdn.luojilab.com/html/poster/picpp2gYkoAQgsWGNY5DDGm.html")
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     @objc func shadowOffsetHeightAddAction() {

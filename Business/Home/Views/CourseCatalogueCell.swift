@@ -95,7 +95,7 @@ class CourseCatalogueCell: UITableViewCell {
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(54)
-            make.trailing.greaterThanOrEqualTo(-25)
+            make.trailing.lessThanOrEqualTo(-25)
             make.top.equalTo(16)
         }
         timeImgView.snp.makeConstraints { make in

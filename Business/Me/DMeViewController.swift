@@ -194,7 +194,7 @@ class DMeViewController: BaseViewController {
         initHeaderView()
         
         //update balance display
-        tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: UITableView.RowAnimation.none)
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: UITableView.RowAnimation.none)
     }
     
     // MARK: - ============= Action =============
@@ -217,31 +217,34 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 6
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        if section == 4 {
+            return 0
+        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MeItemCell.className(), for: indexPath) as! MeItemCell
-        if indexPath.row == 0 {
+        if indexPath.section == 0 {
             cell.setup(img: UIImage(named: "me_itemOrder")!, title: "我的订单")
-        } else if indexPath.row == 1 {
+        } else if indexPath.section == 1 {
             var value: String?
             if let balance = AuthorizationService.sharedInstance.user?.balance {
                 let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
                 value = string
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
-        } else if indexPath.row == 2 {
+        } else if indexPath.section == 2 {
             cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
-        } else if indexPath.row == 3 {
+        } else if indexPath.section == 3 {
             cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
-        } else if indexPath.row == 4 {
-            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "讲师入口")
-        } else if indexPath.row == 5 {
+        } else if indexPath.section == 4 {
+            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
+        } else if indexPath.section == 5 {
             cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         }
         return cell
@@ -251,37 +254,37 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         
-        if indexPath.row == 0 {
+        if indexPath.section == 0 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
             navigationController?.pushViewController(DOrdersViewController(), animated: true)
-        } else if indexPath.row == 1 {
+        } else if indexPath.section == 1 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
-        } else if indexPath.row == 2 {
+        } else if indexPath.section == 2 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
             navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
-        } else if indexPath.row == 3 {
+        } else if indexPath.section == 3 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
             navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
-        } else if indexPath.row == 4 {
+        } else if indexPath.section == 4 {
             navigationController?.pushViewController(DTransactionsViewController(), animated: true)
-        } else if indexPath.row == 5 {
+        } else if indexPath.section == 5 {
             navigationController?.pushViewController(DSettingsViewController(), animated: true)
         }
     }

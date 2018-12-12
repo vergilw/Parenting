@@ -335,12 +335,12 @@ class DCourseSectionViewController: BaseViewController {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(scrollView.snp_leadingMargin)
             make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
-            make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.height.equalTo(14)
         }
         tagLabel.snp.makeConstraints { make in
             make.leading.equalTo(scrollView.snp_leadingMargin)
-            make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.top.equalTo(titleLabel.snp.bottom).offset(9)
             make.height.equalTo(12)
         }

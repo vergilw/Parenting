@@ -12,8 +12,9 @@ import HandyJSON
 let UserProvider = MoyaProvider<UserAPI>()
 
 enum UserAPI {
-    case updateUser(String?, String?)
+    case updateUser(name: String?, avatar: String?)
     case user
+    case updatePushToken(String)
 }
 
 extension UserAPI: TargetType {
@@ -28,6 +29,8 @@ extension UserAPI: TargetType {
             return "/app/profile"
         case .user:
             return "/app/profile"
+        case .updatePushToken:
+            return "/app/profile/update_getui_token"
         }
     }
     
@@ -37,6 +40,8 @@ extension UserAPI: TargetType {
             return .put
         case .user:
             return .get
+        case .updatePushToken:
+            return .put
         }
     }
     
@@ -57,6 +62,8 @@ extension UserAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         case .user:
             return .requestPlain
+        case let .updatePushToken(pushToken):
+            return .requestParameters(parameters: ["token": pushToken], encoding: URLEncoding.default)
         }
         
     }
@@ -67,7 +74,11 @@ extension UserAPI: TargetType {
     
     var headers: [String: String]? {
         var headers = ["Accept-Language": "zh-CN",
-                       "device_id": AppService.sharedInstance.uniqueIdentifier]
+                       "Device-ID": AppService.sharedInstance.uniqueIdentifier,
+                       "OS": UIDevice.current.systemName,
+                       "OS-Version": UIDevice.current.systemVersion,
+                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token
         }

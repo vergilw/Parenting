@@ -69,7 +69,7 @@ class DAgreementViewController: BaseViewController {
         }
         paragraphALabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.greaterThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(titleLabel.snp.bottom).offset(9.5)
         }
         subtitleLabel.snp.makeConstraints { make in
@@ -78,7 +78,7 @@ class DAgreementViewController: BaseViewController {
         }
         paragraphBLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.greaterThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(subtitleLabel.snp.bottom).offset(12.5)
         }
     }

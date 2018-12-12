@@ -36,7 +36,6 @@ class DCourseEvaluationViewController: BaseViewController {
         view.alignment = .center
         view.axis = .horizontal
         view.distribution = .fillProportionally
-        view.spacing = 22
         return view
     }()
     
@@ -129,6 +128,8 @@ class DCourseEvaluationViewController: BaseViewController {
             button.addTarget(self, action: #selector(starBtnAction(sender:)), for: .touchUpInside)
             return button
         }()
+        starBtn.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        starBtn.heightAnchor.constraint(equalToConstant: 48).isActive = true
         starsContainerView.addArrangedSubview(starBtn)
         
     }

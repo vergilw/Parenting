@@ -145,6 +145,8 @@ extension DMeFavoritesViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
+        if let model = favoritesModels?[exist: indexPath.row], let courseID = model.id {
+            navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
     }
 }

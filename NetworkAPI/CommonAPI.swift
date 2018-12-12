@@ -75,7 +75,11 @@ extension CommonAPI: TargetType {
     
     var headers: [String: String]? {
         var headers = ["Accept-Language": "zh-CN",
-                       "device_id": AppService.sharedInstance.uniqueIdentifier]
+                       "Device-ID": AppService.sharedInstance.uniqueIdentifier,
+                       "OS": UIDevice.current.systemName,
+                       "OS-Version": UIDevice.current.systemVersion,
+                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token
         }

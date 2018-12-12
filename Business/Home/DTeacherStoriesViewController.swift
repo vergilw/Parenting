@@ -18,7 +18,7 @@ class DTeacherStoriesViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "氧育故事"
+        navigationItem.title = "氧育者故事"
         
         initContentView()
         initConstraints()

@@ -250,7 +250,7 @@ class DMeEditViewController: BaseViewController {
         
         saveBtn.startAnimating()
         
-        UserProvider.request(.updateUser(text, nil), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        UserProvider.request(.updateUser(name: text, avatar: nil), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             self.saveBtn.stopAnimating()
 
             if code >= 0 {
@@ -353,7 +353,7 @@ extension DMeEditViewController: UIImagePickerControllerDelegate, UINavigationCo
             UploadService.sharedInstance.upload(data: imgData, complete: { [weak self] avatarKey in
                 if let avatarKey = avatarKey {
                     
-                    UserProvider.request(.updateUser(nil, avatarKey), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                    UserProvider.request(.updateUser(name: nil, avatar: avatarKey), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                         self?.avatarBtn.stopAnimating()
                         
                         if code >= 0 {

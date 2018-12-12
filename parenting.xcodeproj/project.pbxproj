@@ -17,6 +17,9 @@
 		130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */; };
 		130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */; };
 		130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130C67FD21A3F6A900E30307 /* public_loadingAnimation.gif */; };
+		130C7CC121C0A4BF007C0344 /* EvaluationNoDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */; };
+		130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC221C0F8F0007C0344 /* WebViewController.swift */; };
+		130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC421C10380007C0344 /* GuideViewController.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -143,6 +146,9 @@
 		130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherStoriesCell.swift; sourceTree = "<group>"; };
 		130C67FB21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTeacherStoryDetailViewController.swift; sourceTree = "<group>"; };
 		130C67FD21A3F6A900E30307 /* public_loadingAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_loadingAnimation.gif; sourceTree = "<group>"; };
+		130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationNoDataCell.swift; sourceTree = "<group>"; };
+		130C7CC221C0F8F0007C0344 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		130C7CC421C10380007C0344 /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -359,6 +365,7 @@
 				130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */,
 				130C67F921A3E9A500E30307 /* TeacherStoriesCell.swift */,
 				1316742221A54B2300643BF0 /* SearchHistoryCell.swift */,
+				130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -372,6 +379,8 @@
 				130F1C8B219BC26B004E1DD3 /* ActionButton.swift */,
 				131F015621ABC77D004F5F0F /* SolutionViewController.swift */,
 				13796B3021B7D15A00E0C3D9 /* ShareView.swift */,
+				130C7CC221C0F8F0007C0344 /* WebViewController.swift */,
+				130C7CC421C10380007C0344 /* GuideViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -858,6 +867,7 @@
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
 				13113F6D2199736600B6E0FE /* DAuthorizationViewModel.swift in Sources */,
+				130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
 				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
@@ -866,6 +876,7 @@
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */,
 				13B7F72D21B68728001BF15D /* QNUpToken.m in Sources */,
 				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
@@ -932,6 +943,7 @@
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
 				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
+				130C7CC121C0A4BF007C0344 /* EvaluationNoDataCell.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,

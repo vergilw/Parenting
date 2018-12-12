@@ -30,6 +30,25 @@ class AppCacheService {
         }
     }
     
+    var isFirstLaunch: Bool? {
+        get {
+            if let bool = cache?.object(forKey: "firstLaunch") as? Bool {
+                return bool
+            } else {
+                cache?.setObject(true as NSCoding?, forKey: "firstLaunch")
+                return true
+            }
+        }
+        set {
+            if newValue != nil {
+                cache?.setObject(newValue as NSCoding?, forKey: "firstLaunch")
+            } else {
+                cache?.removeObject(forKey: "firstLaunch")
+            }
+        }
+
+    }
+    
     private init() { }
     
     

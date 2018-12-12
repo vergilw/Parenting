@@ -10,6 +10,10 @@ import UIKit
 
 class DMeCoursesViewController: BaseViewController {
 
+    fileprivate var courseModels: [CourseModel]?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,6 +33,10 @@ class DMeCoursesViewController: BaseViewController {
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.fetchData()
+        })
+        tableView.mj_footer.isHidden = true
         
         view.addSubview(tableView)
     }
@@ -47,9 +55,39 @@ class DMeCoursesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     func fetchData() {
-        HUDService.sharedInstance.showNoDataView(target: view) { [weak self] in
-            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
-        }
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        CourseProvider.request(.courses_my(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+                if let data = JSON?["courses"] as? [[String: Any]] {
+                    self.courseModels = [CourseModel].deserialize(from: data) as? [CourseModel]
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                    
+                    if self.courseModels?.count ?? 0 == 0 {
+                        HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                        }
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
     }
     
     // MARK: - ============= Reload =============
@@ -69,18 +107,22 @@ extension DMeCoursesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return courseModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCell.className(), for: indexPath) as! CourseCell
-        cell.setup(mode: CourseCell.CellDisplayMode.owned)
+        if let model = courseModels?[exist: indexPath.row] {
+            cell.setup(mode: CourseCell.CellDisplayMode.owned, model: model)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        navigationController?.pushViewController(DCourseDetailViewController(courseID: 2), animated: true)
+        if let model = courseModels?[exist: indexPath.row], let courseID = model.id {
+            navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+        }
     }
 }

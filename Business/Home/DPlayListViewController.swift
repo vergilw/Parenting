@@ -227,12 +227,12 @@ class DPlayListViewController: BaseViewController {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(10)
             make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
-            make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.height.equalTo(14)
         }
         tagLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(10)
-            make.trailing.greaterThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.top.equalTo(titleLabel.snp.bottom).offset(9)
             make.height.equalTo(12)
         }
@@ -243,7 +243,7 @@ class DPlayListViewController: BaseViewController {
         }
         playingTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(view.snp_leadingMargin)
-            make.trailing.greaterThanOrEqualTo(playingIndicatorImgView.snp.leading).offset(-32)
+            make.trailing.lessThanOrEqualTo(playingIndicatorImgView.snp.leading).offset(-32)
             make.top.equalTo(20)
         }
         playingSectionBtn.snp.makeConstraints { make in
@@ -472,6 +472,14 @@ class DPlayListViewController: BaseViewController {
             PlayListService.sharedInstance.playingIndex > 0 else {
             return
         }
+        
+        if course.is_bought == false {
+            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex-1], section.audition == true else {
+                HUDService.sharedInstance.show(string: "非可试听章节")
+                return
+            }
+        }
+        
         PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: PlayListService.sharedInstance.playingIndex-1)
     }
     
@@ -481,6 +489,14 @@ class DPlayListViewController: BaseViewController {
             PlayListService.sharedInstance.playingIndex < sections.count-1 else {
                 return
         }
+        
+        if course.is_bought == false {
+            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex+1], section.audition == true else {
+                HUDService.sharedInstance.show(string: "非可试听章节")
+                return
+            }
+        }
+        
         PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: PlayListService.sharedInstance.playingIndex+1)
     }
     
@@ -539,6 +555,14 @@ extension DPlayListViewController: UITableViewDataSource, UITableViewDelegate {
             indexPath.row <= sections.count-1, indexPath.row != PlayListService.sharedInstance.playingIndex else {
                 return
         }
+        
+        if course.is_bought == false {
+            guard let section = sections[exist: indexPath.row], section.audition == true else {
+                HUDService.sharedInstance.show(string: "非可试听章节")
+                return
+            }
+        }
+        
         PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: indexPath.row)
     }
 }

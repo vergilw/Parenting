@@ -16,7 +16,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "课程体验"
+        label.text = "留言"
         return label
     }()
     

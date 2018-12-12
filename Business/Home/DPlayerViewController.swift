@@ -330,7 +330,7 @@ class DPlayerViewController: BaseViewController {
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(10)
             make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
-            make.trailing.greaterThanOrEqualTo(tagLabel.snp.leading).offset(-10)
+            make.trailing.lessThanOrEqualTo(tagLabel.snp.leading).offset(-10)
             make.height.equalTo(12)
         }
         courseNameLabel.snp.makeConstraints { make in

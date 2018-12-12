@@ -23,6 +23,7 @@ enum CourseAPI {
     case courses(categoryID: Int?, page: Int)
     case course_toggle_favorites(courseID: Int)
     case course_favorites(Int)
+    case courses_my(Int)
 }
 
 extension CourseAPI: TargetType {
@@ -53,6 +54,8 @@ extension CourseAPI: TargetType {
             return "/app/courses/\(courseID)/toggle_favorite"
         case .course_favorites:
             return "/app/favorites/courses.json"
+        case .courses_my:
+            return "/app/my/courses"
         }
     }
     
@@ -77,6 +80,8 @@ extension CourseAPI: TargetType {
         case .course_toggle_favorites:
             return .post
         case .course_favorites:
+            return .get
+        case .courses_my:
             return .get
         }
     }
@@ -115,6 +120,8 @@ extension CourseAPI: TargetType {
             return .requestPlain
         case let .course_favorites(page):
             return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
+        case let .courses_my(page):
+            return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
         }
     }
     
@@ -124,7 +131,11 @@ extension CourseAPI: TargetType {
     
     var headers: [String: String]? {
         var headers = ["Accept-Language": "zh-CN",
-                       "device_id": AppService.sharedInstance.uniqueIdentifier]
+                       "Device-ID": AppService.sharedInstance.uniqueIdentifier,
+                       "OS": UIDevice.current.systemName,
+                       "OS-Version": UIDevice.current.systemVersion,
+                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token
         }

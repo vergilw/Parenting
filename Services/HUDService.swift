@@ -291,16 +291,16 @@ class FetchView: UIView {
 }
 
 
-fileprivate class ResultView: UIView {
+class ResultView: UIView {
     
     enum ResultMode {
         case noNetwork
         case noData
     }
     
-    fileprivate var mode: ResultMode = .noNetwork
+    var mode: ResultMode = .noNetwork
     
-    fileprivate var actionBlock: (()->())?
+    var actionBlock: (()->())?
     
     lazy fileprivate var actionBtn: UIButton = {
         let button = UIButton()
@@ -308,7 +308,7 @@ fileprivate class ResultView: UIView {
         return button
     }()
     
-    lazy fileprivate var stackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.alignment = .center
         view.axis = .vertical
@@ -323,13 +323,13 @@ fileprivate class ResultView: UIView {
         return button
     }()
     
-    lazy fileprivate var iconImgView: UIImageView = {
+    lazy var iconImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "public_noNetworkImg")
         return imgView
     }()
     
-    lazy fileprivate var titleLabel: ParagraphLabel = {
+    lazy var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.head
@@ -340,7 +340,7 @@ fileprivate class ResultView: UIView {
         return label
     }()
     
-    lazy fileprivate var solutionBtn: UIButton = {
+    lazy var solutionBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)!
@@ -369,7 +369,7 @@ fileprivate class ResultView: UIView {
         stackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.width.equalTo(UIScreenWidth)
-            make.centerY.equalToSuperview().multipliedBy((1-0.618)/0.5)
+            make.centerY.equalToSuperview()//.multipliedBy((1-0.618)/0.5)
         }
         stackView.addArrangedSubview(iconImgView)
         stackView.addArrangedSubview(titleLabel)

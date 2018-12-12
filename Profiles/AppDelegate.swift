@@ -54,10 +54,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .highlighted)
         
-        if self.window?.rootViewController != nil {
-            guard let rootViewController = self.window?.rootViewController, !rootViewController.isKind(of: UITabBarController.self) else {
-                return
-            }
+//        if self.window?.rootViewController != nil {
+//            guard let rootViewController = self.window?.rootViewController, !rootViewController.isKind(of: UITabBarController.self) else {
+//                return
+//            }
+//        }
+        
+        guard let isFirstLaunch = AppCacheService.sharedInstance.isFirstLaunch, isFirstLaunch == false else {
+            self.window?.rootViewController = GuideViewController()
+            return
         }
         
         let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
@@ -85,7 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         
         self.window?.rootViewController = tabBarController
-        
     }
     
     func setupAudioSession() {
@@ -157,6 +161,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
         GeTuiSdk.registerDeviceToken(token)
+        
+        
+        guard AuthorizationService.sharedInstance.isSignIn() else { return }
+        
+        UserProvider.request(.updatePushToken(token), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+        }))
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

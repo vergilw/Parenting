@@ -25,7 +25,16 @@ class ResponseService {
         let returnCompletion: Completion = { result in
             switch result {
             case let .success(response):
+                
+                if let token = response.response?.allHeaderFields["Auth-Token"] as? String {
+                    if let model = AuthorizationService.sharedInstance.user {
+                        model.auth_token = token
+                        AuthorizationService.sharedInstance.user = model
+                    }
+                }
+                
                 if response.statusCode == 200 {
+                    
                     do {
                         let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
                         if let code = JSON["code"] as? Int {

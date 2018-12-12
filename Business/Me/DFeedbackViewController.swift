@@ -37,7 +37,7 @@ class DFeedbackViewController: BaseViewController {
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
-        label.text = "产品团队将及时查看您宝贵的建议,或在下一个版本更新时采纳您的建议，为您提供更好的产品体验."
+        label.text = "非常感谢您的宝贵建议！氧育团队将及时查看并尽快与您取得联系，希望能为您提供更好的产品体验。 "
         return label
     }()
     

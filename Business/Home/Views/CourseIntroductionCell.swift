@@ -23,7 +23,7 @@ class CourseIntroductionCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "讲师介绍"
+        label.text = "老师简介"
         return label
     }()
     
@@ -93,7 +93,7 @@ class CourseIntroductionCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "听课指南"
+        label.text = "听课须知"
         return label
     }()
     
@@ -168,7 +168,7 @@ class CourseIntroductionCell: UITableViewCell {
         teacherNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
             make.bottom.equalTo(teacherAvatarImgView.snp.centerY).offset(-1.5)
-            make.trailing.greaterThanOrEqualTo(-25)
+            make.trailing.lessThanOrEqualTo(-25)
         }
         teacherTagLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)

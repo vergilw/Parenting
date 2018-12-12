@@ -118,6 +118,14 @@ class PlayListService: NSObject {
             return
         }
         
+        if course.is_bought == false {
+            guard let section = sections[exist: playingIndex+1], section.audition == true else {
+                isPlaying = false
+                return
+            }
+        }
+        
+        
         playAudio(course: course, sections: sections, playingIndex: playingIndex+1)
         self.setupNowPlaying()
     }

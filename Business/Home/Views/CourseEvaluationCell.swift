@@ -90,7 +90,7 @@ class CourseEvaluationCell: UITableViewCell {
         teacherNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
             make.bottom.equalTo(teacherAvatarImgView.snp.centerY).offset(-1.5)
-            make.trailing.greaterThanOrEqualTo(-25)
+            make.trailing.lessThanOrEqualTo(-25)
         }
         starsStackView.snp.makeConstraints { make in
             make.leading.equalTo(teacherNameLabel)
@@ -104,7 +104,7 @@ class CourseEvaluationCell: UITableViewCell {
         }
         evluationLabel.snp.makeConstraints { make in
             make.leading.equalTo(contentView.snp_leadingMargin).offset(15)
-            make.trailing.greaterThanOrEqualTo(contentView.snp_leadingMargin).offset(-15)
+            make.trailing.lessThanOrEqualTo(contentView.snp_trailingMargin).offset(-15)
             make.top.equalTo(teacherAvatarImgView.snp.bottom).offset(45)
             make.bottom.equalTo(contentView.snp_bottomMargin).offset(-24)
         }
