@@ -239,23 +239,6 @@ class FetchView: UIView {
         fatalError()
     }
     
-//    override func didMoveToSuperview() {
-//        var viewController: UIViewController?
-//        var view: UIView? = self
-//        repeat {
-//            if view?.next?.isKind(of: UIViewController.self) ?? false {
-//                viewController = view?.next as? UIViewController
-//                break
-//            }
-//            view = view?.superview
-//        } while view != nil
-//
-//        //FIXME: isNavigationBarHidden not correct (viewwillappear)
-//        if viewController?.navigationController?.isNavigationBarHidden ?? true {
-//            backBarBtn.isHidden = false
-//        }
-//    }
-    
     override func didMoveToWindow() {
         var viewController: UIViewController?
         var view: UIView? = self
@@ -267,7 +250,6 @@ class FetchView: UIView {
             view = view?.superview
         } while view != nil
         
-        //FIXME: isNavigationBarHidden not correct (viewwillappear)
         if viewController?.navigationController?.isNavigationBarHidden ?? true {
             backBarBtn.isHidden = false
         }

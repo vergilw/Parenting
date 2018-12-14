@@ -16,7 +16,35 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    var tabBarController: UITabBarController = {
+        let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
+        let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
+        homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
+        homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
+        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
+        
+        let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
+        let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
+        meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
+        meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
+        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
+        
+        let tabBarController = UITabBarController()
+        tabBarController.tabBar.isTranslucent = false
+        
+        tabBarController.tabBar.backgroundImage = UIImage(color: .white)
+        tabBarController.tabBar.shadowImage = UIImage()
+        
+        tabBarController.tabBar.layer.shadowOffset = CGSize(width: 0, height: -3.0)
+        tabBarController.tabBar.layer.shadowOpacity = 0.05
+        tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
+        
+        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
+        
+        return tabBarController
+    }()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
@@ -54,40 +82,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .highlighted)
         
-//        if self.window?.rootViewController != nil {
-//            guard let rootViewController = self.window?.rootViewController, !rootViewController.isKind(of: UITabBarController.self) else {
-//                return
-//            }
-//        }
-        
         guard let isFirstLaunch = AppCacheService.sharedInstance.isFirstLaunch, isFirstLaunch == false else {
             self.window?.rootViewController = GuideViewController()
             return
         }
-        
-        let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-        let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
-        homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
-        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
-        let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
-        let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
-        meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
-        meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
-        let tabBarController = UITabBarController()
-        tabBarController.tabBar.isTranslucent = false
-        
-        tabBarController.tabBar.backgroundImage = UIImage(color: .white)
-        tabBarController.tabBar.shadowImage = UIImage()
-        
-        tabBarController.tabBar.layer.shadowOffset = CGSize(width: 0, height: -3.0)
-        tabBarController.tabBar.layer.shadowOpacity = 0.05
-        tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
-        
-        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
         
         self.window?.rootViewController = tabBarController
     }

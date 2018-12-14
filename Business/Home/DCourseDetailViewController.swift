@@ -280,8 +280,6 @@ class DCourseDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        navigationController?.setNavigationBarHidden(true, animated: true)
-        
         navigationItem.title = "课程详情"
         reloadNavigationItem()
         
@@ -494,8 +492,6 @@ class DCourseDetailViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        //FIXME: debug no network
-        
         HUDService.sharedInstance.showFetchingView(target: self.view)
         self.viewModel.fetchCourse { (status) in
             HUDService.sharedInstance.hideFetchingView(target: self.view)

@@ -15,6 +15,7 @@ class GuideViewController: BaseViewController {
         if #available(iOS 11, *) {
             scrollView.contentInsetAdjustmentBehavior = .never
         }
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         return scrollView
