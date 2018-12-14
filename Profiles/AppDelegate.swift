@@ -24,6 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
         homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
+        let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
+        let videoImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
+        videoNavigationController.tabBarItem = UITabBarItem(title: "小视频", image: videoImg, tag: 1)
+        videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
+        videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
+        
         let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
         let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
         meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
@@ -40,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.tabBar.layer.shadowOpacity = 0.05
         tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
         
-        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
+        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: true)
         
         return tabBarController
     }()

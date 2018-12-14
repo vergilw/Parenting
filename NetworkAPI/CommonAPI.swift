@@ -10,7 +10,7 @@ import Foundation
 import Moya
 import HandyJSON
 
-let CommonProvider = MoyaProvider<CommonAPI>()
+let CommonProvider = MoyaProvider<CommonAPI>(manager: DefaultAlamofireManager.sharedManager)
 
 enum CommonAPI {
     case home
@@ -78,7 +78,7 @@ extension CommonAPI: TargetType {
                        "Device-ID": AppService.sharedInstance.uniqueIdentifier,
                        "OS": UIDevice.current.systemName,
                        "OS-Version": UIDevice.current.systemVersion,
-                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "Device-Model": UIDevice.current.machineModel ?? "",
                        "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token

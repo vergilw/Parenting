@@ -107,6 +107,15 @@
 		1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */; };
 		132A492521B52AF700038027 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132A492421B52AF700038027 /* AppService.swift */; };
 		132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132C920B21BA81F2002148E1 /* OrderModel.swift */; };
+		132DA5F221C352D7004F0F42 /* DVideosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5F121C352D7004F0F42 /* DVideosViewController.swift */; };
+		132DA5F421C357B2004F0F42 /* VideoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5F321C357B2004F0F42 /* VideoAPI.swift */; };
+		132DA5F621C35AD6004F0F42 /* DVideosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5F521C35AD6004F0F42 /* DVideosViewModel.swift */; };
+		132DA5F821C35C15004F0F42 /* VideoCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */; };
+		132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5F921C35C21004F0F42 /* VideoModel.swift */; };
+		132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5FB21C37C93004F0F42 /* VideoCollectionCell.swift */; };
+		132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */; };
+		132DA60021C3A3EE004F0F42 /* DVideoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */; };
+		132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */; };
 		13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13796B3021B7D15A00E0C3D9 /* ShareView.swift */; };
 		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
 		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
@@ -239,6 +248,15 @@
 		1324F5652186E099005276C9 /* DCourseSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseSectionViewModel.swift; sourceTree = "<group>"; };
 		132A492421B52AF700038027 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		132C920B21BA81F2002148E1 /* OrderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModel.swift; sourceTree = "<group>"; };
+		132DA5F121C352D7004F0F42 /* DVideosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideosViewController.swift; sourceTree = "<group>"; };
+		132DA5F321C357B2004F0F42 /* VideoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAPI.swift; sourceTree = "<group>"; };
+		132DA5F521C35AD6004F0F42 /* DVideosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideosViewModel.swift; sourceTree = "<group>"; };
+		132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCategoryModel.swift; sourceTree = "<group>"; };
+		132DA5F921C35C21004F0F42 /* VideoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoModel.swift; sourceTree = "<group>"; };
+		132DA5FB21C37C93004F0F42 /* VideoCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCollectionCell.swift; sourceTree = "<group>"; };
+		132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoDetailViewController.swift; sourceTree = "<group>"; };
+		132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoDetailViewModel.swift; sourceTree = "<group>"; };
+		132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailCell.swift; sourceTree = "<group>"; };
 		13796B3021B7D15A00E0C3D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
 		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -426,6 +444,8 @@
 				131170A521B77A0800C178BB /* AdvanceModel.swift */,
 				132C920B21BA81F2002148E1 /* OrderModel.swift */,
 				13128B8C21BE0ACC00251B6F /* ModelTransform.swift */,
+				132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */,
+				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -507,6 +527,7 @@
 				130D8B6421AFBCD5003E7645 /* StoryAPI.swift */,
 				131170A121B75C1600C178BB /* UserAPI.swift */,
 				131170A321B774ED00C178BB /* PaymentAPI.swift */,
+				132DA5F321C357B2004F0F42 /* VideoAPI.swift */,
 			);
 			path = NetworkAPI;
 			sourceTree = "<group>";
@@ -514,6 +535,7 @@
 		1320C377217EB76600902A5C /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				132DA5ED21C34E9A004F0F42 /* Video */,
 				130F1C8D219BF8CB004E1DD3 /* Payment */,
 				13113F632199131300B6E0FE /* Authorization */,
 				13144B2321806E71002B4281 /* Common */,
@@ -560,6 +582,27 @@
 				131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */,
 			);
 			path = Me;
+			sourceTree = "<group>";
+		};
+		132DA5ED21C34E9A004F0F42 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				132DA5EE21C35296004F0F42 /* Views */,
+				132DA5F121C352D7004F0F42 /* DVideosViewController.swift */,
+				132DA5F521C35AD6004F0F42 /* DVideosViewModel.swift */,
+				132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */,
+				132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		132DA5EE21C35296004F0F42 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				132DA5FB21C37C93004F0F42 /* VideoCollectionCell.swift */,
+				132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		13B7F6F321B68709001BF15D /* Vendors */ = {
@@ -851,6 +894,7 @@
 				131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */,
 				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
 				13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */,
+				132DA5F421C357B2004F0F42 /* VideoAPI.swift in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
 				131170A621B77A0800C178BB /* AdvanceModel.swift in Sources */,
@@ -869,6 +913,7 @@
 				13113F6D2199736600B6E0FE /* DAuthorizationViewModel.swift in Sources */,
 				130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
+				132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */,
 				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
@@ -881,7 +926,9 @@
 				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
 				13B7F73221B68728001BF15D /* QNUrlSafeBase64.m in Sources */,
+				132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */,
 				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,
+				132DA5F621C35AD6004F0F42 /* DVideosViewModel.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
 				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
@@ -889,6 +936,7 @@
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
 				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
+				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
@@ -898,6 +946,7 @@
 				13B7F73C21B68728001BF15D /* QNSessionManager.m in Sources */,
 				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
 				132A492521B52AF700038027 /* AppService.swift in Sources */,
+				132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
@@ -912,6 +961,7 @@
 				13B7F73721B68728001BF15D /* QNALAssetFile.m in Sources */,
 				13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */,
 				130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */,
+				132DA5F821C35C15004F0F42 /* VideoCategoryModel.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
 				131170A221B75C1600C178BB /* UserAPI.swift in Sources */,
@@ -928,6 +978,7 @@
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
 				1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */,
+				132DA60021C3A3EE004F0F42 /* DVideoDetailViewModel.swift in Sources */,
 				1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */,
 				131FB295219D785600B55210 /* DMeFavoritesViewController.swift in Sources */,
 				13B7F72C21B68728001BF15D /* QNResumeUpload.m in Sources */,
@@ -943,6 +994,7 @@
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
 				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
+				132DA5F221C352D7004F0F42 /* DVideosViewController.swift in Sources */,
 				130C7CC121C0A4BF007C0344 /* EvaluationNoDataCell.swift in Sources */,
 				131160B92182E54C0000F105 /* PlaceholderTableViewCell.swift in Sources */,
 				13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */,

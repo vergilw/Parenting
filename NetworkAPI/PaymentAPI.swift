@@ -9,7 +9,7 @@
 import Moya
 import HandyJSON
 
-let PaymentProvider = MoyaProvider<PaymentAPI>()
+let PaymentProvider = MoyaProvider<PaymentAPI>(manager: DefaultAlamofireManager.sharedManager)
 
 enum PaymentAPI {
     case advances
@@ -102,7 +102,7 @@ extension PaymentAPI: TargetType {
                        "Device-ID": AppService.sharedInstance.uniqueIdentifier,
                        "OS": UIDevice.current.systemName,
                        "OS-Version": UIDevice.current.systemVersion,
-                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "Device-Model": UIDevice.current.machineModel ?? "",
                        "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token

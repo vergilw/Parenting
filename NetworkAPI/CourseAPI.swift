@@ -10,7 +10,7 @@ import Foundation
 import Moya
 import HandyJSON
 
-let CourseProvider = MoyaProvider<CourseAPI>()
+let CourseProvider = MoyaProvider<CourseAPI>(manager: DefaultAlamofireManager.sharedManager)
 
 enum CourseAPI {
     case course(courseID: Int)
@@ -134,7 +134,7 @@ extension CourseAPI: TargetType {
                        "Device-ID": AppService.sharedInstance.uniqueIdentifier,
                        "OS": UIDevice.current.systemName,
                        "OS-Version": UIDevice.current.systemVersion,
-                       "Device-Name": UIDevice.current.machineModel ?? "",
+                       "Device-Model": UIDevice.current.machineModel ?? "",
                        "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token

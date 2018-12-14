@@ -434,19 +434,30 @@ class CustomMJHeader: MJRefreshHeader {
         imgView.size = CGSize(width: 29, height: 38)
     }
     
-    fileprivate var refreshState: MJRefreshState = .idle
+//    fileprivate var refreshState: MJRefreshState = .idle
     
     override var state: MJRefreshState {
-        get {
-            return refreshState
-        }
-        set {
-            super.state = newValue
-            refreshState = newValue
-            if newValue == .idle {
+//        get {
+//            return refreshState
+//        }
+//        set {
+//            super.state = newValue
+//            refreshState = newValue
+//            if newValue == .idle {
+//                imgView.stopAnimating()
+//                imgView.currentAnimatedImageIndex = 0
+//            } else if newValue == .refreshing {
+//                imgView.startAnimating()
+//            } else {
+//                imgView.stopAnimating()
+//            }
+//
+//        }
+        didSet {
+            if state == .idle {
                 imgView.stopAnimating()
                 imgView.currentAnimatedImageIndex = 0
-            } else if newValue == .refreshing {
+            } else if state == .refreshing {
                 imgView.startAnimating()
             } else {
                 imgView.stopAnimating()

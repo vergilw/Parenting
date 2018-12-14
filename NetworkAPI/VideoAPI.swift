@@ -1,41 +1,41 @@
 //
-//  StoryAPI.swift
+//  VideoAPI.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/29.
+//  Created by Vergil.Wang on 2018/12/14.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import Moya
 import HandyJSON
 
-let StoryProvider = MoyaProvider<StoryAPI>(manager: DefaultAlamofireManager.sharedManager)
+let VideoProvider = MoyaProvider<VideoAPI>(manager: DefaultAlamofireManager.sharedManager)
 
-enum StoryAPI {
-    case stories(Int)
-    case story(Int)
+enum VideoAPI {
+    case video_category
+    case videos(Int?, Int)
 }
 
-extension StoryAPI: TargetType {
+extension VideoAPI: TargetType {
     
     public var baseURL: URL {
-        return URL(string: ServerHost)!
+        return URL(string: "http://dappore.store/api")!
     }
     
     public var path: String {
         switch self {
-        case .stories:
-            return "/app/user_stories.json"
-        case let .story(storyID):
-            return "/app/user_stories/" + String(storyID) + ".json"
+        case .video_category:
+            return "/video_taxons"
+        case .videos:
+            return "/videos"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-        case .stories:
+        case .video_category:
             return .get
-        case .story:
+        case .videos:
             return .get
         }
     }
@@ -46,10 +46,14 @@ extension StoryAPI: TargetType {
     
     var task: Task {
         switch self {
-        case let .stories(page):
-            return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
-        case .story:
+        case .video_category:
             return .requestPlain
+        case let .videos(categoryID, page):
+            var parameters: [String: Any] = ["page":page, "per":"10"]
+            if let categoryID = categoryID {
+                parameters["video_taxon_id"] = categoryID
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
     
