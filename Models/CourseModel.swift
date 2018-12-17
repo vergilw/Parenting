@@ -14,6 +14,7 @@ class CourseModel: HandyJSON {
     var title: String?
     var sub_title: String?
     var price: Float?
+    var market_price: Float?
     var students_count: Int?
     var cover_attribute: AssetModel?
     var suitable: String?

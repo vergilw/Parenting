@@ -21,6 +21,7 @@ class CourseSectionModel: HandyJSON {
     var course: CourseModel?
     var content_images_attribute: [AssetModel]?
     var media_attribute: AssetModel?
+    var can_play: Bool?
     
     required init() {
         

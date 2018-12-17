@@ -148,20 +148,10 @@ class ParagraphLabel: UILabel {
         originalFont = font
         originalForegroundColor = textColor
         
-        //FIXME: price display error
         if let symbolAttributes = symbolAttributes, let symbolText = symbolText {
             var attributes = symbolAttributes
             if let symbolFont = attributes[NSAttributedString.Key.font] as? UIFont {
                 attributes[NSAttributedString.Key.baselineOffset] = (singlelineHeight(font: symbolFont)-symbolFont.lineHeight)/4
-                
-//                let paragraph = NSMutableParagraphStyle()
-//                let lineHeight: CGFloat = singlelineHeight(font: symbolFont)
-//                paragraph.maximumLineHeight = lineHeight
-//                paragraph.minimumLineHeight = lineHeight
-//                paragraph.alignment = textAlignment
-//                paragraph.lineBreakMode = lineBreakMode
-//
-//                attributes[NSAttributedString.Key.paragraphStyle] = paragraph
             }
             attributedString.addAttributes(attributes, range: NSString(string: text).range(of: symbolText))
         }
@@ -179,7 +169,7 @@ class ParagraphLabel: UILabel {
             
             let attributedString = NSMutableAttributedString(string: text)
             attributedString.addAttributes([
-                NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-font.lineHeight)/4+1.25, NSAttributedString.Key.font: font], range: NSRange(location: 0, length: attributedString.length))
+                NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-font.lineHeight)/4+1.25, NSAttributedString.Key.font: (originalFont ?? font) as Any], range: NSRange(location: 0, length: attributedString.length))
             if let symbolAttributes = symbolAttributes, let symbolText = symbolText {
                 var attributes = symbolAttributes
                 if let symbolFont = attributes[NSAttributedString.Key.font] as? UIFont {

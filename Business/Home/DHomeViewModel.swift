@@ -51,7 +51,14 @@ class DHomeViewModel {
                 }
                 
                 if let stories = data["story_tellers"] as? [[String: Any]] {
-                    self.storyModels = [StoryModel].deserialize(from: stories) as? [StoryModel]
+                    let array = [StoryModel].deserialize(from: stories) as? [StoryModel]
+                    if array?.count ?? 0 >= 3 {
+                        let subarray = array![0...2]
+                        self.storyModels = subarray.reversed()
+                    } else {
+                        self.storyModels = array?.reversed()
+                    }
+                    
                 }
             }
             

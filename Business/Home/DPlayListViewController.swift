@@ -474,7 +474,7 @@ class DPlayListViewController: BaseViewController {
         }
         
         if course.is_bought == false {
-            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex-1], section.audition == true else {
+            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex-1], section.can_play == false else {
                 HUDService.sharedInstance.show(string: "非可试听章节")
                 return
             }
@@ -491,7 +491,7 @@ class DPlayListViewController: BaseViewController {
         }
         
         if course.is_bought == false {
-            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex+1], section.audition == true else {
+            guard let section = sections[exist: PlayListService.sharedInstance.playingIndex+1], section.can_play == false else {
                 HUDService.sharedInstance.show(string: "非可试听章节")
                 return
             }
@@ -557,7 +557,7 @@ extension DPlayListViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         if course.is_bought == false {
-            guard let section = sections[exist: indexPath.row], section.audition == true else {
+            guard let section = sections[exist: indexPath.row], section.can_play == false else {
                 HUDService.sharedInstance.show(string: "非可试听章节")
                 return
             }

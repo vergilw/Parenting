@@ -61,8 +61,8 @@ class OrderCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var priceLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var priceLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
         label.text = "¥0.0"
@@ -188,8 +188,9 @@ class OrderCell: UITableViewCell {
             previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
         }
         
-        let priceString: String = String.priceFormatter.string(from: (NSNumber(string: model.amount ?? "") ?? NSNumber())) ?? ""
-        priceLabel.setParagraphText(priceString)
+        if let price = model.amount {
+            priceLabel.setPriceText(text: price, discount: model.market_price)
+        }
         
         if mode == .nonpayment {
             
@@ -198,6 +199,6 @@ class OrderCell: UITableViewCell {
             orderNumberLabel.setSymbolText(orderString, symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
         }
         
-        timeLabel.setParagraphText((model.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
+        timeLabel.setParagraphText((model.created_at?.string(format: "yyyy.MM.dd HH:mm")) ?? "")
     }
 }

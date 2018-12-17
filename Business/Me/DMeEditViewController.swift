@@ -64,7 +64,7 @@ class DMeEditViewController: BaseViewController {
         textField.clearButtonMode = .whileEditing
         textField.font = UIFont(name: "PingFangSC-Regular", size: 17)
         textField.textColor = UIConstants.Color.head
-        textField.attributedPlaceholder = NSAttributedString(string: "请输入你的名字", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
+        textField.attributedPlaceholder = NSAttributedString(string: "请输入你的名字（16个字符以内）", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
         textField.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
@@ -140,15 +140,6 @@ class DMeEditViewController: BaseViewController {
         scrollView.addSubviews([avatarBtn, nameTitleLabel, nameTextField, wechatTitleLabel, wechatBtn, phoneTitleLabel, phoneTextField])
     }
     
-    func initNavigationItem() {
-//        let barBtnItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: #selector(nameSaveBtnAction))
-//        barBtnItem.tintColor = UIConstants.Color.primaryGreen
-        
-        let barBtnItem = UIBarButtonItem(customView: saveBtn)
-        barBtnItem.width = 50
-        navigationItem.rightBarButtonItem = barBtnItem
-    }
-    
     // MARK: - ============= Constraints =============
     func initConstraints() {
         scrollView.snp.makeConstraints { make in
@@ -218,7 +209,16 @@ class DMeEditViewController: BaseViewController {
         }
     }
     
-    
+    func reloadNavigationItem(isHidden: Bool? = nil) {
+        if isHidden == false || nameTextField.text != AuthorizationService.sharedInstance.user?.name {
+            let barBtnItem = UIBarButtonItem(customView: saveBtn)
+            barBtnItem.width = 50
+            navigationItem.rightBarButtonItem = barBtnItem
+            
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
     
     // MARK: - ============= Action =============
     
@@ -248,6 +248,11 @@ class DMeEditViewController: BaseViewController {
             return
         }
         
+        guard text?.encodingCount() ?? 0 <= 16 else {
+            HUDService.sharedInstance.show(string: "名字长度限制16字符")
+            return
+        }
+        
         saveBtn.startAnimating()
         
         UserProvider.request(.updateUser(name: text, avatar: nil), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
@@ -265,6 +270,8 @@ class DMeEditViewController: BaseViewController {
                     HUDService.sharedInstance.show(string: "名字修改成功")
                 }
             }
+            
+            self.reloadNavigationItem()
         }))
     }
 
@@ -319,7 +326,7 @@ class DMeEditViewController: BaseViewController {
 extension DMeEditViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        initNavigationItem()
+        reloadNavigationItem(isHidden: false)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -331,10 +338,21 @@ extension DMeEditViewController: UITextFieldDelegate {
         if textField == nameTextField && string.count > 1 {
             autoFillString = string.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
             textField.text = autoFillString
+            
             return false
         } else {
             return true
         }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        reloadNavigationItem()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        nameSaveBtnAction()
+        
+        return false
     }
 }
 

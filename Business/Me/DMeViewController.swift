@@ -85,6 +85,8 @@ class DMeViewController: BaseViewController {
         
         let avatarBtn: UIButton = {
             let button = UIButton()
+            button.layer.borderColor = UIColor("#f3f4f6").cgColor
+            button.layer.borderWidth = 1.5
             button.clipsToBounds = true
             button.layer.cornerRadius = 35
             button.imageView?.contentMode = .scaleAspectFill
@@ -117,6 +119,7 @@ class DMeViewController: BaseViewController {
         if AuthorizationService.sharedInstance.isSignIn() {
             avatarBtn.isUserInteractionEnabled = true
             nameLabel.text = AuthorizationService.sharedInstance.user?.name ?? "名字"
+            
             if let avatarURL = AuthorizationService.sharedInstance.user?.avatar_url {
                 avatarBtn.kf.setImage(with: URL(string: avatarURL), for: .normal)
             }
@@ -130,11 +133,14 @@ class DMeViewController: BaseViewController {
             }
             nameLabel.snp.makeConstraints { make in
                 make.leading.equalTo(UIConstants.Margin.leading)
-                make.top.equalTo(avatarBtn.snp.top).offset(10)
+                make.bottom.equalTo(avatarBtn.snp.centerY).offset(-2.5)
+                make.trailing.lessThanOrEqualTo(avatarBtn.snp.leading).offset(-30)
+                make.height.equalTo(nameLabel.font.lineHeight - (nameLabel.font.lineHeight - nameLabel.font.pointSize))
             }
             editTitleLabel.snp.makeConstraints { make in
                 make.leading.equalTo(UIConstants.Margin.leading)
-                make.top.equalTo(nameLabel.snp.bottom).offset(6.5)
+                make.top.equalTo(avatarBtn.snp.centerY).offset(7.5)
+                make.height.equalTo(editTitleLabel.font.lineHeight - (editTitleLabel.font.lineHeight - editTitleLabel.font.pointSize))
             }
             arrowImgView.snp.makeConstraints { make in
                 make.leading.equalTo(editTitleLabel.snp.trailing).offset(4.5)

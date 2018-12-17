@@ -83,11 +83,12 @@ class CourseCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var priceLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var priceLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
-        label.text = "¥0.0"
+//        label.text = "¥0.0"
+//        label.numberOfLines = 0
         return label
     }()
     
@@ -166,6 +167,7 @@ class CourseCell: UITableViewCell {
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
             make.centerY.equalTo(avatarImgView)
+            make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(12)
@@ -215,14 +217,14 @@ class CourseCell: UITableViewCell {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
             if let price = model?.price {
-                priceLabel.setParagraphText(String(price))
+                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
             }
             
         } else if mode == .favirotes {
             priceLabel.textColor = UIColor("#ef5226")
             priceLabel.font = UIConstants.Font.h2
             if let price = model?.price {
-                priceLabel.setParagraphText(String(price))
+                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
             }
             
         } else if mode == .owned {

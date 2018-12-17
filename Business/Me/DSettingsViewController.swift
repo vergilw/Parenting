@@ -92,7 +92,9 @@ class DSettingsViewController: BaseViewController {
             let formatter = ByteCountFormatter()
             formatter.countStyle = .binary
             formatter.allowsNonnumericFormatting = false
+            formatter.allowedUnits = [.useMB, .useGB]
             self.cacheSizeString = formatter.string(fromByteCount: Int64(size))
+            
             self.tableView.reloadData()
         }
     }

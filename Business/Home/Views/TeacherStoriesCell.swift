@@ -16,6 +16,12 @@ class TeacherStoriesCell: UITableViewCell {
         return imgView
     }()
     
+    lazy fileprivate var coverImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor(white: 0, alpha: 0.4)
+        return imgView
+    }()
+    
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
@@ -56,7 +62,7 @@ class TeacherStoriesCell: UITableViewCell {
         
         selectionStyle = .none
         contentView.backgroundColor = .gray
-        contentView.addSubviews([previewImgView, titleLabel, nameLabel, tagLabel])
+        contentView.addSubviews([previewImgView, coverImgView, titleLabel, nameLabel, tagLabel])
         initConstraints()
     }
     
@@ -64,14 +70,19 @@ class TeacherStoriesCell: UITableViewCell {
         previewImgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        coverImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.leading.greaterThanOrEqualTo(UIConstants.Margin.leading)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.leading.greaterThanOrEqualTo(35)
+            make.trailing.lessThanOrEqualTo(-35)
         }
         tagLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(-20)
+            make.leading.greaterThanOrEqualTo(35)
+            make.trailing.lessThanOrEqualTo(-35)
         }
         nameLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

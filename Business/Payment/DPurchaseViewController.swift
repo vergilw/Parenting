@@ -55,8 +55,8 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var priceLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var priceLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
         label.textAlignment = .right
@@ -71,8 +71,8 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var balanceValueLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var balanceValueLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.textAlignment = .right
@@ -278,14 +278,14 @@ class DPurchaseViewController: BaseViewController {
 //        balanceValueLabel.setParagraphText(balanceString)
         
         if let balance = AuthorizationService.sharedInstance.user?.balance {
-            let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
-            balanceValueLabel.setParagraphText(string ?? "0.00")
+            balanceValueLabel.setPriceText(text: balance, discount: nil)
         }
         
-        let priceString: String = String.priceFormatter.string(from: (NSNumber(string: orderModel?.amount ?? "") ?? NSNumber())) ?? ""
-        priceLabel.setParagraphText(priceString)
+        if let price = orderModel?.amount {
+            priceLabel.setPriceText(text: price, discount: orderModel?.market_price)
+        }
         
-        timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd hh:mm")) ?? "")
+        timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd HH:mm")) ?? "")
         
         if orderModel?.payment_status == "unpaid" || orderModel?.payment_status == "part_paid" {
             actionBtn.isHidden = false
@@ -320,6 +320,8 @@ class DPurchaseViewController: BaseViewController {
             self.actionBtn.stopAnimating()
 
             if code >= 0 {
+                AuthorizationService.sharedInstance.updateUserInfo()
+                
                 HUDService.sharedInstance.show(string: "购买成功")
 
                 NotificationCenter.default.post(name: Notification.Payment.payCourseDidSuccess, object: nil)

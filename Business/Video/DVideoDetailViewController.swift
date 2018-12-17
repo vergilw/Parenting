@@ -20,12 +20,18 @@ class DVideoDetailViewController: BaseViewController {
         addNotificationObservers()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         tableView.rowHeight = UIScreenHeight
-//        tableView.register(TeacherStoriesCell.self, forCellReuseIdentifier: TeacherStoriesCell.className())
-//        tableView.dataSource = self
-//        tableView.delegate = self
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: VideoDetailCell.className())
+        tableView.dataSource = self
+        tableView.delegate = self
         
         view.addSubview(tableView)
     }

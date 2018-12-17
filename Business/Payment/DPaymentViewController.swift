@@ -20,11 +20,10 @@ class DPaymentViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var balanceValueLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var balanceValueLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h1
         label.textColor = UIConstants.Color.disable
-        label.setParagraphText("0.00")
         return label
     }()
     
@@ -160,9 +159,8 @@ class DPaymentViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
-            let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
-            balanceValueLabel.setParagraphText(string ?? "0.00")
             balanceValueLabel.textColor = UIConstants.Color.primaryOrange
+            balanceValueLabel.setPriceText(text: balance, discount: nil)
         }
         
     }

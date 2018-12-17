@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B639921C7410100BE79A0 /* PriceLabel.swift */; };
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
 		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
@@ -145,6 +146,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130B639921C7410100BE79A0 /* PriceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLabel.swift; sourceTree = "<group>"; };
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
 		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 				13796B3021B7D15A00E0C3D9 /* ShareView.swift */,
 				130C7CC221C0F8F0007C0344 /* WebViewController.swift */,
 				130C7CC421C10380007C0344 /* GuideViewController.swift */,
+				130B639921C7410100BE79A0 /* PriceLabel.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -893,6 +896,7 @@
 			files = (
 				131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */,
 				13113F652199134100B6E0FE /* AuthorizationViewController.swift in Sources */,
+				130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */,
 				13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */,
 				132DA5F421C357B2004F0F42 /* VideoAPI.swift in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,

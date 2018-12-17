@@ -19,7 +19,7 @@ class PlayListService: NSObject {
     private override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: nil)
         
         setupRemoteTransportControls()
     }
@@ -213,17 +213,17 @@ class PlayListService: NSObject {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
-    func handleInterruption(notification: Notification) {
+    @objc func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
                 return
         }
+        
         if type == .began {
             // Interruption began, take appropriate actions
             setupNowPlaying()
-        }
-        else if type == .ended {
+        } else if type == .ended {
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {

@@ -89,6 +89,13 @@ extension String {
         return formatter
     }()
     
+    func encodingCount() -> Int {
+        let encoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
+        if let data: Data = data(using: String.Encoding(rawValue: encoding)) {
+            return data.count
+        }
+        return 0
+    }
     
     /*
     /// Hashing algorithm for hashing a string instance.

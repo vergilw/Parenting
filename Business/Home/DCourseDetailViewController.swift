@@ -941,11 +941,6 @@ class DCourseDetailViewController: BaseViewController {
             return
         }
         
-        guard viewModel.courseModel?.is_bought == true else {
-            HUDService.sharedInstance.show(string: "购买课程后才能评论")
-            return
-        }
-        
         if viewModel.myCommentModel == nil {
             button.startAnimating()
             viewModel.fetchMyComment(completion: { (bool) in
@@ -960,6 +955,16 @@ class DCourseDetailViewController: BaseViewController {
             })
             
         } else {
+            guard viewModel.courseModel?.is_bought == true else {
+                if viewModel.courseModel?.price == 0 {
+                    HUDService.sharedInstance.show(string: "免费课程暂不支持留言")
+                } else {
+                    HUDService.sharedInstance.show(string: "购买课程后才能评论")
+                }
+                
+                return
+            }
+            
             let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
                 self?.viewModel.myCommentModel = model
                 self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
@@ -1056,8 +1061,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             return label
         }()
         
-        let tagLabel: ParagraphLabel = {
-            let label = ParagraphLabel()
+        let tagLabel: PriceLabel = {
+            let label = PriceLabel()
             label.font = UIConstants.Font.h2
             label.layer.cornerRadius = 2.5
             label.textAlignment = .center
@@ -1126,8 +1131,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
         } else if let price = viewModel.courseModel?.price {
             
-            let string = String.priceFormatter.string(from: NSNumber(value: price))
-            tagLabel.setParagraphText(string ?? "")
+            tagLabel.setPriceText(text: String(price), discount: viewModel.courseModel?.market_price)
             tagLabel.textColor = UIColor("#ef5226")
             tagLabel.backgroundColor = .white
             tagLabel.snp.remakeConstraints { make in
@@ -1274,6 +1278,12 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         guard indexPath.section == 1, indexPath.row > 0 else { return }
         
         if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
+            
+            
+            if viewModel.courseModel?.is_bought != true && model.can_play != true {
+                HUDService.sharedInstance.show(string: "请先购买课程")
+                return
+            }
             
             if let contentType = model.media_attribute?.content_type, contentType.hasPrefix("video") {
 //                navigationController?.pushViewController(DPlayerViewController(), animated: true)

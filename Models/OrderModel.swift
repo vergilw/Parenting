@@ -13,6 +13,7 @@ class OrderModel: HandyJSON {
     var id: Int?
     var uuid: String?
     var amount: String?
+    var market_price: Float?
     var payment_status: String?
     var payment_status_text: String?
     var created_at: Date?
