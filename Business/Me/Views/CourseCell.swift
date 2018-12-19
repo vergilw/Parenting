@@ -44,8 +44,6 @@ class CourseCell: UITableViewCell {
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
-//        imgView.clipsToBounds = true
-        
         return imgView
     }()
     
@@ -65,6 +63,8 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var nameLabel: UILabel = {
         let label = UILabel()
+//        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
+//        label.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.text = "Gcide丨全职妈妈"
@@ -77,7 +77,7 @@ class CourseCell: UITableViewCell {
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 2
         label.lineBreakMode = .byCharWrapping
-        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-160-24
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-CourseCell.previewImgWidth()-24
         label.setParagraphText("如何规划幼儿英引引导成长的历...")
         
         return label
@@ -85,6 +85,7 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var priceLabel: PriceLabel = {
         let label = PriceLabel()
+        label.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         label.font = UIConstants.Font.h2
         label.textColor = UIColor("#ef5226")
 //        label.text = "¥0.0"
@@ -96,7 +97,7 @@ class CourseCell: UITableViewCell {
         let button = ActionButton()
         button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
         button.setImage(UIImage(named: "course_favoriteSelected")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: -8, left: 0, bottom: 8, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -5, left: 0, bottom: 5, right: 0)
         button.isHidden = true
         button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
         return button
@@ -145,8 +146,10 @@ class CourseCell: UITableViewCell {
         shadowImgView.snp.makeConstraints { make in
             make.centerX.equalTo(previewImgView)
             make.top.equalTo(previewImgView.snp.top).offset(-3.5)
-            make.width.equalTo(previewImgView.snp.width).multipliedBy(175.0/160.0)
-            make.height.equalTo(previewImgView.snp.height).multipliedBy(105.0/90.0)
+            let imgWidth = CourseCell.previewImgWidth()
+            let imgHeight = imgWidth/160.0*90.0
+            make.width.equalTo(previewImgView.snp.width).multipliedBy(175.0/imgWidth)
+            make.height.equalTo(previewImgView.snp.height).multipliedBy(105.0/imgHeight)
         }
         gradientShadowImgView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(previewImgView)
@@ -167,7 +170,8 @@ class CourseCell: UITableViewCell {
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
             make.centerY.equalTo(avatarImgView)
-            make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12)
+            make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+            make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(12)
@@ -188,6 +192,7 @@ class CourseCell: UITableViewCell {
         if mode != displayMode {
             if mode == .default {
                 actionBtn.isHidden = true
+                priceLabel.isHidden = false
                 
                 priceLabel.snp.remakeConstraints { make in
                     make.trailing.equalTo(-12)
@@ -196,18 +201,21 @@ class CourseCell: UITableViewCell {
                 
             } else if mode == .favirotes {
                 actionBtn.isHidden = false
+                priceLabel.isHidden = false
                 
                 priceLabel.snp.remakeConstraints { make in
-                    make.leading.equalTo(previewImgView.snp.trailing).offset(12)
+                    make.trailing.lessThanOrEqualTo(actionBtn.snp.leading).priority(.required)
+                    make.leading.equalTo(previewImgView.snp.trailing).offset(12).priority(.low)
                     make.centerY.equalTo(avatarImgView)
                 }
             } else if mode == .owned {
                 actionBtn.isHidden = true
+                priceLabel.isHidden = true
                 
-                priceLabel.snp.remakeConstraints { make in
-                    make.trailing.equalTo(-12)
-                    make.centerY.equalTo(avatarImgView)
-                }
+//                priceLabel.snp.remakeConstraints { make in
+//                    make.trailing.equalTo(-12)
+//                    make.centerY.equalTo(avatarImgView)
+//                }
             }
             displayMode = mode
         }
@@ -236,13 +244,13 @@ class CourseCell: UITableViewCell {
         
         if let URLString = model?.cover_attribute?.service_url {
             let width: CGFloat = CourseCell.previewImgWidth()
-            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
+            let processor = RoundCornerImageProcessor(cornerRadius: 4, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
             previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
         }
         
         if let URLString = model?.teacher?.headshot_attribute?.service_url {
             let processor = RoundCornerImageProcessor(cornerRadius: 22, targetSize: CGSize(width: 44, height: 44))
-            avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+            avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
         }
         
         titleLabel.setParagraphText(model?.title ?? "")

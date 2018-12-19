@@ -12,6 +12,8 @@ import MediaPlayer
 import Kingfisher
 import Presentr
 
+import UserNotifications
+
 class PlayListService: NSObject {
     
     static let sharedInstance = PlayListService()
@@ -128,6 +130,7 @@ class PlayListService: NSObject {
         
         playAudio(course: course, sections: sections, playingIndex: playingIndex+1)
         self.setupNowPlaying()
+        
     }
     
     func setupRemoteTransportControls() {

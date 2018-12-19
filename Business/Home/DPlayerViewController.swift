@@ -425,7 +425,7 @@ class DPlayerViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let avatarURL = courseModel?.teacher?.headshot_attribute?.service_url {
-            avatarImgView.kf.setImage(with: URL(string: avatarURL))
+            avatarImgView.kf.setImage(with: URL(string: avatarURL), placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         courseNameLabel.text = courseModel?.title

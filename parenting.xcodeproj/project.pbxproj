@@ -91,7 +91,6 @@
 		1320C378217EB76600902A5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C36B217EB76600902A5C /* AppDelegate.swift */; };
 		1320C37A217EB76600902A5C /* Public.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1320C36F217EB76600902A5C /* Public.xcassets */; };
 		1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C370217EB76600902A5C /* LaunchScreen.storyboard */; };
-		1320C37C217EB76600902A5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1320C372217EB76600902A5C /* Main.storyboard */; };
 		1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C37D217EB8E800902A5C /* BaseNavigationController.swift */; };
 		1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C37E217EB8E800902A5C /* BaseViewController.swift */; };
 		1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320C382217EB93900902A5C /* String+Extension.swift */; };
@@ -231,7 +230,6 @@
 		1320C36C217EB76600902A5C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1320C36F217EB76600902A5C /* Public.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Public.xcassets; sourceTree = "<group>"; };
 		1320C371217EB76600902A5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		1320C373217EB76600902A5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1320C37D217EB8E800902A5C /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		1320C37E217EB8E800902A5C /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1320C381217EB91100902A5C /* NetworkConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConstants.swift; sourceTree = "<group>"; };
@@ -486,7 +484,6 @@
 				130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */,
 				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
-				1320C372217EB76600902A5C /* Main.storyboard */,
 				13144B26218077F4002B4281 /* Course.xcassets */,
 				13113F6621994CD900B6E0FE /* Authorization.xcassets */,
 				130F1C96219C174E004E1DD3 /* Me.xcassets */,
@@ -779,6 +776,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 0;
+							};
 						};
 					};
 				};
@@ -814,7 +814,6 @@
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
 				13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */,
-				1320C37C217EB76600902A5C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,14 +1032,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		1320C372217EB76600902A5C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1320C373217EB76600902A5C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1167,7 +1158,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1176,7 +1167,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = DevProvisioningProfiles;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1189,8 +1180,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				INFOPLIST_FILE = "$(SRCROOT)/Profiles/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1199,7 +1190,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = DisProvisioningProfiles;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

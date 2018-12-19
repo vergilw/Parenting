@@ -26,8 +26,8 @@ class SolutionViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var paragraph1Label: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var paragraph1Label: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.body
         label.numberOfLines = 0
@@ -53,8 +53,8 @@ class SolutionViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var subparagraph1Label: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var subparagraph1Label: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.body
         label.numberOfLines = 0

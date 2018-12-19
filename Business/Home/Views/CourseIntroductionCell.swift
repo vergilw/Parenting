@@ -219,7 +219,7 @@ class CourseIntroductionCell: UITableViewCell {
         teacherNameLabel.text = model.teacher?.name
         
         if let avatarURL = model.teacher?.headshot_attribute?.service_url {
-            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
+            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL), placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         if let tags = model.teacher?.tags, tags.count > 0 {

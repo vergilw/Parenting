@@ -37,6 +37,7 @@ class DMeEditViewController: BaseViewController {
     
     lazy fileprivate var saveBtn: ActionButton = {
         let button = ActionButton()
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
         button.setIndicatorColor(UIConstants.Color.primaryRed)
         button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h3
@@ -212,9 +213,9 @@ class DMeEditViewController: BaseViewController {
     func reloadNavigationItem(isHidden: Bool? = nil) {
         if isHidden == false || nameTextField.text != AuthorizationService.sharedInstance.user?.name {
             let barBtnItem = UIBarButtonItem(customView: saveBtn)
-            barBtnItem.width = 50
+            barBtnItem.width = 34+50
             navigationItem.rightBarButtonItem = barBtnItem
-            
+            navigationItem.rightMargin = 0
         } else {
             navigationItem.rightBarButtonItem = nil
         }
@@ -329,21 +330,30 @@ extension DMeEditViewController: UITextFieldDelegate {
         reloadNavigationItem(isHidden: false)
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        guard let _ = textField.text else { return true }
-        
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+//        guard let _ = textField.text else { return true }
+
         //auto fill name
-        var autoFillString = string
-        if textField == nameTextField && string.count > 1 {
-            autoFillString = string.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
-            textField.text = autoFillString
-            
-            return false
-        } else {
-            return true
-        }
-    }
+//        var autoFillString = string
+//        if textField == nameTextField && string.count > 1 {
+//            autoFillString = string.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
+//            let originalText: NSString = NSString(string: textField.text ?? "")
+//            let resultText = originalText.replacingCharacters(in: NSRange(location: range.location, length: autoFillString.count), with: autoFillString)
+//            textField.text = resultText
+//
+//            return false
+//        } else {
+//            return true
+//        }
+        
+//        let originalText: NSString = NSString(string: textField.text ?? "")
+//        let resultText: String = originalText.replacingCharacters(in: range, with: string)
+//        if resultText.encodingCount() > 16 {
+//            return false
+//        }
+//        return true
+//    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         reloadNavigationItem()

@@ -57,6 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
         
+        setupThirdPartyPlatforms()
+        
         self.window = UIWindow()
         setupRootViewController()
         self.window?.makeKeyAndVisible()
@@ -65,18 +67,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.toolbarDoneBarButtonItemImage = UIImage(named: "public_dismissKeyboard")
         
         setupAudioSession()
-        setupThirdPartyPlatforms()
+        
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
         
         
-        
-        //FIXME: Umeng
-        
-        let deviceID = UMConfigure.deviceIDForIntegration()
-        print(deviceID)
-        //此函数在UMCommon.framework版本1.4.2及以上版本，在UMConfigure.h的头文件中加入。
-        //如果用户用组件化SDK,需要升级最新的UMCommon.framework版本。
+        //FIXME: shutdown constraints log
+//        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         
         
@@ -107,10 +104,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func setupThirdPartyPlatforms() {
+        //FIXME: Umeng
+//        #if DEBUG
+//        if let deviceID = UMConfigure.deviceIDForIntegration() {
+//            print("\(#function) \(deviceID)")
+//        }
+//        UMConfigure.setLogEnabled(true)
+//        #endif
+
         UMConfigure.initWithAppkey("5bd6ab53b465f5473b0000e7", channel: "App Store")
         UMSocialManager.default()?.setPlaform(.wechatSession, appKey: "wxc7c60047a9c75018", appSecret: "c5168f183fd20a038df632c1d6d4157e", redirectURL: "http://mobile.umeng.com/social")
         UMSocialGlobal.shareInstance()?.isUsingHttpsWhenShareContent = false
         
+        
+
         #if DEBUG
         Bugly.start(withAppId: "87773979f0", developmentDevice: true, config: nil)
         #else
@@ -200,7 +207,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
         if UIApplication.shared.applicationState == .inactive ||
             UIApplication.shared.applicationState == .background {
             let notiObj = UNMutableNotificationContent()
-            notiObj.title = alert["title"] ?? "氧育"
+            notiObj.title = alert["title"] ?? "氧育亲子"
             if let subtitle = alert["subtitle"] {
                 notiObj.subtitle = subtitle
             }
@@ -214,3 +221,4 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
     }
     
 }
+

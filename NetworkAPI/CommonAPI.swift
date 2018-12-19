@@ -79,7 +79,8 @@ extension CommonAPI: TargetType {
                        "OS": UIDevice.current.systemName,
                        "OS-Version": UIDevice.current.systemVersion,
                        "Device-Model": UIDevice.current.machineModel ?? "",
-                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String]
+                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
+                       "Accept": "application/vnd.inee.v1+json"]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token
         }

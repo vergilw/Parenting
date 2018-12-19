@@ -38,10 +38,10 @@ class AuthorizationViewController: BaseViewController {
     lazy fileprivate var agreementBtn: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = UIConstants.Font.foot
-        let text = "已阅读并同意氧育用户协议"
+        let text = "已阅读并同意氧育亲子用户协议"
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot], range: NSRange(location: 0, length: text.count))
-        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育用户协议"))
+        attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育亲子用户协议"))
         button.setAttributedTitle(attributedString, for: .normal)
         button.addTarget(self, action: #selector(agreementBtnAction), for: .touchUpInside)
         return button
@@ -199,7 +199,7 @@ class AuthorizationViewController: BaseViewController {
                 if #available(iOS 11, *) {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 } else {
-                    make.top.equalToSuperview()
+                    make.top.equalTo(UIStatusBarHeight)
                 }
                 make.width.equalTo(UIConstants.Margin.leading*2+backBtn.imageView!.image!.size.width)
                 make.height.equalTo(50)
@@ -358,7 +358,11 @@ class AuthorizationViewController: BaseViewController {
     @objc func agreementBtnAction() {
         let viewController = WebViewController()
         viewController.navigationItem.title = "协议与隐私政策"
-        viewController.url = URL(string: "https://pic1cdn.luojilab.com/html/poster/picpp2gYkoAQgsWGNY5DDGm.html")
+        #if DEBUG
+        viewController.url = URL(string: "http://m.1314-edu.com/agreement.html")
+        #else
+        viewController.url = URL(string: "https://yy.1314-edu.com/agreement.html")
+        #endif
         navigationController?.pushViewController(viewController, animated: true)
     }
     

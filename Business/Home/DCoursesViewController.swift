@@ -378,6 +378,21 @@ class DCoursesViewController: BaseViewController {
         tableViewScrollView.setContentOffset(CGPoint(x: UIScreenWidth*CGFloat(sender.tag), y: 0), animated: true)
         
         selectedIndex = sender.tag
+        
+        if let previous = buttons[exist: selectedIndex-1]  {
+            let frame = view.convert(previous.frame, from: previous.superview)
+            if frame.origin.x < 0 {
+                scrollView.scrollRectToVisible(previous.frame, animated: true)
+            }
+            
+        }
+        if let next = buttons[exist: selectedIndex+1], next.frame.origin.x+next.frame.size.width > UIScreenWidth {
+            let frame = view.convert(next.frame, from: next.superview)
+            if frame.origin.x+frame.size.width > UIScreenWidth {
+                scrollView.scrollRectToVisible(next.frame, animated: true)
+            }
+        }
+        
     }
 }
 

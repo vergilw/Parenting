@@ -140,6 +140,7 @@ class DCourseSectionViewController: BaseViewController {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
+        label.isHidden = true
         return label
     }()
     
@@ -879,33 +880,8 @@ extension DCourseSectionViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
-//        let offsetY = scrollView.panGestureRecognizer.vel
+        guard navigationView.frame.size != .zero else { return }
         
-//        if offsetY < 0 {
-//            if navigationView.frame.origin.y > 0 {
-//                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-//                                              y: navigationView.frame.origin.y+offsetY,
-//                                              width: navigationView.frame.size.width,
-//                                              height: navigationView.frame.size.height)
-//            } else {
-//                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-//                                              y: -navigationView.frame.size.height,
-//                                              width: navigationView.frame.size.width,
-//                                              height: navigationView.frame.size.height)
-//            }
-//        } else {
-//            if navigationView.frame.origin.y < 0 {
-//                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-//                                              y: navigationView.frame.origin.y+offsetY,
-//                                              width: navigationView.frame.size.width,
-//                                              height: navigationView.frame.size.height)
-//            } else {
-//                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-//                                              y: 0,
-//                                              width: navigationView.frame.size.width,
-//                                              height: navigationView.frame.size.height)
-//            }
-//        }
         if navigationView.translatesAutoresizingMaskIntoConstraints == false {
             navigationView.translatesAutoresizingMaskIntoConstraints = true
         }

@@ -302,7 +302,7 @@ class DPlayListViewController: BaseViewController {
         guard let playingCourseModel = PlayListService.sharedInstance.playingCourseModel else { return }
         
         if let avatarURL = playingCourseModel.teacher?.headshot_attribute?.service_url {
-            avatarImgView.kf.setImage(with: URL(string: avatarURL))
+            avatarImgView.kf.setImage(with: URL(string: avatarURL), placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         titleLabel.text = playingCourseModel.title

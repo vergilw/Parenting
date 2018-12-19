@@ -95,7 +95,7 @@ class GuideViewController: BaseViewController {
 extension GuideViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.x > UIScreenWidth*3.2 {
+        if scrollView.contentOffset.x > UIScreenWidth*3.1 {
             
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, AppCacheService.sharedInstance.isFirstLaunch != false else {
                 return

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+//import IQKeyboardManagerSwift
 
 class DPhoneViewController: BaseViewController {
 
@@ -23,7 +24,8 @@ class DPhoneViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIFont.systemFont(ofSize: 32)
         label.textColor = UIConstants.Color.head
-        label.setParagraphText("手机快速登录氧育")
+        label.adjustsFontSizeToFitWidth = true
+        label.setParagraphText("手机快速登录")
         if mode == .binding {
             label.setParagraphText("验证手机")
         }
@@ -61,6 +63,7 @@ class DPhoneViewController: BaseViewController {
         textField.attributedPlaceholder = NSAttributedString(string: "手机号", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
+        textField.keyboardDistanceFromTextField = 35+32+26+52+12
         return textField
     }()
     
@@ -90,6 +93,7 @@ class DPhoneViewController: BaseViewController {
         textField.attributedPlaceholder = NSAttributedString(string: "验证码", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
+        textField.keyboardDistanceFromTextField = 26+52+12
         return textField
     }()
     
@@ -149,10 +153,10 @@ class DPhoneViewController: BaseViewController {
             button.setTitleColor(UIConstants.Color.foot, for: .normal)
             button.setTitle("因中华人民共和国网络安全法规定，请您完成手机验证", for: .normal)
         } else {
-            let text = "已阅读并同意氧育用户协议"
+            let text = "已阅读并同意氧育亲子用户协议"
             let attributedString = NSMutableAttributedString(string: text)
             attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot], range: NSRange(location: 0, length: text.count))
-            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育用户协议"))
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.subhead, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue], range: NSString(string: text).range(of: "氧育亲子用户协议"))
             button.setAttributedTitle(attributedString, for: .normal)
             button.addTarget(self, action: #selector(agreementBtnAction), for: .touchUpInside)
         }
@@ -181,6 +185,7 @@ class DPhoneViewController: BaseViewController {
         addNotificationObservers()
         
         reloadPasscodeTimer()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -213,11 +218,13 @@ class DPhoneViewController: BaseViewController {
     func initConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(40)
-            make.top.equalTo(80)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(80).priority(.low)
         }
         subtitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.bottom.lessThanOrEqualTo(phoneView.snp.top).offset(-26).priority(.required)
         }
         phoneView.snp.makeConstraints { make in
             make.leading.equalTo(40)
@@ -394,7 +401,14 @@ class DPhoneViewController: BaseViewController {
     }
     
     @objc func agreementBtnAction() {
-        navigationController?.pushViewController(DAgreementViewController(), animated: true)
+        let viewController = WebViewController()
+        viewController.navigationItem.title = "协议与隐私政策"
+        #if DEBUG
+        viewController.url = URL(string: "http://m.1314-edu.com/agreement.html")
+        #else
+        viewController.url = URL(string: "https://yy.1314-edu.com/agreement.html")
+        #endif
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     deinit {

@@ -19,6 +19,8 @@ class DCourseDetailViewModel {
     
     var myCommentModel: CommentModel?
     
+    var commentsCount: Int?
+    
     lazy fileprivate var commentPage: Int = 1
     
     func fetchCourse(completion: @escaping (Bool)->Void) {
@@ -42,7 +44,8 @@ class DCourseDetailViewModel {
                     self.commentModel?.append(contentsOf: models!)
                 }
                 
-                if let pageData = JSON["page_data"] as? [String: Any], let totalPages = pageData["total_pages"] as? Int {
+                if let pageData = JSON["page_data"] as? [String: Any], let totalPages = pageData["total_pages"] as? Int, let totalCount = pageData["total_count"] as? Int {
+                    self.commentsCount = totalCount
                     if totalPages > self.commentPage {
                         self.commentPage += 1
                         completion(true, true)

@@ -332,12 +332,13 @@ class DCourseDetailViewController: BaseViewController {
                     self?.tableView.mj_footer.isHidden = true
                 }
                 self?.reload()
+                self?.evaluationBtn.setTitle("留言(\(self?.viewModel.commentsCount ?? 0))", for: .normal)
             }
         })
         let footer = tableView.mj_footer as! MJRefreshAutoStateFooter
         footer.setTitle("以上为筛选后的用户课程体验", for: .noMoreData)
         
-        view.addSubviews(tableView, toolView, categoryView)
+        view.addSubviews(tableView, categoryView, toolView)
         
         initCategoryContentView()
         initToolContentView()
@@ -408,7 +409,7 @@ class DCourseDetailViewController: BaseViewController {
             if #available(iOS 11, *) {
                 make.bottom.equalTo(-(navigationController?.view.safeAreaInsets.bottom ?? 0))
             } else {
-                make.bottom.equalTo(55)
+                make.bottom.equalTo(0)
             }
             make.width.equalTo(52)
         }
@@ -426,7 +427,7 @@ class DCourseDetailViewController: BaseViewController {
             if #available(iOS 11, *) {
                 make.bottom.equalTo(-(navigationController?.view.safeAreaInsets.bottom ?? 0))
             } else {
-                make.bottom.equalTo(55)
+                make.bottom.equalTo(0)
             }
             make.width.equalTo(52)
         }
@@ -561,31 +562,36 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     func reloadNavigationItem() {
-        var barBtnItems = [UIBarButtonItem]()
         
         let shareBarBtn: UIButton = {
-            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
             let img = UIImage(named: "public_shareBarItem")!.withRenderingMode(.alwaysOriginal)
+            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 10+img.size.width+UIConstants.Margin.trailing, height: 44)))
             button.setImage(img, for: .normal)
-            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: img.size.width/2-(UIConstants.Margin.trailing-navigationItem.rightMargin), bottom: 0, right: -img.size.width/2+(UIConstants.Margin.trailing-navigationItem.rightMargin))
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(UIConstants.Margin.trailing-10)/2, bottom: 0, right: (UIConstants.Margin.trailing-10)/2)
             button.addTarget(self, action: #selector(shareBarItemAction), for: .touchUpInside)
             return button
         }()
-        barBtnItems.append(UIBarButtonItem(customView: shareBarBtn))
+        
+        let customView: UIView = {
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: shareBarBtn.bounds.size.width, height: shareBarBtn.bounds.size.height)))
+            return view
+        }()
+        customView.addSubview(shareBarBtn)
+        shareBarBtn.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(shareBarBtn.bounds.size.width)
+            make.height.greaterThanOrEqualTo(44)
+        }
+        
         if PlayListService.sharedInstance.playingIndex != -1 {
-            let spaceBarItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.fixedSpace, target: nil, action: nil)
-            spaceBarItem.width = navigationItem.rightMargin
-            barBtnItems.insert(spaceBarItem, at: 0)
-            
-            
             let audioBarBtn: UIButton = {
-                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
-                button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
-                
-                let img = YYImage(named: "public_audioAnimationItem")
+                let img = YYImage(named: "public_audioAnimationItem")!
                 let imgView = YYAnimatedImageView(image: img)
                 
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 22+20, height: 44)))
+                button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
                 button.addSubview(imgView)
+                
                 imgView.snp.makeConstraints { make in
                     make.center.equalToSuperview()
                     make.width.equalTo(22)
@@ -599,10 +605,24 @@ class DCourseDetailViewController: BaseViewController {
                 
                 return button
             }()
+            customView.addSubview(audioBarBtn)
+            customView.frame = CGRect(origin: .zero, size: CGSize(width: shareBarBtn.bounds.size.width+audioBarBtn.bounds.size.width, height: customView.bounds.size.height))
+            shareBarBtn.snp.remakeConstraints { make in
+                make.trailing.top.bottom.equalToSuperview()
+                make.width.equalTo(shareBarBtn.bounds.size.width)
+                make.height.greaterThanOrEqualTo(44)
+            }
+            audioBarBtn.snp.makeConstraints { make in
+                make.leading.top.bottom.equalToSuperview()
+                make.trailing.equalTo(shareBarBtn.snp.leading)
+                make.width.equalTo(audioBarBtn.bounds.size.width)
+                make.height.greaterThanOrEqualTo(44)
+            }
             
-            barBtnItems.append(UIBarButtonItem(customView: audioBarBtn))
         }
-        navigationItem.rightBarButtonItems = barBtnItems
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: customView)
+        navigationItem.rightMargin = 0
     }
     
     func reloadCategoryView() {
@@ -895,6 +915,11 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func toolActionBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
         
         if viewModel.courseModel?.is_bought == false && viewModel.courseModel?.price != 0 {
             
@@ -942,6 +967,17 @@ class DCourseDetailViewController: BaseViewController {
         }
         
         if viewModel.myCommentModel == nil {
+            
+            guard viewModel.courseModel?.is_bought == true else {
+                if viewModel.courseModel?.price == 0 {
+                    HUDService.sharedInstance.show(string: "免费课程暂不支持留言")
+                } else {
+                    HUDService.sharedInstance.show(string: "购买课程后才能评论")
+                }
+                
+                return
+            }
+            
             button.startAnimating()
             viewModel.fetchMyComment(completion: { (bool) in
                 button.stopAnimating()
@@ -955,15 +991,6 @@ class DCourseDetailViewController: BaseViewController {
             })
             
         } else {
-            guard viewModel.courseModel?.is_bought == true else {
-                if viewModel.courseModel?.price == 0 {
-                    HUDService.sharedInstance.show(string: "免费课程暂不支持留言")
-                } else {
-                    HUDService.sharedInstance.show(string: "购买课程后才能评论")
-                }
-                
-                return
-            }
             
             let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
                 self?.viewModel.myCommentModel = model
@@ -1168,8 +1195,8 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                     
                 })
             } else {
-                return tableView.fd_heightForCell(withIdentifier: CourseCatalogueCell.className(), cacheBy: indexPath, configuration: { (cell) in
-                    if let cell = cell as? CourseCatalogueCell, let model = self.viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
+                return tableView.fd_heightForCell(withIdentifier: CourseCatalogueCell.className(), cacheBy: indexPath, configuration: { [weak self] (cell) in
+                    if let cell = cell as? CourseCatalogueCell, let model = self?.viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
                         cell.setup(model: model, isPlaying: false, isBought: false)
                     }
                 })
@@ -1275,7 +1302,15 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        //return if select title header
         guard indexPath.section == 1, indexPath.row > 0 else { return }
+        
+        //return if not sign in
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
         
         if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
             

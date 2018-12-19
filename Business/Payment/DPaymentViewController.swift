@@ -11,6 +11,15 @@ import UIKit
 class DPaymentViewController: BaseViewController {
 
     lazy fileprivate var advanceModels: [AdvanceModel]? = nil
+
+    lazy fileprivate var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        if #available(iOS 11, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
     
     lazy fileprivate var balanceTitleLabel: UILabel = {
         let label = UILabel()
@@ -96,13 +105,18 @@ class DPaymentViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
+        view.addSubview(scrollView)
         
-        view.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+        scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
+        
+        scrollView.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
     }
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         balanceTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(60)
@@ -119,14 +133,16 @@ class DPaymentViewController: BaseViewController {
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(topUpTitleLabel.snp.bottom).offset(32)
             make.height.equalTo(150)
+            make.width.equalTo(UIScreenWidth)
         }
         indicatorBtn.snp.makeConstraints { make in
             make.edges.equalTo(collectionView)
         }
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.lessThanOrEqualTo(UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(collectionView.snp.bottom).offset(25)
+            make.bottom.equalTo(-25)
         }
     }
     

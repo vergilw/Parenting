@@ -124,12 +124,12 @@ class CourseEvaluationCell: UITableViewCell {
         teacherNameLabel.text = model.user_name
         
         if let avatarURL = model.user_avatar {
-            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
+            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL), placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         if let timestamp = model.created_at_timestamp {
             let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
-            timeLabel.text = date.string(format: "hh:mm")
+            timeLabel.text = date.string(format: "yyyy-MM-dd HH:mm")
         }
         
         starsStackView.removeAllSubviews()

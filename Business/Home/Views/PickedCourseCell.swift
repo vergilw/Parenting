@@ -39,11 +39,11 @@ class PickedCourseCell: UICollectionViewCell {
         return label
     }()
     
-    lazy fileprivate var titleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.head
-        label.lineBreakMode = .byCharWrapping
+//        label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 2
         label.preferredMaxLayoutWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         return label
@@ -143,7 +143,7 @@ class PickedCourseCell: UICollectionViewCell {
         
 //        if let URLString = model.teacher?.headshot_attribute?.service_url {
 //            let processor = RoundCornerImageProcessor(cornerRadius: 20, targetSize: CGSize(width: 40, height: 40))
-//            avatarImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+//            avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
 //        }
         
         footnoteLabel.setParagraphText(String((model.students_count ?? 0)) + "人已学习")
@@ -162,6 +162,7 @@ class PickedCourseCell: UICollectionViewCell {
         let lineHeight: CGFloat = 18.5
         paragraph.maximumLineHeight = lineHeight
         paragraph.minimumLineHeight = lineHeight
+        paragraph.lineBreakMode = .byTruncatingTail
         
         let attributedString = NSMutableAttributedString(string: model.title ?? "")
         attributedString.addAttributes([

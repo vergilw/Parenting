@@ -11,10 +11,9 @@ import Alamofire
 
 
 //#if DEBUG
-//    var ServerHost = "http://test.beichensanjiaozhou.com"
-//#else
-
     var ServerHost = "http://m.1314-edu.com"
+//#else
+//    var ServerHost = "https://yy.1314-edu.com"
 //#endif
 
 class DefaultAlamofireManager: Alamofire.SessionManager {

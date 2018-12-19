@@ -92,6 +92,7 @@ class DMeViewController: BaseViewController {
             button.imageView?.contentMode = .scaleAspectFill
             button.setImage(UIImage(named: "public_avatarPlaceholder")?.withRenderingMode(.alwaysOriginal), for: .normal)
             button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
+            button.isUserInteractionEnabled = false
             return button
         }()
         
@@ -121,7 +122,7 @@ class DMeViewController: BaseViewController {
             nameLabel.text = AuthorizationService.sharedInstance.user?.name ?? "名字"
             
             if let avatarURL = AuthorizationService.sharedInstance.user?.avatar_url {
-                avatarBtn.kf.setImage(with: URL(string: avatarURL), for: .normal)
+                avatarBtn.kf.setImage(with: URL(string: avatarURL), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"))
             }
             
             headerView.addSubviews([actionBtn, nameLabel, editTitleLabel, arrowImgView, avatarBtn])
@@ -147,7 +148,11 @@ class DMeViewController: BaseViewController {
                 make.centerY.equalTo(editTitleLabel)
             }
             avatarBtn.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
+                if #available(iOS 11, *) {
+                    make.centerY.equalToSuperview().offset((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)/2)
+                } else {
+                    make.centerY.equalToSuperview()
+                }
                 make.trailing.equalTo(-UIConstants.Margin.leading)
                 make.size.equalTo(CGSize(width: 70, height: 70))
             }
@@ -157,14 +162,18 @@ class DMeViewController: BaseViewController {
             
             signInLabel.snp.makeConstraints { make in
                 make.leading.equalTo(UIConstants.Margin.leading)
-                make.centerY.equalToSuperview()
+                make.centerY.equalTo(avatarBtn)
             }
             signInArrowImgView.snp.makeConstraints { make in
                 make.leading.equalTo(signInLabel.snp.trailing).offset(4.5)
                 make.centerY.equalTo(signInLabel)
             }
             avatarBtn.snp.makeConstraints { make in
-                make.centerY.equalToSuperview()
+                if #available(iOS 11, *) {
+                    make.centerY.equalToSuperview().offset((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)/2)
+                } else {
+                    make.centerY.equalToSuperview()
+                }
                 make.trailing.equalTo(-UIConstants.Margin.leading)
                 make.size.equalTo(CGSize(width: 70, height: 70))
             }
@@ -240,8 +249,9 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 1 {
             var value: String?
             if let balance = AuthorizationService.sharedInstance.user?.balance {
-                let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber())
-                value = string
+                if let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber()) {
+                    value = "氧育币" + string
+                }
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
         } else if indexPath.section == 2 {

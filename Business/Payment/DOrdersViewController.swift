@@ -79,6 +79,7 @@ class DOrdersViewController: BaseViewController {
         
         view.addSubviews([categoryView, tableView])
         categoryView.addSubviews([nonpaymentBtn, paymentBtn, categoryIndicatorImgView])
+        categoryView.drawSeparator(startPoint: CGPoint(x: 0, y: 46), endPoint: CGPoint(x: UIScreenWidth, y: 46))
         
         initHeaderView()
     }

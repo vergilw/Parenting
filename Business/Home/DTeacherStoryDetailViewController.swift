@@ -189,7 +189,7 @@ class DTeacherStoryDetailViewController: BaseViewController {
         
         if let avatarURL = storyModel?.story_teller?.avatar {
 //            avatarURL += "?imageMogr2/thumbnail/50x"
-            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL))
+            teacherAvatarImgView.kf.setImage(with: URL(string: avatarURL), placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         titleLabel.setParagraphText(storyModel?.title ?? "")
