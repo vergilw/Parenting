@@ -57,7 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
         
-        setupThirdPartyPlatforms()
         
         self.window = UIWindow()
         setupRootViewController()
@@ -67,15 +66,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.toolbarDoneBarButtonItemImage = UIImage(named: "public_dismissKeyboard")
         
         setupAudioSession()
-        
+        setupThirdPartyPlatforms()
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
         
-        
+        UIApplication.shared.applicationIconBadgeNumber = 0
         //FIXME: shutdown constraints log
 //        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        
-        
         
         return true
     }
@@ -116,7 +113,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UMSocialManager.default()?.setPlaform(.wechatSession, appKey: "wxc7c60047a9c75018", appSecret: "c5168f183fd20a038df632c1d6d4157e", redirectURL: "http://mobile.umeng.com/social")
         UMSocialGlobal.shareInstance()?.isUsingHttpsWhenShareContent = false
         
-        
 
         #if DEBUG
         Bugly.start(withAppId: "87773979f0", developmentDevice: true, config: nil)
@@ -125,11 +121,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         GeTuiSdk.start(withAppId: "VVsqPhssZX5kMkwXeMOp2", appKey: "1moSQ8HVzE6jbWhH0YRcI7", appSecret: "Sy2GYDFe9X8AEnhgbpbG76", delegate: self)
-        registerRemoteNotification()
+        
+        if AuthorizationService.sharedInstance.isSignIn() {
+            registerRemoteNotification()
+        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         PlayListService.sharedInstance.setupNowPlaying()
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {

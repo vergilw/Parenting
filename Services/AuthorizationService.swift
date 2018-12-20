@@ -39,7 +39,9 @@ class AuthorizationService {
     }
     
     @objc func signInDidSuccess() {
-        
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.registerRemoteNotification()
+        }
     }
     
     @objc func signOutDidSuccess() {

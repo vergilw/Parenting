@@ -9,8 +9,9 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
-import Kingfisher
 import Presentr
+import Kingfisher
+import StoreKit
 
 import UserNotifications
 
@@ -117,6 +118,13 @@ class PlayListService: NSObject {
     @objc func playToEndTimeAction() {
         guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex < sections.count - 1 else {
             isPlaying = false
+            
+        
+            if #available(iOS 10.3, *) {
+                if UIApplication.shared.applicationState == .active {
+                    SKStoreReviewController.requestReview()
+                }
+            }
             return
         }
         

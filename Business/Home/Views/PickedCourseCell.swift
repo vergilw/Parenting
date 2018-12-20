@@ -22,6 +22,7 @@ class PickedCourseCell: UICollectionViewCell {
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: width/16.0*9)))
         imgView.contentMode = .scaleAspectFill
+        imgView.image = UIImage(named: "public_coursePlaceholder")
         return imgView
     }()
     
@@ -138,7 +139,7 @@ class PickedCourseCell: UICollectionViewCell {
         if let URLString = model.cover_attribute?.service_url {
             let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
             let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
-            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
         }
         
 //        if let URLString = model.teacher?.headshot_attribute?.service_url {

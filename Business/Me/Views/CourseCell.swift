@@ -44,6 +44,7 @@ class CourseCell: UITableViewCell {
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
+        imgView.image = UIImage(named: "public_coursePlaceholder")
         return imgView
     }()
     
@@ -171,7 +172,6 @@ class CourseCell: UITableViewCell {
             make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
             make.centerY.equalTo(avatarImgView)
             make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
-            make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(12)
@@ -194,10 +194,16 @@ class CourseCell: UITableViewCell {
                 actionBtn.isHidden = true
                 priceLabel.isHidden = false
                 
-                priceLabel.snp.remakeConstraints { make in
-                    make.trailing.equalTo(-12)
-                    make.centerY.equalTo(avatarImgView)
-                }
+//                priceLabel.snp.remakeConstraints { make in
+//                    make.trailing.equalTo(-12)
+//                    make.centerY.equalTo(avatarImgView)
+//                }
+//                nameLabel.snp.remakeConstraints { make in
+//                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
+//                    make.centerY.equalTo(avatarImgView)
+//                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+//                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
+//                }
                 
             } else if mode == .favirotes {
                 actionBtn.isHidden = false
@@ -208,14 +214,27 @@ class CourseCell: UITableViewCell {
                     make.leading.equalTo(previewImgView.snp.trailing).offset(12).priority(.low)
                     make.centerY.equalTo(avatarImgView)
                 }
+                nameLabel.snp.remakeConstraints { make in
+                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
+                    make.centerY.equalTo(avatarImgView)
+                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
+                }
+                
             } else if mode == .owned {
                 actionBtn.isHidden = true
                 priceLabel.isHidden = true
                 
-//                priceLabel.snp.remakeConstraints { make in
-//                    make.trailing.equalTo(-12)
-//                    make.centerY.equalTo(avatarImgView)
-//                }
+                priceLabel.snp.remakeConstraints { make in
+                    make.trailing.equalTo(-12)
+                    make.centerY.equalTo(avatarImgView)
+                }
+                nameLabel.snp.remakeConstraints { make in
+                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
+                    make.centerY.equalTo(avatarImgView)
+                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
+                }
             }
             displayMode = mode
         }
@@ -245,7 +264,7 @@ class CourseCell: UITableViewCell {
         if let URLString = model?.cover_attribute?.service_url {
             let width: CGFloat = CourseCell.previewImgWidth()
             let processor = RoundCornerImageProcessor(cornerRadius: 4, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
-            previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
         }
         
         if let URLString = model?.teacher?.headshot_attribute?.service_url {

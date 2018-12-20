@@ -1062,6 +1062,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         let bannerImgView: UIImageView = {
             let imgView = UIImageView()
             imgView.contentMode = .scaleAspectFill
+            imgView.image = UIImage(named: "public_coursePlaceholder")
             return imgView
         }()
         
@@ -1128,7 +1129,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         }
         
         if let URLString = viewModel.courseModel?.cover_attribute?.service_url {
-            bannerImgView.kf.setImage(with: URL(string: URLString))
+            bannerImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"))
         }
         
         titleLabel.setParagraphText(viewModel.courseModel?.title ?? "")

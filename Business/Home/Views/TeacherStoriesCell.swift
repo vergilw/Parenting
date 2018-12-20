@@ -12,7 +12,9 @@ class TeacherStoriesCell: UITableViewCell {
 
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.contentMode = .scaleAspectFit
+        imgView.contentMode = .scaleAspectFill
+        imgView.image = UIImage(named: "public_coursePlaceholder")
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -28,7 +30,7 @@ class TeacherStoriesCell: UITableViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+        label.preferredMaxLayoutWidth = UIScreenWidth-35-35
         return label
     }()
     
@@ -98,7 +100,7 @@ class TeacherStoriesCell: UITableViewCell {
         
         if var URLString = model.cover_image?.service_url {
             URLString += "?imageMogr2/thumbnail/\(UIScreenWidth)x\(UIScreenWidth/16.0*9)"
-            previewImgView.kf.setImage(with: URL(string: URLString))
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"))
         }
         
         titleLabel.setParagraphText(model.title ?? "")
