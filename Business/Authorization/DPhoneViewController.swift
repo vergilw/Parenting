@@ -56,7 +56,7 @@ class DPhoneViewController: BaseViewController {
         }
         textField.delegate = self
         textField.returnKeyType = .next
-        textField.keyboardType = .phonePad
+        textField.keyboardType = .asciiCapableNumberPad
         textField.clearButtonMode = .whileEditing
         textField.font = UIConstants.Font.body
         textField.textColor = UIConstants.Color.head

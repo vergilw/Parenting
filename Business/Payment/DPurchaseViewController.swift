@@ -306,7 +306,7 @@ class DPurchaseViewController: BaseViewController {
             let alertController = UIAlertController(title: nil, message: "您的余额不足，请先充值", preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
-                let navigationController = BaseNavigationController(rootViewController: DPaymentViewController())
+                let navigationController = BaseNavigationController(rootViewController: DTopUpViewController())
                 self.present(navigationController, animated: true, completion: nil)
 //                self.navigationController?.pushViewController(DPaymentViewController(), animated: true)
             }))

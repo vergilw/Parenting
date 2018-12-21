@@ -89,6 +89,15 @@ extension String {
         return formatter
     }()
     
+    static let integerFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        formatter.minimumFractionDigits = 0
+        formatter.roundingMode = .ceiling
+        return formatter
+    }()
+    
     func encodingCount() -> Int {
         let encoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue))
         if let data: Data = data(using: String.Encoding(rawValue: encoding)) {

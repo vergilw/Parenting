@@ -10,9 +10,26 @@ import UIKit
 
 class TopUpItemCell: UICollectionViewCell {
     
-    lazy fileprivate var titleLabel: UILabel = {
+    lazy fileprivate var stackView: UIStackView = {
+        let view = UIStackView()
+        view.alignment = .center
+        view.axis = .vertical
+        view.distribution = .fillProportionally
+        view.spacing = 5
+        return view
+    }()
+    
+    lazy fileprivate var gainLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.primaryGreen
+        label.text = "0"
+        return label
+    }()
+    
+    lazy fileprivate var costLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.primaryGreen
         label.text = "0"
         return label
@@ -25,10 +42,16 @@ class TopUpItemCell: UICollectionViewCell {
         layer.borderColor = UIConstants.Color.primaryGreen.cgColor
         layer.borderWidth = 0.5
         
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
+        contentView.addSubview(stackView)
+        stackView.addArrangedSubview(gainLabel)
+        stackView.addArrangedSubview(costLabel)
+        
+        stackView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        
+        costLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        gainLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,60 +59,14 @@ class TopUpItemCell: UICollectionViewCell {
     }
     
     func setup(model: AdvanceModel) {
-        titleLabel.text = model.name
+        if let gain = model.wallet_amount {
+            gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
+        }
+        
+        if let cost = model.final_price {
+            costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "元"
+        }
+        
     }
 }
 
-/*
- lazy fileprivate var stackView: UIStackView = {
- let view = UIStackView()
- view.alignment = .center
- view.axis = .vertical
- view.distribution = .fillProportionally
- return view
- }()
- 
- lazy fileprivate var costLabel: UILabel = {
- let label = UILabel()
- label.font = UIConstants.Font.h2
- label.textColor = UIConstants.Color.head
- label.text = "0"
- return label
- }()
- 
- lazy fileprivate var gainLabel: UILabel = {
- let label = UILabel()
- label.font = UIConstants.Font.h2
- label.textColor = UIConstants.Color.primaryGreen
- label.text = "0"
- return label
- }()
- 
- override init(frame: CGRect) {
- super.init(frame: .zero)
- 
- layer.cornerRadius = 5
- layer.borderColor = UIConstants.Color.primaryGreen.cgColor
- layer.borderWidth = 0.5
- 
- contentView.addSubview(stackView)
- stackView.addArrangedSubview(costLabel)
- stackView.addArrangedSubview(gainLabel)
- 
- stackView.snp.makeConstraints { make in
- make.center.equalToSuperview()
- }
- 
- costLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
- gainLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
- }
- 
- required init?(coder aDecoder: NSCoder) {
- fatalError()
- }
- 
- func setup(model: AdvanceModel) {
- costLabel.text = model.final_price
- gainLabel.text = model.wallet_amount
- }
- */

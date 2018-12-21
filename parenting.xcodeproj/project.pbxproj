@@ -26,11 +26,14 @@
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
 		130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6221AFB978003E7645 /* StoryModel.swift */; };
 		130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6421AFBCD5003E7645 /* StoryAPI.swift */; };
+		130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43221CC83C30008259F /* DPaymentViewController.swift */; };
+		130DD43521CC863F0008259F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43421CC863F0008259F /* CategoryView.swift */; };
+		130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43621CCE27D0008259F /* RewardDetailsCell.swift */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
 		130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8B219BC26B004E1DD3 /* ActionButton.swift */; };
-		130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */; };
+		130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C8E219BF924004E1DD3 /* DTopUpViewController.swift */; };
 		130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */; };
 		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
@@ -164,11 +167,14 @@
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
 		130D8B6221AFB978003E7645 /* StoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryModel.swift; sourceTree = "<group>"; };
 		130D8B6421AFBCD5003E7645 /* StoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAPI.swift; sourceTree = "<group>"; };
+		130DD43221CC83C30008259F /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
+		130DD43421CC863F0008259F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		130DD43621CCE27D0008259F /* RewardDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardDetailsCell.swift; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		130F1C8B219BC26B004E1DD3 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
+		130F1C8E219BF924004E1DD3 /* DTopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTopUpViewController.swift; sourceTree = "<group>"; };
 		130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopUpItemCell.swift; sourceTree = "<group>"; };
 		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
@@ -333,9 +339,10 @@
 			isa = PBXGroup;
 			children = (
 				130F1C90219C0E5E004E1DD3 /* Views */,
-				130F1C8E219BF924004E1DD3 /* DPaymentViewController.swift */,
+				130F1C8E219BF924004E1DD3 /* DTopUpViewController.swift */,
 				1310F8DE219EA184004073FF /* DPurchaseViewController.swift */,
 				1310F8E0219EB06B004073FF /* DOrdersViewController.swift */,
+				130DD43221CC83C30008259F /* DPaymentViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -345,6 +352,7 @@
 			children = (
 				130F1C91219C0E8C004E1DD3 /* TopUpItemCell.swift */,
 				1310F8E2219EBB42004073FF /* OrderCell.swift */,
+				130DD43621CCE27D0008259F /* RewardDetailsCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -401,6 +409,7 @@
 				130C7CC221C0F8F0007C0344 /* WebViewController.swift */,
 				130C7CC421C10380007C0344 /* GuideViewController.swift */,
 				130B639921C7410100BE79A0 /* PriceLabel.swift */,
+				130DD43421CC863F0008259F /* CategoryView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -940,6 +949,7 @@
 				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
 				130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
+				130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
 				130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */,
@@ -1005,12 +1015,13 @@
 				13B7F72C21B68728001BF15D /* QNResumeUpload.m in Sources */,
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
-				130F1C8F219BF924004E1DD3 /* DPaymentViewController.swift in Sources */,
+				130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */,
 				13B7F6F221B67745001BF15D /* UploadService.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
+				130DD43521CC863F0008259F /* CategoryView.swift in Sources */,
 				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
 				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
@@ -1035,6 +1046,7 @@
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
 				132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */,
+				130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1191,7 +1203,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1214,7 +1226,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Profiles/BridgeHeader.h";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

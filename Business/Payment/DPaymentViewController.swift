@@ -2,7 +2,7 @@
 //  DPaymentViewController.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/11/14.
+//  Created by Vergil.Wang on 2018/12/21.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
@@ -10,78 +10,96 @@ import UIKit
 
 class DPaymentViewController: BaseViewController {
 
-    lazy fileprivate var advanceModels: [AdvanceModel]? = nil
-
-    lazy fileprivate var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
+    lazy fileprivate var contentView: CategoryView = {
+        var contentHeight: CGFloat = 0
         if #available(iOS 11, *) {
-            scrollView.contentInsetAdjustmentBehavior = .never
+            let safeTop: CGFloat = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)
+            let navigationHeight: CGFloat = (navigationController?.navigationBar.bounds.size.height ?? 0)
+            contentHeight = UIScreenHeight-safeTop-navigationHeight-46
+        } else {
+            let safeTop: CGFloat = UIStatusBarHeight
+            let navigationHeight: CGFloat = (navigationController?.navigationBar.bounds.size.height ?? 0)
+            contentHeight = UIScreenHeight-safeTop-navigationHeight-46
         }
-        scrollView.showsVerticalScrollIndicator = false
-        return scrollView
-    }()
-    
-    lazy fileprivate var balanceTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
-        label.text = "氧育币余额"
-        return label
-    }()
-    
-    lazy fileprivate var balanceValueLabel: PriceLabel = {
-        let label = PriceLabel()
-        label.font = UIConstants.Font.h1
-        label.textColor = UIConstants.Color.disable
-        return label
-    }()
-    
-    lazy fileprivate var topUpTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
-        label.text = "充值"
-        return label
-    }()
-    
-    lazy fileprivate var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-20)/3, height: 70)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.register(TopUpItemCell.self, forCellWithReuseIdentifier: TopUpItemCell.className())
-        view.dataSource = self
+        let view = CategoryView(distribution: UIStackView.Distribution.fillEqually, titles: ["氧育币", "金币"], childViews: [coinView, rewardView], contentHeight: contentHeight)
         view.delegate = self
+        return view
+    }()
+    
+    lazy fileprivate var coinView: UIView = {
+        let view = UIView()
         view.backgroundColor = .white
         return view
     }()
     
-    lazy fileprivate var indicatorBtn: ActionButton = {
-        let button = ActionButton()
-        button.setIndicatorColor(UIConstants.Color.primaryGreen)
-        button.isHidden = true
-        
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
-        let effectView = UIVisualEffectView(effect: blurEffect)
-        button.addSubview(effectView)
-        button.sendSubviewToBack(effectView)
-        effectView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-        }
-        return button
+    lazy fileprivate var rewardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
     }()
     
-    lazy fileprivate var footnoteLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.foot
-        label.numberOfLines = 0
-        label.setParagraphText("iOS与安卓设备因平台政策问题，充值后仅供苹果设备使用；\n氧育币只能用于购买氧育APP内的商品；\n氧育币充值后不可提现、转赠；")
+    lazy fileprivate var rewardTableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = .white
+        tableView.rowHeight = 118
+        tableView.register(RewardDetailsCell.self, forCellReuseIdentifier: RewardDetailsCell.className())
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.tableFooterView = UIView()
+        if #available(iOS 11, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+            tableView.estimatedRowHeight = 0
+            tableView.estimatedSectionHeaderHeight = 0
+            tableView.estimatedSectionFooterHeight = 0
+        }
+        
+//        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak tableView] in
+//            guard let tableView = tableView else { return }
+//
+//            self?.viewModel.fetchCourses(completion: { (code, next, models) in
+//                if code < 0 || next {
+//                    tableView.mj_footer.endRefreshing()
+//                } else {
+//                    tableView.mj_footer.endRefreshingWithNoMoreData()
+//                }
+//
+//                if let models = models, let index = self?.tableViews.firstIndex(of: tableView), let _ = self?.viewModel.coursesModels?[exist: index] {
+//                    self?.viewModel.coursesModels?[index].append(contentsOf: models)
+//                    tableView.reloadData()
+//                }
+//            })
+//        })
+//        tableView.mj_footer.isHidden = true
+        
+        return tableView
+    }()
+    
+    lazy fileprivate var coinBalanceLabel: PriceLabel = {
+        let label = PriceLabel()
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 30)!
+        label.textColor = .white
+        return label
+    }()
+    
+    lazy fileprivate var rewardBalanceLabel: PriceLabel = {
+        let label = PriceLabel()
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 30)!
+        label.textColor = .white
+        return label
+    }()
+    
+    lazy fileprivate var todayRewardLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
+        return label
+    }()
+    
+    lazy fileprivate var overallRewardLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h2
+        label.textColor = UIConstants.Color.head
         return label
     }()
     
@@ -90,144 +108,360 @@ class DPaymentViewController: BaseViewController {
 
         navigationItem.title = "支付中心"
         
-        if presentingViewController != nil {
-            initDismissBtn()
-        }
-        
         initContentView()
         initConstraints()
         addNotificationObservers()
         
         reload()
-        fetchData()
-        AuthorizationService.sharedInstance.updateUserInfo()
     }
     
     // MARK: - ============= Initialize View =============
-    func initContentView() {
-        view.addSubview(scrollView)
+    fileprivate func initContentView() {
+        view.addSubview(contentView)
         
-        scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
+        initCoinView()
+        rewardView.addSubview(rewardTableView)
+        initRewardHeaderView()
+        initRewardBottom()
+    }
+    
+    fileprivate func initCoinView() {
+        let coinContentView: UIView = {
+            let view = UIView()
+            //TODO: update background
+            view.backgroundColor = UIColor("#0fc4c6")
+            return view
+        }()
         
-        scrollView.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+        let balanceTitleLabel: ParagraphLabel = {
+            let label = ParagraphLabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = .white
+            label.text = "当前氧育币"
+            return label
+        }()
+        
+        let topUpBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.body
+            button.setTitle("充值", for: .normal)
+            button.addTarget(self, action: #selector(topUpBtnAction), for: .touchUpInside)
+            return button
+        }()
+        
+        let footnoteLabel: ParagraphLabel = {
+            let label = ParagraphLabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = .white
+            label.text = "仅可用于课程购买"
+            return label
+        }()
+        
+        coinView.addSubview(coinContentView)
+        coinContentView.addSubviews([coinBalanceLabel, balanceTitleLabel, topUpBtn, footnoteLabel])
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 15, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30, y: 96), color: .white)
+        
+        coinContentView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(20)
+            make.height.equalTo(146)
+        }
+        coinBalanceLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.top.equalTo(30)
+            make.height.equalTo(25)
+        }
+        balanceTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.top.equalTo(coinBalanceLabel.snp.bottom).offset(12)
+        }
+        footnoteLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.bottom.equalTo(-20)
+        }
+        topUpBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(-25)
+            make.bottom.equalTo(balanceTitleLabel)
+            make.size.equalTo(CGSize(width: 80, height: 35))
+        }
+    }
+    
+    fileprivate func initRewardHeaderView() {
+        let headerView: UIView = {
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 325)))
+            view.backgroundColor = .white
+            return view
+        }()
+        
+        let coinContentView: UIView = {
+            let view = UIView()
+            //TODO: update background
+            view.backgroundColor = UIColor("#0fc4c6")
+            return view
+        }()
+        
+        let balanceTitleLabel: ParagraphLabel = {
+            let label = ParagraphLabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = .white
+            label.text = "当前金币"
+            return label
+        }()
+        
+        let withdrawBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.body
+            button.setTitle("提现", for: .normal)
+            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            return button
+        }()
+        
+        let footnoteLabel: ParagraphLabel = {
+            let label = ParagraphLabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = .white
+            label.text = "100金币=1元=1氧育币"
+            return label
+        }()
+        
+        let exchangeBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(.white, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.foot
+            button.setTitle("去兑换 ", for: .normal)
+            button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            button.tintColor = .white
+            button.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
+//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            return button
+        }()
+        
+        
+        headerView.addSubview(coinContentView)
+        coinContentView.addSubviews([rewardBalanceLabel, balanceTitleLabel, withdrawBtn, footnoteLabel, exchangeBtn])
+        initOverallView(superview: headerView)
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 15, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30, y: 96), color: .white)
+        headerView.drawSeparator(startPoint: CGPoint(x: 0, y: 324.5), endPoint: CGPoint(x: UIScreenWidth, y: 324.5))
+        
+        coinContentView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(20)
+            make.height.equalTo(146)
+        }
+        rewardBalanceLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.top.equalTo(30)
+            make.height.equalTo(25)
+        }
+        balanceTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.top.equalTo(rewardBalanceLabel.snp.bottom).offset(12)
+        }
+        footnoteLabel.snp.makeConstraints { make in
+            make.leading.equalTo(25)
+            make.bottom.equalTo(-20)
+        }
+        withdrawBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(-25)
+            make.bottom.equalTo(balanceTitleLabel)
+            make.size.equalTo(CGSize(width: 80, height: 35))
+        }
+        exchangeBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(-25)
+            make.centerY.equalTo(footnoteLabel)
+            make.size.equalTo(CGSize(width: 80, height: 35))
+        }
+        
+        rewardTableView.tableHeaderView = headerView
+    }
+    
+    fileprivate func initOverallView(superview: UIView) {
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .fill
+            view.axis = .horizontal
+            view.distribution = .fillEqually
+            view.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 58)), cornerRadius: 29, color: UIConstants.Color.background)
+            return view
+        }()
+        
+        let todayStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
+        }()
+        
+        let overallStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
+        }()
+        
+        let todayTitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = UIConstants.Color.foot
+            label.text = "今日金币"
+            return label
+        }()
+        
+        let overallTitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = UIConstants.Color.foot
+            label.text = "累计金币"
+            return label
+        }()
+        
+        let footnoteLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.foot
+            label.textColor = UIConstants.Color.foot
+            label.text = "金币收支明细"
+            return label
+        }()
+        
+        stackView.addArrangedSubview(todayStackView)
+        stackView.addArrangedSubview(overallStackView)
+        todayStackView.addArrangedSubview(todayRewardLabel)
+        todayStackView.addArrangedSubview(todayTitleLabel)
+        overallStackView.addArrangedSubview(overallRewardLabel)
+        overallStackView.addArrangedSubview(overallTitleLabel)
+        
+        superview.addSubviews([stackView, footnoteLabel])
+        footnoteLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(-26)
+        }
+        stackView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.height.equalTo(58)
+            make.bottom.equalTo(footnoteLabel.snp.top).offset(-26)
+        }
+    }
+    
+    fileprivate func initRewardBottom() {
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 18
+            view.layoutMargins = UIEdgeInsets(top: 7.5, left: UIConstants.Margin.leading, bottom: 7.5, right: UIConstants.Margin.trailing)
+            view.isLayoutMarginsRelativeArrangement = true
+            return view
+        }()
+        
+        let rankBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.h2
+            button.setTitle("收入排行", for: .normal)
+            button.layer.cornerRadius = 20
+            button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
+            button.layer.borderWidth = 1
+//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            return button
+        }()
+        
+        let shareBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.h2
+            button.setTitle("Marvel", for: .normal)
+            button.layer.cornerRadius = 20
+            button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
+            button.layer.borderWidth = 1
+            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            return button
+        }()
+        
+        stackView.addArrangedSubview(rankBtn)
+        stackView.addArrangedSubview(shareBtn)
+        shareBtn.widthAnchor.constraint(equalToConstant: 193).isActive = true
+        
+        rewardView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            if #available(iOS 11.0, *) {
+                make.height.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)+55)
+            } else {
+                make.height.equalTo(55)
+            }
+            make.top.equalTo(rewardTableView.snp.bottom)
+        }
     }
     
     // MARK: - ============= Constraints =============
-    func initConstraints() {
-        scrollView.snp.makeConstraints { make in
+    fileprivate func initConstraints() {
+        contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        balanceTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(60)
-        }
-        balanceValueLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(balanceTitleLabel.snp.bottom).offset(32)
-        }
-        topUpTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(balanceValueLabel.snp.bottom).offset(94)
-        }
-        collectionView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(topUpTitleLabel.snp.bottom).offset(32)
-            make.height.equalTo(150)
-            make.width.equalTo(UIScreenWidth)
-        }
-        indicatorBtn.snp.makeConstraints { make in
-            make.edges.equalTo(collectionView)
-        }
-        footnoteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(collectionView.snp.bottom).offset(25)
-            make.bottom.equalTo(-25)
+        rewardTableView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
         }
     }
     
     // MARK: - ============= Notification =============
-    func addNotificationObservers() {
+    fileprivate func addNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
-    func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.view)
-        
-        PaymentProvider.request(.advances, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
-            if code >= 0 {
-                if let data = JSON?["advances"] as? [[String: Any]] {
-                    self.advanceModels = [AdvanceModel].deserialize(from: data) as? [AdvanceModel]
-                    self.collectionView.reloadData()
-                }
-                
-            } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
-                    self?.fetchData()
-                }
-            }
-        }))
-        
-    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
-            balanceValueLabel.textColor = UIConstants.Color.primaryOrange
-            balanceValueLabel.setPriceText(text: balance, discount: nil)
+            coinBalanceLabel.setPriceText(text: balance, discount: nil)
         }
-        
     }
     
     // MARK: - ============= Action =============
+    @objc func topUpBtnAction() {
+        navigationController?.pushViewController(DTopUpViewController(), animated: true)
+    }
 }
 
 
-extension DPaymentViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return advanceModels?.count ?? 0
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        if let index = tableViews.firstIndex(of: tableView) {
+//            return viewModel.coursesModels?[exist: index]?.count ?? 0
+//        }
+        return 3
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopUpItemCell.className(), for: indexPath) as! TopUpItemCell
-        if let model = advanceModels?[indexPath.row] {
-            cell.setup(model: model)
-        }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: RewardDetailsCell.className(), for: indexPath) as! RewardDetailsCell
+//        if let index = tableViews.firstIndex(of: tableView) {
+//            if let models = viewModel.coursesModels?[exist: index], let model = models[exist: indexPath.row] {
+//                cell.setup(mode: CourseCell.CellDisplayMode.default, model: model)
+//            }
+//        }
+        cell.setup()
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        guard let models = advanceModels else { return }
-        
-        if let model = advanceModels?[exist: indexPath.row], let productID = model.apple_product_id {
-            indicatorBtn.startAnimating()
-            indicatorBtn.isHidden = false
-            PaymentService.sharedInstance.purchaseProduct(productID: productID, models: models, complete: { (status) in
-                self.indicatorBtn.isHidden = true
-                self.indicatorBtn.stopAnimating()
-                
-                if status {
-                    HUDService.sharedInstance.show(string: "已成功充值")
-                    if self.presentingViewController != nil {
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    
-                } else {
-//                    HUDService.sharedInstance.show(string: "充值失败")
-                    let alertController = UIAlertController(title: nil, message: "未能成功充值，请稍后重试", preferredStyle: UIAlertController.Style.alert)
-                    alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
-                    self.present(alertController, animated: true, completion: nil)
-                }
-            })
-        }
-    }
+}
+
+
+extension DPaymentViewController: CategoryDelegate {
     
+    func contentView(_ contentView: UIView, didScrollRowAt index: Int) {
+        
+    }
 }
