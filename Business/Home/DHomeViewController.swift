@@ -19,8 +19,8 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var section0FooterHeight: CGFloat = 10 + 42 + 60
     lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 30
     lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-    lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
-    lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 10 + 37
+    lazy fileprivate var item0Height: CGFloat = 4.5 + itemWidth/16.0*9 + 10 + 12 + 7 + 37
+    lazy fileprivate var item1Height: CGFloat = 4.5 + itemWidth/16.0*9 + 10 + 37
     lazy fileprivate var item0Spacing: CGFloat = 22
     lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
     

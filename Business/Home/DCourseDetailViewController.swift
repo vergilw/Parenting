@@ -507,8 +507,21 @@ class DCourseDetailViewController: BaseViewController {
         }
     }
     
+    fileprivate func rewardShare() {
+//        HUDService.sharedInstance.showFetchingView(target: self.view)
+        self.viewModel.shareReward(completion: { (code) in
+//            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            if code >= 0 {
+//                self.reload()
+                
+            }
+        })
+    }
+    
     // MARK: - ============= Reload =============
     @objc func reload() {
+        reloadNavigationItem()
+        
         tableView.reloadData()
         
         setupHeaderView()
@@ -566,8 +579,22 @@ class DCourseDetailViewController: BaseViewController {
         let shareBarBtn: UIButton = {
             let img = UIImage(named: "public_shareBarItem")!.withRenderingMode(.alwaysOriginal)
             let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 10+img.size.width+UIConstants.Margin.trailing, height: 44)))
-            button.setImage(img, for: .normal)
-            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(UIConstants.Margin.trailing-10)/2, bottom: 0, right: (UIConstants.Margin.trailing-10)/2)
+            
+            if viewModel.courseModel?.rewardable == true {
+                let img = YYImage(named: "public_shareRewardAnimation")!
+                let imgView = YYAnimatedImageView(image: img)
+                button.addSubview(imgView)
+                imgView.snp.makeConstraints { make in
+                    make.centerY.equalToSuperview()
+                    make.trailing.equalTo(-UIConstants.Margin.trailing)
+                    make.width.equalTo(22)
+                    make.height.equalTo(22)
+                }
+            } else {
+                button.setImage(img, for: .normal)
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(UIConstants.Margin.trailing-10)/2, bottom: 0, right: (UIConstants.Margin.trailing-10)/2)
+            }
+            
             button.addTarget(self, action: #selector(shareBarItemAction), for: .touchUpInside)
             return button
         }()
@@ -740,7 +767,20 @@ class DCourseDetailViewController: BaseViewController {
         
     }
     
-    @objc func shareBarItemAction() {
+    @objc func shareBarItemAction(isAlertHidden: Bool = false) {
+        if isAlertHidden == false && viewModel.courseModel?.rewardable == true && !AuthorizationService.sharedInstance.isSignIn() {
+            let alertController = UIAlertController(title: nil, message: "登录后分享可以获得赏金，是否去登录", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "去分享", style: UIAlertAction.Style.default, handler: { (action) in
+                self.shareBarItemAction(isAlertHidden: true)
+            }))
+            alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.default, handler: { (action) in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        }
+        
         guard let shareURL = viewModel.courseModel?.share_url else {
             HUDService.sharedInstance.show(string: "分享信息缺失")
             return
@@ -751,7 +791,7 @@ class DCourseDetailViewController: BaseViewController {
         let imgURL: String = self.viewModel.courseModel?.cover_attribute?.service_url ?? ""
         
         let shareView = ShareView()
-        shareView.shareClosure = { [weak shareView] shareType in
+        shareView.shareClosure = { [weak shareView, weak self] shareType in
             if shareType == .wechatSession {
                 
                 let shareObj = UMShareWebpageObject.shareObject(withTitle: title, descr: descr, thumImage: imgURL)
@@ -761,6 +801,9 @@ class DCourseDetailViewController: BaseViewController {
                     if let response = result as? UMSocialShareResponse {
                         if let status = response.originalResponse as? Int, status == 0 {
                             HUDService.sharedInstance.show(string: "分享完成")
+                            
+                            //TODO: reward
+                            self?.rewardShare()
                         } else {
                             HUDService.sharedInstance.show(string: "分享失败")
                         }

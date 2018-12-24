@@ -36,7 +36,7 @@ class DCourseDetailViewModel {
     
     func fetchComments(completion: @escaping (_ status: Bool, _ next: Bool)->Void) {
         CourseProvider.request(.comments(courseID: courseID, page: commentPage), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if let JSON = JSON, code != -1 {
+            if let JSON = JSON, code >= 0 {
                 if self.commentModel == nil {
                     self.commentModel = [CommentModel].deserialize(from: JSON["comments"] as! [[String: Any]]) as? [CommentModel]
                 } else {
@@ -64,7 +64,7 @@ class DCourseDetailViewModel {
     
     func fetchMyComment(completion: @escaping (Bool)->Void) {
         CourseProvider.request(.my_comment(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code != -1 {
+            if code >= 0 {
                 self.myCommentModel = CommentModel.deserialize(from: JSON?["comments"] as? [String: Any])
                 completion(true)
             } else {
@@ -80,6 +80,16 @@ class DCourseDetailViewModel {
                 completion(code, isFavorite)
             } else {
                 completion(code, false)
+            }
+        }))
+    }
+    
+    func shareReward(completion: @escaping (Int)->Void) {
+        RewardCoinProvider.request(.reward(courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            if code >= 0 {
+                completion(code)
+            } else {
+                completion(code)
             }
         }))
     }

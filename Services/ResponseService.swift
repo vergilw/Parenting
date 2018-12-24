@@ -33,7 +33,7 @@ class ResponseService {
                     }
                 }
                 
-                if response.statusCode == 200 {
+                if response.statusCode >= 200 && response.statusCode < 300 {
                     
                     do {
                         let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]

@@ -33,6 +33,13 @@ class PickedCourseCell: UICollectionViewCell {
         return imgView
     }()
     
+    lazy fileprivate var rewardMarkImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_rewardMark")
+        imgView.isHidden = true
+        return imgView
+    }()
+    
     lazy fileprivate var footnoteLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
@@ -68,7 +75,7 @@ class PickedCourseCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubviews([previewImgView, titleLabel, nameLabel])
+        contentView.addSubviews([previewImgView, rewardMarkImgView, titleLabel, nameLabel])
         
 //        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
 //        let height = width/16.0*9
@@ -82,8 +89,13 @@ class PickedCourseCell: UICollectionViewCell {
     fileprivate func initConstraints() {
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         previewImgView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            make.top.equalTo(4.5)
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(width/16.0*9)
+        }
+        rewardMarkImgView.snp.makeConstraints { make in
+            make.leading.equalTo(20)
+            make.top.equalToSuperview()
         }
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(10)
@@ -133,6 +145,12 @@ class PickedCourseCell: UICollectionViewCell {
                 }
             }
             
+        }
+        
+        if model.rewardable == true {
+            rewardMarkImgView.isHidden = false
+        } else {
+            rewardMarkImgView.isHidden = true
         }
         
         

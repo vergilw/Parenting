@@ -48,6 +48,13 @@ class CourseCell: UITableViewCell {
         return imgView
     }()
     
+    lazy fileprivate var rewardMarkImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_rewardMark")
+        imgView.isHidden = true
+        return imgView
+    }()
+    
     lazy fileprivate var footnoteLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
@@ -122,7 +129,7 @@ class CourseCell: UITableViewCell {
         contentView.backgroundColor = UIConstants.Color.background
         
         contentView.addSubview(panelView)
-        panelView.addSubviews([shadowImgView, previewImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn])
+        panelView.addSubviews([shadowImgView, previewImgView, rewardMarkImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn])
         
         previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
         
@@ -137,7 +144,7 @@ class CourseCell: UITableViewCell {
         panelView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading+10)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(20)
+            make.top.equalTo(24.5)
             make.bottom.equalTo(-20)
         }
         footnoteLabel.snp.makeConstraints { make in
@@ -161,6 +168,10 @@ class CourseCell: UITableViewCell {
             let imgWidth = CourseCell.previewImgWidth()
             make.width.equalTo(imgWidth)
             make.height.equalTo(imgWidth/16.0*9)
+        }
+        rewardMarkImgView.snp.makeConstraints { make in
+            make.leading.equalTo(10)
+            make.top.equalTo(-14.5)
         }
         
         avatarImgView.snp.makeConstraints { make in
@@ -261,6 +272,13 @@ class CourseCell: UITableViewCell {
         }
         
         
+        if model?.rewardable == true {
+            rewardMarkImgView.isHidden = false
+        } else {
+            rewardMarkImgView.isHidden = true
+        }
+    
+        
         if let URLString = model?.cover_attribute?.service_url {
             let width: CGFloat = CourseCell.previewImgWidth()
             let processor = RoundCornerImageProcessor(cornerRadius: 4, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
@@ -308,6 +326,6 @@ class CourseCell: UITableViewCell {
     }
     
     class func cellHeight() -> CGFloat {
-        return 10 + previewImgWidth()/16.0*9 + 12 + 22 + 20 + 20
+        return 10 + 4.5 + previewImgWidth()/16.0*9 + 12 + 22 + 20 + 20
     }
 }

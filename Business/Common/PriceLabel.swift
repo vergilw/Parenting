@@ -67,4 +67,15 @@ class PriceLabel: UILabel {
             layer.addSublayer(strikethroughLayer!)
         }
     }
+    
+    func setStatisticText(string: String) {
+        guard let string = Float(string) else { return }
+        
+        if string < 1000 {
+            setPriceText(text: String(string))
+            return
+        }
+        
+        text = String(format: "%.3fk", string/1000.0)
+    }
 }

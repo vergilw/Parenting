@@ -128,9 +128,14 @@ class DPaymentViewController: BaseViewController {
     fileprivate func initCoinView() {
         let coinContentView: UIView = {
             let view = UIView()
-            //TODO: update background
-            view.backgroundColor = UIColor("#0fc4c6")
+            view.clipsToBounds = false
             return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "payment_coinGradientBg")
+            return imgView
         }()
         
         let balanceTitleLabel: ParagraphLabel = {
@@ -143,9 +148,11 @@ class DPaymentViewController: BaseViewController {
         
         let topUpBtn: UIButton = {
             let button = UIButton()
+            button.setBackgroundImage(UIImage(named: "payment_topUpBtnShadow"), for: .normal)
             button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
             button.titleLabel?.font = UIConstants.Font.body
             button.setTitle("充值", for: .normal)
+            button.titleEdgeInsets = UIEdgeInsets(top: -2.5, left: 0, bottom: 2.5, right: 0)
             button.addTarget(self, action: #selector(topUpBtnAction), for: .touchUpInside)
             return button
         }()
@@ -159,14 +166,21 @@ class DPaymentViewController: BaseViewController {
         }()
         
         coinView.addSubview(coinContentView)
-        coinContentView.addSubviews([coinBalanceLabel, balanceTitleLabel, topUpBtn, footnoteLabel])
-        coinContentView.drawSeparator(startPoint: CGPoint(x: 15, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30, y: 96), color: .white)
+        coinContentView.addSubviews([bgImgView, coinBalanceLabel, balanceTitleLabel, topUpBtn, footnoteLabel])
+        
+        let shadowWidth: CGFloat = 720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2)*20/2
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 15+shadowWidth, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30-shadowWidth*2, y: 96), color: .white)
         
         coinContentView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(20)
             make.height.equalTo(146)
+        }
+        bgImgView.snp.makeConstraints { make in
+            make.top.centerX.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(350/290.0)
+            make.width.equalToSuperview().multipliedBy(720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2))
         }
         coinBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -182,9 +196,9 @@ class DPaymentViewController: BaseViewController {
             make.bottom.equalTo(-20)
         }
         topUpBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(-25)
-            make.bottom.equalTo(balanceTitleLabel)
-            make.size.equalTo(CGSize(width: 80, height: 35))
+            make.trailing.equalTo(-22.5)
+            make.bottom.equalTo(balanceTitleLabel).offset(5)
+            make.size.equalTo(CGSize(width: 85, height: 40))
         }
     }
     
@@ -197,9 +211,14 @@ class DPaymentViewController: BaseViewController {
         
         let coinContentView: UIView = {
             let view = UIView()
-            //TODO: update background
-            view.backgroundColor = UIColor("#0fc4c6")
+            view.clipsToBounds = false
             return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "payment_rewardGradientBg")
+            return imgView
         }()
         
         let balanceTitleLabel: ParagraphLabel = {
@@ -212,10 +231,12 @@ class DPaymentViewController: BaseViewController {
         
         let withdrawBtn: UIButton = {
             let button = UIButton()
+            button.setBackgroundImage(UIImage(named: "payment_withdrawBtnShadow"), for: .normal)
             button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
             button.titleLabel?.font = UIConstants.Font.body
             button.setTitle("提现", for: .normal)
             //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.titleEdgeInsets = UIEdgeInsets(top: -2.5, left: 0, bottom: 2.5, right: 0)
             return button
         }()
         
@@ -235,15 +256,17 @@ class DPaymentViewController: BaseViewController {
             button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(.alwaysTemplate), for: .normal)
             button.tintColor = .white
             button.semanticContentAttribute = UISemanticContentAttribute.forceRightToLeft
-//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(exchangeBtnAction), for: .touchUpInside)
             return button
         }()
         
         
         headerView.addSubview(coinContentView)
-        coinContentView.addSubviews([rewardBalanceLabel, balanceTitleLabel, withdrawBtn, footnoteLabel, exchangeBtn])
+        coinContentView.addSubviews([bgImgView, rewardBalanceLabel, balanceTitleLabel, withdrawBtn, footnoteLabel, exchangeBtn])
         initOverallView(superview: headerView)
-        coinContentView.drawSeparator(startPoint: CGPoint(x: 15, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30, y: 96), color: .white)
+        
+        let shadowWidth: CGFloat = 720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2)*20/2
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 15+shadowWidth, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30-shadowWidth*2, y: 96), color: .white)
         headerView.drawSeparator(startPoint: CGPoint(x: 0, y: 324.5), endPoint: CGPoint(x: UIScreenWidth, y: 324.5))
         
         coinContentView.snp.makeConstraints { make in
@@ -251,6 +274,11 @@ class DPaymentViewController: BaseViewController {
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(20)
             make.height.equalTo(146)
+        }
+        bgImgView.snp.makeConstraints { make in
+            make.top.centerX.equalToSuperview()
+            make.height.equalToSuperview().multipliedBy(350/290.0)
+            make.width.equalToSuperview().multipliedBy(720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2))
         }
         rewardBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -266,14 +294,14 @@ class DPaymentViewController: BaseViewController {
             make.bottom.equalTo(-20)
         }
         withdrawBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(-25)
+            make.trailing.equalTo(-22.5)
             make.bottom.equalTo(balanceTitleLabel)
-            make.size.equalTo(CGSize(width: 80, height: 35))
+            make.size.equalTo(CGSize(width: 85, height: 40))
         }
         exchangeBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(-25)
+            make.trailing.equalTo(-22.5)
             make.centerY.equalTo(footnoteLabel)
-            make.size.equalTo(CGSize(width: 80, height: 35))
+            make.size.equalTo(CGSize(width: 85, height: 40))
         }
         
         rewardTableView.tableHeaderView = headerView
@@ -369,7 +397,7 @@ class DPaymentViewController: BaseViewController {
             button.layer.cornerRadius = 20
             button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
             button.layer.borderWidth = 1
-//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(rankingBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -428,6 +456,14 @@ class DPaymentViewController: BaseViewController {
     // MARK: - ============= Action =============
     @objc func topUpBtnAction() {
         navigationController?.pushViewController(DTopUpViewController(), animated: true)
+    }
+    
+    @objc func exchangeBtnAction() {
+        navigationController?.pushViewController(DExchangeViewController(), animated: true)
+    }
+    
+    @objc func rankingBtnAction() {
+        navigationController?.pushViewController(DRewardRankingViewController(), animated: true)
     }
 }
 
