@@ -28,7 +28,7 @@ class PriceLabel: UILabel {
         return super.intrinsicContentSize
     }
 
-    func setPriceText(text: String, discount: Float? = nil) {
+    func setPriceText(text: String, symbol: String? = nil, discount: Float? = nil) {
         if let strikethroughLayer = strikethroughLayer {
             strikethroughLayer.removeFromSuperlayer()
             self.strikethroughLayer = nil
@@ -41,12 +41,18 @@ class PriceLabel: UILabel {
         }
         
         var text: String = "\(formatterText)"
+        if let symbol = symbol {
+            text = " \(symbol)\(text)"
+        }
         if let formatterDiscount = formatterDiscount {
             text = " \(formatterDiscount)  \(text)"
         }
         
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttributes([NSAttributedString.Key.font: font], range: NSRange(location: 0, length: attributedString.length))
+        if let symbol = symbol {
+            attributedString.addAttributes([NSAttributedString.Key.baselineOffset: (font.lineHeight-singlelineHeight(font: font))/4], range: NSString(string: text).range(of: symbol))
+        }
         if let formatterDiscount = formatterDiscount {
             attributedString.addAttributes([NSAttributedString.Key.font : UIConstants.Font.foot, NSAttributedString.Key.foregroundColor: UIColor("#cacaca")], range: NSString(string: text).range(of: " \(formatterDiscount) "))
         }
@@ -77,5 +83,27 @@ class PriceLabel: UILabel {
         }
         
         text = String(format: "%.3fk", string/1000.0)
+    }
+    
+    fileprivate func singlelineHeight(font: UIFont) -> CGFloat {
+        var lineHeight: CGFloat = 0
+        if font == UIConstants.Font.h1 {
+            lineHeight = UIConstants.LineHeight.h1
+            
+        } else if font == UIConstants.Font.h2 {
+            lineHeight = UIConstants.LineHeight.h2
+            
+        } else if font == UIConstants.Font.h3 {
+            lineHeight = UIConstants.LineHeight.h3
+            
+        } else if font == UIConstants.Font.body {
+            lineHeight = UIConstants.LineHeight.body
+            
+        } else if font == UIConstants.Font.foot {
+            lineHeight = UIConstants.LineHeight.foot
+        } else {
+            lineHeight = font.pointSize
+        }
+        return lineHeight
     }
 }

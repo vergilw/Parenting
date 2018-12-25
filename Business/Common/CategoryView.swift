@@ -119,6 +119,7 @@ class CategoryView: UIView {
             childView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
             childView.widthAnchor.constraint(equalToConstant: width).isActive = true
         }
+        self.childViews = childViews
         
         initConstraints()
     }

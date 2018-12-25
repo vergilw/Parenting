@@ -99,9 +99,9 @@ extension CourseAPI: TargetType {
         case .course_section:
             return .requestPlain
         case let .comments(courseID, page):
-            return .requestParameters(parameters: ["type":"course", "type_id":courseID, "page":page], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["commentable_type":"Course", "commentable_id":courseID, "page":page], encoding: URLEncoding.default)
         case let .my_comment(courseID):
-            return .requestParameters(parameters: ["type":"course", "type_id":courseID], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["commentable_type":"Course", "commentable_id":courseID], encoding: URLEncoding.default)
         case let .post_comment(courseID, starsCount, content):
             var parameters: [String: Any] = ["[comment]commentable_type":"Course", "[comment]commentable_id":courseID, "[comment]star":starsCount]
             if let content = content {

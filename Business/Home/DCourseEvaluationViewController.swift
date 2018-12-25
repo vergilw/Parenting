@@ -83,9 +83,9 @@ class DCourseEvaluationViewController: BaseViewController {
     
     lazy fileprivate var selectedStarsCount: Int = 0
     
-    fileprivate var completionBlock: ((CommentModel)->())?
+    fileprivate var completionBlock: ((CommentModel, Float?)->())?
     
-    init(courseID: Int, model: CommentModel?, completion: @escaping (_ model: CommentModel)->()) {
+    init(courseID: Int, model: CommentModel?, completion: ((_ model: CommentModel, _ rewardValue: Float?)->())?) {
         super.init(nibName: nil, bundle: nil)
         
         self.courseID = courseID
@@ -283,14 +283,21 @@ class DCourseEvaluationViewController: BaseViewController {
         }
         
         CourseProvider.request(.post_comment(courseID: courseID, starsCount: selectedStarsCount, content: textView.text), completion: ResponseService.sharedInstance.response(completion: { [weak self] (code, JSON) in
-            if code != -1 {
-                HUDService.sharedInstance.show(string: "您已成功提交评价")
-                //let model = CommentModel.deserialize(from: JSON),
+            if code >= 0 {
+                
                 if let block = self?.completionBlock {
                     let model = CommentModel()
                     model.star = self?.selectedStarsCount
                     model.content = self?.textView.text
-                    block(model)
+                    
+                    if let rewardValue = JSON?["reward"] as? Float {
+                        block(model, rewardValue)
+                    } else {
+                        HUDService.sharedInstance.show(string: "您已成功提交评价")
+                        
+                        block(model, nil)
+                    }
+                    
                 }
                 self?.dismissBtnAction()
             }

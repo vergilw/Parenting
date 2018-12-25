@@ -36,7 +36,7 @@ class DTeacherStoriesViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.fetchData()
+            self?.fetchMoreData()
         })
         tableView.mj_footer.isHidden = true
         
@@ -62,17 +62,21 @@ class DTeacherStoriesViewController: BaseViewController {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         
         StoryProvider.request(.stories(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
             HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
             if code >= 0 {
                 if let data = JSON?["data"] as? [[String: Any]] {
-                    self.storyModels = [StoryModel].deserialize(from: data) as? [StoryModel]
+                    if let models = [StoryModel].deserialize(from: data) as? [StoryModel] {
+                        self.storyModels = models
+                    }
                     self.tableView.reloadData()
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
                             self.tableView.mj_footer.isHidden = false
-                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            self.tableView.mj_footer.resetNoMoreData()
                             
                         } else {
                             self.tableView.mj_footer.isHidden = true
@@ -84,6 +88,33 @@ class DTeacherStoriesViewController: BaseViewController {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchData()
                 }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        StoryProvider.request(.stories(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.tableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["data"] as? [[String: Any]] {
+                    if let models = [StoryModel].deserialize(from: data) as? [StoryModel] {
+                        self.storyModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.endRefreshing()
+                        } else {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
             }
         }))
     }

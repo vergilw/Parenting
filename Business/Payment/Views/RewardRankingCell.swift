@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class RewardRankingCell: UITableViewCell {
 
@@ -105,7 +106,7 @@ class RewardRankingCell: UITableViewCell {
         }
     }
     
-    func setup(index: Int) {
+    func setup(index: Int, model: RewardRankingModel) {
         if index < 3 {
             sequenceLabel.isHidden = true
             sequenceImgView.isHidden = false
@@ -116,10 +117,13 @@ class RewardRankingCell: UITableViewCell {
             sequenceLabel.text = "\(index)"
         }
         
+        if let URLString = model.user?.avatar_url {
+            let processor = RoundCornerImageProcessor(cornerRadius: 22.5, targetSize: CGSize(width: 45, height: 45))
+            avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
+        }
         
-        nameLabel.text = "周子辰"
+        nameLabel.text = model.user?.name
         
-        
-        valueLabel.setStatisticText(string: "134524.34")
+        valueLabel.setStatisticText(string: model.income_amount ?? "")
     }
 }

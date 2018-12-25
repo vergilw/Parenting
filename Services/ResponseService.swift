@@ -57,7 +57,14 @@ class ResponseService {
                 } else {
                     do {
                         let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]
-                        HUDService.sharedInstance.show(string: JSON?["message"] as! String)
+                        
+                        if let errorMsg = JSON?["message"] as? String {
+                            #if DEBUG
+                            print("\(errorMsg)")
+                            #endif
+                            HUDService.sharedInstance.show(string: errorMsg)
+                        }
+                        
                         completion(-1, nil)
                     } catch {
                         HUDService.sharedInstance.show(string: "服务端错误")

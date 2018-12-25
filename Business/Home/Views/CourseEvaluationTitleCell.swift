@@ -29,6 +29,22 @@ class CourseEvaluationTitleCell: UITableViewCell {
         return button
     }()
     
+    lazy fileprivate var animationActionBtn: UIButton = {
+        let button = UIButton()
+        
+        let img = YYImage(named: "course_commentRewardAnimation")!
+        let imgView = YYAnimatedImageView(image: img)
+        button.addSubview(imgView)
+        imgView.snp.makeConstraints { make in
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(CGSize(width: 77.5, height: 20))
+        }
+        
+        button.addTarget(self, action: #selector(evaluationBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -47,7 +63,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
         
         contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
         
-        contentView.addSubviews([titleLabel, actionBtn])
+        contentView.addSubviews([titleLabel, actionBtn, animationActionBtn])
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
             make.top.equalTo(32)
@@ -59,17 +75,33 @@ class CourseEvaluationTitleCell: UITableViewCell {
             make.width.equalTo(60+contentView.layoutMargins.right*2)
             make.height.equalTo(44)
         }
+        animationActionBtn.snp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.trailing.equalToSuperview()
+            make.width.equalTo(77.5+contentView.layoutMargins.right*2)
+            make.height.equalTo(44)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
     
-    func setup(isEvaluate: Bool) {
+    func setup(isEvaluate: Bool, isAnimation: Bool = false) {
+        
         if isEvaluate {
+            actionBtn.isHidden = false
+            animationActionBtn.isHidden = true
             actionBtn.setTitle("我的评价", for: .normal)
         } else {
-            actionBtn.setTitle("我要评价", for: .normal)
+            if isAnimation {
+                actionBtn.isHidden = true
+                animationActionBtn.isHidden = false
+            } else {
+                actionBtn.isHidden = false
+                animationActionBtn.isHidden = true
+                actionBtn.setTitle("我要评价", for: .normal)
+            }
         }
     }
     

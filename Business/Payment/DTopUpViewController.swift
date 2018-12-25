@@ -105,11 +105,31 @@ class DTopUpViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
+        initNavigationItem()
+        
         view.addSubview(scrollView)
         
         scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
         
         scrollView.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+    }
+    
+    fileprivate func initNavigationItem() {
+        let detailsBtn: ActionButton = {
+            let button = ActionButton()
+            button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
+            button.setIndicatorColor(UIConstants.Color.primaryRed)
+            button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.h2_regular
+            button.setTitle("记录", for: .normal)
+            button.addTarget(self, action: #selector(detailsBtnAction), for: .touchUpInside)
+            return button
+        }()
+        
+        let barBtnItem = UIBarButtonItem(customView: detailsBtn)
+        barBtnItem.width = 34+50
+        navigationItem.rightBarButtonItem = barBtnItem
+        navigationItem.rightMargin = 0
     }
     
     // MARK: - ============= Constraints =============
@@ -182,6 +202,9 @@ class DTopUpViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    @objc func detailsBtnAction() {
+        navigationController?.pushViewController(DCoinDetailsViewController(), animated: true)
+    }
 }
 
 

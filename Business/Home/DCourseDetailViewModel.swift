@@ -84,13 +84,13 @@ class DCourseDetailViewModel {
         }))
     }
     
-    func shareReward(completion: @escaping (Int)->Void) {
+    func shareReward(completion: @escaping (Float?)->Void) {
         RewardCoinProvider.request(.reward(courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code >= 0 {
-                completion(code)
-            } else {
-                completion(code)
+            if code >= 0, let rewardValue = JSON?["reward"] as? Float {
+                completion(rewardValue)
+                return
             }
+            completion(nil)
         }))
     }
 }

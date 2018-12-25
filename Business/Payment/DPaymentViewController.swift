@@ -35,6 +35,7 @@ class DPaymentViewController: BaseViewController {
     lazy fileprivate var rewardView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
+        view.alpha = 0
         return view
     }()
     
@@ -89,15 +90,15 @@ class DPaymentViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var todayRewardLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var todayRewardLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         return label
     }()
     
-    lazy fileprivate var overallRewardLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var overallRewardLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         return label
@@ -310,7 +311,7 @@ class DPaymentViewController: BaseViewController {
     fileprivate func initOverallView(superview: UIView) {
         let stackView: UIStackView = {
             let view = UIStackView()
-            view.alignment = .fill
+            view.alignment = .center
             view.axis = .horizontal
             view.distribution = .fillEqually
             view.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 58)), cornerRadius: 29, color: UIConstants.Color.background)
@@ -445,6 +446,33 @@ class DPaymentViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchRewardData() {
+        HUDService.sharedInstance.showFetchingView(target: rewardView)
+        
+        RewardCoinProvider.request(.reward_detail, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            HUDService.sharedInstance.hideFetchingView(target: self.rewardView)
+            if code >= 0 {
+                self.rewardView.alpha = 1.0
+                
+                if let data = JSON?["user_coin"] as? [String: Any] {
+                    if let balance = data["amount"] as? String {
+                        self.rewardBalanceLabel.setPriceText(text: balance)
+                    }
+                    if let todayReward = data["today_amount"] as? String {
+                        self.todayRewardLabel.setPriceText(text: todayReward)
+                    }
+                    if let overallReward = data["income_amount"] as? String {
+                        self.overallRewardLabel.setPriceText(text: overallReward)
+                    }
+                }
+
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchRewardData()
+                }
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -498,6 +526,8 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
 extension DPaymentViewController: CategoryDelegate {
     
     func contentView(_ contentView: UIView, didScrollRowAt index: Int) {
-        
+        if index == 1 && rewardView.alpha == 0 {
+            fetchRewardData()
+        }
     }
 }

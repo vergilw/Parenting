@@ -10,6 +10,12 @@ import UIKit
 
 class DRewardRankingViewController: BaseViewController {
 
+    fileprivate var rankingModels: [RewardRankingModel]?
+    
+    fileprivate var myRankingModel: RewardRankingModel?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     lazy fileprivate var bottomPinnedView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -33,6 +39,7 @@ class DRewardRankingViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        fetchData()
         reload()
     }
     
@@ -46,10 +53,10 @@ class DRewardRankingViewController: BaseViewController {
         tableView.register(RewardRankingCell.self, forCellReuseIdentifier: RewardRankingCell.className())
         tableView.dataSource = self
         tableView.delegate = self
-//        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-//            self?.fetchData()
-//        })
-//        tableView.mj_footer.isHidden = true
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.fetchData()
+        })
+        tableView.mj_footer.isHidden = true
         
         view.addSubviews([tableView, bottomPinnedView])
         bottomPinnedView.addSubview(bottomRankingCell.contentView)
@@ -81,10 +88,76 @@ class DRewardRankingViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        RewardCoinProvider.request(.reward_ranking(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
+            if code >= 0 {
+                if let data = JSON?["user_coins"] as? [[String: Any]] {
+                    if let models = [RewardRankingModel].deserialize(from: data) as? [RewardRankingModel] {
+                        self.rankingModels = models
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.resetNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                }
+                
+                if let data = JSON?["user_coin"] as? [String: Any], let index = data["position"] as? Int {
+                    if let model = RewardRankingModel.deserialize(from: data) {
+                        self.myRankingModel = model
+                        self.bottomRankingCell.setup(index: index, model: model)
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        StoryProvider.request(.stories(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.tableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["user_coins"] as? [[String: Any]] {
+                    if let models = [RewardRankingModel].deserialize(from: data) as? [RewardRankingModel] {
+                        self.rankingModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.endRefreshing()
+                        } else {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        bottomRankingCell.setup(index: 500)
     }
     
     // MARK: - ============= Action =============
@@ -99,16 +172,14 @@ extension DRewardRankingViewController: UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return  15 //courseModels?.count ?? 0
+        return rankingModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RewardRankingCell.className(), for: indexPath) as! RewardRankingCell
-//        if let model = courseModels?[exist: indexPath.row] {
-//            cell.setup(mode: CourseCell.CellDisplayMode.owned, model: model)
-//        }
-        //FIXME: DEBUG
-        cell.setup(index: indexPath.row)
+        if let model = rankingModels?[exist: indexPath.row] {
+            cell.setup(index: indexPath.row, model: model)
+        }
         return cell
     }
     

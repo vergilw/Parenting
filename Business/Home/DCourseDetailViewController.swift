@@ -508,12 +508,18 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     fileprivate func rewardShare() {
+        guard viewModel.courseModel?.rewardable == true else { return }
+        
 //        HUDService.sharedInstance.showFetchingView(target: self.view)
-        self.viewModel.shareReward(completion: { (code) in
+        self.viewModel.shareReward(completion: { (value) in
 //            HUDService.sharedInstance.hideFetchingView(target: self.view)
-            if code >= 0 {
-//                self.reload()
-                
+            if let value = value {
+                let view = RewardView()
+                self.navigationController?.view.addSubview(view)
+                view.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                view.present(string: String(value), mode: .share)
             }
         })
     }
@@ -768,9 +774,10 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func shareBarItemAction(isAlertHidden: Bool = false) {
+        
         if isAlertHidden == false && viewModel.courseModel?.rewardable == true && !AuthorizationService.sharedInstance.isSignIn() {
-            let alertController = UIAlertController(title: nil, message: "登录后分享可以获得赏金，是否去登录", preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "去分享", style: UIAlertAction.Style.default, handler: { (action) in
+            let alertController = UIAlertController(title: nil, message: "登录后进行分享才可获取赏金哟", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "继续分享", style: UIAlertAction.Style.default, handler: { (action) in
                 self.shareBarItemAction(isAlertHidden: true)
             }))
             alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.default, handler: { (action) in
@@ -802,7 +809,6 @@ class DCourseDetailViewController: BaseViewController {
                         if let status = response.originalResponse as? Int, status == 0 {
                             HUDService.sharedInstance.show(string: "分享完成")
                             
-                            //TODO: reward
                             self?.rewardShare()
                         } else {
                             HUDService.sharedInstance.show(string: "分享失败")
@@ -822,6 +828,8 @@ class DCourseDetailViewController: BaseViewController {
                     if let response = result as? UMSocialShareResponse {
                         if let status = response.originalResponse as? Int, status == 0 {
                             HUDService.sharedInstance.show(string: "分享完成")
+                            
+                            self?.rewardShare()
                         } else {
                             HUDService.sharedInstance.show(string: "分享失败")
                         }
@@ -1025,9 +1033,18 @@ class DCourseDetailViewController: BaseViewController {
             viewModel.fetchMyComment(completion: { (bool) in
                 button.stopAnimating()
                 if bool {
-                    let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
+                    let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model, rewardValue) in
                         self?.viewModel.myCommentModel = model
                         self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
+                        
+                        if let rewardValue = rewardValue {
+                            let view = RewardView()
+                            self?.navigationController?.view.addSubview(view)
+                            view.snp.makeConstraints { make in
+                                make.edges.equalToSuperview()
+                            }
+                            view.present(string: String(rewardValue), mode: .comment)
+                        }
                     }
                     self.customPresentViewController(self.evaluationPresenter, viewController: viewController, animated: true)
                 }
@@ -1035,10 +1052,7 @@ class DCourseDetailViewController: BaseViewController {
             
         } else {
             
-            let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel) { [weak self] (model) in
-                self?.viewModel.myCommentModel = model
-                self?.tableView.reloadRow(at: IndexPath(row: 0, section: 2), with: .none)
-            }
+            let viewController = DCourseEvaluationViewController(courseID: self.viewModel.courseID, model: self.viewModel.myCommentModel, completion: nil)
             self.customPresentViewController(self.evaluationPresenter, viewController: viewController, animated: true)
         }
     }
@@ -1322,7 +1336,9 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
                     self?.displayMyEvaluation(button: button)
                 }
                 if viewModel.courseModel?.is_comment == true || viewModel.myCommentModel != nil {
-                    cell.setup(isEvaluate: true)
+                    cell.setup(isEvaluate: true, isAnimation: viewModel.courseModel?.rewardable ?? false)
+                } else {
+                    cell.setup(isEvaluate: false, isAnimation: viewModel.courseModel?.rewardable ?? false)
                 }
                 return cell
             }

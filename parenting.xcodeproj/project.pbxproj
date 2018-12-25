@@ -29,6 +29,10 @@
 		130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43221CC83C30008259F /* DPaymentViewController.swift */; };
 		130DD43521CC863F0008259F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43421CC863F0008259F /* CategoryView.swift */; };
 		130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43621CCE27D0008259F /* RewardDetailsCell.swift */; };
+		130DDE5821D1C859007D0619 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5721D1C859007D0619 /* RewardView.swift */; };
+		130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5921D202CD007D0619 /* RewardRankingModel.swift */; };
+		130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */; };
+		130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
@@ -176,6 +180,10 @@
 		130DD43221CC83C30008259F /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
 		130DD43421CC863F0008259F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		130DD43621CCE27D0008259F /* RewardDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardDetailsCell.swift; sourceTree = "<group>"; };
+		130DDE5721D1C859007D0619 /* RewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardView.swift; sourceTree = "<group>"; };
+		130DDE5921D202CD007D0619 /* RewardRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardRankingModel.swift; sourceTree = "<group>"; };
+		130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoinDetailsViewController.swift; sourceTree = "<group>"; };
+		130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsCell.swift; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -357,6 +365,7 @@
 				130DD43221CC83C30008259F /* DPaymentViewController.swift */,
 				1316F4DE21D072CC00F5A756 /* DExchangeViewController.swift */,
 				1316F4E021D0ADDA00F5A756 /* DRewardRankingViewController.swift */,
+				130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -368,6 +377,7 @@
 				1310F8E2219EBB42004073FF /* OrderCell.swift */,
 				130DD43621CCE27D0008259F /* RewardDetailsCell.swift */,
 				1316F4E221D0AEA900F5A756 /* RewardRankingCell.swift */,
+				130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -425,6 +435,7 @@
 				130C7CC421C10380007C0344 /* GuideViewController.swift */,
 				130B639921C7410100BE79A0 /* PriceLabel.swift */,
 				130DD43421CC863F0008259F /* CategoryView.swift */,
+				130DDE5721D1C859007D0619 /* RewardView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -483,6 +494,7 @@
 				13128B8C21BE0ACC00251B6F /* ModelTransform.swift */,
 				132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */,
 				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
+				130DDE5921D202CD007D0619 /* RewardRankingModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -991,7 +1003,9 @@
 				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,
 				132DA5F621C35AD6004F0F42 /* DVideosViewModel.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
+				130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */,
 				1310F8DF219EA184004073FF /* DPurchaseViewController.swift in Sources */,
+				130DDE5821D1C859007D0619 /* RewardView.swift in Sources */,
 				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
@@ -1072,6 +1086,8 @@
 				13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */,
 				13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */,
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
+				130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */,
+				130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
 				1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */,

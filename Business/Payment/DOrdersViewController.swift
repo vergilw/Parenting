@@ -176,7 +176,7 @@ class DOrdersViewController: BaseViewController {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
                             self.tableView.mj_footer.isHidden = false
-                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            self.tableView.mj_footer.resetNoMoreData()
                             
                         } else {
                             self.tableView.mj_footer.isHidden = true
@@ -219,10 +219,10 @@ class DOrdersViewController: BaseViewController {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
                             self.tableView.mj_footer.isHidden = false
-                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
                             
                         } else {
                             self.tableView.mj_footer.isHidden = true
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
                         }
                     }
                 }

@@ -13,6 +13,8 @@ let RewardCoinProvider = MoyaProvider<RewardCoinAPI>(manager: DefaultAlamofireMa
 
 enum RewardCoinAPI {
     case reward(Int)
+    case reward_detail
+    case reward_ranking(Int)
 }
 
 extension RewardCoinAPI: TargetType {
@@ -25,6 +27,10 @@ extension RewardCoinAPI: TargetType {
         switch self {
         case let .reward(storyID):
             return "/api/Course/\(storyID)/aim_logs"
+        case .reward_detail:
+            return "/api/coin_logs"
+        case .reward_ranking:
+            return "/api/coin_logs/top"
         }
     }
     
@@ -32,6 +38,10 @@ extension RewardCoinAPI: TargetType {
         switch self {
         case .reward:
             return .post
+        case .reward_detail:
+            return .get
+        case .reward_ranking:
+            return .get
         }
     }
     
@@ -43,6 +53,10 @@ extension RewardCoinAPI: TargetType {
         switch self {
         case .reward:
             return .requestParameters(parameters: ["code": "share"], encoding: URLEncoding.default)
+        case .reward_detail:
+            return .requestPlain
+        case let .reward_ranking(page):
+            return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         }
     }
     
