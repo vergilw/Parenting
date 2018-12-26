@@ -25,6 +25,19 @@ class PlayListService: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: nil)
         
         setupRemoteTransportControls()
+        
+        //add time observer
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
+            
+            guard let cmtime = self?.player.currentTime() else { return }
+            guard self?.player.rate != 0 else { return }
+            let seconds = CMTimeGetSeconds(cmtime)
+            guard seconds >= 0 else { return }
+            
+            if let courseID = self?.playingCourseModel?.id, let sectionID = self?.playingSectionModels?[exist: self?.playingIndex ?? -1]?.id {
+                PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
+            }
+        })
     }
     
     var player: AVPlayer = {
@@ -40,6 +53,8 @@ class PlayListService: NSObject {
     var playingIndex: Int = -1
     
     @objc dynamic var isPlaying: Bool = false
+    
+    fileprivate var timeObserverToken: Any?
     
     let presenter: Presentr = {
         let width = ModalSize.full
@@ -68,6 +83,9 @@ class PlayListService: NSObject {
                 if currentURL != playURL {
                     player.pause()
                     player.replaceCurrentItem(with: playerItem)
+                    
+                    //之前播放的课程被打断，同步播放记录到服务器
+                    PlaybackRecordService.sharedInstance.syncRecords()
                 }
                 
                 if startPlaying {
@@ -96,6 +114,9 @@ class PlayListService: NSObject {
     }
     
     func pauseAudio() {
+        //当前播放课程暂停，同步播放记录到服务器
+        PlaybackRecordService.sharedInstance.syncRecords()
+        
         guard player.currentItem != nil, player.rate != 0 else {
             return
         }
@@ -116,6 +137,12 @@ class PlayListService: NSObject {
     }
     
     @objc func playToEndTimeAction() {
+        if let courseID = playingCourseModel?.id, let sectionID = playingSectionModels?[exist: playingIndex]?.id, let duration = playingSectionModels?[exist: playingIndex]?.duration_with_seconds {
+            PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: TimeInterval(duration))
+        }
+        //当前小节课程播放完毕，同步播放记录到服务器
+        PlaybackRecordService.sharedInstance.syncRecords()
+        
         guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex < sections.count - 1 else {
             isPlaying = false
             

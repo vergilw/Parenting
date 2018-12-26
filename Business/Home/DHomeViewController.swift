@@ -111,6 +111,14 @@ class DHomeViewController: BaseViewController {
         return view
     }()
     
+    lazy fileprivate var rewardCoursesBtn: UIButton = {
+        let button = UIButton()
+//        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.backgroundColor = UIConstants.Color.primaryOrange
+        button.addTarget(self, action: #selector(rewardCoursesBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var coursesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -175,7 +183,7 @@ class DHomeViewController: BaseViewController {
             self?.fetchData()
         })
 //        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        scrollView.addSubviews([carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
     }
@@ -241,7 +249,7 @@ class DHomeViewController: BaseViewController {
         carouselView.snp.makeConstraints { make in
             make.leading.equalTo(0)
             make.trailing.equalTo(scrollView)
-            make.top.equalTo(20)
+            make.top.equalTo(25)
             make.width.equalTo(UIScreenWidth)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
         }
@@ -252,11 +260,16 @@ class DHomeViewController: BaseViewController {
             make.height.equalTo(52)
         }
         
-        
+        rewardCoursesBtn.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(storyView.snp.bottom).offset(20)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/325*82)
+        }
         
         coursesCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(storyView.snp.bottom).offset(29)
+            make.top.equalTo(rewardCoursesBtn.snp.bottom).offset(35)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(collectionHeight)
         }
@@ -424,6 +437,10 @@ class DHomeViewController: BaseViewController {
     
     @objc func teacherStoriesBtnAction() {
         navigationController?.pushViewController(DTeacherStoriesViewController(), animated: true)
+    }
+    
+    @objc func rewardCoursesBtnAction() {
+        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
     }
     
     @objc func teacherRecommendedBtnAction() {

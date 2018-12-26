@@ -28,6 +28,8 @@ class CourseModel: HandyJSON {
     var recommended_cover_attribute: AssetModel?
     var share_url: String?
     var rewardable: Bool?
+    var is_finished_course: Bool?
+    var lastest_play_catalogue: Int?
     
     required init() {
         

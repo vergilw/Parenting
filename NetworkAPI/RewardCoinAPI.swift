@@ -15,6 +15,7 @@ enum RewardCoinAPI {
     case reward(Int)
     case reward_detail
     case reward_ranking(Int)
+    case reward_courses(Int)
 }
 
 extension RewardCoinAPI: TargetType {
@@ -31,6 +32,8 @@ extension RewardCoinAPI: TargetType {
             return "/api/coin_logs"
         case .reward_ranking:
             return "/api/coin_logs/top"
+        case .reward_courses:
+            return "/app/courses.json"
         }
     }
     
@@ -41,6 +44,8 @@ extension RewardCoinAPI: TargetType {
         case .reward_detail:
             return .get
         case .reward_ranking:
+            return .get
+        case .reward_courses:
             return .get
         }
     }
@@ -57,6 +62,8 @@ extension RewardCoinAPI: TargetType {
             return .requestPlain
         case let .reward_ranking(page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
+        case let .reward_courses(page):
+            return .requestParameters(parameters: ["page":page, "per_page":"10", "reward.amount-gt":"0"], encoding: URLEncoding.default)
         }
     }
     

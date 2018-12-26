@@ -33,6 +33,7 @@
 		130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5921D202CD007D0619 /* RewardRankingModel.swift */; };
 		130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */; };
 		130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */; };
+		130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
@@ -81,6 +82,7 @@
 		13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AA921A7DA2A009BD77A /* CommonAPI.swift */; };
 		13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */; };
 		13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */; };
+		1314250F21D316EE00B35346 /* PlaybackRecordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1314250E21D316EE00B35346 /* PlaybackRecordService.swift */; };
 		13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1B21801332002B4281 /* PickedCourseCell.swift */; };
 		13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */; };
 		13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */; };
@@ -184,6 +186,7 @@
 		130DDE5921D202CD007D0619 /* RewardRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardRankingModel.swift; sourceTree = "<group>"; };
 		130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoinDetailsViewController.swift; sourceTree = "<group>"; };
 		130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsCell.swift; sourceTree = "<group>"; };
+		130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DRewardCoursesViewController.swift; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -231,6 +234,7 @@
 		13133AA921A7DA2A009BD77A /* CommonAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonAPI.swift; sourceTree = "<group>"; };
 		13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewModel.swift; sourceTree = "<group>"; };
 		13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCategoryModel.swift; sourceTree = "<group>"; };
+		1314250E21D316EE00B35346 /* PlaybackRecordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackRecordService.swift; sourceTree = "<group>"; };
 		13144B1B21801332002B4281 /* PickedCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickedCourseCell.swift; sourceTree = "<group>"; };
 		13144B1D21801C2A002B4281 /* DCourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseDetailViewController.swift; sourceTree = "<group>"; };
 		13144B1F218040D9002B4281 /* CourseCatalogueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCatalogueCell.swift; sourceTree = "<group>"; };
@@ -551,6 +555,7 @@
 				132A492421B52AF700038027 /* AppService.swift */,
 				13B7F6EC21B65D18001BF15D /* PaymentService.swift */,
 				13B7F6F121B67745001BF15D /* UploadService.swift */,
+				1314250E21D316EE00B35346 /* PlaybackRecordService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -611,6 +616,7 @@
 				1316742021A53CC400643BF0 /* DSearchViewController.swift */,
 				131067FB21A6436A00F79E92 /* DCoursesViewController.swift */,
 				13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */,
+				130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1009,6 +1015,7 @@
 				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
+				1314250F21D316EE00B35346 /* PlaybackRecordService.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
 				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
 				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
@@ -1026,6 +1033,7 @@
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
+				130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */,
 				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,
 				13B7F73321B68728001BF15D /* QNFile.m in Sources */,
 				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
@@ -1246,6 +1254,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Vendors/WeChatSDK1.8.3",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1268,6 +1280,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Vendors/WeChatSDK1.8.3",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -505,7 +505,7 @@ class DCourseSectionViewController: BaseViewController {
     @objc func reload() {
         tableView.reloadData()
         
-        reloadPlayPanel()
+        
         
 //        if let avatarURL = viewModel.courseSectionModel?.course?.teacher?.headshot_attribute?.service_url {
 //            avatarImgView.kf.setImage(with: URL(string: avatarURL))
@@ -519,7 +519,15 @@ class DCourseSectionViewController: BaseViewController {
             tagLabel.text = tagLabel.text?.appendingFormat(" : %@", tagString)
         }
         
-        progressLabel.text = String(format: "已学习%d%%", viewModel.courseSectionModel?.learned ?? 0)
+        if let recordSeconds = viewModel.courseSectionModel?.learned, let durationSeconds = viewModel.courseSectionModel?.duration_with_seconds {
+            progressLabel.isHidden = false
+            
+            let percent = recordSeconds/durationSeconds*100
+            progressLabel.text = String(format: "已学习%.0f%%", floor(percent))
+        } else {
+            progressLabel.isHidden = true
+        }
+        
         audioCurrentTimeLabel.text = "00:00"
         if let durationSeconds = viewModel.courseSectionModel?.duration_with_seconds {
             let duration: TimeInterval = TimeInterval(durationSeconds)
@@ -560,6 +568,9 @@ class DCourseSectionViewController: BaseViewController {
             make.width.equalTo(UIScreenWidth)
             make.height.equalTo(containerHeight)
         }
+        
+        //重置全局播放器记录
+        reloadPlayPanel()
     }
     
     func reload(sectionID: Int) {
@@ -633,15 +644,36 @@ class DCourseSectionViewController: BaseViewController {
             guard self?.isSliderDragging == false else { return }
             guard let durationSeconds = self?.viewModel.courseSectionModel?.duration_with_seconds else { return }
             self?.audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+            
         })
     }
     
     func recoverPlayPanelView() {
+        
+        //重置上次播放记录
+        var recordSeconds: Float?
+        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: viewModel.courseID, sectionID: viewModel.sectionID) as? Float {
+            recordSeconds = seconds
+        } else if let seconds = viewModel.courseSectionModel?.learned {
+            recordSeconds = seconds
+        }
+        if let seconds = recordSeconds {
+            let timeInterval: TimeInterval = TimeInterval(seconds)
+            let date = Date(timeIntervalSince1970: timeInterval)
+            audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+            
+            if let durationSeconds = viewModel.courseSectionModel?.duration_with_seconds {
+                audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+            }
+        } else {
+            audioCurrentTimeLabel.text = "00:00"
+            audioSlider.value = 0
+        }
+        
         if let timeObserverToken = timeObserverToken {
             PlayListService.sharedInstance.player.removeTimeObserver(timeObserverToken)
         }
-        audioCurrentTimeLabel.text = "00:00"
-        audioSlider.value = 0
+        
         audioActionBtn.setImage(UIImage(named: "course_playAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
         
         sliderBufferView.snp.remakeConstraints { make in
@@ -700,6 +732,8 @@ class DCourseSectionViewController: BaseViewController {
                                 make.width.equalTo(audioSlider.snp.width).multipliedBy(loadedTime/totalTime)
                             }
                         }
+                        
+                        
                         
                     }
                 }

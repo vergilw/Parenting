@@ -542,7 +542,14 @@ class DCourseDetailViewController: BaseViewController {
         
         if viewModel.courseModel?.price == 0 || viewModel.courseModel?.is_bought == true {
             toolActionBtn.backgroundColor = UIConstants.Color.primaryGreen
-            toolActionBtn.setTitle("立即学习", for: .normal)
+            if viewModel.courseModel?.is_finished_course == true {
+                toolActionBtn.setTitle("重新学习", for: .normal)
+            } else if viewModel.courseModel?.lastest_play_catalogue != nil {
+                toolActionBtn.setTitle("继续学习", for: .normal)
+            } else {
+                toolActionBtn.setTitle("立即学习", for: .normal)
+            }
+            
             auditionBtn.isHidden = true
             toolActionBtn.snp.remakeConstraints { make in
                 make.leading.equalTo(favoriteBtn.snp.trailing).offset(10)
@@ -998,12 +1005,28 @@ class DCourseDetailViewController: BaseViewController {
                 }
             }))
             
-        } else {
-            guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
-            PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: 0)
+        } else if viewModel.courseModel?.is_bought == false && viewModel.courseModel?.price == 0 {
             
-            guard let sectionID = sections[exist: 0]?.id else { return }
-            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: sectionID)
+            
+        } else if viewModel.courseModel?.is_bought == true {
+            guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
+//            PlayListService.sharedInstance.playAudio(course: course, sections: sections, playingIndex: 0)
+            
+            var sectionID: Int?
+            if course.is_finished_course == true {
+                if let ID = sections[exist: 0]?.id {
+                    sectionID = ID
+                }
+            } else if let latestID = course.lastest_play_catalogue {
+                sectionID = latestID
+            } else {
+                if let ID = sections[exist: 0]?.id {
+                    sectionID = ID
+                }
+            }
+            
+            guard let ID = sectionID else { return }
+            let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: ID)
             navigationController?.pushViewController(viewController, animated: true)
         }
         

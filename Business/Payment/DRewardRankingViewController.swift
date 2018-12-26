@@ -96,7 +96,7 @@ class DRewardRankingViewController: BaseViewController {
             HUDService.sharedInstance.hideFetchingView(target: self.view)
             
             if code >= 0 {
-                if let data = JSON?["user_coins"] as? [[String: Any]] {
+                if let data = JSON?["coins"] as? [[String: Any]] {
                     if let models = [RewardRankingModel].deserialize(from: data) as? [RewardRankingModel] {
                         self.rankingModels = models
                     }
@@ -114,7 +114,7 @@ class DRewardRankingViewController: BaseViewController {
                     }
                 }
                 
-                if let data = JSON?["user_coin"] as? [String: Any], let index = data["position"] as? Int {
+                if let data = JSON?["coin"] as? [String: Any], let index = data["position"] as? Int {
                     if let model = RewardRankingModel.deserialize(from: data) {
                         self.myRankingModel = model
                         self.bottomRankingCell.setup(index: index, model: model)
@@ -131,12 +131,12 @@ class DRewardRankingViewController: BaseViewController {
     
     fileprivate func fetchMoreData() {
         
-        StoryProvider.request(.stories(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        RewardCoinProvider.request(.reward_ranking(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.tableView.mj_footer.endRefreshing()
             
             if code >= 0 {
-                if let data = JSON?["user_coins"] as? [[String: Any]] {
+                if let data = JSON?["coins"] as? [[String: Any]] {
                     if let models = [RewardRankingModel].deserialize(from: data) as? [RewardRankingModel] {
                         self.rankingModels?.append(contentsOf: models)
                     }

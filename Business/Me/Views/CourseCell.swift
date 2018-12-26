@@ -15,6 +15,7 @@ class CourseCell: UITableViewCell {
         case `default`
         case favirotes
         case owned
+        case reward
     }
     
     lazy fileprivate var displayMode: CellDisplayMode = .default
@@ -111,6 +112,34 @@ class CourseCell: UITableViewCell {
         return button
     }()
     
+    lazy fileprivate var rewardFootnoteView: UIStackView = {
+        let view = UIStackView()
+        view.alignment = .center
+        view.axis = .horizontal
+        view.distribution = .fillProportionally
+        view.spacing = 5
+        view.isHidden = true
+        
+        var imgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "")
+            return imgView
+        }()
+        
+        var label: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.body
+            label.textColor = UIColor("#f2b141")
+            label.text = "前往分享"
+            return label
+        }()
+        
+        view.addArrangedSubview(imgView)
+        view.addArrangedSubview(label)
+        
+        return view
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -129,7 +158,7 @@ class CourseCell: UITableViewCell {
         contentView.backgroundColor = UIConstants.Color.background
         
         contentView.addSubview(panelView)
-        panelView.addSubviews([shadowImgView, previewImgView, rewardMarkImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn])
+        panelView.addSubviews([shadowImgView, previewImgView, rewardMarkImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn, rewardFootnoteView])
         
         previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
         
@@ -170,7 +199,7 @@ class CourseCell: UITableViewCell {
             make.height.equalTo(imgWidth/16.0*9)
         }
         rewardMarkImgView.snp.makeConstraints { make in
-            make.leading.equalTo(10)
+            make.leading.equalTo(0)
             make.top.equalTo(-14.5)
         }
         
@@ -197,6 +226,10 @@ class CourseCell: UITableViewCell {
             make.trailing.bottom.equalToSuperview()
             make.size.equalTo(CGSize(width: 52, height: 12+20+20))
         }
+        rewardFootnoteView.snp.makeConstraints { make in
+            make.trailing.equalTo(-12)
+            make.centerY.equalTo(avatarImgView)
+        }
     }
     
     func setup(mode: CellDisplayMode, model: CourseModel? = nil) {
@@ -204,6 +237,7 @@ class CourseCell: UITableViewCell {
             if mode == .default {
                 actionBtn.isHidden = true
                 priceLabel.isHidden = false
+                rewardFootnoteView.isHidden = true
                 
 //                priceLabel.snp.remakeConstraints { make in
 //                    make.trailing.equalTo(-12)
@@ -219,6 +253,7 @@ class CourseCell: UITableViewCell {
             } else if mode == .favirotes {
                 actionBtn.isHidden = false
                 priceLabel.isHidden = false
+                rewardFootnoteView.isHidden = true
                 
                 priceLabel.snp.remakeConstraints { make in
                     make.trailing.lessThanOrEqualTo(actionBtn.snp.leading).priority(.required)
@@ -235,6 +270,7 @@ class CourseCell: UITableViewCell {
             } else if mode == .owned {
                 actionBtn.isHidden = true
                 priceLabel.isHidden = true
+                rewardFootnoteView.isHidden = true
                 
                 priceLabel.snp.remakeConstraints { make in
                     make.trailing.equalTo(-12)
@@ -246,6 +282,11 @@ class CourseCell: UITableViewCell {
                     make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
                     make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
                 }
+            } else if mode == .reward {
+                actionBtn.isHidden = true
+                priceLabel.isHidden = true
+                rewardFootnoteView.isHidden = false
+                
             }
             displayMode = mode
         }

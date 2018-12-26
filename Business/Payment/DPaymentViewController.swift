@@ -454,7 +454,7 @@ class DPaymentViewController: BaseViewController {
             if code >= 0 {
                 self.rewardView.alpha = 1.0
                 
-                if let data = JSON?["user_coin"] as? [String: Any] {
+                if let data = JSON?["coin"] as? [String: Any] {
                     if let balance = data["amount"] as? String {
                         self.rewardBalanceLabel.setPriceText(text: balance)
                     }

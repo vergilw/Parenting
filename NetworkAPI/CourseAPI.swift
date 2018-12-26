@@ -24,6 +24,7 @@ enum CourseAPI {
     case course_toggle_favorites(courseID: Int)
     case course_favorites(Int)
     case courses_my(Int)
+    case course_record(Int, Int, String)
 }
 
 extension CourseAPI: TargetType {
@@ -56,6 +57,8 @@ extension CourseAPI: TargetType {
             return "/app/favorites/courses.json"
         case .courses_my:
             return "/app/my/courses"
+        case let .course_record(courseID, sectionID, _):
+            return "/app/courses/\(courseID)/course_catalogues/\(sectionID)/play_record"
         }
     }
     
@@ -83,6 +86,8 @@ extension CourseAPI: TargetType {
             return .get
         case .courses_my:
             return .get
+        case .course_record:
+            return .post
         }
     }
     
@@ -122,6 +127,8 @@ extension CourseAPI: TargetType {
             return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
         case let .courses_my(page):
             return .requestParameters(parameters: ["page":page, "per_page":"10"], encoding: URLEncoding.default)
+        case let .course_record(_, _, seconds):
+            return .requestParameters(parameters: ["time":seconds], encoding: URLEncoding.default)
         }
     }
     

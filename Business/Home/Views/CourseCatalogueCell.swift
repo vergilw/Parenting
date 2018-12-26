@@ -68,6 +68,30 @@ class CourseCatalogueCell: UITableViewCell {
         return dateFormatter
     }()
     
+    lazy fileprivate var progressView: UIStackView = {
+        let view = UIStackView()
+        view.alignment = .center
+        view.axis = .horizontal
+        view.distribution = .fillProportionally
+        view.spacing = 5
+        view.isHidden = true
+        
+        return view
+    }()
+    
+    var progressImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_progressFinished")
+        return imgView
+    }()
+    
+    var progressLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot
+        label.textColor = UIConstants.Color.primaryGreen
+        return label
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -82,7 +106,9 @@ class CourseCatalogueCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.addSubviews([sequenceLabel, listeningIndicatorImgView, titleLabel, timeImgView, timeLabel, auditionLabel])
+        contentView.addSubviews([sequenceLabel, listeningIndicatorImgView, titleLabel, timeImgView, timeLabel, auditionLabel, progressView])
+        progressView.addArrangedSubview(progressImgView)
+        progressView.addArrangedSubview(progressLabel)
         
         sequenceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -113,6 +139,10 @@ class CourseCatalogueCell: UITableViewCell {
             make.width.equalTo(42)
             make.height.equalTo(17)
         }
+        progressView.snp.makeConstraints { make in
+            make.centerY.equalTo(timeImgView)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -131,10 +161,41 @@ class CourseCatalogueCell: UITableViewCell {
             timeLabel.text = CourseCatalogueCell.timeFormatter.string(from: durationDate)
         }
         
-        if !isBought && model.audition == true {
+        var recordSeconds: Float?
+        
+        if let courseID = model.course?.id, let sectionID = model.id {
+            if let record = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
+                recordSeconds = record
+            }
+        }
+        if (recordSeconds != nil || (model.learned != nil && model.learned != 0)) && isBought == true {
+            auditionLabel.isHidden = true
+            progressView.isHidden = false
+            
+            if recordSeconds == nil {
+                if let learned = model.learned {
+                    recordSeconds = learned
+                }
+            }
+            if let recordSeconds = recordSeconds {
+                if let durationSeconds = model.duration_with_seconds {
+                    let percent = recordSeconds/durationSeconds*100
+                    progressLabel.text = String(format: "%.0f%%", floor(percent))
+                    
+                    if percent < 100 {
+                        progressImgView.image = UIImage(named: "course_progressUnfinished")
+                    } else {
+                        progressImgView.image = UIImage(named: "course_progressFinished")
+                    }
+                }
+            }
+            
+        } else if !isBought && model.audition == true {
             auditionLabel.isHidden = false
+            progressView.isHidden = true
         } else {
             auditionLabel.isHidden = true
+            progressView.isHidden = true
         }
         
         if isPlaying {
@@ -146,5 +207,7 @@ class CourseCatalogueCell: UITableViewCell {
             listeningIndicatorImgView.isHidden = true
             titleLabel.textColor = UIConstants.Color.body
         }
+        
+        
     }
 }

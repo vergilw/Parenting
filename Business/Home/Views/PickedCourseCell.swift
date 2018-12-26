@@ -94,7 +94,7 @@ class PickedCourseCell: UICollectionViewCell {
             make.height.equalTo(width/16.0*9)
         }
         rewardMarkImgView.snp.makeConstraints { make in
-            make.leading.equalTo(20)
+            make.leading.equalTo(10)
             make.top.equalToSuperview()
         }
         footnoteLabel.snp.makeConstraints { make in

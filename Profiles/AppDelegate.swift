@@ -69,10 +69,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupThirdPartyPlatforms()
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
+        PlaybackRecordService.sharedInstance.syncRecords()
         
         UIApplication.shared.applicationIconBadgeNumber = 0
+        
         //FIXME: shutdown constraints log
-//        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         return true
     }
