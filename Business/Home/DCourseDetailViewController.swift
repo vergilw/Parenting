@@ -213,13 +213,9 @@ class DCourseDetailViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var toolActionBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var toolActionBtn: ActionButton = {
+        let button = ActionButton()
         button.layer.cornerRadius = 20
-//        button.layer.masksToBounds = true
-//        button.clipsToBounds = true
-        
-        
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2
         button.setTitle("立即学习", for: .normal)
@@ -1004,8 +1000,10 @@ class DCourseDetailViewController: BaseViewController {
         
         if viewModel.courseModel?.is_bought == false && viewModel.courseModel?.price != 0 {
             
+            //收费课程，下单
+            toolActionBtn.startAnimating()
             PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-                
+                self.toolActionBtn.stopAnimating()
                 if code >= 0 {
                     if let order = JSON?["order"] as? [String: Any], let orderID = order["id"] as? Int {
                         
@@ -1030,6 +1028,25 @@ class DCourseDetailViewController: BaseViewController {
             
         } else if viewModel.courseModel?.is_bought == false && viewModel.courseModel?.price == 0 {
             
+            //免费课程，自动下单，购买
+            toolActionBtn.startAnimating()
+            //下单
+            PaymentProvider.request(.course_order(self.viewModel.courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                self.toolActionBtn.stopAnimating()
+                if code >= 0 {
+                    AuthorizationService.sharedInstance.updateUserInfo()
+                    
+                    NotificationCenter.default.post(name: Notification.Payment.payCourseDidSuccess, object: nil)
+                    
+                    //更新当前页面
+                    self.fetchData()
+                    
+                    //自动进入第一小节
+                    guard let sectionID = self.viewModel.courseModel?.course_catalogues?.first?.id else { return }
+                    let viewController = DCourseSectionViewController(courseID: self.viewModel.courseID, sectionID: sectionID)
+                    self.navigationController?.pushViewController(viewController, animated: true)
+                }
+            }))
             
         } else if viewModel.courseModel?.is_bought == true {
             guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }

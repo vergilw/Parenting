@@ -117,7 +117,7 @@ class CourseCatalogueCell: UITableViewCell {
         }
         listeningIndicatorImgView.snp.makeConstraints { make in
             make.leading.equalTo(25)
-            make.top.equalTo(16)
+            make.top.equalTo(16+(UIConstants.ParagraphLineHeight.body-sequenceLabel.font.lineHeight)/4+1.25)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(54)

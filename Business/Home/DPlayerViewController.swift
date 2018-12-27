@@ -474,6 +474,28 @@ class DPlayerViewController: BaseViewController {
         if let videoURL = sectionModel?.media_attribute?.service_url, let playURL = URL(string: videoURL) {
             let playerItem = AVPlayerItem(url: playURL)
             player.replaceCurrentItem(with: playerItem)
+            
+            //重置上次播放记录
+            if let courseID = courseModel?.id, let sectionID = sectionModel?.id {
+                var recordSeconds: Float?
+                if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
+                    recordSeconds = seconds
+                } else if let seconds = sectionModel?.learned {
+                    recordSeconds = seconds
+                }
+                if let seconds = recordSeconds {
+                    let timeInterval: TimeInterval = TimeInterval(seconds)
+                    let date = Date(timeIntervalSince1970: timeInterval)
+                    audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+                    
+                    if let durationSeconds = sectionModel?.duration_with_seconds {
+                        audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+                    }
+                    
+                    player.seek(to: CMTime(seconds: Double(seconds), preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                }
+            }
+            
             player.play()
             
             if let timeObserverToken = timeObserverToken {
@@ -488,6 +510,12 @@ class DPlayerViewController: BaseViewController {
             timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self, weak player] (time) in
                 
                 guard let cmtime = player?.currentTime() else { return }
+                
+                let seconds = CMTimeGetSeconds(cmtime)
+                if let courseID = self?.courseModel?.id, let sectionID = self?.sectionModel?.id {
+                    PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
+                }
+                
                 guard player?.rate != 0 else {
                     let playImg = UIImage(named: "course_videoPlay")?.withRenderingMode(.alwaysOriginal)
                     if self?.audioActionBtn.currentImage != playImg {
@@ -495,14 +523,12 @@ class DPlayerViewController: BaseViewController {
                     }
                     return
                 }
-                let seconds = CMTimeGetSeconds(cmtime)
+                
                 guard seconds >= 0 else { return }
                 let timeInterval: TimeInterval = TimeInterval(seconds)
                 let date = Date(timeIntervalSince1970: timeInterval)
                 
-                if let courseID = self?.courseModel?.id, let sectionID = self?.sectionModel?.id {
-                    PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
-                }
+                
                 
                 self?.audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
                 
