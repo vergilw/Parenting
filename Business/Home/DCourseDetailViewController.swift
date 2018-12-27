@@ -530,15 +530,21 @@ class DCourseDetailViewController: BaseViewController {
         guard viewModel.courseModel?.rewardable == true else { return }
         
 //        HUDService.sharedInstance.showFetchingView(target: self.view)
-        self.viewModel.shareReward(completion: { (value) in
+        self.viewModel.shareReward(completion: { (status, value) in
 //            HUDService.sharedInstance.hideFetchingView(target: self.view)
-            if let value = value {
+            
+            if status == "success", let value = value {
                 let view = RewardView()
                 self.navigationController?.view.addSubview(view)
                 view.snp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
                 view.present(string: String(value), mode: .share)
+            } else if status == "over_limit" {
+                HUDService.sharedInstance.show(string: "今天您本课程的分享次数已用完，请明天再来")
+                
+            } else if status == "lacking_amount" {
+                HUDService.sharedInstance.show(string: "本课程赏金刚刚被分完了")
             }
         })
     }

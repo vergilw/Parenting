@@ -19,6 +19,7 @@ enum PaymentAPI {
     case order(Int)
     case orders(String, Int)
     case order_pay(Int)
+    case coin_logs(Int)
 }
 
 extension PaymentAPI: TargetType {
@@ -43,6 +44,8 @@ extension PaymentAPI: TargetType {
             return "/app/my/orders"
         case let .order_pay(orderID):
             return "/app/my/orders/\(orderID)/wallet_pay"
+        case .coin_logs:
+            return "/api/wallet_logs"
         }
     }
     
@@ -62,6 +65,8 @@ extension PaymentAPI: TargetType {
             return .get
         case .order_pay:
             return .post
+        case .coin_logs:
+            return .get
         }
     }
     
@@ -90,6 +95,8 @@ extension PaymentAPI: TargetType {
              "app_version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
              "device_id": AppService.sharedInstance.uniqueIdentifier]
             return .requestParameters(parameters: ["device_info": deviceParameters], encoding: JSONEncoding.default)
+        case let .coin_logs(page):
+            return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         }
     }
     

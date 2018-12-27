@@ -10,7 +10,7 @@ import UIKit
 
 class DExchangeViewController: BaseViewController {
 
-    lazy fileprivate var advanceModels: [AdvanceModel]? = nil
+    lazy fileprivate var exchangeModels: [RewardExchangeModel]? = nil
     
     lazy fileprivate var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -140,6 +140,7 @@ class DExchangeViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
+        fetchData()
         reload()
     }
     
@@ -207,22 +208,42 @@ class DExchangeViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        RewardCoinProvider.request(.reward_exchangeList, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
+            if code >= 0 {
+                if let data = JSON?["coin_wallets"] as? [[String: Any]] {
+                    if let models = [RewardExchangeModel].deserialize(from: data) as? [RewardExchangeModel] {
+                        self.exchangeModels = models
+                    }
+                    self.collectionView.reloadData()
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        if let balance = AuthorizationService.sharedInstance.user?.balance {
+        if let balance = AuthorizationService.sharedInstance.user?.reward {
             if Int(balance) != 0 {
                 balanceValueLabel.textColor = UIConstants.Color.primaryOrange
             }
             balanceValueLabel.setPriceText(text: balance, discount: nil)
         }
         
-        //FIXME: DEBUG
-        balanceValueLabel.setPriceText(text: "11.0", discount: nil)
     }
     
     // MARK: - ============= Action =============
@@ -237,42 +258,40 @@ extension DExchangeViewController: UICollectionViewDataSource, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return advanceModels?.count ?? 0
+        return exchangeModels?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopUpItemCell.className(), for: indexPath) as! TopUpItemCell
-        if let model = advanceModels?[indexPath.row] {
-            cell.setup(model: model)
+        if let model = exchangeModels?[indexPath.row] {
+            cell.setupExchange(model: model)
         }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        guard let models = advanceModels else { return }
+        guard let model = exchangeModels?[exist: indexPath.row], let exchangeValue = model.coin_amount, let exchangeFloat = Float(exchangeValue) else { return }
+
+        indicatorBtn.startAnimating()
+        indicatorBtn.isHidden = false
         
-        if let model = advanceModels?[exist: indexPath.row], let productID = model.apple_product_id {
-            indicatorBtn.startAnimating()
-            indicatorBtn.isHidden = false
-            PaymentService.sharedInstance.purchaseProduct(productID: productID, models: models, complete: { (status) in
-                self.indicatorBtn.isHidden = true
-                self.indicatorBtn.stopAnimating()
-                
-                if status {
-                    HUDService.sharedInstance.show(string: "已成功充值")
-                    if self.presentingViewController != nil {
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    
-                } else {
-                    //                    HUDService.sharedInstance.show(string: "充值失败")
-                    let alertController = UIAlertController(title: nil, message: "未能成功充值，请稍后重试", preferredStyle: UIAlertController.Style.alert)
-                    alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
-                    self.present(alertController, animated: true, completion: nil)
-                }
-            })
-        }
+        RewardCoinProvider.request(.reward_exchange(exchangeFloat), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            self.indicatorBtn.isHidden = true
+            self.indicatorBtn.stopAnimating()
+            
+            if code >= 0 {
+                HUDService.sharedInstance.show(string: "已成功兑换")
+                AuthorizationService.sharedInstance.updateUserInfo()
+            } else {
+                let alertController = UIAlertController(title: nil, message: "未能成功兑换，请稍后重试", preferredStyle: UIAlertController.Style.alert)
+                alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+            }
+            
+        }))
+        
+        
     }
     
 }

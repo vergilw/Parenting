@@ -17,6 +17,7 @@ class UserModel: HandyJSON {
     var name: String?
     var wechat_name: String?
     var balance: String?
+    var reward: String?
     
     required init() {
         
@@ -25,6 +26,8 @@ class UserModel: HandyJSON {
     func mapping(mapper: HelpingMapper) {
         mapper <<<
             self.balance <-- ["wallet.ios_balance", "ios_balance"]
+        mapper <<<
+            self.reward <-- ["coin.income_amount", "income_amount"]
     }
     
     /*

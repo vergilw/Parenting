@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518721D4B89B00C42610 /* CoinLogModel.swift */; };
+		130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518A21D4C48800C42610 /* RewardExchangeModel.swift */; };
 		130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B639921C7410100BE79A0 /* PriceLabel.swift */; };
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
@@ -160,6 +162,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130A518721D4B89B00C42610 /* CoinLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinLogModel.swift; sourceTree = "<group>"; };
+		130A518A21D4C48800C42610 /* RewardExchangeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardExchangeModel.swift; sourceTree = "<group>"; };
 		130B639921C7410100BE79A0 /* PriceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLabel.swift; sourceTree = "<group>"; };
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
@@ -359,9 +363,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		130A518921D4C46900C42610 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				130A518A21D4C48800C42610 /* RewardExchangeModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		130F1C8D219BF8CB004E1DD3 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
+				130A518921D4C46900C42610 /* Models */,
 				130F1C90219C0E5E004E1DD3 /* Views */,
 				130F1C8E219BF924004E1DD3 /* DTopUpViewController.swift */,
 				1310F8DE219EA184004073FF /* DPurchaseViewController.swift */,
@@ -499,6 +512,7 @@
 				132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */,
 				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
 				130DDE5921D202CD007D0619 /* RewardRankingModel.swift */,
+				130A518721D4B89B00C42610 /* CoinLogModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1007,6 +1021,7 @@
 				13B7F73221B68728001BF15D /* QNUrlSafeBase64.m in Sources */,
 				132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */,
 				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,
+				130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */,
 				132DA5F621C35AD6004F0F42 /* DVideosViewModel.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */,
@@ -1020,6 +1035,7 @@
 				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
 				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
+				130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */,
 				131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
 				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,

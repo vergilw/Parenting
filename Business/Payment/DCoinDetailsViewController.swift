@@ -10,6 +10,10 @@ import UIKit
 
 class DCoinDetailsViewController: BaseViewController {
 
+    var coinLogModels: [CoinLogModel]?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,6 +22,8 @@ class DCoinDetailsViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchData()
     }
     
     // MARK: - ============= Initialize View =============
@@ -30,10 +36,10 @@ class DCoinDetailsViewController: BaseViewController {
         tableView.register(CoinDetailsCell.self, forCellReuseIdentifier: CoinDetailsCell.className())
         tableView.dataSource = self
         tableView.delegate = self
-//        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-//            self?.fetchData()
-//        })
-//        tableView.mj_footer.isHidden = true
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.fetchMoreData()
+        })
+        tableView.mj_footer.isHidden = true
         
         view.addSubview(tableView)
     }
@@ -51,6 +57,66 @@ class DCoinDetailsViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchData() {
+        HUDService.sharedInstance.showFetchingView(target: self.view)
+        
+        PaymentProvider.request(.coin_logs(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
+            if code >= 0 {
+                if let data = JSON?["wallet_logs"] as? [[String: Any]] {
+                    if let models = [CoinLogModel].deserialize(from: data) as? [CoinLogModel] {
+                        self.coinLogModels = models
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.resetNoMoreData()
+                            
+                        } else {
+                            self.tableView.mj_footer.isHidden = true
+                        }
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        PaymentProvider.request(.coin_logs(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.tableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["wallet_logs"] as? [[String: Any]] {
+                    if let models = [CoinLogModel].deserialize(from: data) as? [CoinLogModel] {
+                        self.coinLogModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.endRefreshing()
+                        } else {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -69,16 +135,14 @@ extension DCoinDetailsViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6//storyModels?.count ?? 0
+        return coinLogModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CoinDetailsCell.className(), for: indexPath) as! CoinDetailsCell
-//        if let model = storyModels?[exist: indexPath.row] {
-//            cell.setup(model: model)
-//        }
-        //FIXME: DEBUG
-        cell.setup()
+        if let model = coinLogModels?[exist: indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     

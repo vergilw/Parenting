@@ -17,11 +17,12 @@ class RewardDetailsCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var descLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var descLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.body
+        label.textColor = UIConstants.Color.head
         label.backgroundColor = UIConstants.Color.background
+        label.textAlignment = .center
         return label
     }()
     
@@ -32,11 +33,17 @@ class RewardDetailsCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var priceLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var priceLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
+        label.textColor = UIConstants.Color.primaryOrange
         return label
+    }()
+    
+    lazy fileprivate var coinIconImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "payment_coinIcon")
+        return imgView
     }()
     
     override func awakeFromNib() {
@@ -55,7 +62,7 @@ class RewardDetailsCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews([titleLabel, headnoteLabel, descLabel, priceLabel])
+        contentView.addSubviews([titleLabel, headnoteLabel, descLabel, priceLabel, coinIconImgView])
         initConstraints()
     }
     
@@ -73,9 +80,13 @@ class RewardDetailsCell: UITableViewCell {
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(titleLabel.snp.bottom).offset(15)
         }
-        priceLabel.snp.makeConstraints { make in
+        coinIconImgView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalTo(descLabel)
+        }
+        priceLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(coinIconImgView.snp.leading).offset(-4)
+            make.centerY.equalTo(descLabel).offset(-1)
         }
     }
     
@@ -83,50 +94,26 @@ class RewardDetailsCell: UITableViewCell {
         fatalError()
     }
     
-    func setup() {
+    func setup(model: CoinLogModel) {
         
-        titleLabel.setParagraphText("如何规划幼儿英引导引...")
-        headnoteLabel.setParagraphText("2018.10.30 08.25")
-        descLabel.setParagraphText("已有1342次学习")
-        priceLabel.setParagraphText("29.9")
+        titleLabel.setParagraphText(model.title ?? "")
+        headnoteLabel.setParagraphText(model.created_at?.string(format: "yyyy.MM.dd HH:mm") ?? "")
+        descLabel.text = "分享奖励"
+        let size = descLabel.systemLayoutSizeFitting(CGSize(width: UIScreenWidth, height: UIScreenHeight))
+        descLabel.snp.remakeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(titleLabel.snp.bottom).offset(15)
+            make.size.equalTo(CGSize(width: size.width+10, height: 21))
+        }
+        
+        if let amount = model.amount, let amountInt = Float(amount) {
+            if amountInt > 0 {
+                priceLabel.setPriceText(text: amount, symbol: "+")
+            } else {
+                priceLabel.setPriceText(text: String(abs(amountInt)), symbol: "-")
+            }
+        }
+        
     }
     
-    fileprivate func setPriceText(_ text: String) {
-        if let originalFont = priceLabel.originalFont {
-            priceLabel.font = originalFont
-        }
-        
-        let attributedString = NSMutableAttributedString(string: text)
-        
-        let paragraph = NSMutableParagraphStyle()
-        var lineHeight: CGFloat = 0
-        if priceLabel.font == UIConstants.Font.h1 {
-            lineHeight = UIConstants.LineHeight.h1
-            
-        } else if priceLabel.font == UIConstants.Font.h2 {
-            lineHeight = UIConstants.LineHeight.h2
-            
-        } else if priceLabel.font == UIConstants.Font.h3 {
-            lineHeight = UIConstants.LineHeight.h3
-            
-        } else if priceLabel.font == UIConstants.Font.body {
-            lineHeight = UIConstants.LineHeight.body
-            
-        } else if priceLabel.font == UIConstants.Font.foot {
-            lineHeight = UIConstants.LineHeight.foot
-        } else {
-            lineHeight = priceLabel.font.pointSize
-        }
-        paragraph.maximumLineHeight = lineHeight
-        paragraph.minimumLineHeight = lineHeight
-        paragraph.alignment = priceLabel.textAlignment
-        
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-priceLabel.font.lineHeight)/4, NSAttributedString.Key.font: priceLabel.font], range: NSRange(location: 0, length: attributedString.length))
-        priceLabel.originalFont = priceLabel.font
-        attributedString.addAttributes([NSAttributedString.Key.font : UIConstants.Font.body], range: NSString(string: text).range(of: "¥"))
-        attributedString.addAttributes([NSAttributedString.Key.baselineOffset: (lineHeight-priceLabel.font.lineHeight)/4+1.25, NSAttributedString.Key.font: priceLabel.font], range: NSString(string: text).range(of: "+"))
-        
-        priceLabel.attributedText = attributedString
-    }
 }

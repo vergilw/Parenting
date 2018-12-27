@@ -412,11 +412,35 @@ class DCourseSectionViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(courseRecordDidChanged(sender:)), name: Notification.Course.courseRecordDidChanged, object: nil)
+        
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
             self?.reloadPlayPanel()
             self?.courseCataloguesView.reload()
         }
         
+    }
+    
+    @objc func courseRecordDidChanged(sender: Notification) {
+        
+        guard let courseRecord = sender.userInfo?[viewModel.courseID] as? [Int: TimeInterval] else { return }
+        
+        for sectionID in courseRecord.keys {
+            guard sectionID != 0 else { continue }
+            
+            if viewModel.courseSectionModel?.id == sectionID {
+                if let sectionRecord = courseRecord[sectionID] {
+                    viewModel.courseSectionModel?.learned = Float(sectionRecord)
+                }
+            }
+            
+            if let index = viewModel.courseCatalogueModels?.firstIndex(where: { (sectionModel) -> Bool in
+                return sectionModel.id == sectionID
+            }), let sectionRecord = courseRecord[sectionID] {
+                viewModel.courseCatalogueModels?[exist: index]?.learned = Float(sectionRecord)
+                
+            }
+        }
         
     }
     

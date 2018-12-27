@@ -10,6 +10,10 @@ import UIKit
 
 class DPaymentViewController: BaseViewController {
 
+    var coinLogModels: [CoinLogModel]?
+    
+    lazy fileprivate var pageNumber: Int = 1
+    
     lazy fileprivate var contentView: CategoryView = {
         var contentHeight: CGFloat = 0
         if #available(iOS 11, *) {
@@ -54,24 +58,10 @@ class DPaymentViewController: BaseViewController {
             tableView.estimatedSectionHeaderHeight = 0
             tableView.estimatedSectionFooterHeight = 0
         }
-        
-//        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak tableView] in
-//            guard let tableView = tableView else { return }
-//
-//            self?.viewModel.fetchCourses(completion: { (code, next, models) in
-//                if code < 0 || next {
-//                    tableView.mj_footer.endRefreshing()
-//                } else {
-//                    tableView.mj_footer.endRefreshingWithNoMoreData()
-//                }
-//
-//                if let models = models, let index = self?.tableViews.firstIndex(of: tableView), let _ = self?.viewModel.coursesModels?[exist: index] {
-//                    self?.viewModel.coursesModels?[index].append(contentsOf: models)
-//                    tableView.reloadData()
-//                }
-//            })
-//        })
-//        tableView.mj_footer.isHidden = true
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak tableView] in
+            self?.fetchMoreData()
+        })
+        tableView.mj_footer.isHidden = true
         
         return tableView
     }()
@@ -449,7 +439,7 @@ class DPaymentViewController: BaseViewController {
     fileprivate func fetchRewardData() {
         HUDService.sharedInstance.showFetchingView(target: rewardView)
         
-        RewardCoinProvider.request(.reward_detail, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        RewardCoinProvider.request(.reward_detail(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             HUDService.sharedInstance.hideFetchingView(target: self.rewardView)
             if code >= 0 {
                 self.rewardView.alpha = 1.0
@@ -465,11 +455,54 @@ class DPaymentViewController: BaseViewController {
                         self.overallRewardLabel.setPriceText(text: overallReward)
                     }
                 }
+                
+                if let data = JSON?["coin_logs"] as? [[String: Any]] {
+                    self.coinLogModels = [CoinLogModel].deserialize(from: data) as? [CoinLogModel]
+                    self.rewardTableView.reloadData()
+                }
+                
+                if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    if totalPages > self.pageNumber {
+                        self.pageNumber += 1
+                        self.rewardTableView.mj_footer.isHidden = false
+                        self.rewardTableView.mj_footer.resetNoMoreData()
+                        
+                    } else {
+                        self.rewardTableView.mj_footer.isHidden = true
+                    }
+                }
 
             } else if code == -2 {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchRewardData()
                 }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        RewardCoinProvider.request(.reward_detail(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.rewardTableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["coin_logs"] as? [[String: Any]] {
+                    if let models = [CoinLogModel].deserialize(from: data) as? [CoinLogModel] {
+                        self.coinLogModels?.append(contentsOf: models)
+                    }
+                    self.rewardTableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.rewardTableView.mj_footer.endRefreshing()
+                        } else {
+                            self.rewardTableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
             }
         }))
     }
@@ -503,20 +536,14 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if let index = tableViews.firstIndex(of: tableView) {
-//            return viewModel.coursesModels?[exist: index]?.count ?? 0
-//        }
-        return 3
+        return coinLogModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RewardDetailsCell.className(), for: indexPath) as! RewardDetailsCell
-//        if let index = tableViews.firstIndex(of: tableView) {
-//            if let models = viewModel.coursesModels?[exist: index], let model = models[exist: indexPath.row] {
-//                cell.setup(mode: CourseCell.CellDisplayMode.default, model: model)
-//            }
-//        }
-        cell.setup()
+        if let model = coinLogModels?[exist: indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     

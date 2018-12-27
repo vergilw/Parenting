@@ -14,6 +14,29 @@ class DRewardCoursesViewController: BaseViewController {
     
     lazy fileprivate var pageNumber: Int = 1
     
+    lazy fileprivate var navigationView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.clear
+        return view
+    }()
+    
+    lazy fileprivate var backBarBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy fileprivate var navigationTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Medium", size: 20)!
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "赏金课程"
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,6 +47,12 @@ class DRewardCoursesViewController: BaseViewController {
         addNotificationObservers()
         
         fetchData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     // MARK: - ============= Initialize View =============
@@ -38,13 +67,89 @@ class DRewardCoursesViewController: BaseViewController {
         })
         tableView.mj_footer.isHidden = true
         
-        view.addSubview(tableView)
+        view.addSubviews([tableView, navigationView])
+        navigationView.addSubviews([backBarBtn, navigationTitleLabel])
+        
+        initHeaderView()
+    }
+    
+    fileprivate func initHeaderView() {
+        let headerView: UIView = {
+            var height: CGFloat = 0
+            if #available(iOS 11.0, *) {
+                height = UIScreenWidth/375*182 + ((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight) - 20)
+            } else {
+                height = UIScreenWidth/375*182
+            }
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: height)))
+            view.backgroundColor = UIColor("#f9ce93")
+            return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "course_rewardCoursesBanner")
+            imgView.contentMode = .scaleAspectFill
+            return imgView
+        }()
+        
+//        let backBarBtn: UIButton = {
+//            let button = UIButton()
+//            button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+//            button.tintColor = .white
+//            button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+//            return button
+//        }()
+//
+//        let titleLabel: UILabel = {
+//            let label = UILabel()
+//            label.font = UIFont(name: "PingFangSC-Medium", size: 20)!
+//            label.textColor = .white
+//            label.textAlignment = .center
+//            label.text = "赏金课程"
+//            return label
+//        }()
+        
+        headerView.addSubviews([bgImgView])
+        bgImgView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(UIScreenWidth/375*182)
+        }
+//        titleLabel.snp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.top.equalTo(UIStatusBarHeight)
+//            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+//        }
+//        backBarBtn.snp.makeConstraints { make in
+//            make.leading.equalTo(0)
+//            make.top.equalTo(UIStatusBarHeight)
+//            make.width.equalTo(62.5)
+//            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+//        }
+        
+        tableView.tableHeaderView = headerView
     }
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        navigationView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0)+UIStatusBarHeight)
+        }
+        backBarBtn.snp.makeConstraints { make in
+            make.leading.equalTo(0)
+            make.top.equalTo(UIStatusBarHeight)
+            make.width.equalTo(62.5)
+            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+        }
+        navigationTitleLabel.snp.makeConstraints { make in
+            make.leading.greaterThanOrEqualTo(backBarBtn.snp.trailing)
+            make.centerX.equalToSuperview()
+            make.top.equalTo(UIStatusBarHeight)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -150,5 +255,25 @@ extension DRewardCoursesViewController: UITableViewDataSource, UITableViewDelega
             navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
         }
         
+    }
+}
+
+
+extension DRewardCoursesViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        guard navigationView.frame.size != .zero else { return }
+        
+        let offsetY = scrollView.contentOffset.y
+        if offsetY > (tableView.tableHeaderView?.bounds.size.height ?? 0)-navigationView.bounds.size.height {
+            navigationView.backgroundColor = UIColor("#f9ce93")
+            navigationTitleLabel.textColor = UIConstants.Color.head
+            backBarBtn.tintColor = UIConstants.Color.head
+        } else {
+            navigationView.backgroundColor = UIColor.clear
+            navigationTitleLabel.textColor = .white
+            backBarBtn.tintColor = .white
+        }
     }
 }

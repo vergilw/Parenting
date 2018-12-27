@@ -84,13 +84,22 @@ class DCourseDetailViewModel {
         }))
     }
     
-    func shareReward(completion: @escaping (Float?)->Void) {
+    func shareReward(completion: @escaping (String, Float?)->Void) {
         RewardCoinProvider.request(.reward(courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            if code >= 0, let rewardValue = JSON?["reward"] as? Float {
-                completion(rewardValue)
+            if code >= 0, let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String {
+                if status == "success", let rewardValue = reward["amount"] as? Float  {
+                    completion(status, rewardValue)
+                    
+                } else if status == "over_limit" {
+                    completion(status, nil)
+                    
+                } else if status == "lacking_amount" {
+                    completion(status, nil)
+                }
+                
                 return
             }
-            completion(nil)
+            completion("error", nil)
         }))
     }
 }

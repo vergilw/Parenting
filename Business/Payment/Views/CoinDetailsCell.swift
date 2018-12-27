@@ -78,12 +78,18 @@ class CoinDetailsCell: UITableViewCell {
         fatalError()
     }
     
-    func setup() {
-        titleLabel.setParagraphText("购买课程")
+    func setup(model: CoinLogModel) {
         
-        descLabel.setParagraphText("2018.10.30 08:25")
+        titleLabel.setParagraphText(model.title ?? "")
+        descLabel.setParagraphText(model.created_at?.string(format: "yyyy.MM.dd HH:mm") ?? "")
         
-        priceLabel.setPriceText(text: "29.9", symbol: "-")
+        if let amount = model.amount, let amountInt = Float(amount) {
+            if amountInt > 0 {
+                priceLabel.setPriceText(text: amount, symbol: "+")
+            } else {
+                priceLabel.setPriceText(text: String(abs(amountInt)), symbol: "-")
+            }
+        }
         
     }
     

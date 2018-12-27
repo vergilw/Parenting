@@ -68,5 +68,16 @@ class TopUpItemCell: UICollectionViewCell {
         }
         
     }
+    
+    func setupExchange(model: RewardExchangeModel) {
+        if let gain = model.coin_amount {
+            gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
+        }
+        
+        if let cost = model.wallet_amount {
+            costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "氧育币"
+        }
+        
+    }
 }
 
