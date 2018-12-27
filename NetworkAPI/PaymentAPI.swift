@@ -20,6 +20,8 @@ enum PaymentAPI {
     case orders(String, Int)
     case order_pay(Int)
     case coin_logs(Int)
+    case withdraw_list
+    case withdraw(Float)
 }
 
 extension PaymentAPI: TargetType {
@@ -46,6 +48,10 @@ extension PaymentAPI: TargetType {
             return "/app/my/orders/\(orderID)/wallet_pay"
         case .coin_logs:
             return "/api/wallet_logs"
+        case .withdraw_list:
+            return "/api/coin_cashes/list"
+        case .withdraw:
+            return "/api/coin_cashes"
         }
     }
     
@@ -67,6 +73,10 @@ extension PaymentAPI: TargetType {
             return .post
         case .coin_logs:
             return .get
+        case .withdraw_list:
+            return .get
+        case .withdraw:
+            return .post
         }
     }
     
@@ -97,6 +107,11 @@ extension PaymentAPI: TargetType {
             return .requestParameters(parameters: ["device_info": deviceParameters], encoding: JSONEncoding.default)
         case let .coin_logs(page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
+        case .withdraw_list:
+            return .requestPlain
+        case let .withdraw(value):
+            let parameters = ["coin_cash": ["coin_amount": value]]
+            return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         }
     }
     

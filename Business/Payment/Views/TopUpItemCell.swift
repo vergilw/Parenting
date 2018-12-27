@@ -79,5 +79,16 @@ class TopUpItemCell: UICollectionViewCell {
         }
         
     }
+    
+    func setupWithdraw(model: WithdrawModel) {
+        if let gain = model.cash_amount {
+            gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
+        }
+        
+        if let cost = model.coin_amount {
+            costLabel.text = "兑" + (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "金币"
+        }
+        
+    }
 }
 

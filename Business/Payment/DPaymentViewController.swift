@@ -226,7 +226,7 @@ class DPaymentViewController: BaseViewController {
             button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
             button.titleLabel?.font = UIConstants.Font.body
             button.setTitle("提现", for: .normal)
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(withdrawBtnAction), for: .touchUpInside)
             button.titleEdgeInsets = UIEdgeInsets(top: -2.5, left: 0, bottom: 2.5, right: 0)
             return button
         }()
@@ -521,6 +521,10 @@ class DPaymentViewController: BaseViewController {
     
     @objc func exchangeBtnAction() {
         navigationController?.pushViewController(DExchangeViewController(), animated: true)
+    }
+    
+    @objc func withdrawBtnAction() {
+        navigationController?.pushViewController(DWithdrawViewController(), animated: true)
     }
     
     @objc func rankingBtnAction() {

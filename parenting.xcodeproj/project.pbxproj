@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518721D4B89B00C42610 /* CoinLogModel.swift */; };
 		130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518A21D4C48800C42610 /* RewardExchangeModel.swift */; };
+		130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */; };
+		130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518E21D4CF8400C42610 /* WithdrawModel.swift */; };
+		130A519121D4D21000C42610 /* DWithdrawResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */; };
 		130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B639921C7410100BE79A0 /* PriceLabel.swift */; };
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
@@ -164,6 +167,9 @@
 /* Begin PBXFileReference section */
 		130A518721D4B89B00C42610 /* CoinLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinLogModel.swift; sourceTree = "<group>"; };
 		130A518A21D4C48800C42610 /* RewardExchangeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardExchangeModel.swift; sourceTree = "<group>"; };
+		130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawViewController.swift; sourceTree = "<group>"; };
+		130A518E21D4CF8400C42610 /* WithdrawModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawModel.swift; sourceTree = "<group>"; };
+		130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawResultViewController.swift; sourceTree = "<group>"; };
 		130B639921C7410100BE79A0 /* PriceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLabel.swift; sourceTree = "<group>"; };
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
@@ -367,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				130A518A21D4C48800C42610 /* RewardExchangeModel.swift */,
+				130A518E21D4CF8400C42610 /* WithdrawModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -383,6 +390,8 @@
 				1316F4DE21D072CC00F5A756 /* DExchangeViewController.swift */,
 				1316F4E021D0ADDA00F5A756 /* DRewardRankingViewController.swift */,
 				130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */,
+				130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */,
+				130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -986,6 +995,7 @@
 				13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */,
 				132DA5F421C357B2004F0F42 /* VideoAPI.swift in Sources */,
 				131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */,
+				130A519121D4D21000C42610 /* DWithdrawResultViewController.swift in Sources */,
 				130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */,
 				131170A621B77A0800C178BB /* AdvanceModel.swift in Sources */,
 				130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */,
@@ -1073,6 +1083,7 @@
 				13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */,
 				13B7F73B21B68728001BF15D /* QNResponseInfo.m in Sources */,
 				1316F4E321D0AEA900F5A756 /* RewardRankingCell.swift in Sources */,
+				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
@@ -1094,6 +1105,7 @@
 				130DD43521CC863F0008259F /* CategoryView.swift in Sources */,
 				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
+				130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */,
 				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
 				1320C38E217EB93A00902A5C /* Date+Extension.swift in Sources */,
 				132DA5F221C352D7004F0F42 /* DVideosViewController.swift in Sources */,
