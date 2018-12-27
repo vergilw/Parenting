@@ -500,6 +500,10 @@ class DPlayerViewController: BaseViewController {
                 let timeInterval: TimeInterval = TimeInterval(seconds)
                 let date = Date(timeIntervalSince1970: timeInterval)
                 
+                if let courseID = self?.courseModel?.id, let sectionID = self?.sectionModel?.id {
+                    PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
+                }
+                
                 self?.audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
                 
                 let pauseImg = UIImage(named: "course_videoPause")?.withRenderingMode(.alwaysOriginal)
@@ -547,12 +551,17 @@ class DPlayerViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func dismissBtnAction() {
+        player.pause()
+        
         dismiss(animated: true, completion: {
             if UIDevice.current.orientation.isLandscape {
                 UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
                 UINavigationController.attemptRotationToDeviceOrientation()
             }
         })
+        
+        //当前页面退出，同步播放记录到服务器
+        PlaybackRecordService.sharedInstance.syncRecords()
     }
     
     @objc func audioActionBtnAction() {
@@ -574,6 +583,9 @@ class DPlayerViewController: BaseViewController {
                 timer.invalidate()
                 hideTimer = nil
             }
+            
+            //当前播放课程暂停，同步播放记录到服务器
+            PlaybackRecordService.sharedInstance.syncRecords()
         }
     }
     
@@ -628,6 +640,9 @@ class DPlayerViewController: BaseViewController {
         }
         
         controlCoverView.isHidden = false
+        
+        //当前播放课程结束，同步播放记录到服务器
+        PlaybackRecordService.sharedInstance.syncRecords()
     }
     
     deinit {

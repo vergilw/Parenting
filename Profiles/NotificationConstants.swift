@@ -21,14 +21,16 @@ public extension Notification {
     }
     
     public class Payment {
-        @objc public static let payCourseDidSuccess: Notification.Name = Notification.Name(String(describing: User.self) + #keyPath(payCourseDidSuccess))
+        @objc public static let payCourseDidSuccess: Notification.Name = Notification.Name(String(describing: Payment.self) + #keyPath(payCourseDidSuccess))
+    }
+    
+    public class Course {
+        @objc public static let courseRecordDidChanged: Notification.Name = Notification.Name(String(describing: Course.self) + #keyPath(courseRecordDidChanged))
+        
     }
     
     public class Setting {
         @objc public static let userSettingChange: Notification.Name = Notification.Name(String(describing: Setting.self) + #keyPath(userSettingChange))
     }
     
-    public class Write {
-        @objc public static let contactTextViewDidChange: Notification.Name = Notification.Name(String(describing: Write.self) + #keyPath(contactTextViewDidChange))
-    }
 }

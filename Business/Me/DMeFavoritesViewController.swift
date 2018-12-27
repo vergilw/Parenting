@@ -35,7 +35,7 @@ class DMeFavoritesViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.fetchData()
+            self?.fetchMoreData()
         })
         tableView.mj_footer.isHidden = true
         
@@ -59,10 +59,14 @@ class DMeFavoritesViewController: BaseViewController {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         
         CourseProvider.request(.course_favorites(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
             HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
             if code >= 0 {
                 if let data = JSON?["data"] as? [[String: Any]] {
-                    self.favoritesModels = [CourseModel].deserialize(from: data) as? [CourseModel]
+                    if let models = [CourseModel].deserialize(from: data) as? [CourseModel] {
+                        self.favoritesModels = models
+                    }
                     self.tableView.reloadData()
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
@@ -75,11 +79,11 @@ class DMeFavoritesViewController: BaseViewController {
                             self.tableView.mj_footer.isHidden = true
                         }
                     }
-                    
-                    if self.favoritesModels?.count ?? 0 == 0 {
-                        HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
-                            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
-                        }
+                }
+                
+                if self.favoritesModels?.count ?? 0 == 0 {
+                    HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                        self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
                     }
                 }
                 
@@ -87,6 +91,33 @@ class DMeFavoritesViewController: BaseViewController {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchData()
                 }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        CourseProvider.request(.course_favorites(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.tableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["data"] as? [[String: Any]] {
+                    if let models = [CourseModel].deserialize(from: data) as? [CourseModel] {
+                        self.favoritesModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.endRefreshing()
+                        } else {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
             }
         }))
     }

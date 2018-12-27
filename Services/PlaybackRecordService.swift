@@ -52,11 +52,27 @@ class PlaybackRecordService {
         }
     }
     
+    func fetchLatestCourseSectionID(courseID: Int) -> Int? {
+        if let courseRecords = records?[courseID] {
+            if let index = courseRecords[0] {
+                return Int(index)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
     func updateRecords(courseID: Int, sectionID: Int, seconds: TimeInterval) {
         if let _ = records?[courseID] {
             records?[courseID]?[sectionID] = seconds
+            //用0来记录课程最新播放索引
+            records?[courseID]?[0] = TimeInterval(sectionID)
         } else {
             records?[courseID] = [sectionID: seconds]
+            //用0来记录课程最新播放索引
+            records?[courseID]?[0] = TimeInterval(sectionID)
         }
     }
     
@@ -70,12 +86,19 @@ class PlaybackRecordService {
         for courseRecords in records {
             
             for sectionRecord in courseRecords.value {
+                
+                //如果是播放索引记录，则跳过
+                guard sectionRecord.key != 0 else { continue }
+                
                 dispatchGroup.enter()
                 CourseProvider.request(.course_record(courseRecords.key, sectionRecord.key, String(sectionRecord.value)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                     
                     if code >= 0 {
+                        //通知所有持有课程Model的class更新数据
+                        NotificationCenter.default.post(name: Notification.Course.courseRecordDidChanged, object: nil, userInfo: [courseRecords.key: courseRecords.value])
+                        
                         self.records?[courseRecords.key]?.removeValue(forKey: sectionRecord.key)
-                        if self.records?[courseRecords.key]?.keys.count == 0 {
+                        if self.records?[courseRecords.key]?.keys.count == 0 || (self.records?[courseRecords.key]?.keys.count == 1 && self.records?[courseRecords.key]?.keys.first == 0) {
                             self.records?.removeValue(forKey: courseRecords.key)
                         }
                     }

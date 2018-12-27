@@ -484,11 +484,34 @@ class DCourseDetailViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-
+        NotificationCenter.default.addObserver(self, selector: #selector(courseRecordDidChanged(sender:)), name: Notification.Course.courseRecordDidChanged, object: nil)
+        
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
             self?.reloadNavigationItem()
             self?.tableView.reloadSection(1, with: .none)
         }
+    }
+    
+    @objc func courseRecordDidChanged(sender: Notification) {
+        
+        guard let courseRecord = sender.userInfo?[viewModel.courseID] as? [Int: TimeInterval] else { return }
+        
+        if let sectionIndexID = courseRecord[0] {
+            viewModel.courseModel?.lastest_play_catalogue = Int(sectionIndexID)
+        }
+        
+        for sectionID in courseRecord.keys {
+            guard sectionID != 0 else { continue }
+            
+            if let index = viewModel.courseModel?.course_catalogues?.firstIndex(where: { (sectionModel) -> Bool in
+                return sectionModel.id == sectionID
+            }), let sectionRecord = courseRecord[sectionID] {
+                viewModel.courseModel?.course_catalogues?[exist: index]?.learned = Float(sectionRecord)
+                
+                tableView.reloadSection(1, with: UITableView.RowAnimation.none)
+            }
+        }
+        
     }
     
     // MARK: - ============= Request =============
@@ -1024,6 +1047,10 @@ class DCourseDetailViewController: BaseViewController {
                     sectionID = ID
                 }
             }
+            //本地播放小节索引数据，优于远程数据
+            if let ID = PlaybackRecordService.sharedInstance.fetchLatestCourseSectionID(courseID: viewModel.courseID) {
+                sectionID = ID
+            }
             
             guard let ID = sectionID else { return }
             let viewController = DCourseSectionViewController(courseID: viewModel.courseID, sectionID: ID)
@@ -1044,7 +1071,7 @@ class DCourseDetailViewController: BaseViewController {
             
             guard viewModel.courseModel?.is_bought == true else {
                 if viewModel.courseModel?.price == 0 {
-                    HUDService.sharedInstance.show(string: "免费课程暂不支持留言")
+                    HUDService.sharedInstance.show(string: "学习课程后才能评论")
                 } else {
                     HUDService.sharedInstance.show(string: "购买课程后才能评论")
                 }

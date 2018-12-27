@@ -269,7 +269,7 @@ class CourseCell: UITableViewCell {
                 
             } else if mode == .owned {
                 actionBtn.isHidden = true
-                priceLabel.isHidden = true
+                priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
                 
                 priceLabel.snp.remakeConstraints { make in
@@ -310,6 +310,14 @@ class CourseCell: UITableViewCell {
             priceLabel.textColor = UIConstants.Color.primaryGreen
             priceLabel.font = UIConstants.Font.body
             priceLabel.text = "开始学习"
+            
+            if model?.is_finished_course == true {
+                priceLabel.text = "完成学习"
+            } else if model?.lastest_play_catalogue != nil {
+                priceLabel.text = "继续学习"
+            } else {
+                priceLabel.text = "立即学习"
+            }
         }
         
         

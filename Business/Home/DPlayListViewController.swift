@@ -288,6 +288,7 @@ class DPlayListViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
+        
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
             self?.reloadPlayPanel()
         }
@@ -543,7 +544,7 @@ extension DPlayListViewController: UITableViewDataSource, UITableViewDelegate {
         if playingIndex != -1, playingIndex == indexPath.row {
             isPlaying = true
         }
-        cell.setup(model: PlayListService.sharedInstance.playingSectionModels![indexPath.row], isPlaying: isPlaying, isBought: true)
+        cell.setup(model: PlayListService.sharedInstance.playingSectionModels![indexPath.row], isPlaying: isPlaying, isBought: true, isProgressHidden: true)
         return cell
     }
     

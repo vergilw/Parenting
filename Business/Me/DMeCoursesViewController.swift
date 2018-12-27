@@ -34,7 +34,7 @@ class DMeCoursesViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.fetchData()
+            self?.fetchMoreData()
         })
         tableView.mj_footer.isHidden = true
         
@@ -54,14 +54,19 @@ class DMeCoursesViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
-    func fetchData() {
+    
+    fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         
         CourseProvider.request(.courses_my(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
             HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
             if code >= 0 {
                 if let data = JSON?["courses"] as? [[String: Any]] {
-                    self.courseModels = [CourseModel].deserialize(from: data) as? [CourseModel]
+                    if let models = [CourseModel].deserialize(from: data) as? [CourseModel] {
+                        self.courseModels = models
+                    }
                     self.tableView.reloadData()
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
@@ -74,11 +79,11 @@ class DMeCoursesViewController: BaseViewController {
                             self.tableView.mj_footer.isHidden = true
                         }
                     }
-                    
-                    if self.courseModels?.count ?? 0 == 0 {
-                        HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
-                            self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
-                        }
+                }
+                
+                if self.courseModels?.count ?? 0 == 0 {
+                    HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                        self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
                     }
                 }
                 
@@ -86,6 +91,33 @@ class DMeCoursesViewController: BaseViewController {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchData()
                 }
+            }
+        }))
+    }
+    
+    fileprivate func fetchMoreData() {
+        
+        CourseProvider.request(.courses_my(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.tableView.mj_footer.endRefreshing()
+            
+            if code >= 0 {
+                if let data = JSON?["courses"] as? [[String: Any]] {
+                    if let models = [CourseModel].deserialize(from: data) as? [CourseModel] {
+                        self.courseModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.pageNumber {
+                            self.pageNumber += 1
+                            self.tableView.mj_footer.endRefreshing()
+                        } else {
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                        }
+                    }
+                }
+                
             }
         }))
     }

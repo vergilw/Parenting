@@ -757,7 +757,8 @@ class DCourseSectionViewController: BaseViewController {
             let manager = Alamofire.NetworkReachabilityManager(host: ServerHost)
             if manager?.isReachableOnWWAN ?? false {
                 if let _ = AppCacheService.sharedInstance.autoplayOnWWAN {
-                    self.preparePlayAudio(autoPlay: true)
+                    preparePlayAudio(autoPlay: true)
+                    progressLabel.isHidden = true
                 } else {
                     let alertController = UIAlertController(title: nil, message: "当前为非WiFi网络，播放将产生流量费用", preferredStyle: .alert)
                     alertController.addAction(UIAlertAction(title: "取消播放", style: .default, handler: { (alertAction) in
@@ -766,6 +767,7 @@ class DCourseSectionViewController: BaseViewController {
                     alertController.addAction(UIAlertAction(title: "继续播放", style: .default, handler: { (alertAction) in
                         AppCacheService.sharedInstance.autoplayOnWWAN = true
                         self.preparePlayAudio(autoPlay: true)
+                        self.progressLabel.isHidden = true
                     }))
                     DispatchQueue.main.async {
                         self.present(alertController, animated: true, completion: nil)
@@ -773,8 +775,11 @@ class DCourseSectionViewController: BaseViewController {
                 }
                 
             } else {
-                self.preparePlayAudio(autoPlay: true)
+                preparePlayAudio(autoPlay: true)
+                progressLabel.isHidden = true
             }
+            
+            
             
 //            audioActionBtn.setImage(UIImage(named: "course_pauseAction")?.withRenderingMode(.alwaysOriginal), for: .normal)
 //

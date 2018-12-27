@@ -23,6 +23,7 @@ class PlayListService: NSObject {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(courseRecordDidChanged(sender:)), name: Notification.Course.courseRecordDidChanged, object: nil)
         
         setupRemoteTransportControls()
         
@@ -88,28 +89,37 @@ class PlayListService: NSObject {
                     PlaybackRecordService.sharedInstance.syncRecords()
                 }
                 
+                playingCourseModel = course
+                playingSectionModels = sections
+                self.playingIndex = playingIndex
+                
+                //恢复上次播放进度
+                recoverPlayerCurrentTime()
+                
                 if startPlaying {
                     player.play()
                     
-                    do {
-                        try AVAudioSession.sharedInstance().setActive(true)
-                    } catch {
-                        print(error)
-                    }
-                    
-                    
-                    playingCourseModel = course
-                    playingSectionModels = sections
-                    self.playingIndex = playingIndex
-                    
-                } else {
-                    playingCourseModel = course
-                    playingSectionModels = sections
-                    self.playingIndex = playingIndex
+                    try? AVAudioSession.sharedInstance().setActive(true)
                 }
                 
                 isPlaying = startPlaying
             }
+        }
+    }
+    
+    fileprivate func recoverPlayerCurrentTime() {
+        guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex != -1 else { return }
+        guard let courseID = course.id, let section = sections[exist: playingIndex], let sectionID = section.id else { return }
+        
+        
+        var recordSeconds: Float?
+        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
+            recordSeconds = seconds
+        } else if let seconds = section.learned {
+            recordSeconds = seconds
+        }
+        if let seconds = recordSeconds {
+            player.seek(to: CMTime(seconds: Double(seconds), preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         }
     }
     
@@ -165,6 +175,16 @@ class PlayListService: NSObject {
         
         playAudio(course: course, sections: sections, playingIndex: playingIndex+1)
         self.setupNowPlaying()
+        
+    }
+    
+    @objc func courseRecordDidChanged(sender: Notification) {
+        guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex != -1 else { return }
+        guard let courseID = course.id, let section = sections[exist: playingIndex], let sectionID = section.id else { return }
+        
+        guard let courseRecord = sender.userInfo?[courseID] as? [Int: TimeInterval], let sectionRecord = courseRecord[sectionID] else { return }
+        
+        playingSectionModels?[playingIndex].learned = Float(sectionRecord)
         
     }
     

@@ -119,7 +119,7 @@ extension CourseCataloguesView: UITableViewDataSource, UITableViewDelegate {
             sections[PlayListService.sharedInstance.playingIndex].id == courseSectionModels![indexPath.row].id {
             isPlaying = true
         }
-        cell.setup(model: courseSectionModels![indexPath.row], isPlaying: isPlaying, isBought: isBought ?? false)
+        cell.setup(model: courseSectionModels![indexPath.row], isPlaying: isPlaying, isBought: isBought ?? false, isProgressHidden: true)
         return cell
     }
     

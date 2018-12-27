@@ -149,7 +149,7 @@ class CourseCatalogueCell: UITableViewCell {
         fatalError()
     }
     
-    func setup(model: CourseSectionModel, isPlaying: Bool, isBought: Bool) {
+    func setup(model: CourseSectionModel, isPlaying: Bool, isBought: Bool, isProgressHidden: Bool = false) {
         sequenceLabel.setParagraphText(String(format: "%02d", model.sort ?? 0))
         
         titleLabel.setParagraphText(model.title ?? "")
@@ -163,12 +163,12 @@ class CourseCatalogueCell: UITableViewCell {
         
         var recordSeconds: Float?
         
-        if let courseID = model.course?.id, let sectionID = model.id {
+        if let courseID = model.course?.id, let sectionID = model.id, isProgressHidden == false {
             if let record = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
                 recordSeconds = record
             }
         }
-        if (recordSeconds != nil || (model.learned != nil && model.learned != 0)) && isBought == true {
+        if isProgressHidden == false && (recordSeconds != nil || (model.learned != nil && model.learned != 0)) && isBought == true {
             auditionLabel.isHidden = true
             progressView.isHidden = false
             
