@@ -32,6 +32,11 @@
 		130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6221AFB978003E7645 /* StoryModel.swift */; };
 		130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6421AFBCD5003E7645 /* StoryAPI.swift */; };
 		130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */; };
+		130D8E2321D60A2D008833C7 /* DWithdrawDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2221D60A2D008833C7 /* DWithdrawDetailsViewController.swift */; };
+		130D8E2521D60B69008833C7 /* WithdrawDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2421D60B69008833C7 /* WithdrawDetailsCell.swift */; };
+		130D8E2921D6234F008833C7 /* reward_share_bg.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130D8E2821D6234F008833C7 /* reward_share_bg.gif */; };
+		130D8E2B21D631F2008833C7 /* DetailsNotDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2A21D631F2008833C7 /* DetailsNotDataCell.swift */; };
+		130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130D8E2C21D63427008833C7 /* reward_courses.gif */; };
 		130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43221CC83C30008259F /* DPaymentViewController.swift */; };
 		130DD43521CC863F0008259F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43421CC863F0008259F /* CategoryView.swift */; };
 		130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43621CCE27D0008259F /* RewardDetailsCell.swift */; };
@@ -191,6 +196,11 @@
 		130D8B6221AFB978003E7645 /* StoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryModel.swift; sourceTree = "<group>"; };
 		130D8B6421AFBCD5003E7645 /* StoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAPI.swift; sourceTree = "<group>"; };
 		130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssociateWechatView.swift; sourceTree = "<group>"; };
+		130D8E2221D60A2D008833C7 /* DWithdrawDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawDetailsViewController.swift; sourceTree = "<group>"; };
+		130D8E2421D60B69008833C7 /* WithdrawDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawDetailsCell.swift; sourceTree = "<group>"; };
+		130D8E2821D6234F008833C7 /* reward_share_bg.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward_share_bg.gif; sourceTree = "<group>"; };
+		130D8E2A21D631F2008833C7 /* DetailsNotDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsNotDataCell.swift; sourceTree = "<group>"; };
+		130D8E2C21D63427008833C7 /* reward_courses.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward_courses.gif; sourceTree = "<group>"; };
 		130DD43221CC83C30008259F /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
 		130DD43421CC863F0008259F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		130DD43621CCE27D0008259F /* RewardDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardDetailsCell.swift; sourceTree = "<group>"; };
@@ -394,6 +404,7 @@
 				130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */,
 				130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */,
 				130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */,
+				130D8E2221D60A2D008833C7 /* DWithdrawDetailsViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -407,6 +418,8 @@
 				1316F4E221D0AEA900F5A756 /* RewardRankingCell.swift */,
 				130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */,
 				130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */,
+				130D8E2421D60B69008833C7 /* WithdrawDetailsCell.swift */,
+				130D8E2A21D631F2008833C7 /* DetailsNotDataCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -472,6 +485,8 @@
 		1316F4E621D0C85B00F5A756 /* Gif */ = {
 			isa = PBXGroup;
 			children = (
+				130D8E2C21D63427008833C7 /* reward_courses.gif */,
+				130D8E2821D6234F008833C7 /* reward_share_bg.gif */,
 				1316F4E921D0C87400F5A756 /* course_commentRewardAnimation.gif */,
 				1316F4E721D0C86D00F5A756 /* public_shareRewardAnimation.gif */,
 				130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */,
@@ -891,6 +906,8 @@
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
+				130D8E2921D6234F008833C7 /* reward_share_bg.gif in Resources */,
+				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
 				130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
@@ -1024,6 +1041,7 @@
 				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
 				130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
+				130D8E2321D60A2D008833C7 /* DWithdrawDetailsViewController.swift in Sources */,
 				130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
@@ -1093,6 +1111,7 @@
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
+				130D8E2521D60B69008833C7 /* WithdrawDetailsCell.swift in Sources */,
 				1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */,
 				132DA60021C3A3EE004F0F42 /* DVideoDetailViewModel.swift in Sources */,
 				1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */,
@@ -1123,6 +1142,7 @@
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */,
 				130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */,
+				130D8E2B21D631F2008833C7 /* DetailsNotDataCell.swift in Sources */,
 				13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */,
 				13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */,
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,

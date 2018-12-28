@@ -48,6 +48,7 @@ class DPaymentViewController: BaseViewController {
         tableView.backgroundColor = .white
         tableView.rowHeight = 118
         tableView.register(RewardDetailsCell.self, forCellReuseIdentifier: RewardDetailsCell.className())
+        tableView.register(DetailsNotDataCell.self, forCellReuseIdentifier: DetailsNotDataCell.className())
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -137,6 +138,7 @@ class DPaymentViewController: BaseViewController {
         let bgImgView: UIImageView = {
             let imgView = UIImageView()
             imgView.image = UIImage(named: "payment_coinGradientBg")
+            imgView.contentMode = .scaleToFill
             return imgView
         }()
         
@@ -182,7 +184,7 @@ class DPaymentViewController: BaseViewController {
         bgImgView.snp.makeConstraints { make in
             make.top.centerX.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(350/290.0)
-            make.width.equalToSuperview().multipliedBy(720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2))
+            make.width.equalTo(720/650.0*(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing))
         }
         coinBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -220,6 +222,7 @@ class DPaymentViewController: BaseViewController {
         let bgImgView: UIImageView = {
             let imgView = UIImageView()
             imgView.image = UIImage(named: "payment_rewardGradientBg")
+            imgView.contentMode = .scaleToFill
             return imgView
         }()
         
@@ -237,7 +240,7 @@ class DPaymentViewController: BaseViewController {
             let label = ParagraphLabel()
             label.font = UIConstants.Font.foot
             label.textColor = .white
-            label.text = "100金币=1元=1氧育币"
+            label.text = "100金币约等于1氧育币"
             return label
         }()
         
@@ -271,7 +274,7 @@ class DPaymentViewController: BaseViewController {
         bgImgView.snp.makeConstraints { make in
             make.top.centerX.equalToSuperview()
             make.height.equalToSuperview().multipliedBy(350/290.0)
-            make.width.equalToSuperview().multipliedBy(720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2))
+            make.width.equalTo(720/650.0*(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing))
         }
         rewardBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -395,7 +398,7 @@ class DPaymentViewController: BaseViewController {
             let button = UIButton()
             button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
             button.titleLabel?.font = UIConstants.Font.h2
-            button.setTitle("收入排行", for: .normal)
+            button.setTitle("排行榜", for: .normal)
             button.titleLabel?.adjustsFontSizeToFitWidth = true
             button.layer.cornerRadius = 20
             button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
@@ -406,12 +409,24 @@ class DPaymentViewController: BaseViewController {
         
         let shareBtn: UIButton = {
             let button = UIButton()
-            button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.h2
-            button.setTitle("Marvel", for: .normal)
-            button.layer.cornerRadius = 20
-            button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
-            button.layer.borderWidth = 1
+            let img = YYImage(named: "reward_share_bg")!
+            let imgView = YYAnimatedImageView(image: img)
+            button.addSubview(imgView)
+            imgView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            
+            let titleLabel: UILabel = {
+                let label = UILabel()
+                label.font = UIConstants.Font.h2
+                label.textColor = .white
+                label.text = "分享收入赚10金币"
+                return label
+            }()
+            button.addSubview(titleLabel)
+            titleLabel.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
             //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
@@ -553,11 +568,12 @@ class DPaymentViewController: BaseViewController {
     }
     
     @objc func withdrawBtnAction() {
-        if UMSocialManager.default()?.isInstall(UMSocialPlatformType.wechatSession) ?? false {
+        //FIXME: DEBUG
+//        if UMSocialManager.default()?.isInstall(UMSocialPlatformType.wechatSession) ?? false {
             navigationController?.pushViewController(DWithdrawViewController(), animated: true)
-        } else {
-            HUDService.sharedInstance.show(string: "iOS暂不支持提现")
-        }
+//        } else {
+//            HUDService.sharedInstance.show(string: "iOS暂不支持提现")
+//        }
     }
     
     @objc func rankingBtnAction() {
@@ -573,15 +589,29 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return coinLogModels?.count ?? 0
+        return coinLogModels?.count ?? 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if coinLogModels?.count ?? 0 > 0 {
+            return 118
+        }
+        return 385
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RewardDetailsCell.className(), for: indexPath) as! RewardDetailsCell
-        if let model = coinLogModels?[exist: indexPath.row] {
-            cell.setup(model: model)
+        if coinLogModels?.count ?? 0 > 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: RewardDetailsCell.className(), for: indexPath) as! RewardDetailsCell
+            if let model = coinLogModels?[exist: indexPath.row] {
+                cell.setup(model: model)
+            }
+            return cell
+            
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: DetailsNotDataCell.className(), for: indexPath) as! DetailsNotDataCell
+            return cell
         }
-        return cell
+        
     }
     
 }

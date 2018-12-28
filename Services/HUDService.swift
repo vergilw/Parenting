@@ -107,9 +107,9 @@ class HUDService {
         }
     }
     
-    func showNoDataView(target view: UIView, frame: CGRect = .zero, redirect block: @escaping ()->()) {
+    func showNoDataView(target view: UIView, frame: CGRect = .zero, redirect block: (()->())? = nil) {
         let HUD = ResultView()
-        HUD.setupNoData()
+        HUD.setupNoData(isSolutionHidden: block == nil)
         view.addSubview(HUD)
         HUD.actionBlock = block
         
@@ -362,10 +362,12 @@ class ResultView: UIView {
         fatalError()
     }
     
-    func setupNoData() {
+    func setupNoData(isSolutionHidden: Bool) {
         mode = .noData
         iconImgView.image = UIImage(named: "public_noDataImg")
         titleLabel.setParagraphText("糟糕！这里什么都没有")
+        
+        solutionBtn.isHidden = isSolutionHidden
         solutionBtn.setTitle("   随便逛逛   ", for: .normal)
     }
     

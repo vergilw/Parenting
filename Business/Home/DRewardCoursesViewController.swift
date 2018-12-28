@@ -55,9 +55,13 @@ class DRewardCoursesViewController: BaseViewController {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = UIColor("#f9ce93")
         tableView.rowHeight = CourseCell.cellHeight()
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
@@ -82,7 +86,7 @@ class DRewardCoursesViewController: BaseViewController {
                 height = UIScreenWidth/375*182
             }
             let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: height)))
-            view.backgroundColor = UIColor("#f9ce93")
+//            view.backgroundColor = UIColor("#f9ce93")
             return view
         }()
         
@@ -172,6 +176,12 @@ class DRewardCoursesViewController: BaseViewController {
                         self.courseModels = models
                     }
                     self.tableView.reloadData()
+                    
+                    //FIXME: DEBUG
+                    if self.courseModels?.count ?? 0 == 0 {
+                        self.navigationController?.setNavigationBarHidden(false, animated: false)
+                        HUDService.sharedInstance.showNoDataView(target: self.view)
+                    }
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
@@ -268,12 +278,12 @@ extension DRewardCoursesViewController: UIScrollViewDelegate {
         let offsetY = scrollView.contentOffset.y
         if offsetY > (tableView.tableHeaderView?.bounds.size.height ?? 0)-navigationView.bounds.size.height {
             navigationView.backgroundColor = UIColor("#f9ce93")
-            navigationTitleLabel.textColor = UIConstants.Color.head
-            backBarBtn.tintColor = UIConstants.Color.head
+//            navigationTitleLabel.textColor = UIConstants.Color.head
+//            backBarBtn.tintColor = UIConstants.Color.head
         } else {
             navigationView.backgroundColor = UIColor.clear
-            navigationTitleLabel.textColor = .white
-            backBarBtn.tintColor = .white
+//            navigationTitleLabel.textColor = .white
+//            backBarBtn.tintColor = .white
         }
     }
 }

@@ -113,8 +113,12 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var rewardCoursesBtn: UIButton = {
         let button = UIButton()
-//        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.backgroundColor = UIConstants.Color.primaryOrange
+        let img = YYImage(named: "reward_courses")!
+        let imgView = YYAnimatedImageView(image: img)
+        button.addSubview(imgView)
+        imgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         button.addTarget(self, action: #selector(rewardCoursesBtnAction), for: .touchUpInside)
         return button
     }()

@@ -13,6 +13,7 @@ class CoinLogModel: HandyJSON {
     var id: Int?
     var amount: String?
     var title: String?
+    var tag_str: String?
     var created_at: Date?
     
     required init() { }

@@ -98,7 +98,7 @@ class RewardDetailsCell: UITableViewCell {
         
         titleLabel.setParagraphText(model.title ?? "")
         headnoteLabel.setParagraphText(model.created_at?.string(format: "yyyy.MM.dd HH:mm") ?? "")
-        descLabel.text = "分享奖励"
+        descLabel.text = model.tag_str
         let size = NSString(string: descLabel.text ?? "").boundingRect(with: CGSize(width: UIScreenWidth, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesFontLeading, attributes: [NSAttributedString.Key.font : descLabel.font], context: nil).size
         descLabel.snp.remakeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)

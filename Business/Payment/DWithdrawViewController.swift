@@ -145,11 +145,30 @@ class DWithdrawViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
+        initNavigationItem()
         view.addSubviews([scrollView])
         
         scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 150), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 150))
         
         scrollView.addSubviews([balanceTitleLabel, balanceValueLabel, balanceNoteLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+    }
+    
+    fileprivate func initNavigationItem() {
+        let detailsBtn: ActionButton = {
+            let button = ActionButton()
+            button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
+            button.setIndicatorColor(UIConstants.Color.primaryRed)
+            button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.h2_regular
+            button.setTitle("记录", for: .normal)
+            button.addTarget(self, action: #selector(detailsBtnAction), for: .touchUpInside)
+            return button
+        }()
+        
+        let barBtnItem = UIBarButtonItem(customView: detailsBtn)
+        barBtnItem.width = 34+50
+        navigationItem.rightBarButtonItem = barBtnItem
+        navigationItem.rightMargin = 0
     }
     
     // MARK: - ============= Constraints =============
@@ -226,7 +245,7 @@ class DWithdrawViewController: BaseViewController {
                     self.collectionView.reloadData()
                 }
                 if let ratio = JSON?["coin_to_cash"] as? NSNumber, let balance = AuthorizationService.sharedInstance.user?.reward, let balanceFloat = Float(balance), balanceFloat > 0 {
-                    let string = String(format: "（约¥%.0f）", floor(balanceFloat*ratio.floatValue))
+                    let string = String(format: "（约%.0f元）", floor(balanceFloat*ratio.floatValue))
                     self.balanceTitleLabel.setSymbolText("金币余额\(string)", symbolText: string, symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
                 }
                 
@@ -250,7 +269,9 @@ class DWithdrawViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-    
+    @objc func detailsBtnAction() {
+        navigationController?.pushViewController(DWithdrawDetailsViewController(), animated: true)
+    }
 }
 
 

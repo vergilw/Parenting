@@ -1,14 +1,14 @@
 //
-//  DCoinDetailsViewController.swift
+//  DWithdrawDetailsViewController.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/12/25.
+//  Created by Vergil.Wang on 2018/12/28.
 //  Copyright © 2018 zheng-chain. All rights reserved.
 //
 
 import UIKit
 
-class DCoinDetailsViewController: BaseViewController {
+class DWithdrawDetailsViewController: BaseViewController {
 
     var coinLogModels: [CoinLogModel]?
     
@@ -17,7 +17,7 @@ class DCoinDetailsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "交易记录"
+        navigationItem.title = "提现记录"
         
         initContentView()
         initConstraints()
@@ -29,17 +29,20 @@ class DCoinDetailsViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         tableView.backgroundColor = .white
-        tableView.rowHeight = 72
+        tableView.rowHeight = 104
         tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         tableView.separatorColor = UIConstants.Color.separator
         tableView.separatorStyle = .singleLine
-        tableView.register(CoinDetailsCell.self, forCellReuseIdentifier: CoinDetailsCell.className())
+        tableView.register(WithdrawDetailsCell.self, forCellReuseIdentifier: WithdrawDetailsCell.className())
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
             self?.fetchMoreData()
         })
         tableView.mj_footer.isHidden = true
+        let footer = tableView.mj_footer as! MJRefreshAutoNormalFooter
+        footer.setTitle("仅显示3个月以内的提现记录", for: .noMoreData)
+        footer.stateLabel.textColor = UIConstants.Color.foot
         
         view.addSubview(tableView)
     }
@@ -74,7 +77,7 @@ class DCoinDetailsViewController: BaseViewController {
                     if self.coinLogModels?.count ?? 0 == 0 {
                         HUDService.sharedInstance.showNoDataView(target: self.view)
                     }
-                    
+                
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
@@ -82,7 +85,12 @@ class DCoinDetailsViewController: BaseViewController {
                             self.tableView.mj_footer.resetNoMoreData()
                             
                         } else {
-                            self.tableView.mj_footer.isHidden = true
+                            self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                            if self.coinLogModels?.count ?? 0 == 0 {
+                                self.tableView.mj_footer.isHidden = true
+                            } else {
+                                self.tableView.mj_footer.isHidden = false
+                            }
                         }
                     }
                 }
@@ -128,11 +136,11 @@ class DCoinDetailsViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-
+    
 }
 
 
-extension DCoinDetailsViewController: UITableViewDataSource, UITableViewDelegate {
+extension DWithdrawDetailsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -143,19 +151,22 @@ extension DCoinDetailsViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CoinDetailsCell.className(), for: indexPath) as! CoinDetailsCell
-        if let model = coinLogModels?[exist: indexPath.row] {
-            cell.setup(model: model)
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: WithdrawDetailsCell.className(), for: indexPath) as! WithdrawDetailsCell
+//        if let model = coinLogModels?[exist: indexPath.row] {
+//            cell.setup(model: model)
+//        }
+        //FIXME: DEBUG
+        cell.setup()
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-//        if let model = storyModels?[exist: indexPath.row], let storyID = model.id {
-//            navigationController?.pushViewController(DTeacherStoryDetailViewController(storyID: storyID), animated: true)
-//        }
+        //        if let model = storyModels?[exist: indexPath.row], let storyID = model.id {
+        //            navigationController?.pushViewController(DTeacherStoryDetailViewController(storyID: storyID), animated: true)
+        //        }
         
     }
+
 }

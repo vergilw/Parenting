@@ -71,12 +71,12 @@ class TopUpItemCell: UICollectionViewCell {
     }
     
     func setupExchange(model: RewardExchangeModel, isEnabled: Bool) {
-        if let gain = model.coin_amount {
-            gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
+        if let gain = model.wallet_amount {
+            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "氧育币"
         }
         
-        if let cost = model.wallet_amount {
-            costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "氧育币"
+        if let cost = model.coin_amount {
+            costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "金币"
         }
         
         if isEnabled {
@@ -92,7 +92,7 @@ class TopUpItemCell: UICollectionViewCell {
     
     func setupWithdraw(model: WithdrawModel, isEnabled: Bool) {
         if let gain = model.cash_amount {
-            gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
+            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "元"
         }
         
         if let cost = model.coin_amount {
