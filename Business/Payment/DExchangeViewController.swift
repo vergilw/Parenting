@@ -26,8 +26,7 @@ class DExchangeViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "金币余额"
-        label.setSymbolText("金币余额（约1个氧育币）", symbolText: "（约1个氧育币）", symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
+        label.setParagraphText("金币余额")
         return label
     }()
     
@@ -91,7 +90,7 @@ class DExchangeViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("注意事项：\n暂时仅支持提现的微信；\n金币可以进行提现，也可以兑换氧育币；\n虚拟币不可转赠；")
+        label.setParagraphText("注意事项：\n1. 目前仅支持金币兑换氧育币；\n2. 金币与氧育币的兑换关系：1氧育币约等于100金币；")
         return label
     }()
     
@@ -226,6 +225,10 @@ class DExchangeViewController: BaseViewController {
                     }
                     self.collectionView.reloadData()
                 }
+                if let ratio = JSON?["coin_to_wallet"] as? NSNumber, let balance = AuthorizationService.sharedInstance.user?.reward, let balanceFloat = Float(balance), balanceFloat > 0 {
+                    let string = String(format: "（约%.0f个氧育币）", floor(balanceFloat*ratio.floatValue))
+                    self.balanceTitleLabel.setSymbolText("金币余额\(string)", symbolText: string, symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
+                }
                 
             } else if code == -2 {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
@@ -263,33 +266,47 @@ extension DExchangeViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopUpItemCell.className(), for: indexPath) as! TopUpItemCell
-        if let model = exchangeModels?[indexPath.row] {
-            cell.setupExchange(model: model)
+        var rewardBalance: Float = 0
+        if let reward = AuthorizationService.sharedInstance.user?.reward, let rewardFloat = Float(reward) {
+            rewardBalance = rewardFloat
+        }
+        if let model = exchangeModels?[exist: indexPath.row], let amount = Float(model.coin_amount ?? "") {
+            cell.setupExchange(model: model, isEnabled: rewardBalance >= amount)
         }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        //FIXME: DEBUG
+        guard let reward = AuthorizationService.sharedInstance.user?.reward, let rewardFloat = Float(reward) else { return }
         guard let model = exchangeModels?[exist: indexPath.row], let exchangeValue = model.coin_amount, let exchangeFloat = Float(exchangeValue) else { return }
+//        guard rewardFloat >= exchangeFloat else { return }
 
-        indicatorBtn.startAnimating()
-        indicatorBtn.isHidden = false
         
-        RewardCoinProvider.request(.reward_exchange(exchangeFloat), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            self.indicatorBtn.isHidden = true
-            self.indicatorBtn.stopAnimating()
+        let alertController = UIAlertController(title: nil, message: "确认用\(rewardFloat)金币兑换\(model.wallet_amount ?? "")氧育币吗？", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+            self.indicatorBtn.startAnimating()
+            self.indicatorBtn.isHidden = false
             
-            if code >= 0 {
-                HUDService.sharedInstance.show(string: "已成功兑换")
-                AuthorizationService.sharedInstance.updateUserInfo()
-            } else {
-                let alertController = UIAlertController(title: nil, message: "未能成功兑换，请稍后重试", preferredStyle: UIAlertController.Style.alert)
-                alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
-                self.present(alertController, animated: true, completion: nil)
-            }
-            
+            RewardCoinProvider.request(.reward_exchange(exchangeFloat), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                self.indicatorBtn.isHidden = true
+                self.indicatorBtn.stopAnimating()
+                
+                if code >= 0 {
+                    HUDService.sharedInstance.show(string: "已成功兑换")
+                    AuthorizationService.sharedInstance.updateUserInfo()
+                } else {
+                    let alertController = UIAlertController(title: nil, message: "未能成功兑换，请稍后重试", preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                
+            }))
         }))
+        self.present(alertController, animated: true, completion: nil)
+        
         
         
     }

@@ -31,6 +31,7 @@
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
 		130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6221AFB978003E7645 /* StoryModel.swift */; };
 		130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6421AFBCD5003E7645 /* StoryAPI.swift */; };
+		130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */; };
 		130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43221CC83C30008259F /* DPaymentViewController.swift */; };
 		130DD43521CC863F0008259F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43421CC863F0008259F /* CategoryView.swift */; };
 		130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DD43621CCE27D0008259F /* RewardDetailsCell.swift */; };
@@ -189,6 +190,7 @@
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
 		130D8B6221AFB978003E7645 /* StoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryModel.swift; sourceTree = "<group>"; };
 		130D8B6421AFBCD5003E7645 /* StoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAPI.swift; sourceTree = "<group>"; };
+		130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssociateWechatView.swift; sourceTree = "<group>"; };
 		130DD43221CC83C30008259F /* DPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPaymentViewController.swift; sourceTree = "<group>"; };
 		130DD43421CC863F0008259F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		130DD43621CCE27D0008259F /* RewardDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardDetailsCell.swift; sourceTree = "<group>"; };
@@ -404,6 +406,7 @@
 				130DD43621CCE27D0008259F /* RewardDetailsCell.swift */,
 				1316F4E221D0AEA900F5A756 /* RewardRankingCell.swift */,
 				130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */,
+				130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1060,6 +1063,7 @@
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
 				130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */,
+				130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */,
 				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,
 				13B7F73321B68728001BF15D /* QNFile.m in Sources */,
 				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
@@ -1282,10 +1286,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Vendors/WeChatSDK1.8.3",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1309,10 +1310,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Vendors/WeChatSDK1.8.3",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.otof.yangyu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

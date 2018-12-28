@@ -80,6 +80,17 @@ class DPaymentViewController: BaseViewController {
         return label
     }()
     
+    lazy fileprivate var withdrawBtn: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(named: "payment_withdrawBtnShadow"), for: .normal)
+        button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
+        button.setTitle("提现", for: .normal)
+        button.addTarget(self, action: #selector(withdrawBtnAction), for: .touchUpInside)
+        button.titleEdgeInsets = UIEdgeInsets(top: -2.5, left: 0, bottom: 2.5, right: 0)
+        return button
+    }()
+    
     lazy fileprivate var todayRewardLabel: PriceLabel = {
         let label = PriceLabel()
         label.font = UIConstants.Font.h2
@@ -220,16 +231,7 @@ class DPaymentViewController: BaseViewController {
             return label
         }()
         
-        let withdrawBtn: UIButton = {
-            let button = UIButton()
-            button.setBackgroundImage(UIImage(named: "payment_withdrawBtnShadow"), for: .normal)
-            button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.body
-            button.setTitle("提现", for: .normal)
-            button.addTarget(self, action: #selector(withdrawBtnAction), for: .touchUpInside)
-            button.titleEdgeInsets = UIEdgeInsets(top: -2.5, left: 0, bottom: 2.5, right: 0)
-            return button
-        }()
+        
         
         let footnoteLabel: ParagraphLabel = {
             let label = ParagraphLabel()
@@ -380,11 +382,21 @@ class DPaymentViewController: BaseViewController {
             return view
         }()
         
+        let shadowImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = .white
+            imgView.layer.shadowOffset = CGSize(width: 0, height: -3.0)
+            imgView.layer.shadowOpacity = 0.05
+            imgView.layer.shadowColor = UIColor.black.cgColor
+            return imgView
+        }()
+        
         let rankBtn: UIButton = {
             let button = UIButton()
             button.setTitleColor(UIConstants.Color.primaryOrange, for: .normal)
             button.titleLabel?.font = UIConstants.Font.h2
             button.setTitle("收入排行", for: .normal)
+            button.titleLabel?.adjustsFontSizeToFitWidth = true
             button.layer.cornerRadius = 20
             button.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
             button.layer.borderWidth = 1
@@ -403,6 +415,11 @@ class DPaymentViewController: BaseViewController {
             //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
+        
+        stackView.addSubview(shadowImgView)
+        shadowImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         stackView.addArrangedSubview(rankBtn)
         stackView.addArrangedSubview(shareBtn)
@@ -446,7 +463,10 @@ class DPaymentViewController: BaseViewController {
                 
                 if let data = JSON?["coin"] as? [String: Any] {
                     if let balance = data["amount"] as? String {
-                        self.rewardBalanceLabel.setPriceText(text: balance)
+//                        self.rewardBalanceLabel.setPriceText(text: balance)
+                        
+                        AuthorizationService.sharedInstance.user?.reward = balance
+                        self.reload()
                     }
                     if let todayReward = data["today_amount"] as? String {
                         self.todayRewardLabel.setPriceText(text: todayReward)
@@ -512,6 +532,15 @@ class DPaymentViewController: BaseViewController {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
             coinBalanceLabel.setPriceText(text: balance, discount: nil)
         }
+        if let balance = AuthorizationService.sharedInstance.user?.reward {
+            rewardBalanceLabel.setPriceText(text: balance, discount: nil)
+            
+            //FIXME: DEBUG
+//            if let balanceFloat = Float(balance), balanceFloat < 100 {
+//                withdrawBtn.isHidden = true
+//            }
+        }
+        
     }
     
     // MARK: - ============= Action =============
@@ -524,7 +553,11 @@ class DPaymentViewController: BaseViewController {
     }
     
     @objc func withdrawBtnAction() {
-        navigationController?.pushViewController(DWithdrawViewController(), animated: true)
+        if UMSocialManager.default()?.isInstall(UMSocialPlatformType.wechatSession) ?? false {
+            navigationController?.pushViewController(DWithdrawViewController(), animated: true)
+        } else {
+            HUDService.sharedInstance.show(string: "iOS暂不支持提现")
+        }
     }
     
     @objc func rankingBtnAction() {

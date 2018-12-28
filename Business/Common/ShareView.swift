@@ -173,6 +173,7 @@ class ShareView: UIView {
     }
     
     func present() {
+        self.layoutIfNeeded()
         self.panelView.snp.remakeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(218)

@@ -66,8 +66,8 @@ class AuthorizationViewController: BaseViewController {
         return button
     }()
 
-    lazy fileprivate var wechatBtn: UIButton = {
-        let button = UIButton()
+    lazy fileprivate var wechatBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
         button.setTitle(" 微信登录", for: .normal)
@@ -333,10 +333,12 @@ class AuthorizationViewController: BaseViewController {
     }
     
     @objc func wechatBtnAction() {
+        wechatBtn.startAnimating()
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
                 self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                    self?.wechatBtn.stopAnimating()
                     if code == 10002 {
                         self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
                     } else if code == 10001 {
@@ -345,6 +347,7 @@ class AuthorizationViewController: BaseViewController {
                     }
                 })
             } else {
+                self?.wechatBtn.stopAnimating()
                 HUDService.sharedInstance.show(string: "微信授权失败")
             }
         })

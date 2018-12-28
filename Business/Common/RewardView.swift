@@ -19,6 +19,7 @@ class RewardView: UIView {
     lazy fileprivate var dismissBtn: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        button.alpha = 0.0
         button.addTarget(self, action: #selector(dismissBtnAction), for: .touchUpInside)
         return button
     }()
@@ -101,6 +102,7 @@ class RewardView: UIView {
         contentView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         contentView.isHidden = false
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.curveLinear, animations: {
+            self.dismissBtn.alpha = 1.0
             self.contentView.transform = CGAffineTransform.identity
         }, completion: nil)
     }

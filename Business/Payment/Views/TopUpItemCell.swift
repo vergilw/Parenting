@@ -67,9 +67,10 @@ class TopUpItemCell: UICollectionViewCell {
             costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "元"
         }
         
+        
     }
     
-    func setupExchange(model: RewardExchangeModel) {
+    func setupExchange(model: RewardExchangeModel, isEnabled: Bool) {
         if let gain = model.coin_amount {
             gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
         }
@@ -78,9 +79,18 @@ class TopUpItemCell: UICollectionViewCell {
             costLabel.text = (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "氧育币"
         }
         
+        if isEnabled {
+            layer.borderColor = UIConstants.Color.primaryGreen.cgColor
+            gainLabel.textColor = UIConstants.Color.primaryGreen
+            costLabel.textColor = UIConstants.Color.primaryGreen
+        } else {
+            layer.borderColor = UIConstants.Color.disable.cgColor
+            gainLabel.textColor = UIConstants.Color.disable
+            costLabel.textColor = UIConstants.Color.disable
+        }
     }
     
-    func setupWithdraw(model: WithdrawModel) {
+    func setupWithdraw(model: WithdrawModel, isEnabled: Bool) {
         if let gain = model.cash_amount {
             gainLabel.text = String.integerFormatter.string(from: NSNumber(string: gain) ?? 0)
         }
@@ -89,6 +99,15 @@ class TopUpItemCell: UICollectionViewCell {
             costLabel.text = "兑" + (String.integerFormatter.string(from: NSNumber(string: cost) ?? 0) ?? "") + "金币"
         }
         
+        if isEnabled {
+            layer.borderColor = UIConstants.Color.primaryGreen.cgColor
+            gainLabel.textColor = UIConstants.Color.primaryGreen
+            costLabel.textColor = UIConstants.Color.primaryGreen
+        } else {
+            layer.borderColor = UIConstants.Color.disable.cgColor
+            gainLabel.textColor = UIConstants.Color.disable
+            costLabel.textColor = UIConstants.Color.disable
+        }
     }
 }
 

@@ -112,6 +112,7 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DCourseDetailViewModel()
     
+    lazy fileprivate var shareBarBtn: ActionButton = ActionButton()
     
     lazy fileprivate var categoryView: UIView = {
         let view = UIView()
@@ -614,9 +615,11 @@ class DCourseDetailViewController: BaseViewController {
     
     func reloadNavigationItem() {
         
-        let shareBarBtn: UIButton = {
+        let shareBarBtn: ActionButton = {
             let img = UIImage(named: "public_shareBarItem")!.withRenderingMode(.alwaysOriginal)
-            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 10+img.size.width+UIConstants.Margin.trailing, height: 44)))
+            let button = ActionButton()
+            button.setIndicatorColor(UIConstants.Color.primaryGreen)
+            button.frame = CGRect(origin: .zero, size: CGSize(width: 10+img.size.width+UIConstants.Margin.trailing, height: 44))
             
             if viewModel.courseModel?.rewardable == true {
                 let img = YYImage(named: "public_shareRewardAnimation")!
@@ -628,6 +631,7 @@ class DCourseDetailViewController: BaseViewController {
                     make.width.equalTo(22)
                     make.height.equalTo(22)
                 }
+                button.hiddenViews.append(imgView)
             } else {
                 button.setImage(img, for: .normal)
                 button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(UIConstants.Margin.trailing-10)/2, bottom: 0, right: (UIConstants.Margin.trailing-10)/2)
@@ -636,6 +640,7 @@ class DCourseDetailViewController: BaseViewController {
             button.addTarget(self, action: #selector(shareBarItemAction), for: .touchUpInside)
             return button
         }()
+        self.shareBarBtn = shareBarBtn
         
         let customView: UIView = {
             let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: shareBarBtn.bounds.size.width, height: shareBarBtn.bounds.size.height)))
@@ -805,7 +810,7 @@ class DCourseDetailViewController: BaseViewController {
         
     }
     
-    @objc func shareBarItemAction(isAlertHidden: Bool = false) {
+    @objc func shareBarItemAction(isAlertHidden: Bool = false, isCheckedReward: Bool = false) {
         
         if isAlertHidden == false && viewModel.courseModel?.rewardable == true && !AuthorizationService.sharedInstance.isSignIn() {
             let alertController = UIAlertController(title: nil, message: "登录后进行分享才可获取赏金哟", preferredStyle: UIAlertController.Style.alert)
@@ -813,10 +818,31 @@ class DCourseDetailViewController: BaseViewController {
                 self.shareBarItemAction(isAlertHidden: true)
             }))
             alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.default, handler: { (action) in
-                self.navigationController?.popViewController(animated: true)
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                self.present(authorizationNavigationController, animated: true, completion: nil)
             }))
             self.present(alertController, animated: true, completion: nil)
             
+            return
+        }
+        
+        //再次检测是否赏金课程
+        if isCheckedReward == false && viewModel.courseModel?.rewardable == true {
+            shareBarBtn.startAnimating()
+            self.viewModel.fetchCourse { (status) in
+                self.shareBarBtn.stopAnimating()
+                
+                if self.viewModel.courseModel?.rewardable == false {
+                    let alertController = UIAlertController(title: nil, message: "该课程已退出赏金模式，是否继续分享？", preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+                    alertController.addAction(UIAlertAction(title: "继续", style: UIAlertAction.Style.default, handler: { (action) in
+                        self.shareBarItemAction(isAlertHidden: isAlertHidden, isCheckedReward: true)
+                    }))
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    self.shareBarItemAction(isAlertHidden: isAlertHidden, isCheckedReward: true)
+                }
+            }
             return
         }
         
@@ -877,11 +903,10 @@ class DCourseDetailViewController: BaseViewController {
                 shareView?.removeFromSuperview()
             }
         }
-        view.addSubview(shareView)
+        navigationController?.view.addSubview(shareView)
         shareView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        view.layoutIfNeeded()
         shareView.present()
     }
     
@@ -1290,7 +1315,6 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         } else if let price = viewModel.courseModel?.price {
             
             tagLabel.setPriceText(text: String(price), discount: viewModel.courseModel?.market_price)
-            tagLabel.textColor = UIColor("#ef5226")
             tagLabel.backgroundColor = .white
             tagLabel.snp.remakeConstraints { make in
                 make.trailing.equalTo(-25)

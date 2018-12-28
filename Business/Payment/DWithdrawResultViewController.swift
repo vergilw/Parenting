@@ -70,8 +70,8 @@ class DWithdrawResultViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var amountValueLabel: UILabel = {
-        let label = UILabel()
+    lazy fileprivate var amountValueLabel: PriceLabel = {
+        let label = PriceLabel()
         label.font = UIFont(name: "PingFangSC-Semibold", size: 15)!
         label.textColor = UIConstants.Color.head
         return label
@@ -243,7 +243,7 @@ class DWithdrawResultViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let withdrawValue = withdrawValue {
-            amountValueLabel.text = "¥\(withdrawValue)"
+            amountValueLabel.setPriceText(text: String(withdrawValue), symbol: "¥", discount: nil)
         }
         if let account = AuthorizationService.sharedInstance.user?.wechat_name {
             accountValueLabel.text = account

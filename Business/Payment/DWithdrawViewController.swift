@@ -26,8 +26,7 @@ class DWithdrawViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
-        label.text = "金币余额"
-        label.setSymbolText("金币余额（约10¥）", symbolText: "（约10¥）", symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
+        label.setParagraphText("金币余额")
         return label
     }()
     
@@ -91,7 +90,7 @@ class DWithdrawViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("注意事项：\n暂时仅支持提现的微信；\n金币可以进行提现，也可以兑换氧育币；\n虚拟币不可转赠；")
+        label.setParagraphText("注意事项：\n1. 提现申请将在1-3个工作日内审批到账，如遇到高峰期，可能会有延迟到账，烦请耐心等待；\n2. 提现到账查询：微信->我->钱包->零钱->零钱明细，如果有名称为“企业付款：氧育亲子提现成功”的数据，既提现到账成功；")
         return label
     }()
     
@@ -226,6 +225,10 @@ class DWithdrawViewController: BaseViewController {
                     }
                     self.collectionView.reloadData()
                 }
+                if let ratio = JSON?["coin_to_cash"] as? NSNumber, let balance = AuthorizationService.sharedInstance.user?.reward, let balanceFloat = Float(balance), balanceFloat > 0 {
+                    let string = String(format: "（约¥%.0f）", floor(balanceFloat*ratio.floatValue))
+                    self.balanceTitleLabel.setSymbolText("金币余额\(string)", symbolText: string, symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
+                }
                 
             } else if code == -2 {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
@@ -263,38 +266,61 @@ extension DWithdrawViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopUpItemCell.className(), for: indexPath) as! TopUpItemCell
-        if let model = exchangeModels?[indexPath.row] {
-            cell.setupWithdraw(model: model)
+        var rewardBalance: Float = 0
+        if let reward = AuthorizationService.sharedInstance.user?.reward, let rewardFloat = Float(reward) {
+            rewardBalance = rewardFloat
+        }
+        if let model = exchangeModels?[exist: indexPath.row], let amount = Float(model.coin_amount ?? "") {
+            cell.setupWithdraw(model: model, isEnabled: rewardBalance >= amount)
         }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        //FIXME: DEBUG
+        guard let reward = AuthorizationService.sharedInstance.user?.reward, let rewardFloat = Float(reward) else { return }
         guard let model = exchangeModels?[exist: indexPath.row], let exchangeValue = model.coin_amount, let exchangeFloat = Float(exchangeValue) else { return }
+//        guard rewardFloat >= exchangeFloat else { return }
         
-        indicatorBtn.startAnimating()
-        indicatorBtn.isHidden = false
-        
-        PaymentProvider.request(.withdraw(exchangeFloat), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            self.indicatorBtn.isHidden = true
-            self.indicatorBtn.stopAnimating()
+        guard AuthorizationService.sharedInstance.user?.wechat_name != nil else {
+            let view = AssociateWechatView()
+            navigationController?.view.addSubview(view)
+            view.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            view.present()
             
-            if code >= 0 {
-//                HUDService.sharedInstance.show(string: "已成功提现")
-                AuthorizationService.sharedInstance.updateUserInfo()
-                if let JSON = JSON, let coin_cash = JSON["coin_cash"] as? [String: Any], let cash_amount = coin_cash["cash_amount"] as? String, let valueFloat = Float(cash_amount) {
-                    self.navigationController?.pushViewController(DWithdrawResultViewController(withdrawValue: valueFloat), animated: true)
+            return
+        }
+        
+        let alertController = UIAlertController(title: nil, message: "确认用\(rewardFloat)金币兑换\(model.cash_amount ?? "")元吗？", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+            self.indicatorBtn.startAnimating()
+            self.indicatorBtn.isHidden = false
+            
+            PaymentProvider.request(.withdraw(exchangeFloat), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                self.indicatorBtn.isHidden = true
+                self.indicatorBtn.stopAnimating()
+                
+                if code >= 0 {
+                    AuthorizationService.sharedInstance.updateUserInfo()
+                    if let JSON = JSON, let coin_cash = JSON["coin_cash"] as? [String: Any], let cash_amount = coin_cash["cash_amount"] as? String, let valueFloat = Float(cash_amount) {
+                        self.navigationController?.pushViewController(DWithdrawResultViewController(withdrawValue: valueFloat), animated: true)
+                    }
+                    
+                } else {
+                    let alertController = UIAlertController(title: nil, message: "未能成功提现，请稍后重试", preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
                 }
                 
-                
-            } else {
-                let alertController = UIAlertController(title: nil, message: "未能成功兑换，请稍后重试", preferredStyle: UIAlertController.Style.alert)
-                alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
-                self.present(alertController, animated: true, completion: nil)
-            }
-            
+            }))
         }))
+        self.present(alertController, animated: true, completion: nil)
+        
+        
         
         
     }

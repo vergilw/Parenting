@@ -19,6 +19,8 @@ class ActionButton: UIButton {
 
     lazy fileprivate var hiddenImgView: UIImage? = nil
     
+    var hiddenViews = [UIView]()
+    
     init() {
         super.init(frame: .zero)
         
@@ -48,6 +50,10 @@ class ActionButton: UIButton {
         setTitle(nil, for: .normal)
         setImage(nil, for: .normal)
         
+        for view in hiddenViews {
+            view.isHidden = true
+        }
+        
         activityView.startAnimating()
     }
     
@@ -58,5 +64,9 @@ class ActionButton: UIButton {
         
         setTitle(hiddenTitle, for: .normal)
         setImage(hiddenImgView, for: .normal)
+        
+        for view in hiddenViews {
+            view.isHidden = false
+        }
     }
 }

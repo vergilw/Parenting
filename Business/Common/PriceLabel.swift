@@ -50,7 +50,7 @@ class PriceLabel: UILabel {
         
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttributes([NSAttributedString.Key.font: font], range: NSRange(location: 0, length: attributedString.length))
-        if let symbol = symbol {
+        if let symbol = symbol, (symbol == "+" || symbol == "-") {
             attributedString.addAttributes([NSAttributedString.Key.baselineOffset: (font.lineHeight-singlelineHeight(font: font))/4], range: NSString(string: text).range(of: symbol))
         }
         if let formatterDiscount = formatterDiscount {
