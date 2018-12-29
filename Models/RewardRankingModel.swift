@@ -13,6 +13,7 @@ class RewardRankingModel: HandyJSON {
     var id: Int?
     var income_amount: String?
     var user: UserModel?
+    var position: Int?
     
     required init() { }
     

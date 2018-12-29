@@ -81,7 +81,7 @@ class DTopUpViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("1、因Apple政策原因，充值仅限Apple制定价格\n2、氧育币可用于直接购买APP内虚拟内容\n3、氧育币仅限iOS系统消费，无法在其他系统使用\n4、氧育币为虚拟币，充值后的氧育币不会过期，但无法提现或转增他人")
+        label.setParagraphText("1、因Apple政策原因，充值仅限Apple制定价格\n2、氧育币可用于直接购买APP内虚拟内容\n3、氧育币仅限iOS系统消费，无法在其他系统使用\n4、氧育币为虚拟币，充值后的氧育币不会过期，但无法提现或转赠他人")
         return label
     }()
     

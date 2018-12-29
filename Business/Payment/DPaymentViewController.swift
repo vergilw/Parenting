@@ -46,12 +46,13 @@ class DPaymentViewController: BaseViewController {
     lazy fileprivate var rewardTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.backgroundColor = .white
-        tableView.rowHeight = 118
         tableView.register(RewardDetailsCell.self, forCellReuseIdentifier: RewardDetailsCell.className())
         tableView.register(DetailsNotDataCell.self, forCellReuseIdentifier: DetailsNotDataCell.className())
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        tableView.separatorColor = UIConstants.Color.separator
+        tableView.separatorStyle = .singleLine
         tableView.tableFooterView = UIView()
         if #available(iOS 11, *) {
             tableView.contentInsetAdjustmentBehavior = .never
@@ -594,7 +595,7 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if coinLogModels?.count ?? 0 > 0 {
-            return 118
+            return 86
         }
         return 385
     }

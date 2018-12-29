@@ -101,6 +101,18 @@ class PlaybackRecordService {
                         if self.records?[courseRecords.key]?.keys.count == 0 || (self.records?[courseRecords.key]?.keys.count == 1 && self.records?[courseRecords.key]?.keys.first == 0) {
                             self.records?.removeValue(forKey: courseRecords.key)
                         }
+                        
+                        
+                        //显示获得奖励
+                        if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let rewardValue = reward["amount"] as? NSNumber, UIApplication.shared.applicationState == .active {
+                            
+                            let view = RewardView()
+                            UIApplication.shared.keyWindow?.addSubview(view)
+                            view.snp.makeConstraints { make in
+                                make.edges.equalToSuperview()
+                            }
+                            view.present(string: rewardValue.stringValue, mode: .study)
+                        }
                     }
                     dispatchGroup.leave()
                 }))

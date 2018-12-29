@@ -31,9 +31,13 @@ class PlayListService: NSObject {
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
             
             guard let cmtime = self?.player.currentTime() else { return }
+            guard let duationTime = self?.player.currentItem?.duration else { return }
             
-            let seconds = CMTimeGetSeconds(cmtime)
-            if let courseID = self?.playingCourseModel?.id, let sectionID = self?.playingSectionModels?[exist: self?.playingIndex ?? -1]?.id {
+            var seconds = CMTimeGetSeconds(cmtime)
+            if let courseID = self?.playingCourseModel?.id, let section = self?.playingSectionModels?[exist: self?.playingIndex ?? -1], let sectionID = section.id, self?.playingCourseModel?.is_bought == true, self?.playingCourseModel?.is_bought == true, let duration = section.duration_with_seconds {
+                if CMTimeGetSeconds(duationTime) - seconds < 1 {
+                    seconds = Float64(duration)
+                }
                 PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
             }
         })

@@ -114,10 +114,10 @@ class DRewardRankingViewController: BaseViewController {
                     }
                 }
                 
-                if let data = JSON?["coin"] as? [String: Any], let index = data["position"] as? Int {
+                if let data = JSON?["coin"] as? [String: Any] {
                     if let model = RewardRankingModel.deserialize(from: data) {
                         self.myRankingModel = model
-                        self.bottomRankingCell.setup(index: index, model: model)
+                        self.bottomRankingCell.setup(model: model)
                     }
                 }
                 
@@ -178,7 +178,7 @@ extension DRewardRankingViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RewardRankingCell.className(), for: indexPath) as! RewardRankingCell
         if let model = rankingModels?[exist: indexPath.row] {
-            cell.setup(index: indexPath.row, model: model)
+            cell.setup(model: model)
         }
         return cell
     }

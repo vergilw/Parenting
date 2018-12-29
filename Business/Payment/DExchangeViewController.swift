@@ -226,7 +226,7 @@ class DExchangeViewController: BaseViewController {
                     self.collectionView.reloadData()
                 }
                 if let ratio = JSON?["coin_to_wallet"] as? NSNumber, let balance = AuthorizationService.sharedInstance.user?.reward, let balanceFloat = Float(balance), balanceFloat > 0 {
-                    let string = String(format: "（约%.0f个氧育币）", floor(balanceFloat*ratio.floatValue))
+                    let string = String(format: "（约%.2f个氧育币）", floor(balanceFloat*ratio.floatValue*100)/100.0)
                     self.balanceTitleLabel.setSymbolText("金币余额\(string)", symbolText: string, symbolAttributes: [NSAttributedString.Key.font : UIConstants.Font.body, NSAttributedString.Key.foregroundColor: UIConstants.Color.foot])
                 }
                 

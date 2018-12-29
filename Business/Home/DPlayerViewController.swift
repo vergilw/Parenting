@@ -510,9 +510,13 @@ class DPlayerViewController: BaseViewController {
             timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self, weak player] (time) in
                 
                 guard let cmtime = player?.currentTime() else { return }
+                guard let duationTime = player?.currentItem?.duration else { return }
                 
-                let seconds = CMTimeGetSeconds(cmtime)
-                if let courseID = self?.courseModel?.id, let sectionID = self?.sectionModel?.id {
+                var seconds = CMTimeGetSeconds(cmtime)
+                if let courseID = self?.courseModel?.id, let sectionID = self?.sectionModel?.id, self?.courseModel?.is_bought == true, let duration = self?.sectionModel?.duration_with_seconds {
+                    if CMTimeGetSeconds(duationTime) - seconds < 1 {
+                        seconds = Float64(duration)
+                    }
                     PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
                 }
                 

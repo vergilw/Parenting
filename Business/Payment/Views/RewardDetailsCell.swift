@@ -12,7 +12,7 @@ class RewardDetailsCell: UITableViewCell {
 
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -69,24 +69,24 @@ class RewardDetailsCell: UITableViewCell {
     fileprivate func initConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.lessThanOrEqualTo(headnoteLabel.snp.leading).offset(-12)
-            make.top.equalTo(30)
-        }
-        headnoteLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12)
+            make.top.equalTo(20)
         }
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(titleLabel.snp.bottom).offset(15)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
         coinIconImgView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.centerY.equalTo(descLabel)
+            make.centerY.equalTo(titleLabel)
         }
         priceLabel.snp.makeConstraints { make in
             make.trailing.equalTo(coinIconImgView.snp.leading).offset(-4)
-            make.centerY.equalTo(descLabel).offset(-1)
+            make.centerY.equalTo(titleLabel).offset(-1)
+        }
+        headnoteLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(descLabel)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
         }
     }
     
@@ -103,7 +103,7 @@ class RewardDetailsCell: UITableViewCell {
         descLabel.snp.remakeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(titleLabel.snp.bottom).offset(15)
-            make.size.equalTo(CGSize(width: size.width+10, height: 21))
+            make.size.equalTo(CGSize(width: size.width+14, height: 21))
         }
         
         if let amount = model.amount, let amountInt = Float(amount) {

@@ -232,7 +232,7 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -262,6 +262,8 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
         } else if indexPath.section == 5 {
             cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
+        } else if indexPath.section == 6 {
+            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "帮助中心")
         }
         return cell
     }
@@ -302,6 +304,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             navigationController?.pushViewController(DTransactionsViewController(), animated: true)
         } else if indexPath.section == 5 {
             navigationController?.pushViewController(DSettingsViewController(), animated: true)
+        } else if indexPath.section == 6 {
+            let viewController = WebViewController()
+            viewController.navigationItem.title = "帮助中心"
+            viewController.url = URL(string: "http://www.baidu.com")
+            navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }

@@ -72,7 +72,11 @@ class TopUpItemCell: UICollectionViewCell {
     
     func setupExchange(model: RewardExchangeModel, isEnabled: Bool) {
         if let gain = model.wallet_amount {
-            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "氧育币"
+            let string = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "氧育币"
+            let attributedString = NSMutableAttributedString(string: string)
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot, NSAttributedString.Key.font: UIConstants.Font.foot, NSAttributedString.Key.baselineOffset: 1.25], range: NSString(string: string).range(of: "氧育币"))
+            gainLabel.attributedText = attributedString
+//            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "氧育币"
         }
         
         if let cost = model.coin_amount {
@@ -92,7 +96,11 @@ class TopUpItemCell: UICollectionViewCell {
     
     func setupWithdraw(model: WithdrawModel, isEnabled: Bool) {
         if let gain = model.cash_amount {
-            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "元"
+            let string = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "元"
+            let attributedString = NSMutableAttributedString(string: string)
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.foot, NSAttributedString.Key.font: UIConstants.Font.foot, NSAttributedString.Key.baselineOffset: 1.25], range: NSString(string: string).range(of: "元"))
+            gainLabel.attributedText = attributedString
+//            gainLabel.text = (String.integerFormatter.string(from: NSNumber(string: gain) ?? 0) ?? "") + "元"
         }
         
         if let cost = model.coin_amount {

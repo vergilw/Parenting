@@ -57,7 +57,13 @@ class WebViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-
+    @objc override func backBarItemAction() {
+        if webView.canGoBack {
+            webView.goBack()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
 }
 
 

@@ -106,16 +106,19 @@ class RewardRankingCell: UITableViewCell {
         }
     }
     
-    func setup(index: Int, model: RewardRankingModel) {
-        if index < 3 {
-            sequenceLabel.isHidden = true
-            sequenceImgView.isHidden = false
-            sequenceImgView.image = UIImage(named: "payment_ranking\(index)")
-        } else {
-            sequenceLabel.isHidden = false
-            sequenceImgView.isHidden = true
-            sequenceLabel.text = "\(index)"
+    func setup(model: RewardRankingModel) {
+        if let position = model.position {
+            if position < 4 {
+                sequenceLabel.isHidden = true
+                sequenceImgView.isHidden = false
+                sequenceImgView.image = UIImage(named: "payment_ranking\(position)")
+            } else {
+                sequenceLabel.isHidden = false
+                sequenceImgView.isHidden = true
+                sequenceLabel.text = "\(position)"
+            }
         }
+        
         
         if let URLString = model.user?.avatar_url {
             let processor = RoundCornerImageProcessor(cornerRadius: 22.5, targetSize: CGSize(width: 45, height: 45))

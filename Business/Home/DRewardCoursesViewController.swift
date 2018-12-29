@@ -61,7 +61,7 @@ class DRewardCoursesViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        tableView.backgroundColor = UIColor("#f9ce93")
+        tableView.backgroundColor = UIConstants.Color.background
         tableView.rowHeight = CourseCell.cellHeight()
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
         tableView.dataSource = self
@@ -86,7 +86,7 @@ class DRewardCoursesViewController: BaseViewController {
                 height = UIScreenWidth/375*182
             }
             let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: height)))
-//            view.backgroundColor = UIColor("#f9ce93")
+            view.backgroundColor = UIColor("#f9ce93")
             return view
         }()
         
@@ -177,7 +177,6 @@ class DRewardCoursesViewController: BaseViewController {
                     }
                     self.tableView.reloadData()
                     
-                    //FIXME: DEBUG
                     if self.courseModels?.count ?? 0 == 0 {
                         self.navigationController?.setNavigationBarHidden(false, animated: false)
                         HUDService.sharedInstance.showNoDataView(target: self.view)
