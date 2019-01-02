@@ -32,11 +32,11 @@ class PlayListService: NSObject {
             
             guard let cmtime = self?.player.currentTime() else { return }
             guard let duationTime = self?.player.currentItem?.duration else { return }
-            
-            var seconds = CMTimeGetSeconds(cmtime)
+            print(cmtime.timescale)
+            var seconds = cmtime.seconds
             if let courseID = self?.playingCourseModel?.id, let section = self?.playingSectionModels?[exist: self?.playingIndex ?? -1], let sectionID = section.id, self?.playingCourseModel?.is_bought == true, self?.playingCourseModel?.is_bought == true, let duration = section.duration_with_seconds {
-                if CMTimeGetSeconds(duationTime) - seconds < 1 {
-                    seconds = Float64(duration)
+                if duationTime.seconds - seconds < 1 {
+                    seconds = duration
                 }
                 PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: seconds)
             }
@@ -104,24 +104,29 @@ class PlayListService: NSObject {
                     try? AVAudioSession.sharedInstance().setActive(true)
                 }
                 
-                isPlaying = startPlaying
+                self.isPlaying = startPlaying
             }
         }
     }
     
     fileprivate func recoverPlayerCurrentTime() {
-        guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex != -1 else { return }
-        guard let courseID = course.id, let section = sections[exist: playingIndex], let sectionID = section.id else { return }
+        guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex != -1 else {
+            return
+        }
+        guard let courseID = course.id, let section = sections[exist: playingIndex], let sectionID = section.id else {
+            return
+        }
         
         
-        var recordSeconds: Float?
-        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
+        var recordSeconds: Double?
+        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Double {
             recordSeconds = seconds
         } else if let seconds = section.learned {
             recordSeconds = seconds
         }
         if let seconds = recordSeconds {
-            player.seek(to: CMTime(seconds: Double(seconds), preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            print(seconds, #function, CMTimeScale(NSEC_PER_SEC))
+            player.seek(to: CMTime(seconds: seconds-0.03, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         }
     }
     
@@ -137,13 +142,13 @@ class PlayListService: NSObject {
         isPlaying = false
     }
     
-    func seek(_ index: Float, completion: @escaping ()->()) {
+    func seek(_ index: Double, completion: @escaping ()->()) {
         guard playingIndex != -1, let durationSeconds = playingSectionModels?[playingIndex].duration_with_seconds, durationSeconds > 0 else {
             completion()
             return
         }
         
-        player.seek(to: CMTime(seconds: Double(durationSeconds * index), preferredTimescale: CMTimeScale(NSEC_PER_SEC))) { (bool) in
+        player.seek(to: CMTime(seconds: durationSeconds * index, preferredTimescale: CMTimeScale(NSEC_PER_SEC))) { (bool) in
             completion()
         }
     }
@@ -186,7 +191,7 @@ class PlayListService: NSObject {
         
         guard let courseRecord = sender.userInfo?[courseID] as? [Int: TimeInterval], let sectionRecord = courseRecord[sectionID] else { return }
         
-        playingSectionModels?[playingIndex].learned = Float(sectionRecord)
+        playingSectionModels?[playingIndex].learned = sectionRecord
         
     }
     

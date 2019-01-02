@@ -503,7 +503,7 @@ class DCourseDetailViewController: BaseViewController {
             if let index = viewModel.courseModel?.course_catalogues?.firstIndex(where: { (sectionModel) -> Bool in
                 return sectionModel.id == sectionID
             }), let sectionRecord = courseRecord[sectionID] {
-                viewModel.courseModel?.course_catalogues?[exist: index]?.learned = Float(sectionRecord)
+                viewModel.courseModel?.course_catalogues?[exist: index]?.learned = sectionRecord
                 
                 tableView.reloadSection(1, with: UITableView.RowAnimation.none)
             }

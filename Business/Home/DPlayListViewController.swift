@@ -367,11 +367,12 @@ class DPlayListViewController: BaseViewController {
         guard seconds >= 0 else { return }
         let timeInterval: TimeInterval = TimeInterval(seconds)
         let date = Date(timeIntervalSince1970: timeInterval)
+        print(date, "reset")
         audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
         
         //reset slider
         guard let durationSeconds = playingSectionModels[PlayListService.sharedInstance.playingIndex].duration_with_seconds else { return }
-        audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+        audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
         
         
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
@@ -384,11 +385,12 @@ class DPlayListViewController: BaseViewController {
                 }
                 return
             }
-            let seconds = CMTimeGetSeconds(cmtime)
+            let seconds = cmtime.seconds
             guard seconds >= 0 else { return }
             let timeInterval: TimeInterval = TimeInterval(seconds)
             let date = Date(timeIntervalSince1970: timeInterval)
             self?.audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+            print(date, "observer")
             
             let pauseImg = UIImage(named: "course_borderPauseAction")?.withRenderingMode(.alwaysOriginal)
             if self?.audioActionBtn.currentImage != pauseImg {
@@ -397,7 +399,7 @@ class DPlayListViewController: BaseViewController {
             
             guard self?.isSliderDragging == false else { return }
             guard let durationSeconds = playingSectionModels[PlayListService.sharedInstance.playingIndex].duration_with_seconds else { return }
-            self?.audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+            self?.audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
         })
     }
     
@@ -462,7 +464,7 @@ class DPlayListViewController: BaseViewController {
             isSliderDragging = false
             return
         }
-        PlayListService.sharedInstance.seek(audioSlider.value) {
+        PlayListService.sharedInstance.seek(Double(audioSlider.value)) {
             self.isSliderDragging = false
         }
     }

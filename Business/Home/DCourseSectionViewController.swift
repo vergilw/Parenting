@@ -430,14 +430,14 @@ class DCourseSectionViewController: BaseViewController {
             
             if viewModel.courseSectionModel?.id == sectionID {
                 if let sectionRecord = courseRecord[sectionID] {
-                    viewModel.courseSectionModel?.learned = Float(sectionRecord)
+                    viewModel.courseSectionModel?.learned = sectionRecord
                 }
             }
             
             if let index = viewModel.courseCatalogueModels?.firstIndex(where: { (sectionModel) -> Bool in
                 return sectionModel.id == sectionID
             }), let sectionRecord = courseRecord[sectionID] {
-                viewModel.courseCatalogueModels?[exist: index]?.learned = Float(sectionRecord)
+                viewModel.courseCatalogueModels?[exist: index]?.learned = sectionRecord
                 
             }
         }
@@ -641,7 +641,7 @@ class DCourseSectionViewController: BaseViewController {
         
         //reset slider
         guard let durationSeconds = playingSectionModels[PlayListService.sharedInstance.playingIndex].duration_with_seconds else { return }
-        audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+        audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
         
         //reset time observer
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
@@ -654,7 +654,7 @@ class DCourseSectionViewController: BaseViewController {
                 }
                 return
             }
-            let seconds = CMTimeGetSeconds(cmtime)
+            let seconds = cmtime.seconds
             guard seconds >= 0 else { return }
             let timeInterval: TimeInterval = TimeInterval(seconds)
             let date = Date(timeIntervalSince1970: timeInterval)
@@ -667,7 +667,7 @@ class DCourseSectionViewController: BaseViewController {
             
             guard self?.isSliderDragging == false else { return }
             guard let durationSeconds = self?.viewModel.courseSectionModel?.duration_with_seconds else { return }
-            self?.audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+            self?.audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
             
         })
     }
@@ -675,8 +675,8 @@ class DCourseSectionViewController: BaseViewController {
     func recoverPlayPanelView() {
         
         //重置上次播放记录
-        var recordSeconds: Float?
-        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: viewModel.courseID, sectionID: viewModel.sectionID) as? Float {
+        var recordSeconds: Double?
+        if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: viewModel.courseID, sectionID: viewModel.sectionID) as? Double {
             recordSeconds = seconds
         } else if let seconds = viewModel.courseSectionModel?.learned {
             recordSeconds = seconds
@@ -687,7 +687,7 @@ class DCourseSectionViewController: BaseViewController {
             audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
             
             if let durationSeconds = viewModel.courseSectionModel?.duration_with_seconds {
-                audioSlider.setValue(Float(seconds) / durationSeconds, animated: true)
+                audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
             }
         } else {
             audioCurrentTimeLabel.text = "00:00"
@@ -829,7 +829,7 @@ class DCourseSectionViewController: BaseViewController {
             isSliderDragging = false
             return
         }
-        PlayListService.sharedInstance.seek(audioSlider.value) {
+        PlayListService.sharedInstance.seek(Double(audioSlider.value)) {
             self.isSliderDragging = false
         }
     }

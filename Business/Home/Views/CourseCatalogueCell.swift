@@ -161,10 +161,10 @@ class CourseCatalogueCell: UITableViewCell {
             timeLabel.text = CourseCatalogueCell.timeFormatter.string(from: durationDate)
         }
         
-        var recordSeconds: Float?
+        var recordSeconds: Double?
         
         if let courseID = model.course?.id, let sectionID = model.id, isProgressHidden == false {
-            if let record = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Float {
+            if let record = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Double {
                 recordSeconds = record
             }
         }

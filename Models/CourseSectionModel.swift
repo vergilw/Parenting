@@ -15,9 +15,9 @@ class CourseSectionModel: HandyJSON {
     var sort: Int?
     var audition: Bool?
     var duration: Int?
-    var duration_with_seconds: Float?
+    var duration_with_seconds: Double?
     var subtitle: String?
-    var learned: Float?
+    var learned: Double?
     var course: CourseModel?
     var content_images_attribute: [AssetModel]?
     var media_attribute: AssetModel?
