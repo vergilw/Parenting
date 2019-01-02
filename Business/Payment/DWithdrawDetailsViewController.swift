@@ -10,7 +10,7 @@ import UIKit
 
 class DWithdrawDetailsViewController: BaseViewController {
 
-    var coinLogModels: [CoinLogModel]?
+    var coinLogModels: [WithdrawDetailsModel]?
     
     lazy fileprivate var pageNumber: Int = 1
     
@@ -63,13 +63,13 @@ class DWithdrawDetailsViewController: BaseViewController {
     fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         
-        PaymentProvider.request(.coin_logs(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        PaymentProvider.request(.withdraw_details(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             HUDService.sharedInstance.hideFetchingView(target: self.view)
             
             if code >= 0 {
-                if let data = JSON?["wallet_logs"] as? [[String: Any]] {
-                    if let models = [CoinLogModel].deserialize(from: data) as? [CoinLogModel] {
+                if let data = JSON?["coin_cashes"] as? [[String: Any]] {
+                    if let models = [WithdrawDetailsModel].deserialize(from: data) as? [WithdrawDetailsModel] {
                         self.coinLogModels = models
                     }
                     self.tableView.reloadData()
@@ -105,13 +105,13 @@ class DWithdrawDetailsViewController: BaseViewController {
     
     fileprivate func fetchMoreData() {
         
-        PaymentProvider.request(.coin_logs(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        PaymentProvider.request(.withdraw_details(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.tableView.mj_footer.endRefreshing()
             
             if code >= 0 {
-                if let data = JSON?["wallet_logs"] as? [[String: Any]] {
-                    if let models = [CoinLogModel].deserialize(from: data) as? [CoinLogModel] {
+                if let data = JSON?["coin_cashes"] as? [[String: Any]] {
+                    if let models = [WithdrawDetailsModel].deserialize(from: data) as? [WithdrawDetailsModel] {
                         self.coinLogModels?.append(contentsOf: models)
                     }
                     self.tableView.reloadData()
@@ -152,11 +152,9 @@ extension DWithdrawDetailsViewController: UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WithdrawDetailsCell.className(), for: indexPath) as! WithdrawDetailsCell
-//        if let model = coinLogModels?[exist: indexPath.row] {
-//            cell.setup(model: model)
-//        }
-        //FIXME: DEBUG
-        cell.setup()
+        if let model = coinLogModels?[exist: indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
     

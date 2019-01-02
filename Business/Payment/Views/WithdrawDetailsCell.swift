@@ -119,11 +119,23 @@ class WithdrawDetailsCell: UITableViewCell {
         }
     }
     
-    func setup() {
-        titleLabel.setParagraphText("微信提现-会飞的猪")
-        status1Label.setParagraphText("申请时间：2018-12-12 11:12")
-        status2Label.setParagraphText("到账时间：2018-12-12 11:12")
-        priceLabel.setPriceText(text: "29.9")
-        statusValueLabel.setParagraphText("审核中")
+    func setup(model: WithdrawDetailsModel) {
+        titleLabel.setParagraphText(model.comment ?? "")
+        if let createAt = model.created_at {
+            status1Label.setParagraphText("申请时间：" + createAt.string(format: "yyyy-MM-dd HH:mm"))
+        }
+        if let doneAt = model.done_at {
+            status2Label.setParagraphText("到账时间：" + doneAt.string(format: "yyyy-MM-dd HH:mm"))
+        } else {
+            status2Label.setParagraphText("努力提现中，请耐心等待～")
+        }
+        priceLabel.setPriceText(text: model.cash_amount ?? "")
+        statusValueLabel.setParagraphText(model.state_i18n ?? "")
+        
+        if model.state == "done" {
+            statusValueLabel.textColor = UIConstants.Color.foot
+        } else {
+            statusValueLabel.textColor = UIConstants.Color.primaryGreen
+        }
     }
 }

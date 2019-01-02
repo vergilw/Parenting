@@ -17,6 +17,7 @@
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
 		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
 		130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */; };
+		130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */; };
 		130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */; };
 		130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */; };
 		130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */; };
@@ -181,6 +182,7 @@
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
 		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseEvaluationViewController.swift; sourceTree = "<group>"; };
+		130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawDetailsModel.swift; sourceTree = "<group>"; };
 		130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewLayout.swift; sourceTree = "<group>"; };
 		130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCoursesCell.swift; sourceTree = "<group>"; };
 		130C67F721A3E90500E30307 /* DTeacherStoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTeacherStoriesViewController.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 			children = (
 				130A518A21D4C48800C42610 /* RewardExchangeModel.swift */,
 				130A518E21D4CF8400C42610 /* WithdrawModel.swift */,
+				130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1079,6 +1082,7 @@
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
+				130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
 				130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */,
 				130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */,

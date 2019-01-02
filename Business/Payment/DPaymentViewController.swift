@@ -189,12 +189,11 @@ class DPaymentViewController: BaseViewController {
         }
         coinBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
-            make.top.equalTo(30)
-            make.height.equalTo(25)
+            make.top.equalTo(20)
         }
         balanceTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
-            make.top.equalTo(coinBalanceLabel.snp.bottom).offset(12)
+            make.top.equalTo(coinBalanceLabel.snp.bottom).offset(4)
         }
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -202,7 +201,7 @@ class DPaymentViewController: BaseViewController {
         }
         topUpBtn.snp.makeConstraints { make in
             make.trailing.equalTo(-22.5)
-            make.bottom.equalTo(balanceTitleLabel).offset(5)
+            make.bottom.equalTo(balanceTitleLabel)
             make.size.equalTo(CGSize(width: 85, height: 40))
         }
     }
@@ -279,12 +278,11 @@ class DPaymentViewController: BaseViewController {
         }
         rewardBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
-            make.top.equalTo(30)
-            make.height.equalTo(25)
+            make.top.equalTo(20)
         }
         balanceTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
-            make.top.equalTo(rewardBalanceLabel.snp.bottom).offset(12)
+            make.top.equalTo(rewardBalanceLabel.snp.bottom).offset(4)
         }
         footnoteLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)

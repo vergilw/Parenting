@@ -27,7 +27,7 @@ class UserModel: HandyJSON {
         mapper <<<
             self.balance <-- ["wallet.ios_balance", "ios_balance"]
         mapper <<<
-            self.reward <-- ["coin.income_amount", "income_amount"]
+            self.reward <-- ["coin.amount", "amount"]
     }
     
     /*

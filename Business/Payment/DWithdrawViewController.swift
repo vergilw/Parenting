@@ -299,10 +299,9 @@ extension DWithdrawViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        //FIXME: DEBUG
         guard let reward = AuthorizationService.sharedInstance.user?.reward, let rewardFloat = Float(reward) else { return }
         guard let model = exchangeModels?[exist: indexPath.row], let exchangeValue = model.coin_amount, let exchangeFloat = Float(exchangeValue) else { return }
-//        guard rewardFloat >= exchangeFloat else { return }
+        guard rewardFloat >= exchangeFloat else { return }
         
         guard AuthorizationService.sharedInstance.user?.wechat_name != nil else {
             let view = AssociateWechatView()
@@ -315,7 +314,7 @@ extension DWithdrawViewController: UICollectionViewDataSource, UICollectionViewD
             return
         }
         
-        let alertController = UIAlertController(title: nil, message: "确认用\(rewardFloat)金币兑换\(model.cash_amount ?? "")元吗？", preferredStyle: UIAlertController.Style.alert)
+        let alertController = UIAlertController(title: nil, message: "确认用\(model.coin_amount ?? "")金币兑换\(model.cash_amount ?? "")元吗？", preferredStyle: UIAlertController.Style.alert)
         alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
             self.indicatorBtn.startAnimating()
