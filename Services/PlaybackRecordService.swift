@@ -104,14 +104,14 @@ class PlaybackRecordService {
                         
                         
                         //显示获得奖励
-                        if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let rewardValue = reward["amount"] as? NSNumber, UIApplication.shared.applicationState == .active {
+                        if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let rewardValue = reward["amount"] as? String, UIApplication.shared.applicationState == .active {
                             
                             let view = RewardView()
                             UIApplication.shared.keyWindow?.addSubview(view)
                             view.snp.makeConstraints { make in
                                 make.edges.equalToSuperview()
                             }
-                            view.present(string: rewardValue.stringValue, mode: .study)
+                            view.present(string: rewardValue, mode: .study)
                         }
                     }
                     dispatchGroup.leave()

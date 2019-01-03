@@ -201,13 +201,6 @@ class DPlayerViewController: BaseViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        
-        
-    }
-    
     override var prefersStatusBarHidden: Bool {
         return true
     }

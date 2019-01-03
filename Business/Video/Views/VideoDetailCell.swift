@@ -8,8 +8,15 @@
 
 import UIKit
 import Kingfisher
+import AVFoundation
 
 class VideoDetailCell: UITableViewCell {
+    
+    lazy fileprivate var playerView: AVPlayerView = {
+        let view = AVPlayerView()
+        view.delegate = self
+        return view
+    }()
     
     lazy fileprivate var favoriteBtn: UIButton = {
         let button = UIButton()
@@ -66,15 +73,16 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var authorNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
+        label.font = UIConstants.Font.body
+        label.textColor = .white
         return label
     }()
     
     lazy fileprivate var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.numberOfLines = 2
         return label
     }()
     
@@ -93,6 +101,8 @@ class VideoDetailCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        
+        contentView.addSubview(playerView)
         
         initActionView()
         initCaptionView()
@@ -127,6 +137,7 @@ class VideoDetailCell: UITableViewCell {
             //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
+        likeStackView.addSubview(likeBtn)
         likeBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -198,6 +209,7 @@ class VideoDetailCell: UITableViewCell {
         
         
         //StackView Layout
+        contentView.addSubview(stackView)
         stackView.addArrangedSubview(avatarBtn)
         stackView.addArrangedSubview(likeStackView)
         stackView.addArrangedSubview(commentStackView)
@@ -205,7 +217,7 @@ class VideoDetailCell: UITableViewCell {
         stackView.snp.makeConstraints { make in
             make.trailing.equalTo(-16)
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(-45+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0))
+                make.bottom.equalTo(-45-(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0))
             } else {
                 make.bottom.equalTo(-45)
             }
@@ -226,11 +238,12 @@ class VideoDetailCell: UITableViewCell {
         stackView.addArrangedSubview(authorNameLabel)
         stackView.addArrangedSubview(descriptionLabel)
         
+        contentView.addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-12-50-16)
             if #available(iOS 11.0, *) {
-                make.bottom.equalTo(-45+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0))
+                make.bottom.equalTo(-45-(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0))
             } else {
                 make.bottom.equalTo(-45)
             }
@@ -238,13 +251,65 @@ class VideoDetailCell: UITableViewCell {
     }
     
     fileprivate func initConstraints() {
-        
+        playerView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     func setup(model: VideoModel) {
+        if let URLString = model.media?.url {
+            playerView.setPlayerSourceUrl(url: URLString)
+        }
+        
         if let URLString = model.author?.avatar_url {
             let processor = RoundCornerImageProcessor(cornerRadius: 25, targetSize: CGSize(width: 50, height: 50))
             avatarBtn.kf.setImage(with: URL(string: URLString), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
+        }
+        
+        if let likedCount = model.liked_count {
+            likeCountLabel.text = "\(likedCount)"
+        }
+        //TODO: image
+//        if model.isLike == true {
+//            likeImgView.image =
+//        }
+        if let commentedCount = model.comments_count {
+            commentCountLabel.text = "\(commentedCount)"
+        }
+        if let sharedCount = model.share_count {
+            shareCountLabel.text = "\(sharedCount)"
+        }
+        
+        authorNameLabel.text = "@\(model.author?.name ?? "")"
+        
+        descriptionLabel.text = model.title
+    }
+}
+
+
+// MARK: - ============= AVPlayerUpdateDelegate =============
+extension VideoDetailCell: AVPlayerUpdateDelegate {
+    
+    func onProgressUpdate(current: CGFloat, total: CGFloat) {
+        
+    }
+    
+    func onPlayItemStatusUpdate(status: AVPlayerItem.Status) {
+        switch status {
+        case .unknown:
+//            startLoadingPlayItemAnim()
+            break
+        case .readyToPlay:
+//            startLoadingPlayItemAnim(false)
+            
+//            isPlayerReady = true
+            //            musicAlum.startAnimation(rate: CGFloat(aweme?.rate ?? 0))
+//            onPlayerReady?()
+            playerView.play()
+            break
+        case .failed:
+//            startLoadingPlayItemAnim(false)
+            break
         }
     }
 }

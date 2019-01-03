@@ -106,6 +106,15 @@ extension String {
         return 0
     }
     
+    func urlScheme(scheme:String) -> URL? {
+        if let url = URL.init(string: self) {
+            var components = URLComponents.init(url: url, resolvingAgainstBaseURL: false)
+            components?.scheme = scheme
+            return components?.url
+        }
+        return nil
+    }
+    
     /*
     /// Hashing algorithm for hashing a string instance.
     ///

@@ -87,8 +87,8 @@ class DCourseDetailViewModel {
     func shareReward(completion: @escaping (String, Float?)->Void) {
         RewardCoinProvider.request(.reward(courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             if code >= 0, let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String {
-                if status == "success", let rewardValue = reward["amount"] as? NSNumber  {
-                    completion(status, rewardValue.floatValue)
+                if status == "success", let rewardValue = reward["amount"] as? String  {
+                    completion(status, Float(rewardValue))
                     
                 } else if status == "over_limit" {
                     completion(status, nil)

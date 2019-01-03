@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import AVFoundation
 
 class DVideoDetailViewController: BaseViewController {
 
     lazy fileprivate var viewModel = DVideoDetailViewModel()
+    
+    lazy fileprivate var selectedIndex: Int = 0
     
     lazy fileprivate var dismissBtn: UIButton = {
         let button = UIButton()
@@ -19,12 +22,29 @@ class DVideoDetailViewController: BaseViewController {
         return button
     }()
     
+    init(models: [VideoModel], index: Int) {
+        super.init(nibName: nil, bundle: nil)
+        
+        viewModel.videosModels = models
+        selectedIndex = index
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        tableView.scrollToRow(at: IndexPath(row: selectedIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+        
+        //TODO: init
+//        try? AVAudioSession.sharedInstance().setMode(AVAudioSession.Mode.videoRecording)
+//        try? AVAudioSession.sharedInstance().setActive(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,14 +57,18 @@ class DVideoDetailViewController: BaseViewController {
     fileprivate func initContentView() {
         tableView.rowHeight = UIScreenHeight
         tableView.register(VideoDetailCell.self, forCellReuseIdentifier: VideoDetailCell.className())
+        tableView.isPagingEnabled = true
         tableView.dataSource = self
         tableView.delegate = self
         
-        view.addSubview(tableView)
+        view.addSubviews([tableView, dismissBtn])
     }
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
+        tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         dismissBtn.snp.makeConstraints { make in
             make.leading.top.equalToSuperview()
             make.width.equalTo(62.5)
@@ -84,10 +108,10 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TeacherStoriesCell.className(), for: indexPath) as! TeacherStoriesCell
-//        if let model = storyModels?[exist: indexPath.row] {
-//            cell.setup(model: model)
-//        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: VideoDetailCell.className(), for: indexPath) as! VideoDetailCell
+        if let model = viewModel.videosModels?[exist: indexPath.row] {
+            cell.setup(model: model)
+        }
         return cell
     }
 }

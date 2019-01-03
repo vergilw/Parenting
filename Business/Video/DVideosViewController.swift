@@ -415,11 +415,12 @@ extension DVideosViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        //        if let index = tableViews.firstIndex(of: tableView) {
-        //            if let models = viewModel.videosModels?[exist: index], let model = models[exist: indexPath.row], let courseID = model.id {
-        //                navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
-        //            }
-        //        }
+        if let index = collectionViews.firstIndex(of: collectionView) {
+            if let models = viewModel.videosModels?[exist: index] {
+                navigationController?.pushViewController(DVideoDetailViewController(models: models, index: indexPath.row), animated: true)
+            }
+        }
+        
     }
     
 }

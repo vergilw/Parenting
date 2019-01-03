@@ -290,8 +290,8 @@ class DCourseEvaluationViewController: BaseViewController {
                     model.star = self?.selectedStarsCount
                     model.content = self?.textView.text
                     
-                    if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let rewardValue = reward["amount"] as? NSNumber {
-                        block(model, rewardValue.floatValue)
+                    if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let rewardValue = reward["amount"] as? String {
+                        block(model, Float(rewardValue))
                     } else {
                         HUDService.sharedInstance.show(string: "您已成功提交评价")
                         

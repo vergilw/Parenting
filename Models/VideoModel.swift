@@ -16,12 +16,16 @@ class VideoModel: HandyJSON {
     var color_from: String?
     var color_to: String?
     var color_main: String?
-//    var media : DMediaModel = DMediaModel()
+    var media : MediaModel?
     var title: String?
     var created_at: Date?
     var cover_url: String?
     var isLike: Bool?
     var view_count: String?
+    var liked_count: Int?
+    var share_count: Int?
+    var comments_count: Int?
+    var share_url: String?
     
     required init() { }
     

@@ -589,29 +589,31 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return coinLogModels?.count ?? 1
+        if coinLogModels?.count == 0 {
+            return 1
+        }
+        return coinLogModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if coinLogModels?.count ?? 0 > 0 {
-            return 86
+        if coinLogModels?.count == 0 {
+            return 385
         }
-        return 385
+        return 86
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if coinLogModels?.count ?? 0 > 0 {
+        if coinLogModels?.count == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: DetailsNotDataCell.className(), for: indexPath) as! DetailsNotDataCell
+            return cell
+            
+        } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: RewardDetailsCell.className(), for: indexPath) as! RewardDetailsCell
             if let model = coinLogModels?[exist: indexPath.row] {
                 cell.setup(model: model)
             }
             return cell
-            
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: DetailsNotDataCell.className(), for: indexPath) as! DetailsNotDataCell
-            return cell
         }
-        
     }
     
 }
