@@ -12,6 +12,13 @@ class DVideoDetailViewController: BaseViewController {
 
     lazy fileprivate var viewModel = DVideoDetailViewModel()
     
+    lazy fileprivate var dismissBtn: UIButton = {
+        let button = UIButton()
+        //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,7 +45,15 @@ class DVideoDetailViewController: BaseViewController {
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
-        
+        dismissBtn.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview()
+            make.width.equalTo(62.5)
+            if #available(iOS 11.0, *) {
+                make.height.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)+(navigationController?.navigationBar.bounds.size.height ?? 0))
+            } else {
+                make.height.equalTo(UIStatusBarHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
+            }
+        }
     }
     
     // MARK: - ============= Notification =============

@@ -32,7 +32,6 @@ class PlayListService: NSObject {
             
             guard let cmtime = self?.player.currentTime() else { return }
             guard let duationTime = self?.player.currentItem?.duration else { return }
-            print(cmtime.timescale)
             var seconds = cmtime.seconds
             if let courseID = self?.playingCourseModel?.id, let section = self?.playingSectionModels?[exist: self?.playingIndex ?? -1], let sectionID = section.id, self?.playingCourseModel?.is_bought == true, self?.playingCourseModel?.is_bought == true, let duration = section.duration_with_seconds {
                 if duationTime.seconds - seconds < 1 {
@@ -125,8 +124,8 @@ class PlayListService: NSObject {
             recordSeconds = seconds
         }
         if let seconds = recordSeconds {
-            print(seconds, #function, CMTimeScale(NSEC_PER_SEC))
-            player.seek(to: CMTime(seconds: seconds-0.03, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+            //TODO: seek出来的时间比传入的期望时间少0.03秒左右，暂未找到原因
+            player.seek(to: CMTime(seconds: seconds+0.03, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
         }
     }
     

@@ -180,11 +180,12 @@ class CourseCatalogueCell: UITableViewCell {
             if let recordSeconds = recordSeconds {
                 if let durationSeconds = model.duration_with_seconds {
                     let percent = recordSeconds/durationSeconds*100
-                    progressLabel.text = String(format: "%.0f%%", floor(percent))
                     
-                    if percent < 100 {
+                    if percent < 100 && durationSeconds-recordSeconds > 1 {
+                        progressLabel.text = String(format: "%.0f%%", floor(percent))
                         progressImgView.image = UIImage(named: "course_progressUnfinished")
                     } else {
+                        progressLabel.text = "100%"
                         progressImgView.image = UIImage(named: "course_progressFinished")
                     }
                 }

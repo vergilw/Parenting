@@ -253,6 +253,10 @@ class DWithdrawResultViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func notedBtnAction() {
-        navigationController?.popToRootViewController(animated: true)
+        if let viewControllers = navigationController?.viewControllers, viewControllers.count > 2 {
+            navigationController?.setViewControllers(Array(viewControllers[0...viewControllers.count-3]), animated: true)
+        } else {
+            navigationController?.popToRootViewController(animated: true)
+        }
     }
 }

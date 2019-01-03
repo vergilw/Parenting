@@ -367,12 +367,29 @@ class DPlayListViewController: BaseViewController {
         guard seconds >= 0 else { return }
         let timeInterval: TimeInterval = TimeInterval(seconds)
         let date = Date(timeIntervalSince1970: timeInterval)
-        print(date, "reset")
         audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
         
         //reset slider
-        guard let durationSeconds = playingSectionModels[PlayListService.sharedInstance.playingIndex].duration_with_seconds else { return }
+        guard let durationSeconds = playingSectionModels[exist: PlayListService.sharedInstance.playingIndex]?.duration_with_seconds else { return }
         audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
+        
+        //recover by records
+        if let courseID = PlayListService.sharedInstance.playingCourseModel?.id, let section = PlayListService.sharedInstance.playingSectionModels?[exist: PlayListService.sharedInstance.playingIndex], let sectionID = section.id {
+            var recordSeconds: Double?
+            if let seconds = PlaybackRecordService.sharedInstance.fetchRecords(courseID: courseID, sectionID: sectionID) as? Double {
+                recordSeconds = seconds
+            } else if let seconds = section.learned {
+                recordSeconds = seconds
+            }
+            if let seconds = recordSeconds {
+                //TODO: seek出来的时间比传入的期望时间少0.03秒左右，暂未找到原因
+                audioCurrentTimeLabel.text = CourseCatalogueCell.timeFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(seconds)))
+                audioSlider.setValue(Float(seconds / durationSeconds), animated: true)
+            }
+        }
+        
+        
+        
         
         
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in

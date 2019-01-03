@@ -117,6 +117,7 @@ class DPaymentViewController: BaseViewController {
         addNotificationObservers()
         
         reload()
+        AuthorizationService.sharedInstance.updateUserInfo()
     }
     
     // MARK: - ============= Initialize View =============

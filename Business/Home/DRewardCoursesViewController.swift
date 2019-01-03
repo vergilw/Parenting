@@ -64,6 +64,7 @@ class DRewardCoursesViewController: BaseViewController {
         tableView.backgroundColor = UIConstants.Color.background
         tableView.rowHeight = CourseCell.cellHeight()
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
+        tableView.clipsToBounds = false
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
@@ -87,7 +88,14 @@ class DRewardCoursesViewController: BaseViewController {
             }
             let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: height)))
             view.backgroundColor = UIColor("#f9ce93")
+            view.clipsToBounds = false
             return view
+        }()
+        
+        let bgColorImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = UIColor("#f9ce93")
+            return imgView
         }()
         
         let bgImgView: UIImageView = {
@@ -114,7 +122,19 @@ class DRewardCoursesViewController: BaseViewController {
 //            return label
 //        }()
         
+        if #available(iOS 11.0, *) {
+            
+        } else {
+            headerView.addSubview(bgColorImgView)
+            bgColorImgView.snp.makeConstraints { make in
+                make.top.equalTo(-UIStatusBarHeight)
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(UIStatusBarHeight)
+            }
+        }
+        
         headerView.addSubviews([bgImgView])
+        
         bgImgView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(UIScreenWidth/375*182)

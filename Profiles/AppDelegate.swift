@@ -46,8 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.tabBar.layer.shadowOpacity = 0.05
         tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
         
-        //
-        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
+        //FIXME: DEBUG VIDEO
+        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: true)
         
         return tabBarController
     }()

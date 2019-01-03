@@ -95,7 +95,7 @@ class PlaybackRecordService {
                     
                     if code >= 0 {
                         //通知所有持有课程Model的class更新数据
-                        NotificationCenter.default.post(name: Notification.Course.courseRecordDidChanged, object: nil, userInfo: [courseRecords.key: [sectionRecord.key: Double(Int(sectionRecord.value))]])
+                        NotificationCenter.default.post(name: Notification.Course.courseRecordDidChanged, object: nil, userInfo: [courseRecords.key: sectionRecord])
                         
                         self.records?[courseRecords.key]?.removeValue(forKey: sectionRecord.key)
                         if self.records?[courseRecords.key]?.keys.count == 0 || (self.records?[courseRecords.key]?.keys.count == 1 && self.records?[courseRecords.key]?.keys.first == 0) {
