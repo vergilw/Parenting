@@ -263,7 +263,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 5 {
             cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         } else if indexPath.section == 6 {
-            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "帮助中心")
+            cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
         }
         return cell
     }

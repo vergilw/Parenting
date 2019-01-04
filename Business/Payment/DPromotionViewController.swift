@@ -253,7 +253,7 @@ class DPromotionViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-    func generateImg() -> UIImage? {
+    func generateImg(avatarImg: UIImage) -> UIImage? {
         let panelView: UIView = {
             let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 750, height: 1334)))
             return view
@@ -270,9 +270,7 @@ class DPromotionViewController: BaseViewController {
             imgView.contentMode = .scaleAspectFill
             imgView.layer.cornerRadius = 23.5
             imgView.clipsToBounds = true
-            if let URLString = AuthorizationService.sharedInstance.user?.avatar_url {
-                imgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"))
-            }
+            imgView.image = avatarImg
             return imgView
         }()
         
@@ -342,14 +340,15 @@ class DPromotionViewController: BaseViewController {
             make.center.equalToSuperview()
             make.size.equalTo(CGSize(width: 375, height: 667))
         }
+        
         let img = panelView.snapshotImage(afterScreenUpdates: true)
         panelView.removeFromSuperview()
         return img
     }
     
-    @objc func sessionBtnAction() {
+    func shareToSession(img: UIImage) {
         let shareObj = UMShareImageObject()
-        shareObj.shareImage = generateImg()
+        shareObj.shareImage = self.generateImg(avatarImg: img)
         
         let msgObj = UMSocialMessageObject(mediaObject: shareObj)
         UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatSession, messageObject: msgObj, currentViewController: self, completion: { (result, error) in
@@ -366,9 +365,9 @@ class DPromotionViewController: BaseViewController {
         })
     }
     
-    @objc func timelineBtnAction() {
+    func shareToTimeline(img: UIImage) {
         let shareObj = UMShareImageObject()
-        shareObj.shareImage = generateImg()
+        shareObj.shareImage = self.generateImg(avatarImg: img)
         
         let msgObj = UMSocialMessageObject(mediaObject: shareObj)
         UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatTimeLine, messageObject: msgObj, currentViewController: self, completion: { (result, error) in
@@ -383,6 +382,40 @@ class DPromotionViewController: BaseViewController {
                 HUDService.sharedInstance.show(string: "分享失败")
             }
         })
+    }
+    
+    @objc func sessionBtnAction() {
+        if let URLString = AuthorizationService.sharedInstance.user?.avatar_url {
+            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { (img, error, type, URL) in
+                var resultImg: UIImage
+                if let img = img {
+                    resultImg = img
+                } else {
+                    resultImg = UIImage(named: "public_avatarPlaceholder")!
+                }
+                
+                self.shareToSession(img: resultImg)
+            })
+        } else {
+            shareToSession(img: UIImage(named: "public_avatarPlaceholder")!)
+        }
+    }
+    
+    @objc func timelineBtnAction() {
+        if let URLString = AuthorizationService.sharedInstance.user?.avatar_url {
+            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { (img, error, type, URL) in
+                var resultImg: UIImage
+                if let img = img {
+                    resultImg = img
+                } else {
+                    resultImg = UIImage(named: "public_avatarPlaceholder")!
+                }
+                
+                self.shareToTimeline(img: resultImg)
+            })
+        } else {
+            shareToTimeline(img: UIImage(named: "public_avatarPlaceholder")!)
+        }
     }
     
 }

@@ -576,7 +576,6 @@
 				130D8B6221AFB978003E7645 /* StoryModel.swift */,
 				131170A521B77A0800C178BB /* AdvanceModel.swift */,
 				132C920B21BA81F2002148E1 /* OrderModel.swift */,
-				1316F4E621D0C85B00F5A756 /* Gif */,
 				13128B8C21BE0ACC00251B6F /* ModelTransform.swift */,
 				132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */,
 				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
@@ -615,6 +614,7 @@
 		1320C36E217EB76600902A5C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1316F4E621D0C85B00F5A756 /* Gif */,
 				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
 				13144B26218077F4002B4281 /* Course.xcassets */,

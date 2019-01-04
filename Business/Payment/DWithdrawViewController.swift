@@ -41,7 +41,7 @@ class DWithdrawViewController: BaseViewController {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
-        label.setParagraphText("注：100金币约等于1元约等于1氧育币")
+        label.setParagraphText("注：100金币约等于1元")
         return label
     }()
     
