@@ -39,6 +39,13 @@ class HUDService {
         }
     }
     
+    func hideAllHUD() {
+        for view in HUDContainers {
+            view.removeFromSuperview()
+        }
+        HUDContainers.removeAll()
+    }
+    
     func showFetchingView(target view: UIView, frame: CGRect = .zero) {
         guard !view.subviews.contains(where: { (subview) -> Bool in
             return subview.isKind(of: FetchView.self)

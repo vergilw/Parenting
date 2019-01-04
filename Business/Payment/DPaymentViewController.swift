@@ -508,7 +508,7 @@ class DPaymentViewController: BaseViewController {
                 }
 
             } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                HUDService.sharedInstance.showNoNetworkView(target: self.rewardView) { [weak self] in
                     self?.fetchRewardData()
                 }
             }

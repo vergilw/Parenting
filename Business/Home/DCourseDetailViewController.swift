@@ -535,6 +535,8 @@ class DCourseDetailViewController: BaseViewController {
 //            HUDService.sharedInstance.hideFetchingView(target: self.view)
             
             if status == "success", let value = value {
+                HUDService.sharedInstance.hideAllHUD()
+                
                 let view = RewardView()
                 self.navigationController?.view.addSubview(view)
                 view.snp.makeConstraints { make in
