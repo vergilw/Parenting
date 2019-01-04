@@ -46,6 +46,7 @@
 		130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */; };
 		130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */; };
 		130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */; };
+		130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
@@ -218,6 +219,7 @@
 		130DDE5B21D21257007D0619 /* DCoinDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoinDetailsViewController.swift; sourceTree = "<group>"; };
 		130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsCell.swift; sourceTree = "<group>"; };
 		130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DRewardCoursesViewController.swift; sourceTree = "<group>"; };
+		130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPromotionViewController.swift; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */,
 				130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */,
 				130D8E2221D60A2D008833C7 /* DWithdrawDetailsViewController.swift */,
+				130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -573,6 +576,7 @@
 				130D8B6221AFB978003E7645 /* StoryModel.swift */,
 				131170A521B77A0800C178BB /* AdvanceModel.swift */,
 				132C920B21BA81F2002148E1 /* OrderModel.swift */,
+				1316F4E621D0C85B00F5A756 /* Gif */,
 				13128B8C21BE0ACC00251B6F /* ModelTransform.swift */,
 				132DA5F721C35C15004F0F42 /* VideoCategoryModel.swift */,
 				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
@@ -611,7 +615,6 @@
 		1320C36E217EB76600902A5C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1316F4E621D0C85B00F5A756 /* Gif */,
 				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
 				13144B26218077F4002B4281 /* Course.xcassets */,
@@ -1108,6 +1111,7 @@
 				1314250F21D316EE00B35346 /* PlaybackRecordService.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
 				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
+				130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */,
 				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */,

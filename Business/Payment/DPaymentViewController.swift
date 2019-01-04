@@ -427,7 +427,7 @@ class DPaymentViewController: BaseViewController {
             titleLabel.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(promotionBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -578,6 +578,10 @@ class DPaymentViewController: BaseViewController {
     
     @objc func rankingBtnAction() {
         navigationController?.pushViewController(DRewardRankingViewController(), animated: true)
+    }
+    
+    @objc func promotionBtnAction() {
+        navigationController?.pushViewController(DPromotionViewController(), animated: true)
     }
 }
 

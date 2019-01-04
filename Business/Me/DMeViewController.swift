@@ -307,7 +307,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 6 {
             let viewController = WebViewController()
             viewController.navigationItem.title = "帮助中心"
-            viewController.url = URL(string: "http://www.baidu.com")
+            #if DEBUG
+            viewController.url = URL(string: "http://m.1314-edu.com/help/")
+            #else
+            viewController.url = URL(string: "https://yy.1314-edu.com/help/")
+            #endif
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
