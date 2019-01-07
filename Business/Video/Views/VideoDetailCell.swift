@@ -12,10 +12,22 @@ import AVFoundation
 
 class VideoDetailCell: UITableViewCell {
     
-    lazy fileprivate var playerView: AVPlayerView = {
+    var isPlayerReady: Bool = false
+    var onPlayerReady: (()->Void)?
+    
+    lazy var playerView: AVPlayerView = {
         let view = AVPlayerView()
         view.delegate = self
         return view
+    }()
+    
+    lazy fileprivate var gradientLayer: CAGradientLayer = {
+        let layer = CAGradientLayer()
+        layer.colors = [UIColor.clear.cgColor, UIColor(white: 0, alpha: 0.2).cgColor, UIColor(white: 0, alpha: 0.4).cgColor]
+        layer.locations = [0.3, 0.6, 1.0]
+        layer.startPoint = CGPoint.init(x: 0.0, y: 0.0)
+        layer.endPoint = CGPoint.init(x: 0.0, y: 1.0)
+        return layer
     }()
     
     lazy fileprivate var favoriteBtn: UIButton = {
@@ -101,6 +113,7 @@ class VideoDetailCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+//        contentView.layer.addSublayer(gradientLayer)
         
         contentView.addSubview(playerView)
         
@@ -108,6 +121,15 @@ class VideoDetailCell: UITableViewCell {
         initCaptionView()
         initConstraints()
     }
+    
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//
+//        CATransaction.begin()
+//        CATransaction.setDisableActions(true)
+//        gradientLayer.frame = CGRect.init(x: 0, y: self.bounds.height - 500, width: self.bounds.width, height: 500)
+//        CATransaction.commit()
+//    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -256,8 +278,16 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        isPlayerReady = false
+        playerView.cancelLoading()
+    }
+    
     func setup(model: VideoModel) {
-        if let URLString = model.media?.url {
+        if let URLString = model.media?.url, let url = URL(string: URLString) {
+//            playerView.setup(url: url)
             playerView.setPlayerSourceUrl(url: URLString)
         }
         
@@ -287,6 +317,21 @@ class VideoDetailCell: UITableViewCell {
 }
 
 
+// MARK: - ============= AVPlayer =============
+extension VideoDetailCell {
+    func play() {
+        playerView.play()
+    }
+    
+    func pause() {
+        playerView.pause()
+    }
+    
+    func replay() {
+        playerView.replay()
+    }
+}
+
 // MARK: - ============= AVPlayerUpdateDelegate =============
 extension VideoDetailCell: AVPlayerUpdateDelegate {
     
@@ -302,10 +347,9 @@ extension VideoDetailCell: AVPlayerUpdateDelegate {
         case .readyToPlay:
 //            startLoadingPlayItemAnim(false)
             
-//            isPlayerReady = true
+            isPlayerReady = true
             //            musicAlum.startAnimation(rate: CGFloat(aweme?.rate ?? 0))
-//            onPlayerReady?()
-            playerView.play()
+            onPlayerReady?()
             break
         case .failed:
 //            startLoadingPlayItemAnim(false)

@@ -56,6 +56,9 @@ class PlayListService: NSObject {
     
     @objc dynamic var isPlaying: Bool = false
     
+    //解决与小视频模块监听冲突
+    lazy var invalidateObserver: Bool = false
+    
     fileprivate var timeObserverToken: Any?
     
     let presenter: Presentr = {
@@ -153,6 +156,8 @@ class PlayListService: NSObject {
     }
     
     @objc func playToEndTimeAction() {
+        guard invalidateObserver == false else { return }
+        
         if let courseID = playingCourseModel?.id, let sectionID = playingSectionModels?[exist: playingIndex]?.id, let duration = playingSectionModels?[exist: playingIndex]?.duration_with_seconds {
             PlaybackRecordService.sharedInstance.updateRecords(courseID: courseID, sectionID: sectionID, seconds: TimeInterval(duration))
         }
@@ -278,6 +283,8 @@ class PlayListService: NSObject {
     }
     
     @objc func handleInterruption(notification: Notification) {
+        guard invalidateObserver == false else { return }
+        
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {

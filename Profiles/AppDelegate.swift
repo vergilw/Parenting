@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
         
         //FIXME: DEBUG VIDEO
-        tabBarController.setViewControllers([homeNavigationController, meNavigationController], animated: true)
+        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: true)
         
         return tabBarController
     }()

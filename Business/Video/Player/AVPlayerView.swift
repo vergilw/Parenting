@@ -48,17 +48,12 @@ class AVPlayerView: UIView {
         initSubView()
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initSubView()
-    }
-    
     func initSubView() {
         session = URLSession.init(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         
         playerLayer = AVPlayerLayer.init(player: player)
         playerLayer.videoGravity = .resizeAspectFill
-        self.layer.addSublayer(self.playerLayer)
+        layer.addSublayer(playerLayer)
         
         addProgressObserver()
         
@@ -69,7 +64,7 @@ class AVPlayerView: UIView {
         super.layoutSubviews()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        playerLayer.frame = self.layer.bounds
+        playerLayer.frame = layer.bounds
         CATransaction.commit()
     }
     
@@ -81,7 +76,7 @@ class AVPlayerView: UIView {
         cacheFileKey = sourceURL?.absoluteString
         
         queryCacheOperation = WebCacheManager.shared().queryURLFromDiskMemory(key: cacheFileKey ?? "", cacheQueryCompletedBlock: { [weak self] (data, hasCache) in
-            DispatchQueue.main.async {[weak self] in
+            DispatchQueue.main.async { [weak self] in
                 if !hasCache {
                     self?.sourceURL = self?.sourceURL?.absoluteString.urlScheme(scheme: "streaming")
                 } else {
@@ -117,7 +112,7 @@ class AVPlayerView: UIView {
         playerItem = nil
         playerLayer.player = nil
         
-        cancelLoadingQueue?.async {[weak self] in
+        cancelLoadingQueue?.async { [weak self] in
             self?.urlAsset?.cancelLoading()
             
             self?.task?.cancel()
@@ -191,7 +186,11 @@ extension AVPlayerView {
     }
     
     private func addProgressObserver() {
-        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: DispatchQueue.main, using: {[weak self] time in
+//        if let observer = timeObserver {
+//            player?.removeTimeObserver(observer)
+//            timeObserver = nil
+//        }
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: CMTime.init(value: 1, timescale: 1), queue: DispatchQueue.main, using: { [weak self] time in
             let current = CMTimeGetSeconds(time)
             let total = CMTimeGetSeconds(self?.playerItem?.duration ?? CMTime.init())
             if total == current {
@@ -205,6 +204,7 @@ extension AVPlayerView {
         playerItem?.removeObserver(self, forKeyPath: "status")
         if let observer = timeObserver {
             player?.removeTimeObserver(observer)
+            timeObserver = nil
         }
     }
     
@@ -216,12 +216,12 @@ extension AVPlayerView: URLSessionTaskDelegate, URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         let httpResponse = dataTask.response as! HTTPURLResponse
         let code = httpResponse.statusCode
-        if(code == 200) {
+        if (code == 200) {
             completionHandler(URLSession.ResponseDisposition.allow)
             self.data = Data.init()
             self.response = httpResponse
             self.processPendingRequests()
-        }else {
+        } else {
             completionHandler(URLSession.ResponseDisposition.cancel)
         }
     }
