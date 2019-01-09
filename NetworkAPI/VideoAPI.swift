@@ -14,6 +14,8 @@ let VideoProvider = MoyaProvider<VideoAPI>(manager: DefaultAlamofireManager.shar
 enum VideoAPI {
     case video_category
     case videos(Int?, Int)
+    case video_like(String, Bool)
+    case video_comment(Int, Int)
 }
 
 extension VideoAPI: TargetType {
@@ -28,6 +30,10 @@ extension VideoAPI: TargetType {
             return "/video_taxons"
         case .videos:
             return "/videos"
+        case let .video_like(videoID, isLike):
+            return "/video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
+        case let .video_comment(videoID, _):
+            return "/Video/\(videoID)/comments"
         }
     }
     
@@ -36,6 +42,10 @@ extension VideoAPI: TargetType {
         case .video_category:
             return .get
         case .videos:
+            return .get
+        case .video_like:
+            return .post
+        case .video_comment:
             return .get
         }
     }
@@ -54,6 +64,10 @@ extension VideoAPI: TargetType {
                 parameters["video_taxon_id"] = categoryID
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .video_like:
+            return .requestPlain
+        case let .video_comment(_, page):
+            return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         }
     }
     

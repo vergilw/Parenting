@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Presentr
 
 class DVideoDetailViewController: BaseViewController {
 
@@ -17,11 +18,44 @@ class DVideoDetailViewController: BaseViewController {
     
     lazy fileprivate var isCurPlayerPause: Bool = false
     
+    lazy fileprivate var players = [AVPlayer]()
+    
     lazy fileprivate var dismissBtn: UIButton = {
         let button = UIButton()
-        //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
-        //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .white
+        if #available(iOS 11.0, *) {
+            var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+            if topHeight == 0 {
+                topHeight = 20
+            }
+            button.imageEdgeInsets = UIEdgeInsets(top: topHeight, left: 0, bottom: 0, right: 0)
+        } else {
+            button.imageEdgeInsets = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        }
+        button.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+        button.layer.shadowOpacity = 0.6
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
         return button
+    }()
+    
+    let commentPresenter: Presentr = {
+        let width = ModalSize.full
+        let height = ModalSize.custom(size: 440)
+        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: UIScreenHeight-440))
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVertical
+        customPresenter.dismissTransitionType = .coverVertical
+        customPresenter.roundCorners = true
+        customPresenter.cornerRadius = 5
+        customPresenter.backgroundColor = .black
+        customPresenter.backgroundOpacity = 0.5
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .bottom
+        return customPresenter
     }()
     
     init(models: [VideoModel], index: Int) {
@@ -33,6 +67,10 @@ class DVideoDetailViewController: BaseViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     override func viewDidLoad() {
@@ -50,9 +88,7 @@ class DVideoDetailViewController: BaseViewController {
         PlayListService.sharedInstance.invalidateObserver = true
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
-            
-            let curIndexPath = IndexPath.init(row: self.currentIndex, section: 0)
-            self.tableView.scrollToRow(at: curIndexPath, at: UITableView.ScrollPosition.middle, animated: false)
+            self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
             self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
         }
     }
@@ -86,9 +122,13 @@ class DVideoDetailViewController: BaseViewController {
             make.leading.top.equalToSuperview()
             make.width.equalTo(62.5)
             if #available(iOS 11.0, *) {
-                make.height.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)+(navigationController?.navigationBar.bounds.size.height ?? 0))
+                var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+                if topHeight == 0 {
+                    topHeight = 20
+                }
+                make.height.equalTo(topHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
             } else {
-                make.height.equalTo(UIStatusBarHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
+                make.height.equalTo(20+(navigationController?.navigationBar.bounds.size.height ?? 0))
             }
         }
     }
@@ -107,14 +147,9 @@ class DVideoDetailViewController: BaseViewController {
     // MARK: - ============= Action =============
 
     deinit {
-        let cells = tableView.visibleCells as! [VideoDetailCell]
-        for cell in cells {
-            cell.playerView.cancelLoading()
-        }
-        removeObserver(self, forKeyPath: "currentIndex")
+        NotificationCenter.default.removeObserver(self)
         
         PlayListService.sharedInstance.invalidateObserver = false
-        
     }
 }
 
@@ -131,6 +166,8 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: VideoDetailCell.className(), for: indexPath) as! VideoDetailCell
+        cell.delegate = self
+        addPlayer(cell.player)
         if let model = viewModel.videosModels?[exist: indexPath.row] {
             cell.setup(model: model)
         }
@@ -167,22 +204,37 @@ extension DVideoDetailViewController {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "currentIndex") {
-            isCurPlayerPause = false
             weak var cell = tableView.cellForRow(at: IndexPath.init(row: currentIndex, section: 0)) as? VideoDetailCell
-            if cell?.isPlayerReady ?? false {
-                cell?.replay()
-            } else {
-                AVPlayerManager.shared().pauseAll()
-                cell?.onPlayerReady = { [weak self] in
-                    if let indexPath = self?.tableView.indexPath(for: cell!) {
-                        if !(self?.isCurPlayerPause ?? true) && indexPath.row == self?.currentIndex {
-                            cell?.play()
-                        }
-                    }
-                }
-            }
+            pauseAllPlayers()
+            cell?.player.play()
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    fileprivate func addPlayer(_ element: AVPlayer) {
+        if !players.contains(element) {
+            players.append(element)
+        }
+    }
+    
+    fileprivate func pauseAllPlayers() {
+        for player in players {
+            player.pause()
+        }
+    }
+}
+
+
+extension DVideoDetailViewController: VideoDetailCellDelegate {
+    
+    func tableViewCellComment(_ tableViewCell: VideoDetailCell) {
+        guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
+        let viewController = DVideoCommentViewController(videoID: videoID)
+        self.customPresentViewController(commentPresenter, viewController: viewController, animated: true)
+    }
+    
+    func tableViewCellForward(_ tableViewCell: VideoDetailCell) {
+        
     }
 }

@@ -12,14 +12,24 @@ import AVFoundation
 
 class VideoDetailCell: UITableViewCell {
     
-    var isPlayerReady: Bool = false
-    var onPlayerReady: (()->Void)?
+    weak var delegate: VideoDetailCellDelegate?
     
-    lazy var playerView: AVPlayerView = {
-        let view = AVPlayerView()
-        view.delegate = self
+    var model: VideoModel?
+    
+    lazy var player: AVPlayer = {
+        let view = AVPlayer()
+        view.automaticallyWaitsToMinimizeStalling = false
+        view.actionAtItemEnd = .none
         return view
     }()
+    
+    lazy fileprivate var playerLayer: AVPlayerLayer = {
+        let view = AVPlayerLayer(player: player)
+        view.videoGravity = .resizeAspectFill
+        return view
+    }()
+    
+    fileprivate var playerLooper: AVPlayerLooper?
     
     lazy fileprivate var gradientLayer: CAGradientLayer = {
         let layer = CAGradientLayer()
@@ -28,6 +38,13 @@ class VideoDetailCell: UITableViewCell {
         layer.startPoint = CGPoint.init(x: 0.0, y: 0.0)
         layer.endPoint = CGPoint.init(x: 0.0, y: 1.0)
         return layer
+    }()
+    
+    lazy fileprivate var playerStatusImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "video_playerPlay")
+        imgView.isHidden = true
+        return imgView
     }()
     
     lazy fileprivate var favoriteBtn: UIButton = {
@@ -39,6 +56,9 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var avatarBtn: UIButton = {
         let button = UIButton()
+        button.layer.cornerRadius = 25
+        button.layer.borderColor = UIColor(white: 1, alpha: 0.3).cgColor
+        button.layer.borderWidth = 2
         //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
         //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
         return button
@@ -46,7 +66,11 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var likeImgView: UIImageView = {
         let imgView = UIImageView()
-//        imgView.image = UIImage(named: <#T##String#>)
+        imgView.image = UIImage(named: "video_playerLike")
+        imgView.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+        imgView.layer.shadowOpacity = 0.6
+        imgView.layer.shadowColor = UIColor.black.cgColor
+        imgView.clipsToBounds = false
         return imgView
     }()
     
@@ -54,6 +78,10 @@ class VideoDetailCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = .white
+        label.layer.shadowOffset = CGSize(width: 0, height: 3.0)
+        label.layer.shadowOpacity = 0.6
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.clipsToBounds = false
         return label
     }()
     
@@ -98,6 +126,11 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
+    lazy fileprivate var lastTapTime: TimeInterval = 0
+    lazy fileprivate var lastTapPoint: CGPoint = .zero
+    
+    lazy fileprivate var isRequesting: Bool = false
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -113,26 +146,57 @@ class VideoDetailCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
-//        contentView.layer.addSublayer(gradientLayer)
+        contentView.backgroundColor = UIColor("#353535")
+        contentView.layer.addSublayer(playerLayer)
+        contentView.layer.addSublayer(gradientLayer)
         
-        contentView.addSubview(playerView)
         
         initActionView()
         initCaptionView()
+        initGesture()
+        initObserver()
+        
         initConstraints()
+        
+        
     }
-    
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//
-//        CATransaction.begin()
-//        CATransaction.setDisableActions(true)
-//        gradientLayer.frame = CGRect.init(x: 0, y: self.bounds.height - 500, width: self.bounds.width, height: 500)
-//        CATransaction.commit()
-//    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    fileprivate func initGesture() {
+        contentView.addSubview(playerStatusImgView)
+        
+        let tapGesture = UITapGestureRecognizer { [weak self] (sender) in
+            guard let sender = sender as? UITapGestureRecognizer else { return }
+            guard self != nil else { return }
+            
+            let point = sender.location(in: self?.contentView)
+            //获取当前时间
+            let time = CACurrentMediaTime()
+            //判断当前点击时间与上次点击时间的时间间隔
+            if (time - (self?.lastTapTime ?? 0)) > 0.25 {
+                //推迟0.25秒执行单击方法
+                self?.perform(#selector(self?.playerStatusBtnAction), with: nil, afterDelay: 0.25)
+                
+            } else {
+                //取消执行单击方法
+                NSObject.cancelPreviousPerformRequests(withTarget: self!, selector: #selector(self?.playerStatusBtnAction), object: nil)
+                //执行连击显示爱心的方法
+                self?.showLikeViewAnim(newPoint: point, oldPoint: self!.lastTapPoint)
+                
+                //触发喜欢请求
+                if self?.model?.isLike == false {
+                    self?.videoLikeRequest(isLike: true)
+                }
+            }
+            //更新上一次点击位置
+            self?.lastTapPoint = point
+            //更新上一次点击时间
+            self?.lastTapTime = time
+        }
+        contentView.addGestureRecognizer(tapGesture)
     }
     
     fileprivate func initActionView() {
@@ -141,7 +205,7 @@ class VideoDetailCell: UITableViewCell {
             view.alignment = .center
             view.axis = .vertical
             view.distribution = .fillProportionally
-            view.spacing = 16
+            view.spacing = 24
             return view
         }()
         
@@ -151,19 +215,18 @@ class VideoDetailCell: UITableViewCell {
             view.alignment = .center
             view.axis = .vertical
             view.distribution = .fillProportionally
+            view.spacing = 3.5
             return view
         }()
         let likeBtn: UIButton = {
             let button = UIButton()
-            //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
             //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
-        likeStackView.addSubview(likeBtn)
+        likeStackView.addSubviews([likeBtn])
         likeBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        likeStackView.addSubview(likeBtn)
         likeStackView.addArrangedSubview(likeImgView)
         likeStackView.addArrangedSubview(likeCountLabel)
         
@@ -174,17 +237,17 @@ class VideoDetailCell: UITableViewCell {
             view.alignment = .center
             view.axis = .vertical
             view.distribution = .fillProportionally
+            view.spacing = 3.5
             return view
         }()
         let commentBtn: UIButton = {
             let button = UIButton()
-            //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
-            //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(commentBtnAction), for: .touchUpInside)
             return button
         }()
         let commentImgView: UIImageView = {
             let imgView = UIImageView()
-//            imgView.image = UIImage(named: <#T##String#>)
+            imgView.image = UIImage(named: "video_playerComment")
             return imgView
         }()
         commentStackView.addSubviews([commentBtn, commentMarkImgView])
@@ -205,17 +268,17 @@ class VideoDetailCell: UITableViewCell {
             view.alignment = .center
             view.axis = .vertical
             view.distribution = .fillProportionally
+            view.spacing = 3.5
             return view
         }()
         let shareBtn: UIButton = {
             let button = UIButton()
-            //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
-            //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(forwardBtnAction), for: .touchUpInside)
             return button
         }()
         let shareImgView: UIImageView = {
             let imgView = UIImageView()
-            //            imgView.image = UIImage(named: <#T##String#>)
+            imgView.image = UIImage(named: "video_playerForward")
             return imgView
         }()
         shareStackView.addSubviews([shareBtn, shareMarkImgView])
@@ -232,10 +295,21 @@ class VideoDetailCell: UITableViewCell {
         
         //StackView Layout
         contentView.addSubview(stackView)
+        
         stackView.addArrangedSubview(avatarBtn)
         stackView.addArrangedSubview(likeStackView)
         stackView.addArrangedSubview(commentStackView)
         stackView.addArrangedSubview(shareStackView)
+        
+        avatarBtn.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        likeStackView.heightAnchor.constraint(equalToConstant: 40.5).isActive = true
+        commentStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        shareStackView.heightAnchor.constraint(equalToConstant: 41).isActive = true
+        if #available(iOS 11.0, *) {
+            stackView.setCustomSpacing(32, after: avatarBtn)
+        } else {
+            // Fallback on earlier versions
+        }
         stackView.snp.makeConstraints { make in
             make.trailing.equalTo(-16)
             if #available(iOS 11.0, *) {
@@ -243,7 +317,8 @@ class VideoDetailCell: UITableViewCell {
             } else {
                 make.bottom.equalTo(-45)
             }
-            make.size.equalTo(CGSize(width: 50, height: 223))
+//            make.size.equalTo(CGSize(width: 50, height: 268))
+            make.width.equalTo(50)
         }
     }
     
@@ -272,28 +347,49 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
-    fileprivate func initConstraints() {
-        playerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+    fileprivate func initObserver() {
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: NSKeyValueObservingOptions.new, context: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        isPlayerReady = false
-        playerView.cancelLoading()
+    fileprivate func initConstraints() {
+        playerStatusImgView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+//        playerView.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        gradientLayer.frame = CGRect(x: 0, y: contentView.bounds.height - 500, width: contentView.bounds.width, height: 500)
+        playerLayer.frame = contentView.layer.bounds
+        CATransaction.commit()
+    }
+    
+//    override func prepareForReuse() {
+//        super.prepareForReuse()
+//        
+//        isPlayerReady = false
+//        playerView.cancelLoading()
+//    }
     
     func setup(model: VideoModel) {
+        self.model = model
+        
         if let URLString = model.media?.url, let url = URL(string: URLString) {
-//            playerView.setup(url: url)
-            playerView.setPlayerSourceUrl(url: URLString)
+            player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+//            player.play()
         }
         
         if let URLString = model.author?.avatar_url {
-            let processor = RoundCornerImageProcessor(cornerRadius: 25, targetSize: CGSize(width: 50, height: 50))
-            avatarBtn.kf.setImage(with: URL(string: URLString), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
+//            let processor = RoundCornerImageProcessor(cornerRadius: 50, targetSize: CGSize(width: 100, height: 100))
+            avatarBtn.kf.setImage(with: URL(string: URLString), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"))
         }
         
         if let likedCount = model.liked_count {
@@ -314,46 +410,101 @@ class VideoDetailCell: UITableViewCell {
         
         descriptionLabel.text = model.title
     }
-}
-
-
-// MARK: - ============= AVPlayer =============
-extension VideoDetailCell {
-    func play() {
-        playerView.play()
-    }
     
-    func pause() {
-        playerView.pause()
-    }
-    
-    func replay() {
-        playerView.replay()
-    }
-}
-
-// MARK: - ============= AVPlayerUpdateDelegate =============
-extension VideoDetailCell: AVPlayerUpdateDelegate {
-    
-    func onProgressUpdate(current: CGFloat, total: CGFloat) {
-        
-    }
-    
-    func onPlayItemStatusUpdate(status: AVPlayerItem.Status) {
-        switch status {
-        case .unknown:
-//            startLoadingPlayItemAnim()
-            break
-        case .readyToPlay:
-//            startLoadingPlayItemAnim(false)
-            
-            isPlayerReady = true
-            //            musicAlum.startAnimation(rate: CGFloat(aweme?.rate ?? 0))
-            onPlayerReady?()
-            break
-        case .failed:
-//            startLoadingPlayItemAnim(false)
-            break
+    @objc func playerStatusBtnAction() {
+        if player.rate == 0 {
+            player.play()
+        } else {
+            player.pause()
         }
     }
+    
+    func showLikeViewAnim(newPoint:CGPoint, oldPoint:CGPoint) {
+        
+        
+        let likeImageView = UIImageView.init(image: UIImage.init(named: "video_playerLikeAnimation"))
+        var k = (oldPoint.y - newPoint.y) / (oldPoint.x - newPoint.x)
+        k = abs(k) < 0.5 ? k : (k > 0 ? 0.5 : -0.5)
+        let angle = .pi/4 * -k
+        
+        //TODO: point incorrect
+        let newPoint = CGPoint(x: newPoint.x-40, y: newPoint.y-38)
+            
+        likeImageView.frame = CGRect.init(origin: newPoint, size: CGSize.init(width: 80, height: 80))
+        likeImageView.transform = CGAffineTransform.init(scaleX: 0.8, y: 1.8).concatenating(CGAffineTransform.init(rotationAngle: angle))
+        contentView.addSubview(likeImageView)
+        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseOut, animations: {
+            likeImageView.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0).concatenating(CGAffineTransform.init(rotationAngle: angle))
+        }) { finished in
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                likeImageView.transform = CGAffineTransform.init(scaleX: 3.0, y: 3.0).concatenating(CGAffineTransform.init(rotationAngle: angle))
+                likeImageView.alpha = 0.0
+            }, completion: { finished in
+                likeImageView.removeFromSuperview()
+            })
+        }
+    }
+    
+    @objc func playToEndTimeAction() {
+        player.seek(to: CMTime.zero)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if (keyPath == "timeControlStatus") {
+            if player.timeControlStatus == .playing {
+                self.playerStatusImgView.isHidden = true
+            } else if player.timeControlStatus == .paused {
+                self.playerStatusImgView.isHidden = false
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+    
+    // MARK: - ============= Action =============
+    @objc func commentBtnAction() {
+        if let delegate = delegate {
+            delegate.tableViewCellComment(self)
+        }
+    }
+    
+    @objc func forwardBtnAction() {
+        if let delegate = delegate {
+            delegate.tableViewCellForward(self)
+        }
+    }
+    
+    deinit {
+        player.removeObserver(self, forKeyPath: "timeControlStatus")
+        
+    }
+}
+
+
+extension VideoDetailCell {
+    
+    
+    
+    fileprivate func videoLikeRequest(isLike: Bool) {
+        guard let videoID = model?.id else { return }
+        guard isRequesting == false else { return }
+        
+        isRequesting = true
+        VideoProvider.request(.video_like(videoID, isLike), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            self.isRequesting = false
+            
+            if code >= 0 {
+                self.model?.isLike = isLike
+            }
+        }))
+    }
+}
+
+
+protocol VideoDetailCellDelegate: NSObjectProtocol {
+    
+    func tableViewCellComment(_ tableViewCell: VideoDetailCell)
+    
+    func tableViewCellForward(_ tableViewCell: VideoDetailCell)
 }

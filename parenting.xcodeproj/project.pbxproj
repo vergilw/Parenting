@@ -12,6 +12,7 @@
 		130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */; };
 		130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518E21D4CF8400C42610 /* WithdrawModel.swift */; };
 		130A519121D4D21000C42610 /* DWithdrawResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */; };
+		130AAF6121E48AC600992596 /* CachingPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AAF6021E48AC600992596 /* CachingPlayerItem.swift */; };
 		130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B639921C7410100BE79A0 /* PriceLabel.swift */; };
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
@@ -30,6 +31,10 @@
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
+		130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130D569D21E5C5C800CE65CB /* Video.xcassets */; };
+		130D56A021E5E9F700CE65CB /* DVideoCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D569F21E5E9F700CE65CB /* DVideoCommentViewController.swift */; };
+		130D56A221E5F99900CE65CB /* VideoCommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D56A121E5F99900CE65CB /* VideoCommentModel.swift */; };
+		130D56A421E5FA6800CE65CB /* VideoCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D56A321E5FA6800CE65CB /* VideoCommentCell.swift */; };
 		130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6221AFB978003E7645 /* StoryModel.swift */; };
 		130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8B6421AFBCD5003E7645 /* StoryAPI.swift */; };
 		130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */; };
@@ -56,12 +61,6 @@
 		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0721DDF08300AE2EF6 /* MediaModel.swift */; };
-		130F3C0C21DE00B100AE2EF6 /* AVPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0A21DE00B100AE2EF6 /* AVPlayerManager.swift */; };
-		130F3C0D21DE00B100AE2EF6 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0B21DE00B100AE2EF6 /* AVPlayerView.swift */; };
-		130F3C1221DE017E00AE2EF6 /* WebDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0E21DE017D00AE2EF6 /* WebDownloadOperation.swift */; };
-		130F3C1321DE017E00AE2EF6 /* WebCombineOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0F21DE017E00AE2EF6 /* WebCombineOperation.swift */; };
-		130F3C1421DE017E00AE2EF6 /* WebDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C1021DE017E00AE2EF6 /* WebDownloader.swift */; };
-		130F3C1521DE017E00AE2EF6 /* WebCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C1121DE017E00AE2EF6 /* WebCacheManager.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F521A63BB100F79E92 /* DSettingsViewController.swift */; };
 		131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F721A63D7400F79E92 /* DAboutViewController.swift */; };
@@ -185,6 +184,7 @@
 		130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawViewController.swift; sourceTree = "<group>"; };
 		130A518E21D4CF8400C42610 /* WithdrawModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawModel.swift; sourceTree = "<group>"; };
 		130A519021D4D21000C42610 /* DWithdrawResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawResultViewController.swift; sourceTree = "<group>"; };
+		130AAF6021E48AC600992596 /* CachingPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingPlayerItem.swift; sourceTree = "<group>"; };
 		130B639921C7410100BE79A0 /* PriceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLabel.swift; sourceTree = "<group>"; };
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
@@ -203,6 +203,10 @@
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
+		130D569D21E5C5C800CE65CB /* Video.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Video.xcassets; sourceTree = "<group>"; };
+		130D569F21E5E9F700CE65CB /* DVideoCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoCommentViewController.swift; sourceTree = "<group>"; };
+		130D56A121E5F99900CE65CB /* VideoCommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCommentModel.swift; sourceTree = "<group>"; };
+		130D56A321E5FA6800CE65CB /* VideoCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCommentCell.swift; sourceTree = "<group>"; };
 		130D8B6221AFB978003E7645 /* StoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryModel.swift; sourceTree = "<group>"; };
 		130D8B6421AFBCD5003E7645 /* StoryAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAPI.swift; sourceTree = "<group>"; };
 		130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssociateWechatView.swift; sourceTree = "<group>"; };
@@ -229,12 +233,6 @@
 		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130F3C0721DDF08300AE2EF6 /* MediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModel.swift; sourceTree = "<group>"; };
-		130F3C0A21DE00B100AE2EF6 /* AVPlayerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVPlayerManager.swift; sourceTree = "<group>"; };
-		130F3C0B21DE00B100AE2EF6 /* AVPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVPlayerView.swift; sourceTree = "<group>"; };
-		130F3C0E21DE017D00AE2EF6 /* WebDownloadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDownloadOperation.swift; sourceTree = "<group>"; };
-		130F3C0F21DE017E00AE2EF6 /* WebCombineOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebCombineOperation.swift; sourceTree = "<group>"; };
-		130F3C1021DE017E00AE2EF6 /* WebDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDownloader.swift; sourceTree = "<group>"; };
-		130F3C1121DE017E00AE2EF6 /* WebCacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebCacheManager.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		131067F521A63BB100F79E92 /* DSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSettingsViewController.swift; sourceTree = "<group>"; };
 		131067F721A63D7400F79E92 /* DAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAboutViewController.swift; sourceTree = "<group>"; };
@@ -458,6 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				130F3C0721DDF08300AE2EF6 /* MediaModel.swift */,
+				130D56A121E5F99900CE65CB /* VideoCommentModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -465,12 +464,7 @@
 		130F3C0921DE00A000AE2EF6 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				130F3C1121DE017E00AE2EF6 /* WebCacheManager.swift */,
-				130F3C0F21DE017E00AE2EF6 /* WebCombineOperation.swift */,
-				130F3C1021DE017E00AE2EF6 /* WebDownloader.swift */,
-				130F3C0E21DE017D00AE2EF6 /* WebDownloadOperation.swift */,
-				130F3C0A21DE00B100AE2EF6 /* AVPlayerManager.swift */,
-				130F3C0B21DE00B100AE2EF6 /* AVPlayerView.swift */,
+				130AAF6021E48AC600992596 /* CachingPlayerItem.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -622,6 +616,7 @@
 				130F1C96219C174E004E1DD3 /* Me.xcassets */,
 				1310F8E4219EBEE9004073FF /* Payment.xcassets */,
 				137A82B921B529040099A070 /* parenting.entitlements */,
+				130D569D21E5C5C800CE65CB /* Video.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -730,6 +725,7 @@
 				132DA5F521C35AD6004F0F42 /* DVideosViewModel.swift */,
 				132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */,
 				132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */,
+				130D569F21E5E9F700CE65CB /* DVideoCommentViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -739,6 +735,7 @@
 			children = (
 				132DA5FB21C37C93004F0F42 /* VideoCollectionCell.swift */,
 				132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */,
+				130D56A321E5FA6800CE65CB /* VideoCommentCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -946,6 +943,7 @@
 			files = (
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
+				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
@@ -1066,20 +1064,17 @@
 				13144B20218040D9002B4281 /* CourseCatalogueCell.swift in Sources */,
 				131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */,
 				131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */,
-				130F3C1321DE017E00AE2EF6 /* WebCombineOperation.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				131170A421B774ED00C178BB /* PaymentAPI.swift in Sources */,
 				1316F4E121D0ADDA00F5A756 /* DRewardRankingViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */,
 				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
-				130F3C1221DE017E00AE2EF6 /* WebDownloadOperation.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				1316F4DF21D072CC00F5A756 /* DExchangeViewController.swift in Sources */,
 				130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */,
 				13113F6D2199736600B6E0FE /* DAuthorizationViewModel.swift in Sources */,
 				130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */,
-				130F3C1421DE017E00AE2EF6 /* WebDownloader.swift in Sources */,
 				131160BD2182EF6D0000F105 /* CourseCatalogueTitleCell.swift in Sources */,
 				132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */,
 				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
@@ -1115,6 +1110,7 @@
 				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */,
+				130AAF6121E48AC600992596 /* CachingPlayerItem.swift in Sources */,
 				131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */,
 				13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */,
 				1311201C218171650088F5BF /* TeacherModel.swift in Sources */,
@@ -1144,7 +1140,6 @@
 				1316F4E521D0C2F000F5A756 /* RewardCoinAPI.swift in Sources */,
 				132DA5F821C35C15004F0F42 /* VideoCategoryModel.swift in Sources */,
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
-				130F3C1521DE017E00AE2EF6 /* WebCacheManager.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
 				131170A221B75C1600C178BB /* UserAPI.swift in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
@@ -1154,7 +1149,6 @@
 				13113F6B219970C500B6E0FE /* AuthorizationAPI.swift in Sources */,
 				13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */,
 				13B7F73B21B68728001BF15D /* QNResponseInfo.m in Sources */,
-				130F3C0C21DE00B100AE2EF6 /* AVPlayerManager.swift in Sources */,
 				1316F4E321D0AEA900F5A756 /* RewardRankingCell.swift in Sources */,
 				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
@@ -1176,8 +1170,10 @@
 				13B7F6F221B67745001BF15D /* UploadService.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
+				130D56A221E5F99900CE65CB /* VideoCommentModel.swift in Sources */,
 				130DD43521CC863F0008259F /* CategoryView.swift in Sources */,
 				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
+				130D56A421E5FA6800CE65CB /* VideoCommentCell.swift in Sources */,
 				13B7F73A21B68728001BF15D /* QNUserAgent.m in Sources */,
 				130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */,
 				13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */,
@@ -1192,10 +1188,10 @@
 				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */,
-				130F3C0D21DE00B100AE2EF6 /* AVPlayerView.swift in Sources */,
 				130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */,
 				130D8E2B21D631F2008833C7 /* DetailsNotDataCell.swift in Sources */,
 				13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */,
+				130D56A021E5E9F700CE65CB /* DVideoCommentViewController.swift in Sources */,
 				13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */,
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
 				130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */,
