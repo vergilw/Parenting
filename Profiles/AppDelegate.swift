@@ -25,9 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
-        let videoImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        videoNavigationController.tabBarItem = UITabBarItem(title: "小视频", image: videoImg, tag: 1)
-        videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
+        let videoImg = UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
+        videoNavigationController.tabBarItem = UITabBarItem(title: "视频", image: videoImg, tag: 1)
+        videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_videoSelected")?.withRenderingMode(.alwaysOriginal)
         videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())

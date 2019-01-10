@@ -1,15 +1,17 @@
 //
-//  DVideosViewController.swift
+//  DVideoUserViewController.swift
 //  parenting
 //
-//  Created by Vergil.Wang on 2018/12/14.
-//  Copyright © 2018 zheng-chain. All rights reserved.
+//  Created by Vergil.Wang on 2019/1/10.
+//  Copyright © 2019 zheng-chain. All rights reserved.
 //
 
 import UIKit
 
-class DVideosViewController: BaseViewController {
+class DVideoUserViewController: BaseViewController {
 
+    var userID: Int?
+    
     var videoModels: [VideoModel]?
     
     fileprivate lazy var pageNumber: Int = 1
@@ -17,7 +19,7 @@ class DVideosViewController: BaseViewController {
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        let width = (UIScreenWidth-1)/2.0
+        let width = (UIScreenWidth-2)/3.0
         layout.itemSize = CGSize(width: width, height: width/9.0*16)
         layout.minimumLineSpacing = 1
         layout.minimumInteritemSpacing = 1
@@ -27,14 +29,12 @@ class DVideosViewController: BaseViewController {
             view.contentInsetAdjustmentBehavior = .never
         }
         view.showsVerticalScrollIndicator = false
-        view.register(VideoCollectionCell.self, forCellWithReuseIdentifier: VideoCollectionCell.className())
+        view.register(VideoUserCell.self, forCellWithReuseIdentifier: VideoUserCell.className())
+        view.register(VideoUserHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: VideoUserHeaderView.className())
         view.dataSource = self
         view.delegate = self
         view.backgroundColor = .white
         
-        view.mj_header = CustomMJHeader(refreshingBlock: { [weak self] in
-            self?.fetchData()
-        })
         view.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak view] in
             self?.fetchMoreData()
         })
@@ -43,21 +43,7 @@ class DVideosViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var cameraBtn: UIButton = {
-        let button = UIButton()
-        button.layer.cornerRadius = 27.5
-        button.clipsToBounds = true
-        button.backgroundColor = UIColor("#ffe142")
-        button.setImage(UIImage(named: "video_cameraIndicator"), for: .normal)
-        button.addTarget(self, action: #selector(cameraBtnAction), for: .touchUpInside)
-        button.layer.shadowOffset = CGSize(width: 0, height: 3.5)
-        button.layer.shadowOpacity = 0.1
-        button.layer.shadowRadius = 11
-        button.layer.shadowColor = UIColor.black.cgColor
-        return button
-    }()
     
-    lazy fileprivate var lastOffsetY: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,20 +59,14 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        
-        view.addSubviews([collectionView, cameraBtn])
+        view.addSubview(collectionView)
     }
-
+    
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
         collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-        cameraBtn.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.size.equalTo(CGSize(width: 55, height: 55))
-            make.bottom.equalTo(-45)
         }
     }
     
@@ -97,17 +77,11 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        if !collectionView.mj_header.isRefreshing {
-            HUDService.sharedInstance.showFetchingView(target: self.view)
-        }
+        HUDService.sharedInstance.showFetchingView(target: self.view)
         
-        VideoProvider.request(.videos(nil, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos_user(userID ?? 0, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
-            if self.collectionView.mj_header.isRefreshing {
-                self.collectionView.mj_header.endRefreshing()
-            } else {
-                HUDService.sharedInstance.hideFetchingView(target: self.view)
-            }
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
             
             if code >= 0 {
                 if let data = JSON?["videos"] as? [[String: Any]] {
@@ -141,7 +115,7 @@ class DVideosViewController: BaseViewController {
     
     fileprivate func fetchMoreData() {
         
-        VideoProvider.request(.videos(nil, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos_user(userID ?? 0, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.collectionView.mj_footer.endRefreshing()
             
@@ -171,18 +145,27 @@ class DVideosViewController: BaseViewController {
         
     }
     
-    
     // MARK: - ============= Action =============
-    @objc func cameraBtnAction() {
-        navigationController?.pushViewController(DVideoShootViewController(), animated: true)
-    }
+
 }
 
 
-extension DVideosViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension DVideoUserViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: UIScreenWidth, height: 180)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: VideoUserHeaderView.className(), for: indexPath)
+            return view
+        }
+        return UICollectionReusableView()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -190,7 +173,7 @@ extension DVideosViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoCollectionCell.className(), for: indexPath) as! VideoCollectionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoUserCell.className(), for: indexPath) as! VideoUserCell
         if let model = videoModels?[exist: indexPath.row] {
             cell.setup(model: model)
         }
@@ -208,48 +191,4 @@ extension DVideosViewController: UICollectionViewDataSource, UICollectionViewDel
 }
 
 
-extension DVideosViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//        guard navigationView.frame.size != .zero else { return }
 
-        if cameraBtn.translatesAutoresizingMaskIntoConstraints == false {
-            cameraBtn.translatesAutoresizingMaskIntoConstraints = true
-        }
-        
-        //TODO: iOS 10 first
-        let offsetY = scrollView.contentOffset.y - lastOffsetY
-        if scrollView.contentOffset.y < 0 {
-            cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-            lastOffsetY = 0
-        } else if offsetY > 0 {
-            if cameraBtn.frame.minY < view.bounds.height {
-                if cameraBtn.center.y+offsetY > view.frame.maxY+cameraBtn.bounds.midY {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY+cameraBtn.bounds.midY)
-                } else {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: cameraBtn.center.y+offsetY)
-                }
-                
-            } else {
-                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY+cameraBtn.bounds.midY)
-            }
-            
-            lastOffsetY = scrollView.contentOffset.y
-        } else {
-            if cameraBtn.frame.maxY > view.bounds.height-45 {
-                if cameraBtn.center.y+offsetY < view.frame.maxY-45-55-cameraBtn.bounds.height/2 {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-                } else {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: cameraBtn.center.y+offsetY)
-                }
-                
-            } else {
-                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-            }
-            
-            lastOffsetY = scrollView.contentOffset.y
-        }
-        
-    }
-}

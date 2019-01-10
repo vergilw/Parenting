@@ -16,8 +16,6 @@ class DVideoDetailViewController: BaseViewController {
     
     @objc dynamic var currentIndex: Int = 0
     
-    lazy fileprivate var isCurPlayerPause: Bool = false
-    
     lazy fileprivate var players = [AVPlayer]()
     
     lazy fileprivate var dismissBtn: UIButton = {
@@ -39,24 +37,11 @@ class DVideoDetailViewController: BaseViewController {
         button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
         return button
     }()
-    
-    let commentPresenter: Presentr = {
-        let width = ModalSize.full
-        let height = ModalSize.custom(size: 440)
-        let center = ModalCenterPosition.customOrigin(origin: CGPoint(x: 0, y: UIScreenHeight-440))
-        let customType = PresentationType.custom(width: width, height: height, center: center)
-        
-        let customPresenter = Presentr(presentationType: customType)
-        customPresenter.transitionType = .coverVertical
-        customPresenter.dismissTransitionType = .coverVertical
-        customPresenter.roundCorners = true
-        customPresenter.cornerRadius = 5
-        customPresenter.backgroundColor = .black
-        customPresenter.backgroundOpacity = 0.5
-        customPresenter.dismissOnSwipe = true
-        customPresenter.dismissOnSwipeDirection = .bottom
-        return customPresenter
-    }()
+
+//    lazy fileprivate var userViewController: DVideoUserViewController = {
+//        let viewController = DVideoUserViewController()
+//        return viewController
+//    }()
     
     init(models: [VideoModel], index: Int) {
         super.init(nibName: nil, bundle: nil)
@@ -82,8 +67,8 @@ class DVideoDetailViewController: BaseViewController {
         
         
         //TODO: init
-//        try? AVAudioSession.sharedInstance().setMode(AVAudioSession.Mode.videoRecording)
-//        try? AVAudioSession.sharedInstance().setActive(true)
+        try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback)
+        try? AVAudioSession.sharedInstance().setActive(true)
         
         PlayListService.sharedInstance.invalidateObserver = true
         
@@ -231,10 +216,42 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
     func tableViewCellComment(_ tableViewCell: VideoDetailCell) {
         guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
         let viewController = DVideoCommentViewController(videoID: videoID)
-        self.customPresentViewController(commentPresenter, viewController: viewController, animated: true)
+//        self.customPresentViewController(commentPresenter, viewController: viewController, animated: true)
+//        view.addSubview(viewController.view)
+//        addChild(viewController)
+//        viewController.view.snp.makeConstraints { make in
+//            make.leading.trailing.bottom.equalToSuperview()
+//            make.height.equalTo(440)
+//        }
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        present(viewController, animated: true, completion: nil)
     }
     
     func tableViewCellForward(_ tableViewCell: VideoDetailCell) {
+//        guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
+        let viewController = DVideoForwardViewController()
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        present(viewController, animated: true, completion: nil)
+    }
+    
+    func tableViewCellAvatar(_ tableViewCell: VideoDetailCell) {
+        guard let userID = tableViewCell.model?.author?.id else { return }
         
+        let viewController = DVideoUserViewController()
+        viewController.userID = userID
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+extension DVideoDetailViewController: UIViewControllerTransitioningDelegate {
+    
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presentation = PresentationManager(presentedViewController: presented, presenting: presenting)
+        if presented.isKind(of: DVideoForwardViewController.self) {
+            presentation.layoutHeight = 275
+        }
+        return presentation
     }
 }

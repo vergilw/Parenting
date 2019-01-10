@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class DVideoCommentViewController: BaseViewController {
 
@@ -50,8 +51,14 @@ class DVideoCommentViewController: BaseViewController {
         placeholderView.contentMode = .center
         textField.leftView = placeholderView
         textField.leftViewMode = .always
+        if #available(iOS 11.0, *) {
+            textField.keyboardDistanceFromTextField = -11-(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+        } else {
+            textField.keyboardDistanceFromTextField = -11
+        }
         return textField
     }()
+    
     
     init(videoID: Int) {
         self.videoID = videoID
@@ -66,11 +73,20 @@ class DVideoCommentViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(DVideoCommentViewController.self)
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
         
         fetchData()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 4, height: 4))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        view.layer.mask = mask
     }
     
     // MARK: - ============= Initialize View =============
@@ -125,7 +141,7 @@ class DVideoCommentViewController: BaseViewController {
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.height.equalTo(36)
-            make.centerY.equalToSuperview()
+            make.top.equalTo(5)
         }
     }
     
@@ -140,24 +156,34 @@ class DVideoCommentViewController: BaseViewController {
             make.top.equalTo(titleView.snp.bottom)
             make.bottom.equalTo(bottomInputView.snp.top)
         }
+        
         bottomInputView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(46)
+            if #available(iOS 11.0, *) {
+                make.height.equalTo(46+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0))
+            } else {
+                make.height.equalTo(46)
+            }
         }
     }
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.view)
+        var HUDHeight: CGFloat = 440 - 60 - 46
+        if #available(iOS 11.0, *) {
+            HUDHeight -= (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+        }
+        HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
         
         VideoProvider.request(.video_comment(videoID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
             
             if code >= 0 {
                 if let data = JSON?["comments"] as? [[String: Any]] {
@@ -181,10 +207,14 @@ class DVideoCommentViewController: BaseViewController {
                             self.tableView.mj_footer.isHidden = true
                         }
                     }
+                    
+                    if self.commentModels?.count ?? 0 == 0 {
+                        HUDService.sharedInstance.showNoDataView(target: self.tableView)
+                    }
                 }
                 
             } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
                     self?.fetchData()
                 }
             }
@@ -250,4 +280,16 @@ extension DVideoCommentViewController: UITableViewDataSource, UITableViewDelegat
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
+}
+
+
+extension DVideoCommentViewController {
+//    @objc func keyboardWillShow(sender: Notification) {
+//        guard let keyboardInfo = sender.userInfo else { return }
+//        keyboardInfo[UIResponder.keyboardFrameBeginUserInfoKey]
+//    }
+//
+//    @objc func keyboardWillHide(sender: Notification) {
+//
+//    }
 }

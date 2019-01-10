@@ -26,6 +26,7 @@ class VideoModel: HandyJSON {
     var share_count: Int?
     var comments_count: Int?
     var share_url: String?
+    var rewardable: Bool?
     
     required init() { }
     

@@ -60,7 +60,7 @@ class VideoDetailCell: UITableViewCell {
         button.layer.borderColor = UIColor(white: 1, alpha: 0.3).cgColor
         button.layer.borderWidth = 2
         //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
-        //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -474,6 +474,12 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    @objc func avatarBtnAction() {
+        if let delegate = delegate {
+            delegate.tableViewCellAvatar(self)
+        }
+    }
+    
     deinit {
         player.removeObserver(self, forKeyPath: "timeControlStatus")
         
@@ -507,4 +513,6 @@ protocol VideoDetailCellDelegate: NSObjectProtocol {
     func tableViewCellComment(_ tableViewCell: VideoDetailCell)
     
     func tableViewCellForward(_ tableViewCell: VideoDetailCell)
+    
+    func tableViewCellAvatar(_ tableViewCell: VideoDetailCell)
 }

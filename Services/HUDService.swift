@@ -257,7 +257,7 @@ class FetchView: UIView {
             view = view?.superview
         } while view != nil
         
-        if viewController?.navigationController?.isNavigationBarHidden ?? true {
+        if viewController?.navigationController?.isNavigationBarHidden ?? false {
             backBarBtn.isHidden = false
         }
     }

@@ -16,6 +16,7 @@ enum VideoAPI {
     case videos(Int?, Int)
     case video_like(String, Bool)
     case video_comment(Int, Int)
+    case videos_user(Int, Int)
 }
 
 extension VideoAPI: TargetType {
@@ -34,6 +35,8 @@ extension VideoAPI: TargetType {
             return "/video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
         case let .video_comment(videoID, _):
             return "/Video/\(videoID)/comments"
+        case .videos_user:
+            return "/videos"
         }
     }
     
@@ -46,6 +49,8 @@ extension VideoAPI: TargetType {
         case .video_like:
             return .post
         case .video_comment:
+            return .get
+        case .videos_user:
             return .get
         }
     }
@@ -68,6 +73,8 @@ extension VideoAPI: TargetType {
             return .requestPlain
         case let .video_comment(_, page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
+        case let .videos_user(userID, page):
+            return .requestParameters(parameters: ["author_id": userID, "page":page, "per":"12"], encoding: URLEncoding.default)
         }
     }
     
