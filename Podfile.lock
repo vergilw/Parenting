@@ -4,6 +4,7 @@ PODS:
   - FBRetainCycleDetector (0.1.4)
   - GTSDK (2.3.0.0)
   - HandyJSON (4.2.0)
+  - HappyDNS (0.3.14)
   - IQKeyboardManagerSwift (6.2.0)
   - Kingfisher (4.10.0)
   - MJRefresh (3.1.15.7)
@@ -14,7 +15,17 @@ PODS:
   - Moya/Core (11.0.2):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
+  - PLShortVideoKit (1.16.0):
+    - PLShortVideoKit/ex-libMuseProcessor (= 1.16.0)
+    - PLShortVideoKit/libMuseProcessor (= 1.16.0)
+    - Qiniu (= 7.2.5)
+  - PLShortVideoKit/ex-libMuseProcessor (1.16.0):
+    - Qiniu (= 7.2.5)
+  - PLShortVideoKit/libMuseProcessor (1.16.0):
+    - Qiniu (= 7.2.5)
   - Presentr (1.3.2)
+  - Qiniu (7.2.5):
+    - HappyDNS (~> 0.3)
   - Result (3.2.4)
   - SnapKit (4.0.1)
   - TYCyclePagerView (1.1.0)
@@ -42,6 +53,7 @@ DEPENDENCIES:
   - MJRefresh
   - MLeaksFinder
   - Moya
+  - PLShortVideoKit
   - Presentr
   - SnapKit
   - TYCyclePagerView
@@ -60,12 +72,15 @@ SPEC REPOS:
     - FBRetainCycleDetector
     - GTSDK
     - HandyJSON
+    - HappyDNS
     - IQKeyboardManagerSwift
     - Kingfisher
     - MJRefresh
     - MLeaksFinder
     - Moya
+    - PLShortVideoKit
     - Presentr
+    - Qiniu
     - Result
     - SnapKit
     - TYCyclePagerView
@@ -83,12 +98,15 @@ SPEC CHECKSUMS:
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   GTSDK: 16f570807190eca9846653886a1f399cb0485061
   HandyJSON: 9dfc026c7d7adc1f0f8ba8b181495f0e0763b0f4
+  HappyDNS: dc6a164ee81979093123c241c6353bcf0218add6
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
   Kingfisher: 43c4b802d8b5256cf1f4379e9cd10b329be6d3e2
   MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
   MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   Moya: a725035953bc1c0eb1be505ab903984501d82440
+  PLShortVideoKit: 563353fa12c14c18de131bf3984a87819fde5219
   Presentr: 797ae6ec8904eaba4ec58a4c2065bd66e31569ea
+  Qiniu: 909b408ee489ea54827e9717be90b94bc9dfbc48
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
   TYCyclePagerView: b70858c9b5d0e80e1e3129ff5ceb027eb0f76d44
@@ -100,6 +118,6 @@ SPEC CHECKSUMS:
   UMCShare: aa233aecad67979930fe43f3a2f676023b669439
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 09a558fffa1dc29bf7ff70d3cfb33ebb49674e6a
+PODFILE CHECKSUM: a17ce1fe6e858a5e695c45652f2d08bf09428029
 
 COCOAPODS: 1.5.3

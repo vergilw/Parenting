@@ -62,6 +62,7 @@
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0721DDF08300AE2EF6 /* MediaModel.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
+		130FEECF21E82D1C00321F7F /* VideoRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FEECE21E82D1C00321F7F /* VideoRateView.swift */; };
 		131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F521A63BB100F79E92 /* DSettingsViewController.swift */; };
 		131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F721A63D7400F79E92 /* DAboutViewController.swift */; };
 		131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F921A63D8000F79E92 /* DFeedbackViewController.swift */; };
@@ -240,6 +241,7 @@
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130F3C0721DDF08300AE2EF6 /* MediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModel.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
+		130FEECE21E82D1C00321F7F /* VideoRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRateView.swift; sourceTree = "<group>"; };
 		131067F521A63BB100F79E92 /* DSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSettingsViewController.swift; sourceTree = "<group>"; };
 		131067F721A63D7400F79E92 /* DAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAboutViewController.swift; sourceTree = "<group>"; };
 		131067F921A63D8000F79E92 /* DFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFeedbackViewController.swift; sourceTree = "<group>"; };
@@ -754,6 +756,7 @@
 				1310A0A221E71D32006399D8 /* PresentationActionCell.swift */,
 				1310A0A821E741B2006399D8 /* VideoUserCell.swift */,
 				1310A0AA21E7473C006399D8 /* VideoUserHeaderView.swift */,
+				130FEECE21E82D1C00321F7F /* VideoRateView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -983,11 +986,7 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-			);
-			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
@@ -1005,12 +1004,14 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/FBRetainCycleDetector/FBRetainCycleDetector.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/HappyDNS/HappyDNS.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/MLeaksFinder/MLeaksFinder.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/Presentr/Presentr.framework",
+				"${BUILT_PRODUCTS_DIR}/Qiniu/Qiniu.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TYCyclePagerView/TYCyclePagerView.framework",
@@ -1024,12 +1025,14 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBRetainCycleDetector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HappyDNS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MLeaksFinder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Presentr.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Qiniu.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TYCyclePagerView.framework",
@@ -1145,6 +1148,7 @@
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
+				130FEECF21E82D1C00321F7F /* VideoRateView.swift in Sources */,
 				130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */,
 				130D8E2121D5BE6C008833C7 /* AssociateWechatView.swift in Sources */,
 				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,

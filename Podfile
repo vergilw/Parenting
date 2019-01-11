@@ -32,6 +32,7 @@ target "parenting" do
     pod 'UMCSecurityPlugins'
     pod 'UMCShare/Social/ReducedWeChat'
     #pod "Qiniu"
+    pod 'PLShortVideoKit'
 
 end
 
