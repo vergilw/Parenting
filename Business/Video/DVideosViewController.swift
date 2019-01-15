@@ -174,7 +174,8 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func cameraBtnAction() {
-        navigationController?.pushViewController(DVideoShootViewController(), animated: true)
+        let navigationController = BaseNavigationController(rootViewController: DVideoShootViewController())
+        present(navigationController, animated: true, completion: nil)
     }
 }
 

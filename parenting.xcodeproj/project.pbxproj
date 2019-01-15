@@ -52,6 +52,7 @@
 		130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */; };
 		130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */; };
 		130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */; };
+		130E69E321EDB47900C20915 /* DVideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E69E221EDB47900C20915 /* DVideoEditViewController.swift */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
@@ -234,6 +235,7 @@
 		130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsCell.swift; sourceTree = "<group>"; };
 		130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DRewardCoursesViewController.swift; sourceTree = "<group>"; };
 		130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPromotionViewController.swift; sourceTree = "<group>"; };
+		130E69E221EDB47900C20915 /* DVideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoEditViewController.swift; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -760,6 +762,7 @@
 				1310A0A021E719F8006399D8 /* DVideoForwardViewController.swift */,
 				1310A0A421E737FF006399D8 /* DVideoUserViewController.swift */,
 				1310A0AC21E755FC006399D8 /* DVideoShootViewController.swift */,
+				130E69E221EDB47900C20915 /* DVideoEditViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1205,6 +1208,7 @@
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,
 				131160BF2182F2480000F105 /* CourseEvaluationTitleCell.swift in Sources */,
 				130D8E2521D60B69008833C7 /* WithdrawDetailsCell.swift in Sources */,
+				130E69E321EDB47900C20915 /* DVideoEditViewController.swift in Sources */,
 				1310F8E3219EBB42004073FF /* OrderCell.swift in Sources */,
 				132DA60021C3A3EE004F0F42 /* DVideoDetailViewModel.swift in Sources */,
 				1310F8E1219EB06B004073FF /* DOrdersViewController.swift in Sources */,

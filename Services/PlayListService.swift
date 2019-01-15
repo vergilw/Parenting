@@ -21,7 +21,7 @@ class PlayListService: NSObject {
     
     private override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(courseRecordDidChanged(sender:)), name: Notification.Course.courseRecordDidChanged, object: nil)
         
@@ -100,6 +100,10 @@ class PlayListService: NSObject {
                 //恢复上次播放进度
                 recoverPlayerCurrentTime()
                 
+                if player.currentItem != nil {
+                    NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+                }
+                
                 if startPlaying {
                     player.play()
                     
@@ -167,7 +171,7 @@ class PlayListService: NSObject {
         guard let course = playingCourseModel, let sections = playingSectionModels, playingIndex < sections.count - 1 else {
             isPlaying = false
             
-        
+            
             if #available(iOS 10.3, *) {
                 if UIApplication.shared.applicationState == .active {
                     SKStoreReviewController.requestReview()

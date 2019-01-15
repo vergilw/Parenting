@@ -26,7 +26,7 @@ class VideoRecordProgress: UIView {
     func addFragment() {
         var originX: CGFloat = 0
         if let fragmentView = fragmentViews.last {
-            originX = fragmentView.frame.minX
+            originX = fragmentView.frame.maxX
         }
         
         let fragmentView: UIView = {
@@ -38,9 +38,34 @@ class VideoRecordProgress: UIView {
         fragmentViews.append(fragmentView)
     }
     
-    func setLastWidth(width: CGFloat) {
+    func updateLastFragmentWidth(width: CGFloat) {
         if let fragmentView = fragmentViews.last {
             fragmentView.frame = CGRect(origin: fragmentView.frame.origin, size: CGSize(width: width, height: fragmentView.frame.height))
+        }
+    }
+    
+    func addSegmentationIndicator() {
+        if let fragmentView = fragmentViews.last {
+            let indicatorView: UIView = {
+                let view = UIView(frame: CGRect(origin: CGPoint(x: fragmentView.bounds.maxX-1.5, y: 0), size: CGSize(width: 1.5, height: bounds.height)))
+                view.backgroundColor = .white
+                return view
+            }()
+            fragmentView.addSubview(indicatorView)
+        }
+    }
+    
+    func deleteLastFragment() {
+        if let fragment = fragmentViews.last {
+            fragment.removeFromSuperview()
+            fragmentViews.removeLast()
+        }
+    }
+    
+    func deleteAllFragment() {
+        for fragment in fragmentViews {
+            fragment.removeFromSuperview()
+            fragmentViews.remove(at: fragmentViews.firstIndex(of: fragment)!)
         }
     }
 }

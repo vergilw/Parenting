@@ -2,16 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "zanting.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "yifu.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "zanting@1.5x.png",
+      "filename" : "yifu@1.5x.png",
       "scale" : "3x"
     }
   ],
