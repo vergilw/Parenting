@@ -21,5 +21,6 @@
 #import <Bugly/Bugly.h>
 #import "QiniuSDK.h"
 #import "GTSDK/GeTuiSdk.h"
+#import "PLSProgressBar.h"
 
 #endif /* BridgeHeader_h */

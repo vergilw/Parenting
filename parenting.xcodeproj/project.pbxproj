@@ -63,6 +63,9 @@
 		130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0721DDF08300AE2EF6 /* MediaModel.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		130FEECF21E82D1C00321F7F /* VideoRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FEECE21E82D1C00321F7F /* VideoRateView.swift */; };
+		13103D5F21EC631F00F13BC9 /* VerticallyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */; };
+		13103D6321EC7C2B00F13BC9 /* PLSProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 13103D6121EC7C2B00F13BC9 /* PLSProgressBar.m */; };
+		13103D6521EC836600F13BC9 /* VideoRecordProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */; };
 		131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F521A63BB100F79E92 /* DSettingsViewController.swift */; };
 		131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F721A63D7400F79E92 /* DAboutViewController.swift */; };
 		131067FA21A63D8000F79E92 /* DFeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F921A63D8000F79E92 /* DFeedbackViewController.swift */; };
@@ -242,6 +245,10 @@
 		130F3C0721DDF08300AE2EF6 /* MediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModel.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		130FEECE21E82D1C00321F7F /* VideoRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRateView.swift; sourceTree = "<group>"; };
+		13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticallyButton.swift; sourceTree = "<group>"; };
+		13103D6121EC7C2B00F13BC9 /* PLSProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLSProgressBar.m; sourceTree = "<group>"; };
+		13103D6221EC7C2B00F13BC9 /* PLSProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLSProgressBar.h; sourceTree = "<group>"; };
+		13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordProgress.swift; sourceTree = "<group>"; };
 		131067F521A63BB100F79E92 /* DSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSettingsViewController.swift; sourceTree = "<group>"; };
 		131067F721A63D7400F79E92 /* DAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAboutViewController.swift; sourceTree = "<group>"; };
 		131067F921A63D8000F79E92 /* DFeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFeedbackViewController.swift; sourceTree = "<group>"; };
@@ -483,6 +490,15 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		13103D6021EC7C1000F13BC9 /* QiniuRecordProgress */ = {
+			isa = PBXGroup;
+			children = (
+				13103D6221EC7C2B00F13BC9 /* PLSProgressBar.h */,
+				13103D6121EC7C2B00F13BC9 /* PLSProgressBar.m */,
+			);
+			path = QiniuRecordProgress;
+			sourceTree = "<group>";
+		};
 		13113F632199131300B6E0FE /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
@@ -528,6 +544,7 @@
 				130DD43421CC863F0008259F /* CategoryView.swift */,
 				130DDE5721D1C859007D0619 /* RewardView.swift */,
 				1310A09E21E6E638006399D8 /* PresentationManager.swift */,
+				13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -757,6 +774,7 @@
 				1310A0A821E741B2006399D8 /* VideoUserCell.swift */,
 				1310A0AA21E7473C006399D8 /* VideoUserHeaderView.swift */,
 				130FEECE21E82D1C00321F7F /* VideoRateView.swift */,
+				13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -764,6 +782,7 @@
 		13B7F6F321B68709001BF15D /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				13103D6021EC7C1000F13BC9 /* QiniuRecordProgress */,
 				13B7F6F421B68727001BF15D /* QiniuSDK */,
 			);
 			path = Vendors;
@@ -1010,6 +1029,7 @@
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/MLeaksFinder/MLeaksFinder.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${PODS_ROOT}/PLPlayerKit/Pod/Library/PLPlayerKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Presentr/Presentr.framework",
 				"${BUILT_PRODUCTS_DIR}/Qiniu/Qiniu.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
@@ -1031,6 +1051,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MLeaksFinder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PLPlayerKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Presentr.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Qiniu.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
@@ -1145,6 +1166,7 @@
 				132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
+				13103D5F21EC631F00F13BC9 /* VerticallyButton.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */,
 				1320C39A217EBF3700902A5C /* DHomeViewController.swift in Sources */,
@@ -1166,6 +1188,7 @@
 				130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */,
 				131FB28D219D51DD00B55210 /* CourseCell.swift in Sources */,
 				131170A221B75C1600C178BB /* UserAPI.swift in Sources */,
+				13103D6321EC7C2B00F13BC9 /* PLSProgressBar.m in Sources */,
 				1320C378217EB76600902A5C /* AppDelegate.swift in Sources */,
 				131160C12183008B0000F105 /* DCourseSectionViewController.swift in Sources */,
 				13144B1E21801C2A002B4281 /* DCourseDetailViewController.swift in Sources */,
@@ -1212,6 +1235,7 @@
 				13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */,
 				1320C380217EB8E800902A5C /* BaseViewController.swift in Sources */,
 				1310680021A64B5500F79E92 /* TransactionCell.swift in Sources */,
+				13103D6521EC836600F13BC9 /* VideoRecordProgress.swift in Sources */,
 				13144B22218065FC002B4281 /* CourseIntroductionCell.swift in Sources */,
 				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,

@@ -10,7 +10,17 @@ import UIKit
 
 class VideoRateView: UIView {
     
-    let scale: CGFloat = 375.0/UIScreenWidth
+    enum VideoRateMode {
+        case topslow
+        case slow
+        case normal
+        case fast
+        case topfast
+    }
+    
+    var completionHandler: ((VideoRateMode)->Void)?
+    
+    let scale: CGFloat =  1.0 //375.0/UIScreenWidth
 
     lazy fileprivate var bgImgView: UIImageView = {
         let imgView = UIImageView()
@@ -26,10 +36,17 @@ class VideoRateView: UIView {
     let topSlowIndicatorImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_shootRateIndicator")
-        imgView.alpha = 0
         imgView.layer.anchorPoint = CGPoint(x: 0.5, y: 1)
-        imgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*18.5).scaledBy(x: 0.0, y: 0.0)
+        imgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*19.5).scaledBy(x: 0.0, y: 0.0)
         return imgView
+    }()
+    
+    lazy fileprivate var topSlowLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.text = "极慢"
+        return label
     }()
     
     let slowIndicatorImgView: UIImageView = {
@@ -40,11 +57,27 @@ class VideoRateView: UIView {
         return imgView
     }()
     
+    lazy fileprivate var slowLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.text = "慢"
+        return label
+    }()
+    
     let normalIndicatorImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_shootRateIndicator")
         imgView.layer.anchorPoint = CGPoint(x: 0.5, y: 1)
         return imgView
+    }()
+    
+    lazy fileprivate var normalLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.text = "正常"
+        return label
     }()
     
     let fastIndicatorImgView: UIImageView = {
@@ -55,12 +88,28 @@ class VideoRateView: UIView {
         return imgView
     }()
     
+    lazy fileprivate var fastLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.text = "快"
+        return label
+    }()
+    
     let topFastIndicatorImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_shootRateIndicator")
         imgView.layer.anchorPoint = CGPoint(x: 0.5, y: 1)
-        imgView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*20.5).scaledBy(x: 0.5, y: 0.5)
+        imgView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*20).scaledBy(x: 0.0, y: 0.0)
         return imgView
+    }()
+    
+    lazy fileprivate var topFastLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        label.text = "极快"
+        return label
     }()
     
     var lastOffsetX: CGFloat = 0
@@ -70,6 +119,7 @@ class VideoRateView: UIView {
         
         addSubviews([bgImgView, contentView])
         contentView.addSubviews([topSlowIndicatorImgView, slowIndicatorImgView, normalIndicatorImgView, fastIndicatorImgView, topFastIndicatorImgView])
+        contentView.addSubviews([topSlowLabel, slowLabel, normalLabel, fastLabel, topFastLabel])
         
         bgImgView.snp.makeConstraints { make in
             make.centerX.bottom.equalToSuperview()
@@ -100,6 +150,28 @@ class VideoRateView: UIView {
             make.bottom.equalTo(-22*scale)
         }
         
+        
+        normalLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(normalIndicatorImgView.snp.top).offset(-10)
+        }
+        topSlowLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(topSlowIndicatorImgView).offset(8)
+            make.bottom.equalTo(topSlowIndicatorImgView.snp.top).offset(-10)
+        }
+        slowLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(slowIndicatorImgView).offset(5)
+            make.bottom.equalTo(slowIndicatorImgView.snp.top).offset(-10)
+        }
+        fastLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(fastIndicatorImgView).offset(-5)
+            make.bottom.equalTo(fastIndicatorImgView.snp.top).offset(-10)
+        }
+        topFastLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(topFastIndicatorImgView).offset(-8)
+            make.bottom.equalTo(topFastIndicatorImgView.snp.top).offset(-10)
+        }
+        
         let panGesture: UIPanGestureRecognizer = {
             let view = UIPanGestureRecognizer(target: self, action: #selector(gestureAction(sender:)))
             return view
@@ -113,43 +185,91 @@ class VideoRateView: UIView {
     
     @objc func gestureAction(sender: UIPanGestureRecognizer) {
         
-        if sender.state == .began {
-//            lastOffsetX = 0
+        if sender.state == .changed {
+            let amountX = sender.velocity(in: self).x/150
+            lastOffsetX += amountX
             
-        } else if sender.state == .changed {
-            let amount = sender.translation(in: self)
-            
-            if amount.x > 18.5 {
-                lastOffsetX = 18.5
-            } else if amount.x < -22 {
-                lastOffsetX = -22
+            var offset: CGFloat = 0
+            if lastOffsetX > 19.5 {
+                offset = 19.5
+            } else if lastOffsetX < -20 {
+                offset = -20
             } else {
-                lastOffsetX = amount.x
+                offset = lastOffsetX
             }
-            print(lastOffsetX)
+            lastOffsetX = offset
+            print(amountX, lastOffsetX)
 //            if angle >= 11 {
 //                topSlowIndicatorImgView.isHidden = false
 //            } else {
 //                topSlowIndicatorImgView.isHidden = true
 //            }
             
-            let offsetX = abs(lastOffsetX)
-            if offsetX > 11 {
-                topSlowIndicatorImgView.alpha = 1
+            translatePanOffset(offset: lastOffsetX)
+            
+        } else if sender.state == .ended {
+            if lastOffsetX >= 15 {
+                lastOffsetX = 19.5
+                UIView.animate(withDuration: 0.25) {
+                    self.translatePanOffset(offset: self.lastOffsetX)
+                }
+                if let closure = completionHandler {
+                    closure(.topslow)
+                }
+            } else if lastOffsetX >= 5.5 {
+                lastOffsetX = 11
+                UIView.animate(withDuration: 0.25) {
+                    self.translatePanOffset(offset: self.lastOffsetX)
+                }
+                if let closure = completionHandler {
+                    closure(.slow)
+                }
+            } else if lastOffsetX >= -5.5 {
+                lastOffsetX = 0
+                UIView.animate(withDuration: 0.25) {
+                    self.translatePanOffset(offset: self.lastOffsetX)
+                }
+                if let closure = completionHandler {
+                    closure(.normal)
+                }
+            } else if lastOffsetX >= -15 {
+                lastOffsetX = -11
+                UIView.animate(withDuration: 0.25) {
+                    self.translatePanOffset(offset: self.lastOffsetX)
+                }
+                if let closure = completionHandler {
+                    closure(.fast)
+                }
             } else {
-                topSlowIndicatorImgView.alpha = lastOffsetX/11
+                lastOffsetX = -20
+                UIView.animate(withDuration: 0.25) {
+                    self.translatePanOffset(offset: self.lastOffsetX)
+                }
+                if let closure = completionHandler {
+                    closure(.topfast)
+                }
             }
-            topSlowIndicatorImgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*18.5).scaledBy(x: offsetX/18.5, y: offsetX/18.5)
-            
-            
-            slowIndicatorImgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*11).scaledBy(x: 1.0-abs(lastOffsetX-11)/22, y: 1.0-abs(lastOffsetX-11)/22)
-            
-            normalIndicatorImgView.transform = CGAffineTransform(scaleX: (abs(lastOffsetX)-22)/22, y: -(abs(lastOffsetX)-22)/22)
-            
-            
-            contentView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*lastOffsetX)
-            
         }
         
+    }
+    
+    fileprivate func translatePanOffset(offset: CGFloat) {
+        let offsetX = abs(offset)
+        topSlowIndicatorImgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*19.5).scaledBy(x: offsetX/19.5, y: offsetX/19.5)
+        topSlowLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
+        
+        slowIndicatorImgView.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*11).scaledBy(x: 1.0-abs(offset-11)/22, y: 1.0-abs(offset-11)/22)
+        slowLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
+        
+        normalIndicatorImgView.transform = CGAffineTransform(scaleX: (abs(offset)-22)/22, y: -(abs(offset)-22)/22)
+        normalLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
+        
+        fastIndicatorImgView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*11).scaledBy(x: 1.0-abs(offset+11)/22, y: 1.0-abs(offset+11)/22)
+        fastLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
+        
+        topFastIndicatorImgView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*20).scaledBy(x: offsetX/20, y: offsetX/20)
+        topFastLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
+        
+        contentView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*offset)
     }
 }

@@ -15,6 +15,9 @@ PODS:
   - Moya/Core (11.0.2):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
+  - PLPlayerKit (3.4.0):
+    - PLPlayerKit/iphoneos (= 3.4.0)
+  - PLPlayerKit/iphoneos (3.4.0)
   - PLShortVideoKit (1.16.0):
     - PLShortVideoKit/ex-libMuseProcessor (= 1.16.0)
     - PLShortVideoKit/libMuseProcessor (= 1.16.0)
@@ -53,8 +56,10 @@ DEPENDENCIES:
   - MJRefresh
   - MLeaksFinder
   - Moya
+  - PLPlayerKit
   - PLShortVideoKit
   - Presentr
+  - Qiniu
   - SnapKit
   - TYCyclePagerView
   - "UINavigationItem+Margin"
@@ -78,6 +83,7 @@ SPEC REPOS:
     - MJRefresh
     - MLeaksFinder
     - Moya
+    - PLPlayerKit
     - PLShortVideoKit
     - Presentr
     - Qiniu
@@ -104,6 +110,7 @@ SPEC CHECKSUMS:
   MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
   MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   Moya: a725035953bc1c0eb1be505ab903984501d82440
+  PLPlayerKit: e6ad0e14a1c49db4befab201c2701d26489314e8
   PLShortVideoKit: 563353fa12c14c18de131bf3984a87819fde5219
   Presentr: 797ae6ec8904eaba4ec58a4c2065bd66e31569ea
   Qiniu: 909b408ee489ea54827e9717be90b94bc9dfbc48
@@ -118,6 +125,6 @@ SPEC CHECKSUMS:
   UMCShare: aa233aecad67979930fe43f3a2f676023b669439
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: a17ce1fe6e858a5e695c45652f2d08bf09428029
+PODFILE CHECKSUM: 7c577914d3135229dd09bfa6f381e7755d13e10d
 
 COCOAPODS: 1.5.3

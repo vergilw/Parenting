@@ -11,6 +11,7 @@ import IQKeyboardManagerSwift
 import AVFoundation
 import StoreKit
 import UserNotifications
+import PLShortVideoKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -127,6 +128,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if AuthorizationService.sharedInstance.isSignIn() {
             registerRemoteNotification()
         }
+        
+        PLShortVideoKitEnv.initEnv()
+        PLShortVideoKitEnv.setLogLevel(.debug)
+        PLShortVideoKitEnv.enableFileLogging()
+        
+//        AVAudioSession.sharedInstance().setCategory(.playback, mode: AVAudioSession.Mode.moviePlayback, options: AVAudioSession.CategoryOptions())
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {

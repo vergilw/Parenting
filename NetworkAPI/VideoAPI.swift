@@ -22,21 +22,21 @@ enum VideoAPI {
 extension VideoAPI: TargetType {
     
     public var baseURL: URL {
-        return URL(string: "http://dappore.store/api")!
+        return URL(string: ServerHost)!//"http://dappore.store/api"
     }
     
     public var path: String {
         switch self {
         case .video_category:
-            return "/video_taxons"
+            return "/api/video_taxons"
         case .videos:
-            return "/videos"
+            return "/api/videos"
         case let .video_like(videoID, isLike):
-            return "/video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
+            return "/api/video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
         case let .video_comment(videoID, _):
-            return "/Video/\(videoID)/comments"
+            return "/api/Video/\(videoID)/comments"
         case .videos_user:
-            return "/videos"
+            return "/api/videos"
         }
     }
     
@@ -88,9 +88,8 @@ extension VideoAPI: TargetType {
                        "OS": UIDevice.current.systemName,
                        "OS-Version": UIDevice.current.systemVersion,
                        "Device-Model": UIDevice.current.machineModel ?? "",
-                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String/*,
-                       "Accept": "application/vnd.inee.v1+json"*/]
-        //FIXME: comment accept
+                       "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
+                       "Accept": "application/vnd.inee.v1+json"]
         if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
             headers["Auth-Token"] = token
         }
