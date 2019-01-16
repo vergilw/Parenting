@@ -13,6 +13,8 @@ class DVideoEditViewController: BaseViewController {
 
     fileprivate let editor: PLShortVideoEditor
     
+    fileprivate let asset: AVAsset
+    
     fileprivate lazy var composerMusicBtn: VerticallyButton = {
         let button = VerticallyButton()
         button.setTitleColor(.white, for: .normal)
@@ -27,11 +29,12 @@ class DVideoEditViewController: BaseViewController {
     lazy fileprivate var videoSoundImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_editSelectSoundIcon")
+        imgView.contentMode = .center
         return imgView
     }()
     
     init(settings: [String: Any]) {
-        let asset = settings[PLSAssetKey] as! AVAsset
+        asset = settings[PLSAssetKey] as! AVAsset
         editor = PLShortVideoEditor(asset: asset)
         editor.loopEnabled = true
         editor.timeRange = CMTimeRange(start: CMTime(seconds: settings[PLSStartTimeKey] as! Double,
@@ -121,7 +124,7 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("剪视频", for: .normal)
             button.setImage(UIImage(named: "video_editComposeVideo"), for: .normal)
             button.padding = 4.5
-//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoClipBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -141,8 +144,8 @@ class DVideoEditViewController: BaseViewController {
             button.setTitleColor(.white, for: .normal)
             button.titleLabel?.font = UIConstants.Font.foot
             button.setTitle("选音乐", for: .normal)
-            button.setImage(UIImage(named: "video_editComposeMusic"), for: .normal)
-            button.padding = 4.5
+            button.setImage(UIImage(named: "video_editSelectSoundBg"), for: .normal)
+            button.padding = 0
             //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
@@ -162,9 +165,9 @@ class DVideoEditViewController: BaseViewController {
         stackView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             if #available(iOS 11, *) {
-                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0) + 30)
+                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0) + 23)
             } else {
-                make.top.equalTo(30)
+                make.top.equalTo(23)
             }
         }
     }
@@ -272,5 +275,23 @@ class DVideoEditViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    @objc func videoClipBtnAction() {
+        let viewController = DVideoClipViewController(asset: asset)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        present(viewController, animated: true, completion: nil)
+    }
+}
 
+
+// MARK: - ============= UIViewControllerTransitioningDelegate =============
+extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
+    
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presentation = PresentationManager(presentedViewController: presented, presenting: presenting)
+        if presented.isKind(of: DVideoClipViewController.self) {
+            presentation.layoutHeight = 170
+        }
+        return presentation
+    }
 }
