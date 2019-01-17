@@ -142,7 +142,7 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("音量", for: .normal)
             button.setImage(UIImage(named: "video_editVolume"), for: .normal)
             button.padding = 7.5
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoVolumeBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -294,6 +294,17 @@ class DVideoEditViewController: BaseViewController {
         }
         present(viewController, animated: true, completion: nil)
     }
+    
+    @objc func videoVolumeBtnAction() {
+        let viewController = DVideoVolumeViewController(videoVolume: Float(editor.volume), musicVolume: Float(editor.musicVolume))
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        viewController.editHandler = { [weak self] (videoVolume, musicVolume) in
+            self?.editor.volume = CGFloat(videoVolume)
+            self?.editor.updateMusic(CMTimeRange.zero, volume: NSNumber(value: musicVolume))
+        }
+        present(viewController, animated: true, completion: nil)
+    }
 }
 
 
@@ -303,6 +314,12 @@ extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presentation = PresentationManager(presentedViewController: presented, presenting: presenting)
         if presented.isKind(of: DVideoClipViewController.self) {
+            if #available(iOS 11, *) {
+                presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 170
+            }
+        } else if presented.isKind(of: DVideoVolumeViewController.self) {
             if #available(iOS 11, *) {
                 presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
             } else {

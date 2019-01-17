@@ -35,6 +35,8 @@ class DVideoClipViewController: BaseViewController {
         view.delegate = self
         view.backgroundColor = .clear
         view.isUserInteractionEnabled = false
+        view.layer.cornerRadius = 4
+        view.clipsToBounds = true
         return view
     }()
     
@@ -61,6 +63,8 @@ class DVideoClipViewController: BaseViewController {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_clipVideoSlider")?.resizableImage(withCapInsets: UIEdgeInsets(top: 27, left: 17, bottom: 27, right: 17))
         imgView.backgroundColor = .clear
+        imgView.layer.cornerRadius = 4
+        imgView.clipsToBounds = true
         return imgView
     }()
     

@@ -111,6 +111,7 @@
 		13120E48219131D800404BC7 /* DPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13120E47219131D800404BC7 /* DPlayerViewController.swift */; };
 		13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13128B8C21BE0ACC00251B6F /* ModelTransform.swift */; };
 		1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C40521884B030008AB81 /* CourseCataloguesView.swift */; };
+		1312C81821F0709100F6B039 /* DVideoVolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */; };
 		13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AA921A7DA2A009BD77A /* CommonAPI.swift */; };
 		13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */; };
 		13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */; };
@@ -294,6 +295,7 @@
 		13120E47219131D800404BC7 /* DPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayerViewController.swift; sourceTree = "<group>"; };
 		13128B8C21BE0ACC00251B6F /* ModelTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTransform.swift; sourceTree = "<group>"; };
 		1312C40521884B030008AB81 /* CourseCataloguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCataloguesView.swift; sourceTree = "<group>"; };
+		1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoVolumeViewController.swift; sourceTree = "<group>"; };
 		13133AA921A7DA2A009BD77A /* CommonAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonAPI.swift; sourceTree = "<group>"; };
 		13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewModel.swift; sourceTree = "<group>"; };
 		13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCategoryModel.swift; sourceTree = "<group>"; };
@@ -756,6 +758,7 @@
 				1310A0AC21E755FC006399D8 /* DVideoShootViewController.swift */,
 				130E69E221EDB47900C20915 /* DVideoEditViewController.swift */,
 				130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */,
+				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1161,6 +1164,7 @@
 				1310A0AB21E7473C006399D8 /* VideoUserHeaderView.swift in Sources */,
 				132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
+				1312C81821F0709100F6B039 /* DVideoVolumeViewController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				13103D5F21EC631F00F13BC9 /* VerticallyButton.swift in Sources */,
 				130AC5EE21EEC93C00D0286C /* DVideoClipViewController.swift in Sources */,
