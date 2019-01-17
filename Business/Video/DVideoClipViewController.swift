@@ -8,14 +8,19 @@
 
 import UIKit
 import AVFoundation
+import PLShortVideoKit
 
 class DVideoClipViewController: BaseViewController {
 
     fileprivate let asset: AVAsset
     
+    fileprivate let settings: [AnyHashable: Any]
+    
     fileprivate lazy var keyframeImgs = [UIImage]()
     
     fileprivate lazy var keyframeCount: Int = 6
+    
+    var clipHandler: ((Double,Double)->Void)?
     
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -28,9 +33,16 @@ class DVideoClipViewController: BaseViewController {
         view.register(VideoPreviewCell.self, forCellWithReuseIdentifier: VideoPreviewCell.className())
         view.dataSource = self
         view.delegate = self
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         view.isUserInteractionEnabled = false
         return view
+    }()
+    
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = .white
+        return label
     }()
     
     lazy fileprivate var leftMaskImgView: UIImageView = {
@@ -47,7 +59,8 @@ class DVideoClipViewController: BaseViewController {
     
     lazy fileprivate var clipImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "video_clipVideoSlider")?.resizableImage(withCapInsets: UIEdgeInsets(top: 27.5, left: 17, bottom: 27.5, right: 17))
+        imgView.image = UIImage(named: "video_clipVideoSlider")?.resizableImage(withCapInsets: UIEdgeInsets(top: 27, left: 17, bottom: 27, right: 17))
+        imgView.backgroundColor = .clear
         return imgView
     }()
     
@@ -55,12 +68,16 @@ class DVideoClipViewController: BaseViewController {
     
     fileprivate lazy var isMovingLeft: Bool = true
     
-    init(asset: AVAsset, minClipSeconds: Double = 5) {
+    init(asset: AVAsset, settings: [AnyHashable: Any], minClipSeconds: Double = 5) {
         self.asset = asset
+        self.settings = settings
         
         super.init(nibName: nil, bundle: nil)
         
         self.minClipSeconds = minClipSeconds
+        
+        let durationSeconds = settings[PLSDurationKey] as! NSNumber
+        titleLabel.text = String(format: "已选取%.1fs", durationSeconds.doubleValue)
         
         extractImages(asset: asset) { (image) in
             //TODO: sclae img
@@ -87,17 +104,26 @@ class DVideoClipViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        view.backgroundColor = .black
+        view.backgroundColor = .clear
         
-        view.addSubviews([collectionView, leftMaskImgView, rightMaskImgView, clipImgView])
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let effectView = UIVisualEffectView(effect: blurEffect)
+        view.addSubview(effectView)
+        effectView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        view.addSubviews([collectionView, titleLabel, leftMaskImgView, rightMaskImgView, clipImgView])
+        
+        view.drawSeparator(startPoint: CGPoint(x: 0, y: 56), endPoint: CGPoint(x: UIScreenWidth, y: 56))
     }
     
     fileprivate func initGestureRecognizer() {
-        let leftDragGesture: UIPanGestureRecognizer = {
-            let view = UIPanGestureRecognizer(target: self, action: #selector(leftDragGesture(sender:)))
+        let panGesture: UIPanGestureRecognizer = {
+            let view = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
             return view
         }()
-        view.addGestureRecognizer(leftDragGesture)
+        view.addGestureRecognizer(panGesture)
     }
     
     // MARK: - ============= Constraints =============
@@ -108,8 +134,19 @@ class DVideoClipViewController: BaseViewController {
             make.top.equalTo(74)
             make.height.equalTo(55)
         }
-        leftMaskImgView.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalToSuperview()
+            make.height.equalTo(56)
+        }
+        
+        let clipStartSeconds: CGFloat = CGFloat((settings[PLSStartTimeKey] as! NSNumber).doubleValue)
+        let clipDurationSeconds: CGFloat = CGFloat((settings[PLSDurationKey] as! NSNumber).doubleValue)
+        let assetDurationSeconds: CGFloat = CGFloat(asset.duration.seconds)
+        let contentWidth: CGFloat = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
+        
+        leftMaskImgView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading+contentWidth/assetDurationSeconds*clipStartSeconds)
             make.top.equalTo(74)
             make.height.equalTo(55)
             make.trailing.equalTo(clipImgView.snp.leading).offset(12.5)
@@ -121,8 +158,8 @@ class DVideoClipViewController: BaseViewController {
             make.leading.equalTo(clipImgView.snp.trailing).offset(-12.5)
         }
         clipImgView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.leading.equalTo(UIConstants.Margin.leading+contentWidth/assetDurationSeconds*clipStartSeconds)
+            make.trailing.equalTo(-UIConstants.Margin.trailing-(contentWidth/assetDurationSeconds*(assetDurationSeconds-clipStartSeconds-clipDurationSeconds)))
             make.top.equalTo(74)
             make.height.equalTo(55)
         }
@@ -164,7 +201,7 @@ class DVideoClipViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
-    @objc func leftDragGesture(sender: UIPanGestureRecognizer) {
+    @objc func panGesture(sender: UIPanGestureRecognizer) {
         if sender.state == .began {
             let beginX = sender.location(in: view).x
             isMovingLeft = (beginX <= clipImgView.frame.midX)
@@ -204,7 +241,7 @@ class DVideoClipViewController: BaseViewController {
                 var maskViewWidth: CGFloat = maskFrame.width-offsetX
                 if clipImgView.frame.width+offsetX < minWidth {
                     clipViewWidth = minWidth
-                    maskViewWidth = collectionView.frame.width-(clipFrame.minX-clipViewWidth)+12.5
+                    maskViewWidth = collectionView.frame.width-(clipFrame.minX-UIConstants.Margin.leading)-clipViewWidth+12.5
                 } else if clipImgView.frame.maxX+offsetX > collectionView.frame.maxX {
                     clipViewWidth = collectionView.frame.width-(clipFrame.minX-UIConstants.Margin.leading)
                     maskViewWidth = 12.5
@@ -215,6 +252,15 @@ class DVideoClipViewController: BaseViewController {
                 rightMaskImgView.frame = CGRect(origin: CGPoint(x: clipImgView.frame.maxX-12.5, y: maskFrame.minY), size: CGSize(width: maskViewWidth, height: maskFrame.height))
             }
             
+        } else if sender.state == .ended {
+            let startSeconds: Double = Double((clipImgView.frame.minX-UIConstants.Margin.leading)/collectionView.bounds.width)*asset.duration.seconds
+            let endSeconds: Double = Double((clipImgView.frame.maxX-UIConstants.Margin.leading)/collectionView.bounds.width)*asset.duration.seconds
+            
+            if let closure = clipHandler {
+                closure(startSeconds, endSeconds)
+            }
+            
+            titleLabel.text = String(format: "已选取%.1fs", endSeconds-startSeconds)
         }
     }
 }

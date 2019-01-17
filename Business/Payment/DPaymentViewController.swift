@@ -127,7 +127,8 @@ class DPaymentViewController: BaseViewController {
         initCoinView()
         rewardView.addSubview(rewardTableView)
         initRewardHeaderView()
-        initRewardBottom()
+        //TODO: hide rank and promotion
+//        initRewardBottom()
     }
     
     fileprivate func initCoinView() {
@@ -459,6 +460,8 @@ class DPaymentViewController: BaseViewController {
         }
         rewardTableView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
+            //TODO: hide rank and promotion
+            make.bottom.equalToSuperview()
         }
     }
     

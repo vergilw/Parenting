@@ -120,7 +120,7 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -131,6 +131,8 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
             cell.setup(title: "清除缓存", value: cacheSizeString ?? "")
         } else if indexPath.row == 2 {
             cell.setup(title: "意见反馈")
+        } else if indexPath.row == 3 {
+            cell.setup(title: "隐私")
         }
         return cell
     }
@@ -159,6 +161,16 @@ extension DSettingsViewController: UITableViewDataSource, UITableViewDelegate {
                 return
             }
             navigationController?.pushViewController(DFeedbackViewController(), animated: true)
+            
+        } else if indexPath.row == 3 {
+            let viewController = WebViewController()
+            viewController.navigationItem.title = "隐私"
+            #if DEBUG
+            viewController.url = URL(string: "http://m.1314-edu.com/help/privacy.html")
+            #else
+            viewController.url = URL(string: "https://yy.1314-edu.com/help/privacy.html")
+            #endif
+            navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }

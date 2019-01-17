@@ -19,6 +19,7 @@ class VideoPreviewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
+        contentView.backgroundColor = .clear
         contentView.addSubview(previewImgView)
         previewImgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

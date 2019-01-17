@@ -321,12 +321,12 @@ class DVideoShootViewController: BaseViewController {
         var plsMovieSettings = [String: Any]()
         plsMovieSettings[PLSAssetKey] = recorder.assetRepresentingAllFiles()
         plsMovieSettings[PLSStartTimeKey] = NSNumber(value: 0.0)
-        plsMovieSettings[PLSDurationKey] = NSNumber(value: Float(recorder.getTotalDuration()))
+        plsMovieSettings[PLSDurationKey] = NSNumber(value: recorder.assetRepresentingAllFiles().duration.seconds)
         plsMovieSettings[PLSVolumeKey] = NSNumber(value: 1.0)
         
         let outputSettings = [PLSMovieSettingsKey: plsMovieSettings]
         
-        navigationController?.pushViewController(DVideoEditViewController(settings: plsMovieSettings), animated: true)
+        navigationController?.pushViewController(DVideoEditViewController(settings: outputSettings), animated: true)
     }
 }
 

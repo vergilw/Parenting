@@ -15,6 +15,10 @@ class DVideoEditViewController: BaseViewController {
     
     fileprivate let asset: AVAsset
     
+    fileprivate var outputSettings: [AnyHashable: Any]
+    
+    fileprivate var movieSettings: [AnyHashable: Any]
+    
     fileprivate lazy var composerMusicBtn: VerticallyButton = {
         let button = VerticallyButton()
         button.setTitleColor(.white, for: .normal)
@@ -34,12 +38,15 @@ class DVideoEditViewController: BaseViewController {
     }()
     
     init(settings: [String: Any]) {
-        asset = settings[PLSAssetKey] as! AVAsset
+        outputSettings = settings
+        movieSettings = settings[PLSMovieSettingsKey] as! [AnyHashable : Any]
+        asset = movieSettings[PLSAssetKey] as! AVAsset
+        
         editor = PLShortVideoEditor(asset: asset)
         editor.loopEnabled = true
-        editor.timeRange = CMTimeRange(start: CMTime(seconds: settings[PLSStartTimeKey] as! Double,
+        editor.timeRange = CMTimeRange(start: CMTime(seconds: movieSettings[PLSStartTimeKey] as! Double,
                                                      preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                                       duration: CMTime(seconds: settings[PLSDurationKey] as! Double,
+                                       duration: CMTime(seconds: movieSettings[PLSDurationKey] as! Double,
                                                         preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
         editor.videoSize = asset.pls_videoSize
         editor.fillMode = PLSVideoFillModeType(rawValue: 1)
@@ -276,9 +283,15 @@ class DVideoEditViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func videoClipBtnAction() {
-        let viewController = DVideoClipViewController(asset: asset)
+        let viewController = DVideoClipViewController(asset: asset, settings: movieSettings)
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
+        viewController.clipHandler = { [weak self] (startSeconds, endSeconds) in
+            self?.movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds)
+            self?.movieSettings[PLSDurationKey] = NSNumber(value: endSeconds-startSeconds)
+            self?.editor.timeRange = CMTimeRange(start: CMTime(seconds: startSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), end: CMTime(seconds: endSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            self?.editor.startEditing()
+        }
         present(viewController, animated: true, completion: nil)
     }
 }
@@ -290,7 +303,11 @@ extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presentation = PresentationManager(presentedViewController: presented, presenting: presenting)
         if presented.isKind(of: DVideoClipViewController.self) {
-            presentation.layoutHeight = 170
+            if #available(iOS 11, *) {
+                presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 170
+            }
         }
         return presentation
     }
