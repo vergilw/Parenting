@@ -69,6 +69,7 @@ class DVideosViewController: BaseViewController {
         addNotificationObservers()
         
         fetchData()
+        
     }
     
     // MARK: - ============= Initialize View =============
@@ -239,7 +240,7 @@ extension DVideosViewController: UIScrollViewDelegate {
             lastOffsetY = scrollView.contentOffset.y
         } else {
             if cameraBtn.frame.maxY > view.bounds.height-45 {
-                if cameraBtn.center.y+offsetY < view.frame.maxY-45-55-cameraBtn.bounds.height/2 {
+                if ((cameraBtn.center.y+offsetY) as CGFloat) < ((view.frame.maxY-45-55-cameraBtn.bounds.height/2) as CGFloat) {
                     cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
                 } else {
                     cameraBtn.center = CGPoint(x: view.frame.midX, y: cameraBtn.center.y+offsetY)

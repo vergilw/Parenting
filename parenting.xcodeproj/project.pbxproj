@@ -30,6 +30,9 @@
 		130C7CC121C0A4BF007C0344 /* EvaluationNoDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */; };
 		130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC221C0F8F0007C0344 /* WebViewController.swift */; };
 		130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC421C10380007C0344 /* GuideViewController.swift */; };
+		130C86B321F16E97005BBFF7 /* PLShortVideoKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */; };
+		130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */ = {isa = PBXBuildFile; fileRef = 130C86B421F1721B005BBFF7 /* plsfilters.json */; };
+		130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -112,6 +115,8 @@
 		13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13128B8C21BE0ACC00251B6F /* ModelTransform.swift */; };
 		1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C40521884B030008AB81 /* CourseCataloguesView.swift */; };
 		1312C81821F0709100F6B039 /* DVideoVolumeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */; };
+		1312C81A21F07FEB00F6B039 /* DVideoFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */; };
+		1312C81C21F084CE00F6B039 /* VideoFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1312C81B21F084CE00F6B039 /* VideoFilterCell.swift */; };
 		13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AA921A7DA2A009BD77A /* CommonAPI.swift */; };
 		13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */; };
 		13133AAE21A7F574009BD77A /* CourseCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */; };
@@ -215,6 +220,8 @@
 		130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationNoDataCell.swift; sourceTree = "<group>"; };
 		130C7CC221C0F8F0007C0344 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		130C7CC421C10380007C0344 /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
+		130C86B421F1721B005BBFF7 /* plsfilters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = plsfilters.json; sourceTree = "<group>"; };
+		130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditFilterCell.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -296,6 +303,9 @@
 		13128B8C21BE0ACC00251B6F /* ModelTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTransform.swift; sourceTree = "<group>"; };
 		1312C40521884B030008AB81 /* CourseCataloguesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCataloguesView.swift; sourceTree = "<group>"; };
 		1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoVolumeViewController.swift; sourceTree = "<group>"; };
+		1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoFiltersViewController.swift; sourceTree = "<group>"; };
+		1312C81B21F084CE00F6B039 /* VideoFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFilterCell.swift; sourceTree = "<group>"; };
+		1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PLShortVideoKit.bundle; sourceTree = "<group>"; };
 		13133AA921A7DA2A009BD77A /* CommonAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonAPI.swift; sourceTree = "<group>"; };
 		13133AAB21A7F4F1009BD77A /* DCoursesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCoursesViewModel.swift; sourceTree = "<group>"; };
 		13133AAD21A7F574009BD77A /* CourseCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCategoryModel.swift; sourceTree = "<group>"; };
@@ -561,6 +571,7 @@
 		1320C34B217EB66E00902A5C = {
 			isa = PBXGroup;
 			children = (
+				130C86B421F1721B005BBFF7 /* plsfilters.json */,
 				1320C36A217EB76600902A5C /* Profiles */,
 				1320C375217EB76600902A5C /* Base */,
 				1320C377217EB76600902A5C /* Business */,
@@ -645,6 +656,7 @@
 				1310F8E4219EBEE9004073FF /* Payment.xcassets */,
 				137A82B921B529040099A070 /* parenting.entitlements */,
 				130D569D21E5C5C800CE65CB /* Video.xcassets */,
+				1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -759,6 +771,7 @@
 				130E69E221EDB47900C20915 /* DVideoEditViewController.swift */,
 				130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */,
 				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
+				1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -775,6 +788,8 @@
 				130FEECE21E82D1C00321F7F /* VideoRateView.swift */,
 				13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */,
 				130AC5EF21EED3DC00D0286C /* VideoPreviewCell.swift */,
+				1312C81B21F084CE00F6B039 /* VideoFilterCell.swift */,
+				130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -980,6 +995,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */,
+				130C86B321F16E97005BBFF7 /* PLShortVideoKit.bundle in Resources */,
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
 				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
@@ -1144,6 +1161,7 @@
 				130DDE5821D1C859007D0619 /* RewardView.swift in Sources */,
 				131067F821A63D7400F79E92 /* DAboutViewController.swift in Sources */,
 				1311201821816F180088F5BF /* DCourseDetailViewModel.swift in Sources */,
+				1312C81C21F084CE00F6B039 /* VideoFilterCell.swift in Sources */,
 				1311201521816CFE0088F5BF /* CourseAPI.swift in Sources */,
 				1314250F21D316EE00B35346 /* PlaybackRecordService.swift in Sources */,
 				1312C40621884B030008AB81 /* CourseCataloguesView.swift in Sources */,
@@ -1200,6 +1218,7 @@
 				13B7F73B21B68728001BF15D /* QNResponseInfo.m in Sources */,
 				1316F4E321D0AEA900F5A756 /* RewardRankingCell.swift in Sources */,
 				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
+				1312C81A21F07FEB00F6B039 /* DVideoFiltersViewController.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
@@ -1256,6 +1275,7 @@
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
 				132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */,
+				130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */,
 				130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,
 			);

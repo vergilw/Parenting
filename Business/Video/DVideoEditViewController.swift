@@ -19,6 +19,8 @@ class DVideoEditViewController: BaseViewController {
     
     fileprivate var movieSettings: [AnyHashable: Any]
     
+    fileprivate lazy var filterData: VideoFilter = VideoFilter()
+    
     fileprivate lazy var composerMusicBtn: VerticallyButton = {
         let button = VerticallyButton()
         button.setTitleColor(.white, for: .normal)
@@ -30,11 +32,27 @@ class DVideoEditViewController: BaseViewController {
         return button
     }()
     
-    lazy fileprivate var videoSoundImgView: UIImageView = {
+    fileprivate lazy var videoSoundImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_editSelectSoundIcon")
         imgView.contentMode = .center
         return imgView
+    }()
+    
+    fileprivate lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: UIScreenWidth, height: UIScreenHeight)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.register(VideoEditFilterCell.self, forCellWithReuseIdentifier: VideoEditFilterCell.className())
+        view.dataSource = self
+        view.delegate = self
+        view.backgroundColor = .clear
+        view.showsHorizontalScrollIndicator = false
+        view.isPagingEnabled = true
+        return view
     }()
     
     init(settings: [String: Any]) {
@@ -87,10 +105,13 @@ class DVideoEditViewController: BaseViewController {
         view.addSubview(editor.previewView)
         editor.startEditing()
         
+        view.addSubview(collectionView)
+        
         initBackBtn()
         initTopView()
         initBottomView()
         initSubmitBtn()
+        
     }
     
     fileprivate func initBackBtn() {
@@ -196,7 +217,7 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("滤镜", for: .normal)
             button.setImage(UIImage(named: "video_editFilters"), for: .normal)
             button.padding = 4.5
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoFiltersBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -267,6 +288,9 @@ class DVideoEditViewController: BaseViewController {
         editor.previewView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     // MARK: - ============= Notification =============
@@ -305,6 +329,21 @@ class DVideoEditViewController: BaseViewController {
         }
         present(viewController, animated: true, completion: nil)
     }
+    
+    @objc func videoFiltersBtnAction() {
+        let index = collectionView.indexPathsForSelectedItems?.first?.row ?? 0
+        let viewController = DVideoFiltersViewController(selectedIndex: index)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        viewController.editHandler = { [weak self] (selectedIndex) in
+            
+            if let imgPath = self?.filterData.filterImgs[exist: selectedIndex] {
+                self?.editor.addFilter(imgPath)
+                self?.collectionView.selectItem(at: IndexPath(item: selectedIndex, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
+            }
+        }
+        present(viewController, animated: true, completion: nil)
+    }
 }
 
 
@@ -325,7 +364,46 @@ extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
             } else {
                 presentation.layoutHeight = 170
             }
+        } else if presented.isKind(of: DVideoFiltersViewController.self) {
+            if #available(iOS 11, *) {
+                presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 170
+            }
         }
         return presentation
+    }
+}
+
+
+// MARK: - ============= UICollectionViewDataSource, UICollectionViewDelegate =============
+extension DVideoEditViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return filterData.filterImgs.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoEditFilterCell.className(), for: indexPath) as! VideoEditFilterCell
+        
+        if let filterString = filterData.filterNames[exist: indexPath.row] {
+            cell.setup(string: filterString)
+        }
+        return cell
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        let index = Int(targetContentOffset.pointee.x/UIScreenWidth)
+        
+        collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: UICollectionView.ScrollPosition())
+        
+        if let imgPath = filterData.filterImgs[exist: index] {
+            editor.addFilter(imgPath)
+        }
     }
 }
