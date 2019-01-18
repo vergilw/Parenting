@@ -239,7 +239,7 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("贴纸", for: .normal)
             button.setImage(UIImage(named: "video_editStickers"), for: .normal)
             button.padding = 4.5
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoStickersBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -343,6 +343,14 @@ class DVideoEditViewController: BaseViewController {
             }
         }
         present(viewController, animated: true, completion: nil)
+    }
+
+    @objc func videoStickersBtnAction() {
+        let stickerView = VideoStickerView(img: UIImage(named: "payment_coinLargeIcon")!)
+        view.addSubview(stickerView)
+        stickerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
 }
 
