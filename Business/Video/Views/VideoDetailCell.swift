@@ -59,14 +59,15 @@ class VideoDetailCell: UITableViewCell {
         button.layer.cornerRadius = 25
         button.layer.borderColor = UIColor(white: 1, alpha: 0.3).cgColor
         button.layer.borderWidth = 2
-        //        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.clipsToBounds = true
+        button.setImage(UIImage(named: "public_avatarPlaceholder"), for: .normal)
         button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
         return button
     }()
     
     lazy fileprivate var likeImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "video_playerLike")
+        imgView.image = UIImage(named: "video_playerLike")?.withRenderingMode(.alwaysTemplate)
         imgView.layer.shadowOffset = CGSize(width: 0, height: 3.0)
         imgView.layer.shadowOpacity = 0.6
         imgView.layer.shadowColor = UIColor.black.cgColor
@@ -187,8 +188,8 @@ class VideoDetailCell: UITableViewCell {
                 self?.showLikeViewAnim(newPoint: point, oldPoint: self!.lastTapPoint)
                 
                 //触发喜欢请求
-                if self?.model?.isLike == false {
-                    self?.videoLikeRequest(isLike: true)
+                if self?.model?.liked == false {
+                    self?.videoLikeRequest()
                 }
             }
             //更新上一次点击位置
@@ -220,7 +221,7 @@ class VideoDetailCell: UITableViewCell {
         }()
         let likeBtn: UIButton = {
             let button = UIButton()
-            //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoLikeRequest), for: .touchUpInside)
             return button
         }()
         likeStackView.addSubviews([likeBtn])
@@ -395,10 +396,11 @@ class VideoDetailCell: UITableViewCell {
         if let likedCount = model.liked_count {
             likeCountLabel.text = "\(likedCount)"
         }
-        //TODO: image
-//        if model.isLike == true {
-//            likeImgView.image =
-//        }
+        if model.liked == true {
+            likeImgView.tintColor = UIConstants.Color.primaryRed
+        } else {
+            likeImgView.tintColor = .white
+        }
         if let commentedCount = model.comments_count {
             commentCountLabel.text = "\(commentedCount)"
         }
@@ -489,19 +491,33 @@ class VideoDetailCell: UITableViewCell {
 
 extension VideoDetailCell {
     
-    
-    
-    fileprivate func videoLikeRequest(isLike: Bool) {
-        guard let videoID = model?.id else { return }
+    @objc func videoLikeRequest() {
+        guard let videoID = model?.id, let liked = model?.liked else { return }
         guard isRequesting == false else { return }
         
         isRequesting = true
-        VideoProvider.request(.video_like(videoID, isLike), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.video_like(videoID, !liked), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.isRequesting = false
             
             if code >= 0 {
-                self.model?.isLike = isLike
+                self.model?.liked = !liked
+                if let likedCount = self.model?.liked_count {
+                    if liked == true {
+                        self.model?.liked_count = likedCount - 1
+                        self.likeCountLabel.text = String(likedCount - 1)
+                    } else {
+                        self.model?.liked_count = likedCount + 1
+                        self.likeCountLabel.text = String(likedCount + 1)
+                    }
+                    
+                }
+                
+                if self.model?.liked == true {
+                    self.likeImgView.tintColor = UIConstants.Color.primaryRed
+                } else {
+                    self.likeImgView.tintColor = .white
+                }
             }
         }))
     }

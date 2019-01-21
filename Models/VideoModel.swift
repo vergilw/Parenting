@@ -20,13 +20,14 @@ class VideoModel: HandyJSON {
     var title: String?
     var created_at: Date?
     var cover_url: String?
-    var isLike: Bool?
     var view_count: String?
     var liked_count: Int?
     var share_count: Int?
     var comments_count: Int?
     var share_url: String?
     var rewardable: Bool?
+    var starred: Bool?
+    var liked: Bool?
     
     required init() { }
     

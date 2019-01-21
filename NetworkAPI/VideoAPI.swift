@@ -15,8 +15,10 @@ enum VideoAPI {
     case video_category
     case videos(Int?, Int)
     case video_like(String, Bool)
-    case video_comment(Int, Int)
+    case video_comments(Int, Int)
     case videos_user(Int, Int)
+    case video_comment(Int, String)
+    case video(String, String, String)
 }
 
 extension VideoAPI: TargetType {
@@ -32,10 +34,14 @@ extension VideoAPI: TargetType {
         case .videos:
             return "/api/videos"
         case let .video_like(videoID, isLike):
-            return "/api/video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
-        case let .video_comment(videoID, _):
+            return "/api/Video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
+        case let .video_comments(videoID, _):
             return "/api/Video/\(videoID)/comments"
         case .videos_user:
+            return "/api/videos"
+        case let .video_comment(videoID, _):
+            return "/api/Video/\(videoID)/comments"
+        case .video:
             return "/api/videos"
         }
     }
@@ -48,10 +54,14 @@ extension VideoAPI: TargetType {
             return .get
         case .video_like:
             return .post
-        case .video_comment:
+        case .video_comments:
             return .get
         case .videos_user:
             return .get
+        case .video_comment:
+            return .post
+        case .video:
+            return .post
         }
     }
     
@@ -71,10 +81,14 @@ extension VideoAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .video_like:
             return .requestPlain
-        case let .video_comment(_, page):
+        case let .video_comments(_, page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         case let .videos_user(userID, page):
             return .requestParameters(parameters: ["author_id": userID, "page":page, "per":"12"], encoding: URLEncoding.default)
+        case let .video_comment(_, string):
+            return .requestParameters(parameters: ["comment": ["content": string]], encoding: JSONEncoding.default)
+        case let .video(title, media, cover):
+            return .requestParameters(parameters: ["video": ["title": title, "media": media, "cover": cover]], encoding: JSONEncoding.default)
         }
     }
     

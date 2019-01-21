@@ -267,7 +267,7 @@ class DVideoEditViewController: BaseViewController {
             button.backgroundColor = .white
             button.layer.cornerRadius = 20
             button.clipsToBounds = true
-//            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(submitBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -352,6 +352,51 @@ class DVideoEditViewController: BaseViewController {
             make.center.equalToSuperview()
         }
     }
+    
+    @objc func submitBtnAction() {
+        editor.stopEditing()
+        
+        let exportSession = PLSAVAssetExportSession(asset: asset)
+        exportSession?.outputFileType = .MPEG4
+        exportSession?.shouldOptimizeForNetworkUse = true
+        exportSession?.outputSettings = outputSettings
+        exportSession?.isExportMovieToPhotosAlbum = false
+        exportSession?.audioChannel = 2
+        exportSession?.audioBitrate = PLSAudioBitRate(128000)
+        exportSession?.outputVideoFrameRate = min(60, asset.pls_normalFrameRate)
+        //TODO: aspect video size to 16:9
+        exportSession?.outputVideoSize = asset.pls_videoSize
+        exportSession?.videoLayerOrientation = .portrait
+        
+        //filter
+        let index = collectionView.indexPathsForSelectedItems?.first?.row ?? 0
+        if let imgPath = filterData.filterImgs[exist: index] {
+            exportSession?.addFilter(imgPath)
+        }
+        
+        //cover
+        let imgGenerator = AVAssetImageGenerator(asset: asset)
+        imgGenerator.requestedTimeToleranceBefore = .zero
+        imgGenerator.requestedTimeToleranceAfter = .zero
+        imgGenerator.appliesPreferredTrackTransform = true
+        imgGenerator.maximumSize = asset.pls_videoSize
+        guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: 0, preferredTimescale: CMTimeScale(exactly: 600)!), actualTime: nil) else {
+            return
+        }
+        
+        exportSession?.failureBlock = { error in
+            
+        }
+        exportSession?.completionBlock = { fileURL in
+            guard let fileURL = fileURL else { return }
+            
+            DispatchQueue.main.async {
+                let viewController = DVideoPostViewController(fileURL: fileURL, coverImg: UIImage(cgImage: cgImg))
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
+        }
+        exportSession?.exportAsynchronously()
+    }
 }
 
 
@@ -414,4 +459,9 @@ extension DVideoEditViewController: UICollectionViewDataSource, UICollectionView
             editor.addFilter(imgPath)
         }
     }
+}
+
+
+extension DVideoEditViewController: UIGestureRecognizerDelegate {
+    
 }

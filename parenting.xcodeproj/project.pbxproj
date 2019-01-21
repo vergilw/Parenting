@@ -70,6 +70,7 @@
 		130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0721DDF08300AE2EF6 /* MediaModel.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		130FEECF21E82D1C00321F7F /* VideoRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FEECE21E82D1C00321F7F /* VideoRateView.swift */; };
+		130FF51A21F5927000F49DB3 /* DVideoPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */; };
 		13103D5F21EC631F00F13BC9 /* VerticallyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */; };
 		13103D6521EC836600F13BC9 /* VideoRecordProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */; };
 		131067F621A63BB100F79E92 /* DSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131067F521A63BB100F79E92 /* DSettingsViewController.swift */; };
@@ -260,6 +261,7 @@
 		130F3C0721DDF08300AE2EF6 /* MediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModel.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		130FEECE21E82D1C00321F7F /* VideoRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRateView.swift; sourceTree = "<group>"; };
+		130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoPostViewController.swift; sourceTree = "<group>"; };
 		13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticallyButton.swift; sourceTree = "<group>"; };
 		13103D6421EC836600F13BC9 /* VideoRecordProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecordProgress.swift; sourceTree = "<group>"; };
 		131067F521A63BB100F79E92 /* DSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSettingsViewController.swift; sourceTree = "<group>"; };
@@ -774,6 +776,7 @@
 				130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */,
 				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
 				1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */,
+				130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1224,6 +1227,7 @@
 				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
 				1312C81A21F07FEB00F6B039 /* DVideoFiltersViewController.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
+				130FF51A21F5927000F49DB3 /* DVideoPostViewController.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
 				1320C38B217EB93A00902A5C /* UIView+Extension.swift in Sources */,

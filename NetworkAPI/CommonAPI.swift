@@ -62,10 +62,10 @@ extension CommonAPI: TargetType {
                                                    "user_feedback[device_info]app_version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
                                                    "user_feedback[device_info]device_id": AppService.sharedInstance.uniqueIdentifier], encoding: URLEncoding.default)
         case let .uploadToken(size, contentType):
-            return .requestParameters(parameters: ["[blob]byte_size": size,
-                                                   "[blob]content_type": contentType,
-                                                   "[blob]filename": "",
-                                                   "[blob]checksum": ""], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["blob": ["byte_size": size,
+                                                   "content_type": contentType,
+                                                   "filename": "",
+                                                   "checksum": ""]], encoding: JSONEncoding.default)
         }
     }
     

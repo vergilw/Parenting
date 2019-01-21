@@ -38,8 +38,8 @@ class DVideoCommentViewController: BaseViewController {
     
     lazy fileprivate var textField: UITextField = {
         let textField = UITextField()
-//        textField.delegate = self
-        textField.returnKeyType = .done
+        textField.delegate = self
+        textField.returnKeyType = .send
         textField.clearButtonMode = .whileEditing
         textField.font = UIConstants.Font.body
         textField.textColor = UIConstants.Color.head
@@ -181,7 +181,7 @@ class DVideoCommentViewController: BaseViewController {
         }
         HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
         
-        VideoProvider.request(.video_comment(videoID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.video_comments(videoID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             HUDService.sharedInstance.hideFetchingView(target: self.tableView)
             
@@ -223,7 +223,7 @@ class DVideoCommentViewController: BaseViewController {
     
     fileprivate func fetchMoreData() {
         
-        VideoProvider.request(.video_comment(videoID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.video_comments(videoID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.tableView.mj_footer.endRefreshing()
             
@@ -292,4 +292,30 @@ extension DVideoCommentViewController {
 //    @objc func keyboardWillHide(sender: Notification) {
 //
 //    }
+}
+
+
+extension DVideoCommentViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        
+        let text = textField.text!
+        
+        VideoProvider.request(.video_comment(videoID, text), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0, let data = JSON?["comment"] as? [String: Any] {
+                if let model = VideoCommentModel.deserialize(from: data) {
+                    self.commentModels?.insert(model, at: 0)
+                    self.tableView.reloadData()
+                    
+                    HUDService.sharedInstance.hideResultView(target: self.tableView)
+                }
+                
+                textField.text = nil
+            }
+        }))
+        
+        return false
+    }
 }

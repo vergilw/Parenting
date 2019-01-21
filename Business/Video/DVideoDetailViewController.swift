@@ -132,6 +132,7 @@ class DVideoDetailViewController: BaseViewController {
     // MARK: - ============= Action =============
 
     deinit {
+        removeObserver(self, forKeyPath: "currentIndex", context: nil)
         NotificationCenter.default.removeObserver(self)
         
         PlayListService.sharedInstance.invalidateObserver = false
