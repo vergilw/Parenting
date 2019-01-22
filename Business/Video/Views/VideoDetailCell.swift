@@ -492,6 +492,12 @@ class VideoDetailCell: UITableViewCell {
 extension VideoDetailCell {
     
     @objc func videoLikeRequest() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            UIApplication.shared.keyWindow?.rootViewController?.present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         guard let videoID = model?.id, let liked = model?.liked else { return }
         guard isRequesting == false else { return }
         

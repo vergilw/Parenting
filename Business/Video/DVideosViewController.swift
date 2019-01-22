@@ -12,7 +12,7 @@ class DVideosViewController: BaseViewController {
 
     var videoModels: [VideoModel]?
     
-    fileprivate lazy var pageNumber: Int = 1
+    fileprivate lazy var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
     
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -93,16 +93,16 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchData), name: Notification.Authorization.signInDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
-    fileprivate func fetchData() {
+    @objc fileprivate func fetchData() {
         if !collectionView.mj_header.isRefreshing {
             HUDService.sharedInstance.showFetchingView(target: self.view)
         }
         
-        VideoProvider.request(.videos(nil, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos("next", nil), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if self.collectionView.mj_header.isRefreshing {
                 self.collectionView.mj_header.endRefreshing()
@@ -113,19 +113,22 @@ class DVideosViewController: BaseViewController {
             if code >= 0 {
                 if let data = JSON?["videos"] as? [[String: Any]] {
                     
-                    self.pageNumber = 1
+                    self.orderedSet.removeAllObjects()
                     
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.videoModels = models
+                        
+                        if let ids = (models.map { $0.id }) as? [String] {
+                            self.orderedSet.addObjects(from: ids)
+                        }
                     }
                     self.collectionView.reloadData()
                     
-                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                        if totalPages > self.pageNumber {
-                            self.pageNumber += 1
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int, let currentPages = pagination["current_page"] as? Int {
+                        if totalPages > currentPages {
                             self.collectionView.mj_footer.isHidden = false
                             self.collectionView.mj_footer.resetNoMoreData()
-                            
+
                         } else {
                             self.collectionView.mj_footer.isHidden = true
                         }
@@ -141,8 +144,9 @@ class DVideosViewController: BaseViewController {
     }
     
     fileprivate func fetchMoreData() {
+        guard let videoID = orderedSet.lastObject as? String else { return }
         
-        VideoProvider.request(.videos(nil, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos("pre", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.collectionView.mj_footer.endRefreshing()
             
@@ -150,12 +154,15 @@ class DVideosViewController: BaseViewController {
                 if let data = JSON?["videos"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.videoModels?.append(contentsOf: models)
+                        
+                        if let ids = (models.map { $0.id }) as? [String] {
+                            self.orderedSet.addObjects(from: ids)
+                        }
                     }
                     self.collectionView.reloadData()
                     
-                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                        if totalPages > self.pageNumber {
-                            self.pageNumber += 1
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int, let currentPages = pagination["current_page"] as? Int {
+                        if totalPages > currentPages {
                             self.collectionView.mj_footer.endRefreshing()
                         } else {
                             self.collectionView.mj_footer.endRefreshingWithNoMoreData()
@@ -175,6 +182,12 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func cameraBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         let navigationController = BaseNavigationController(rootViewController: DVideoShootViewController())
         present(navigationController, animated: true, completion: nil)
     }

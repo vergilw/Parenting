@@ -296,6 +296,16 @@ extension DVideoCommentViewController {
 
 
 extension DVideoCommentViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return false
+        }
+        
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         textField.resignFirstResponder()

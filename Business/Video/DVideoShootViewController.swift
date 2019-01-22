@@ -323,6 +323,7 @@ class DVideoShootViewController: BaseViewController {
         plsMovieSettings[PLSStartTimeKey] = NSNumber(value: 0.0)
         plsMovieSettings[PLSDurationKey] = NSNumber(value: recorder.assetRepresentingAllFiles().duration.seconds)
         plsMovieSettings[PLSVolumeKey] = NSNumber(value: 1.0)
+//        plsMovieSettings["DActualDuration"] = NSNumber(value: Float(recorder.getTotalDuration()))
         
         let outputSettings = [PLSMovieSettingsKey: plsMovieSettings]
         

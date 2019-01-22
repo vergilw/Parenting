@@ -21,6 +21,8 @@ class DVideoEditViewController: BaseViewController {
     
     fileprivate lazy var filterData: VideoFilter = VideoFilter()
     
+    fileprivate lazy var stickerViews = [VideoStickerView]()
+    
     fileprivate lazy var composerMusicBtn: VerticallyButton = {
         let button = VerticallyButton()
         button.setTitleColor(.white, for: .normal)
@@ -63,9 +65,14 @@ class DVideoEditViewController: BaseViewController {
         editor = PLShortVideoEditor(asset: asset)
         editor.loopEnabled = true
         editor.timeRange = CMTimeRange(start: CMTime(seconds: movieSettings[PLSStartTimeKey] as! Double,
-                                                     preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                                       duration: CMTime(seconds: movieSettings[PLSDurationKey] as! Double,
-                                                        preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+                                                                 preferredTimescale: 600),
+                                                   duration: CMTime(seconds: movieSettings[PLSDurationKey] as! Double,
+                                                                    preferredTimescale: 600))
+//CMTimeRange(start: CMTime(value: CMTimeValue(movieSettings[PLSStartTimeKey] as! Double),
+//                                                     timescale: 1000),
+//                                       duration: CMTime(value: CMTimeValue(movieSettings[PLSDurationKey] as! Double),
+//                                                        timescale: 1000))
+        
         editor.videoSize = asset.pls_videoSize
         editor.fillMode = PLSVideoFillModeType(rawValue: 1)
         
@@ -313,7 +320,7 @@ class DVideoEditViewController: BaseViewController {
         viewController.clipHandler = { [weak self] (startSeconds, endSeconds) in
             self?.movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds)
             self?.movieSettings[PLSDurationKey] = NSNumber(value: endSeconds-startSeconds)
-            self?.editor.timeRange = CMTimeRange(start: CMTime(seconds: startSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), end: CMTime(seconds: endSeconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            self?.editor.timeRange = CMTimeRange(start: CMTime(seconds: startSeconds, preferredTimescale: 600), end: CMTime(seconds: endSeconds, preferredTimescale: 600))
             self?.editor.startEditing()
         }
         present(viewController, animated: true, completion: nil)
@@ -351,11 +358,41 @@ class DVideoEditViewController: BaseViewController {
         stickerView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        stickerViews.append(stickerView)
     }
     
     @objc func submitBtnAction() {
         editor.stopEditing()
         
+        //stickers
+        var stickerSettings = [[AnyHashable: Any]]()
+        for stickerView in stickerViews {
+//            stickerView.hideBorder()
+            
+            var stickerSetting = [AnyHashable: Any]()
+            
+            let transform = stickerView.transform
+            let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
+            let size = CGSize(width: stickerView.bounds.width*scale, height: stickerView.bounds.height*scale)
+            let center = stickerView.center
+            let point = CGPoint(x: center.x - size.width/2, y: center.y - size.height/2)
+            print(point, scale, size)
+            stickerSetting[PLSStickerKey] = stickerView
+            stickerSetting[PLSSizeKey] = NSValue(cgSize: size)
+            stickerSetting[PLSPointKey] = NSValue(cgPoint: point)
+            stickerSetting[PLSRotationKey] = NSNumber(value: Float(atan2(transform.b, transform.a) * (180 / CGFloat.pi)))
+            stickerSetting[PLSStartTimeKey] = movieSettings[PLSStartTimeKey]
+            stickerSetting[PLSDurationKey] = movieSettings[PLSDurationKey]
+            
+            stickerSetting[PLSVideoPreviewSizeKey] = asset.pls_videoSize
+            stickerSetting[PLSVideoOutputSizeKey] = asset.pls_videoSize
+            
+            stickerSettings.append(stickerSetting)
+        }
+        outputSettings[PLSStickerSettingsKey] = stickerSettings
+        
+        
+        //export video
         let exportSession = PLSAVAssetExportSession(asset: asset)
         exportSession?.outputFileType = .MPEG4
         exportSession?.shouldOptimizeForNetworkUse = true
@@ -380,7 +417,7 @@ class DVideoEditViewController: BaseViewController {
         imgGenerator.requestedTimeToleranceAfter = .zero
         imgGenerator.appliesPreferredTrackTransform = true
         imgGenerator.maximumSize = asset.pls_videoSize
-        guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: 0, preferredTimescale: CMTimeScale(exactly: 600)!), actualTime: nil) else {
+        guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: 0, preferredTimescale: 600), actualTime: nil) else {
             return
         }
         
@@ -429,7 +466,7 @@ extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
 }
 
 
-// MARK: - ============= UICollectionViewDataSource, UICollectionViewDelegate =============
+// MARK: - ============= Filters Feature: UICollectionViewDataSource, UICollectionViewDelegate =============
 extension DVideoEditViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -462,6 +499,16 @@ extension DVideoEditViewController: UICollectionViewDataSource, UICollectionView
 }
 
 
-extension DVideoEditViewController: UIGestureRecognizerDelegate {
+// MARK: - ============= VideoStickerViewDelegate =============
+extension DVideoEditViewController: VideoStickerViewDelegate {
+    func stickerViewRemove(_ stickerView: VideoStickerView) {
+        if let index = stickerViews.firstIndex(of: stickerView) {
+            stickerViews.remove(at: index)
+        }
+    }
     
+    func stickerViewTransform(_ stickerView: VideoStickerView) {
+        
+    }
 }
+

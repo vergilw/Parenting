@@ -10,9 +10,11 @@ import HandyJSON
 
 class DVideoDetailViewModel {
     
-    var videosModels: [VideoModel]?
+    var videoModels: [VideoModel]?
     
-    lazy fileprivate var pageNumber: Int = 1
+    lazy var hasMoreHeader: Bool = true
+    
+    lazy var hasMoreFooter: Bool = true
     
 //    func fetchVideos(completion: @escaping (_ code: Int, _ next: Bool, _ models: [VideoModel]?)->Void) {
 //        VideoProvider.request(.videos(categoryID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in

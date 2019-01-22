@@ -16,6 +16,8 @@ class DVideoDetailViewController: BaseViewController {
     
     @objc dynamic var currentIndex: Int = 0
     
+    lazy fileprivate var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
+    
     lazy fileprivate var players = [AVPlayer]()
     
     lazy fileprivate var dismissBtn: UIButton = {
@@ -46,7 +48,7 @@ class DVideoDetailViewController: BaseViewController {
     init(models: [VideoModel], index: Int) {
         super.init(nibName: nil, bundle: nil)
         
-        viewModel.videosModels = models
+        viewModel.videoModels = models
         currentIndex = index
     }
     
@@ -89,7 +91,6 @@ class DVideoDetailViewController: BaseViewController {
         tableView.contentInset = UIEdgeInsets(top: UIScreenHeight, left: 0, bottom: UIScreenHeight * 3, right: 0);
         tableView.rowHeight = UIScreenHeight
         tableView.register(VideoDetailCell.self, forCellReuseIdentifier: VideoDetailCell.className())
-//        tableView.isPagingEnabled = true
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -120,9 +121,91 @@ class DVideoDetailViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(refetchData), name: Notification.Authorization.signInDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
+    @objc fileprivate func refetchData() {
+        VideoProvider.request(.videos("next", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["videos"] as? [[String: Any]] {
+                    
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        self.viewModel.videoModels = models
+                    }
+                    self.tableView.reloadData()
+                    
+                    //                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    //                        if totalPages > self.pageNumber {
+                    //                            self.pageNumber += 1
+                    //                            self.collectionView.mj_footer.isHidden = false
+                    //                            self.collectionView.mj_footer.resetNoMoreData()
+                    //
+                    //                        } else {
+                    //                            self.collectionView.mj_footer.isHidden = true
+                    //                        }
+                    //                    }
+                }
+                
+            }
+        }))
+    }
+    
+    fileprivate func fetchHeaderData() {
+        
+        VideoProvider.request(.videos("pre", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["videos"] as? [[String: Any]] {
+                    
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
+                    }
+                    self.tableView.reloadData()
+                    
+//                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+//                        if totalPages > self.pageNumber {
+//                            self.pageNumber += 1
+//                            self.collectionView.mj_footer.isHidden = false
+//                            self.collectionView.mj_footer.resetNoMoreData()
+//
+//                        } else {
+//                            self.collectionView.mj_footer.isHidden = true
+//                        }
+//                    }
+                }
+                
+            }
+        }))
+    }
+    
+    fileprivate func fetchFooterData() {
+        VideoProvider.request(.videos("next", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["videos"] as? [[String: Any]] {
+                    
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        self.viewModel.videoModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    //                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    //                        if totalPages > self.pageNumber {
+                    //                            self.pageNumber += 1
+                    //                            self.collectionView.mj_footer.isHidden = false
+                    //                            self.collectionView.mj_footer.resetNoMoreData()
+                    //
+                    //                        } else {
+                    //                            self.collectionView.mj_footer.isHidden = true
+                    //                        }
+                    //                    }
+                }
+                
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -147,14 +230,14 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.videosModels?.count ?? 0
+        return viewModel.videoModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: VideoDetailCell.className(), for: indexPath) as! VideoDetailCell
         cell.delegate = self
         addPlayer(cell.player)
-        if let model = viewModel.videosModels?[exist: indexPath.row] {
+        if let model = viewModel.videoModels?[exist: indexPath.row] {
             cell.setup(model: model)
         }
         return cell
@@ -164,7 +247,7 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
 
 extension DVideoDetailViewController: UIScrollViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        guard let models = viewModel.videosModels else { return }
+        guard let models = viewModel.videoModels else { return }
 
         DispatchQueue.main.async {
             let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
@@ -172,9 +255,19 @@ extension DVideoDetailViewController: UIScrollViewDelegate {
 
             if translatedPoint.y < -50 && self.currentIndex < (models.count - 1) {
                 self.currentIndex += 1
+                
+                //向下翻页prefetching
+                if self.currentIndex >= models.count-4 && self.viewModel.hasMoreFooter {
+                    self.fetchFooterData()
+                }
             }
             if translatedPoint.y > 50 && self.currentIndex > 0 {
                 self.currentIndex -= 1
+                
+                //向上翻页prefetching
+                if self.currentIndex <= 3 && self.viewModel.hasMoreHeader {
+                    self.fetchHeaderData()
+                }
             }
             UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseOut, animations: {
                 self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
@@ -217,13 +310,6 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
     func tableViewCellComment(_ tableViewCell: VideoDetailCell) {
         guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
         let viewController = DVideoCommentViewController(videoID: videoID)
-//        self.customPresentViewController(commentPresenter, viewController: viewController, animated: true)
-//        view.addSubview(viewController.view)
-//        addChild(viewController)
-//        viewController.view.snp.makeConstraints { make in
-//            make.leading.trailing.bottom.equalToSuperview()
-//            make.height.equalTo(440)
-//        }
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
         present(viewController, animated: true, completion: nil)
