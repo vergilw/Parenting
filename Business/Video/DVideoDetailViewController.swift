@@ -153,11 +153,12 @@ class DVideoDetailViewController: BaseViewController {
     }
     
     fileprivate func fetchHeaderData() {
+        guard let videoID = orderedSet.firstObject as? String else { return }
         
-        VideoProvider.request(.videos("pre", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos("pre", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                if let data = JSON?["videos"] as? [[String: Any]] {
+                if let data = JSON?["pre"] as? [[String: Any]] {
                     
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
@@ -181,10 +182,12 @@ class DVideoDetailViewController: BaseViewController {
     }
     
     fileprivate func fetchFooterData() {
-        VideoProvider.request(.videos("next", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        guard let videoID = orderedSet.lastObject as? String else { return }
+        
+        VideoProvider.request(.videos("next", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                if let data = JSON?["videos"] as? [[String: Any]] {
+                if let data = JSON?["next"] as? [[String: Any]] {
                     
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.viewModel.videoModels?.append(contentsOf: models)
@@ -316,8 +319,9 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
     }
     
     func tableViewCellForward(_ tableViewCell: VideoDetailCell) {
-//        guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
-        let viewController = DVideoForwardViewController()
+        guard let model = tableViewCell.model else { return }
+        
+        let viewController = DVideoForwardViewController(model: model)
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
         present(viewController, animated: true, completion: nil)

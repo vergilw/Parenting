@@ -571,12 +571,12 @@ class DPaymentViewController: BaseViewController {
     }
     
     @objc func withdrawBtnAction() {
-        //FIXME: DEBUG
-//        if UMSocialManager.default()?.isInstall(UMSocialPlatformType.wechatSession) ?? false {
+        
+        if let balance = AuthorizationService.sharedInstance.user?.reward, let balanceFloat = Float(balance), balanceFloat >= 100 {
             navigationController?.pushViewController(DWithdrawViewController(), animated: true)
-//        } else {
-//            HUDService.sharedInstance.show(string: "iOS暂不支持提现")
-//        }
+        } else {
+            HUDService.sharedInstance.show(string: "iOS暂不支持提现")
+        }
     }
     
     @objc func rankingBtnAction() {

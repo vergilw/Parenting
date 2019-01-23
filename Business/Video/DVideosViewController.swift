@@ -111,7 +111,7 @@ class DVideosViewController: BaseViewController {
             }
             
             if code >= 0 {
-                if let data = JSON?["videos"] as? [[String: Any]] {
+                if let data = JSON?["next"] as? [[String: Any]] {
                     
                     self.orderedSet.removeAllObjects()
                     
@@ -121,18 +121,17 @@ class DVideosViewController: BaseViewController {
                         if let ids = (models.map { $0.id }) as? [String] {
                             self.orderedSet.addObjects(from: ids)
                         }
-                    }
-                    self.collectionView.reloadData()
-                    
-                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int, let currentPages = pagination["current_page"] as? Int {
-                        if totalPages > currentPages {
+                        
+                        if models.count > 0 {
                             self.collectionView.mj_footer.isHidden = false
                             self.collectionView.mj_footer.resetNoMoreData()
-
+                            
                         } else {
                             self.collectionView.mj_footer.isHidden = true
                         }
                     }
+                    self.collectionView.reloadData()
+                    
                 }
                 
             } else if code == -2 {
@@ -146,28 +145,28 @@ class DVideosViewController: BaseViewController {
     fileprivate func fetchMoreData() {
         guard let videoID = orderedSet.lastObject as? String else { return }
         
-        VideoProvider.request(.videos("pre", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos("next", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.collectionView.mj_footer.endRefreshing()
             
             if code >= 0 {
-                if let data = JSON?["videos"] as? [[String: Any]] {
+                if let data = JSON?["next"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.videoModels?.append(contentsOf: models)
                         
                         if let ids = (models.map { $0.id }) as? [String] {
                             self.orderedSet.addObjects(from: ids)
                         }
-                    }
-                    self.collectionView.reloadData()
-                    
-                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int, let currentPages = pagination["current_page"] as? Int {
-                        if totalPages > currentPages {
+                        
+                        if models.count > 0 {
                             self.collectionView.mj_footer.endRefreshing()
+                            
                         } else {
                             self.collectionView.mj_footer.endRefreshingWithNoMoreData()
                         }
                     }
+                    self.collectionView.reloadData()
+                    
                 }
                 
             }

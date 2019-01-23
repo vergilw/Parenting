@@ -59,6 +59,8 @@
 		130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */; };
 		130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */; };
 		130E69E321EDB47900C20915 /* DVideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E69E221EDB47900C20915 /* DVideoEditViewController.swift */; };
+		130EA23A21F8093C00D59D32 /* DVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */; };
+		130EA23C21F8507800D59D32 /* reward_videoAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
 		130EF26B219A75C3008F61FA /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF26A219A75C3008F61FA /* UserModel.swift */; };
@@ -250,6 +252,8 @@
 		130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DRewardCoursesViewController.swift; sourceTree = "<group>"; };
 		130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPromotionViewController.swift; sourceTree = "<group>"; };
 		130E69E221EDB47900C20915 /* DVideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoEditViewController.swift; sourceTree = "<group>"; };
+		130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoPreviewViewController.swift; sourceTree = "<group>"; };
+		130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward_videoAnimation.gif; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
 		130EF26A219A75C3008F61FA /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -562,6 +566,7 @@
 		1316F4E621D0C85B00F5A756 /* Gif */ = {
 			isa = PBXGroup;
 			children = (
+				130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */,
 				130D8E2C21D63427008833C7 /* reward_courses.gif */,
 				130D8E2821D6234F008833C7 /* reward_share_bg.gif */,
 				1316F4E921D0C87400F5A756 /* course_commentRewardAnimation.gif */,
@@ -777,6 +782,7 @@
 				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
 				1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */,
 				130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */,
+				130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1010,6 +1016,7 @@
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
 				130D8E2921D6234F008833C7 /* reward_share_bg.gif in Resources */,
+				130EA23C21F8507800D59D32 /* reward_videoAnimation.gif in Resources */,
 				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
 				130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
@@ -1155,6 +1162,7 @@
 				13B7F72D21B68728001BF15D /* QNUpToken.m in Sources */,
 				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
 				130C67F821A3E90500E30307 /* DTeacherStoriesViewController.swift in Sources */,
+				130EA23A21F8093C00D59D32 /* DVideoPreviewViewController.swift in Sources */,
 				13B7F73221B68728001BF15D /* QNUrlSafeBase64.m in Sources */,
 				132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */,
 				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,

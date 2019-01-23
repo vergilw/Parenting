@@ -42,7 +42,7 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var playerStatusImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "video_playerPlay")
+        imgView.image = UIImage(named: "video_playerLargePlay")
         imgView.isHidden = true
         return imgView
     }()
@@ -86,6 +86,19 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
+    fileprivate lazy var likeMarkLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 10)!
+        label.textColor = .white
+        label.text = "赏"
+        label.textAlignment = .center
+        label.backgroundColor = UIConstants.Color.primaryRed
+        label.layer.cornerRadius = 7.5
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
+    }()
+    
     lazy fileprivate var commentCountLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.foot
@@ -93,10 +106,17 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var commentMarkImgView: UIImageView = {
-        let imgView = UIImageView()
-//        imgView.image = UIImage(named: <#T##String#>)
-        return imgView
+    fileprivate lazy var commentMarkLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 10)!
+        label.textColor = .white
+        label.text = "赏"
+        label.textAlignment = .center
+        label.backgroundColor = UIConstants.Color.primaryRed
+        label.layer.cornerRadius = 7.5
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
     }()
     
     lazy fileprivate var shareCountLabel: UILabel = {
@@ -106,10 +126,26 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var shareMarkImgView: UIImageView = {
-        let imgView = UIImageView()
-//        imgView.image = UIImage(named: <#T##String#>)
-        return imgView
+    fileprivate lazy var shareMarkLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Regular", size: 10)!
+        label.textColor = .white
+        label.text = "赏"
+        label.textAlignment = .center
+        label.backgroundColor = UIConstants.Color.primaryRed
+        label.layer.cornerRadius = 7.5
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
+    }()
+    
+    let captionStackView: UIStackView = {
+        let view = UIStackView()
+        view.alignment = .leading
+        view.axis = .vertical
+        view.distribution = .fillProportionally
+        view.spacing = 10
+        return view
     }()
     
     lazy fileprivate var authorNameLabel: UILabel = {
@@ -126,6 +162,21 @@ class VideoDetailCell: UITableViewCell {
         label.numberOfLines = 2
         return label
     }()
+    
+    fileprivate lazy var rewardCountdownView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        return view
+    }()
+    
+    fileprivate lazy var rewardCountdownLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot
+        label.textColor = UIColor("#ffd35b")
+        return label
+    }()
+    
+    fileprivate var timeObserverToken: Any?
     
     lazy fileprivate var lastTapTime: TimeInterval = 0
     lazy fileprivate var lastTapPoint: CGPoint = .zero
@@ -154,11 +205,13 @@ class VideoDetailCell: UITableViewCell {
         
         initActionView()
         initCaptionView()
+        initRewardCountdownView()
+        
+        
         initGesture()
         initObserver()
         
         initConstraints()
-        
         
     }
     
@@ -224,12 +277,18 @@ class VideoDetailCell: UITableViewCell {
             button.addTarget(self, action: #selector(videoLikeRequest), for: .touchUpInside)
             return button
         }()
-        likeStackView.addSubviews([likeBtn])
+        likeStackView.addArrangedSubview(likeImgView)
+        likeStackView.addArrangedSubview(likeCountLabel)
+        likeStackView.addSubviews([likeBtn, likeMarkLabel])
         likeBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        likeStackView.addArrangedSubview(likeImgView)
-        likeStackView.addArrangedSubview(likeCountLabel)
+        likeMarkLabel.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.top.equalTo(-5)
+            make.size.equalTo(CGSize(width: 15, height: 15))
+        }
+        
         
         
         //Comment Action
@@ -251,16 +310,18 @@ class VideoDetailCell: UITableViewCell {
             imgView.image = UIImage(named: "video_playerComment")
             return imgView
         }()
-        commentStackView.addSubviews([commentBtn, commentMarkImgView])
+        commentStackView.addArrangedSubview(commentImgView)
+        commentStackView.addArrangedSubview(commentCountLabel)
+        commentStackView.addSubviews([commentBtn, commentMarkLabel])
         commentBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        commentMarkImgView.snp.makeConstraints { make in
+        commentMarkLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.top.equalTo(-5)
+            make.size.equalTo(CGSize(width: 15, height: 15))
         }
-        commentStackView.addArrangedSubview(commentImgView)
-        commentStackView.addArrangedSubview(commentCountLabel)
+        
         
         
         //Share Action
@@ -282,16 +343,18 @@ class VideoDetailCell: UITableViewCell {
             imgView.image = UIImage(named: "video_playerForward")
             return imgView
         }()
-        shareStackView.addSubviews([shareBtn, shareMarkImgView])
+        shareStackView.addArrangedSubview(shareImgView)
+        shareStackView.addArrangedSubview(shareCountLabel)
+        shareStackView.addSubviews([shareBtn, shareMarkLabel])
         shareBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        shareMarkImgView.snp.makeConstraints { make in
+        shareMarkLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.top.equalTo(-5)
+            make.size.equalTo(CGSize(width: 15, height: 15))
         }
-        shareStackView.addArrangedSubview(shareImgView)
-        shareStackView.addArrangedSubview(shareCountLabel)
+        
         
         
         //StackView Layout
@@ -324,20 +387,12 @@ class VideoDetailCell: UITableViewCell {
     }
     
     fileprivate func initCaptionView() {
-        let stackView: UIStackView = {
-            let view = UIStackView()
-            view.alignment = .leading
-            view.axis = .vertical
-            view.distribution = .fillProportionally
-            view.spacing = 10
-            return view
-        }()
         
-        stackView.addArrangedSubview(authorNameLabel)
-        stackView.addArrangedSubview(descriptionLabel)
+        captionStackView.addArrangedSubview(authorNameLabel)
+        captionStackView.addArrangedSubview(descriptionLabel)
         
-        contentView.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
+        contentView.addSubview(captionStackView)
+        captionStackView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-12-50-16)
             if #available(iOS 11.0, *) {
@@ -348,10 +403,47 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    fileprivate func initRewardCountdownView() {
+        let img = YYImage(named: "reward_videoAnimation")!
+        let imgView = YYAnimatedImageView(image: img)
+        
+        
+        rewardCountdownView.addSubviews([imgView, rewardCountdownLabel])
+            
+            
+        imgView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.size.equalTo(CGSize(width: 55, height: 55))
+        }
+        rewardCountdownLabel.snp.makeConstraints { make in
+            make.centerX.bottom.equalToSuperview()
+            make.top.equalTo(imgView.snp.bottom)
+        }
+        
+        
+        contentView.addSubview(rewardCountdownView)
+        rewardCountdownView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.bottom.equalTo(captionStackView.snp.top).offset(-25)
+        }
+    }
+    
     fileprivate func initObserver() {
         player.addObserver(self, forKeyPath: "timeControlStatus", options: NSKeyValueObservingOptions.new, context: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+        
+        
+        //add time observer
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
+            
+            guard let currentSeconds = self?.player.currentTime().seconds else { return }
+            guard let duationSeconds = self?.player.currentItem?.duration.seconds else { return }
+            
+            let timeInterval: TimeInterval = TimeInterval(duationSeconds - currentSeconds)
+            let date = Date(timeIntervalSince1970: timeInterval)
+            self?.rewardCountdownLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+            
+        })
     }
     
     fileprivate func initConstraints() {
@@ -385,7 +477,8 @@ class VideoDetailCell: UITableViewCell {
         
         if let URLString = model.media?.url, let url = URL(string: URLString) {
             player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
-//            player.play()
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         }
         
         if let URLString = model.author?.avatar_url {
@@ -411,6 +504,29 @@ class VideoDetailCell: UITableViewCell {
         authorNameLabel.text = "@\(model.author?.name ?? "")"
         
         descriptionLabel.text = model.title
+        
+        if (model.rewardable_codes?.count ?? 0) > 0 && model.viewed == false {
+            rewardCountdownView.isHidden = false
+        } else {
+            rewardCountdownView.isHidden = true
+        }
+        
+        //FIXME: codes name
+        if (model.rewardable_codes?.count ?? 0) > 0 {
+            if model.rewardable_codes?.contains("like") ?? false {
+                likeMarkLabel.isHidden = false
+            }
+            if model.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+                commentMarkLabel.isHidden = false
+            }
+            if model.rewardable_codes?.contains("share") ?? false {
+                shareMarkLabel.isHidden = false
+            }
+        } else {
+            likeMarkLabel.isHidden = true
+            commentMarkLabel.isHidden = true
+            shareMarkLabel.isHidden = true
+        }
     }
     
     @objc func playerStatusBtnAction() {
@@ -448,7 +564,25 @@ class VideoDetailCell: UITableViewCell {
     }
     
     @objc func playToEndTimeAction() {
+        print(#function)
         player.seek(to: CMTime.zero)
+        
+        //FIXME: codes name
+        if model?.rewardable_codes?.contains("like") ?? false {
+            likeMarkLabel.isHidden = false
+        }
+        if model?.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+            commentMarkLabel.isHidden = false
+        }
+        if model?.rewardable_codes?.contains("share") ?? false {
+            shareMarkLabel.isHidden = false
+        }
+        if model?.viewed == false {
+            model?.viewed = true
+            rewardCountdownView.isHidden = true
+            
+            asReadRequest()
+        }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -461,6 +595,15 @@ class VideoDetailCell: UITableViewCell {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    func startCountdown() {
+        if (model?.rewardable_codes?.count ?? 0) > 0 && model?.viewed == false {
+            rewardCountdownView.isHidden = false
+        } else {
+            rewardCountdownView.isHidden = true
+        }
+        
     }
     
     // MARK: - ============= Action =============
@@ -480,6 +623,14 @@ class VideoDetailCell: UITableViewCell {
         if let delegate = delegate {
             delegate.tableViewCellAvatar(self)
         }
+    }
+    
+    fileprivate func asReadRequest() {
+        guard let string = model?.id, let videoID = Int(string) else { return }
+        
+        VideoProvider.request(.video_viewed(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+        }))
     }
     
     deinit {

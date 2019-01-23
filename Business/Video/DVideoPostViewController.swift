@@ -39,12 +39,18 @@ class DVideoPostViewController: BaseViewController {
         let button = UIButton()
         button.layer.cornerRadius = 4
         button.clipsToBounds = true
-//        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+        button.addTarget(self, action: #selector(previewBtnAction), for: .touchUpInside)
         return button
     }()
     
-    fileprivate lazy var submitBtn: UIButton = {
-        let button = UIButton()
+    fileprivate lazy var previewImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "video_playerPlay")
+        return imgView
+    }()
+    
+    fileprivate lazy var submitBtn: ActionButton = {
+        let button = ActionButton()
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2_regular
         button.setTitle(" 发布", for: .normal)
@@ -92,7 +98,7 @@ class DVideoPostViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        view.addSubviews([textView, previewBtn, submitBtn, draftsBtn])
+        view.addSubviews([textView, previewBtn, previewImgView, submitBtn, draftsBtn])
         
         view.drawSeparator(startPoint: CGPoint(x: 0, y: 210), endPoint: CGPoint(x: UIScreenWidth, y: 210))
     }
@@ -103,6 +109,9 @@ class DVideoPostViewController: BaseViewController {
             make.trailing.equalTo(-20)
             make.top.equalTo(20)
             make.size.equalTo(CGSize(width: 90, height: 160))
+        }
+        previewImgView.snp.makeConstraints { make in
+            make.center.equalTo(previewBtn)
         }
         textView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -141,14 +150,23 @@ class DVideoPostViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    @objc func previewBtnAction() {
+        guard let fileURL = fileURL else { return }
+        let viewController = DVideoPreviewViewController(fileURL: fileURL)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     @objc func submitBtnAction() {
         guard let fileURL = fileURL else { return }
         guard let fileData = try? Data(contentsOf: fileURL) else { return }
         guard let coverImg = coverImg else { return }
         
+        submitBtn.startAnimating()
+        
         dispatchGroup.enter()
         //TODO: video mimetype detect
         CommonProvider.request(.uploadToken(fileData.count, "video/mpeg"), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
             
             guard code >= 0, let key = JSON?["key"] as? String, let directUpload = JSON?["direct_upload"] as? [String: Any], let headers = directUpload["headers"] as? [String: Any], let token = headers["Up-Token"] as? String, let signedID = JSON?["signed_id"] as? String else {
                 self.dispatchGroup.leave()
@@ -175,11 +193,15 @@ class DVideoPostViewController: BaseViewController {
         
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
+            
             guard let videoSignedID = self.videoSignedID, let coverSignedID = self.coverSignedID else {
+                self.submitBtn.stopAnimating()
                 return
             }
             
             VideoProvider.request(.video(self.textView.text, videoSignedID, coverSignedID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                
+                self.submitBtn.stopAnimating()
                 
                 guard code >= 0 else {
                     return

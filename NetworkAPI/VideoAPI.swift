@@ -19,12 +19,15 @@ enum VideoAPI {
     case videos_user(Int, Int)
     case video_comment(Int, String)
     case video(String, String, String)
+    case video_favorite(Int)
+    case video_favorite_delete(Int)
+    case video_viewed(Int)
 }
 
 extension VideoAPI: TargetType {
     
     public var baseURL: URL {
-        return URL(string: ServerHost)!//"http://dappore.store/api"
+        return URL(string: ServerHost)!
     }
     
     public var path: String {
@@ -32,9 +35,9 @@ extension VideoAPI: TargetType {
         case .video_category:
             return "/api/video_taxons"
         case .videos:
-            return "/api/videos"
-        case let .video_like(videoID, isLike):
-            return "/api/Video/\(videoID)/attitudes/\(isLike ? "like" : "cancel")"
+            return "/api/videos/list"
+        case let .video_like(videoID, _):
+            return "/api/Video/\(videoID)/attitudes"
         case let .video_comments(videoID, _):
             return "/api/Video/\(videoID)/comments"
         case .videos_user:
@@ -43,6 +46,12 @@ extension VideoAPI: TargetType {
             return "/api/Video/\(videoID)/comments"
         case .video:
             return "/api/videos"
+        case let .video_favorite(videoID):
+            return "/api/Video/\(videoID)/stars"
+        case let .video_favorite_delete(videoID):
+            return "/api/Video/\(videoID)/stars"
+        case let .video_viewed(videoID):
+            return "/api/videos/\(videoID)/viewed"
         }
     }
     
@@ -62,6 +71,12 @@ extension VideoAPI: TargetType {
             return .post
         case .video:
             return .post
+        case .video_favorite:
+            return .post
+        case .video_favorite_delete:
+            return .delete
+        case .video_viewed:
+            return .patch
         }
     }
     
@@ -79,8 +94,8 @@ extension VideoAPI: TargetType {
                 parameters["id"] = String(videoID)
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        case .video_like:
-            return .requestPlain
+        case let .video_like(_, isLike):
+            return .requestParameters(parameters: ["opinion": isLike ? "liked" : "like_canceled"], encoding: URLEncoding.default)
         case let .video_comments(_, page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         case let .videos_user(userID, page):
@@ -89,6 +104,12 @@ extension VideoAPI: TargetType {
             return .requestParameters(parameters: ["comment": ["content": string]], encoding: JSONEncoding.default)
         case let .video(title, media, cover):
             return .requestParameters(parameters: ["video": ["title": title, "media": media, "cover": cover]], encoding: JSONEncoding.default)
+        case .video_favorite:
+            return .requestPlain
+        case .video_favorite_delete:
+            return .requestPlain
+        case .video_viewed:
+            return .requestPlain
         }
     }
     

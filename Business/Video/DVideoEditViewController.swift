@@ -266,15 +266,15 @@ class DVideoEditViewController: BaseViewController {
     }
     
     fileprivate func initSubmitBtn() {
-        let submitBtn: UIButton = {
-            let button = UIButton()
+        let submitBtn: ActionButton = {
+            let button = ActionButton()
             button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
             button.titleLabel?.font = UIConstants.Font.body
             button.setTitle("下一步", for: .normal)
             button.backgroundColor = .white
             button.layer.cornerRadius = 20
             button.clipsToBounds = true
-            button.addTarget(self, action: #selector(submitBtnAction), for: .touchUpInside)
+            button.addTarget(self, action: #selector(submitBtnAction(sender:)), for: .touchUpInside)
             return button
         }()
         
@@ -361,7 +361,9 @@ class DVideoEditViewController: BaseViewController {
         stickerViews.append(stickerView)
     }
     
-    @objc func submitBtnAction() {
+    @objc func submitBtnAction(sender: ActionButton) {
+        sender.startAnimating()
+        
         editor.stopEditing()
         
         //stickers
@@ -396,6 +398,13 @@ class DVideoEditViewController: BaseViewController {
         let exportSession = PLSAVAssetExportSession(asset: asset)
         exportSession?.outputFileType = .MPEG4
         exportSession?.shouldOptimizeForNetworkUse = true
+        
+        //FIXME: Qiniu SDK sticker bug
+//        let startSeconds = (movieSettings[PLSStartTimeKey] as! NSNumber).doubleValue
+//        let durationSeconds = (movieSettings[PLSDurationKey] as! NSNumber).doubleValue
+//        movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds+1.5)
+//        movieSettings[PLSDurationKey] = NSNumber(value: durationSeconds-1.5)
+//        outputSettings[PLSMovieSettingsKey] = movieSettings
         exportSession?.outputSettings = outputSettings
         exportSession?.isExportMovieToPhotosAlbum = false
         exportSession?.audioChannel = 2
@@ -418,19 +427,25 @@ class DVideoEditViewController: BaseViewController {
         imgGenerator.appliesPreferredTrackTransform = true
         imgGenerator.maximumSize = asset.pls_videoSize
         guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: 0, preferredTimescale: 600), actualTime: nil) else {
+            sender.stopAnimating()
             return
         }
         
         exportSession?.failureBlock = { error in
-            
+            sender.stopAnimating()
         }
         exportSession?.completionBlock = { fileURL in
-            guard let fileURL = fileURL else { return }
+            guard let fileURL = fileURL else {
+                sender.stopAnimating()
+                return
+            }
             
             DispatchQueue.main.async {
                 let viewController = DVideoPostViewController(fileURL: fileURL, coverImg: UIImage(cgImage: cgImg))
                 self.navigationController?.pushViewController(viewController, animated: true)
+                sender.stopAnimating()
             }
+            
         }
         exportSession?.exportAsynchronously()
     }

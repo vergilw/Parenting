@@ -35,17 +35,14 @@ class ResponseService {
                 
                 if response.statusCode >= 200 && response.statusCode < 300 {
                     
-                    do {
-                        let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as! [String: Any]
-                        if let code = JSON["code"] as? Int {
-                            completion(code, JSON)
-                        } else {
-                            completion(0, JSON)
-                        }
-                        
-                    } catch {
-                        HUDService.sharedInstance.show(string: "服务端错误")
-                        completion(-1, nil)
+                    guard let JSON = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any] else {
+                        return completion(response.statusCode, nil)
+                    }
+                    
+                    if let code = JSON?["code"] as? Int {
+                        completion(code, JSON)
+                    } else {
+                        completion(response.statusCode, JSON)
                     }
                     
                 } else if response.statusCode == 401 {

@@ -36,6 +36,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
+        label.textAlignment = .center
         return label
     }()
     
@@ -43,6 +44,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
+        label.textAlignment = .center
         return label
     }()
     
@@ -50,6 +52,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
+        label.textAlignment = .center
         return label
     }()
     
@@ -107,7 +110,28 @@ class VideoUserHeaderView: UICollectionReusableView {
         fatalError()
     }
     
-    func setup() {
+    func setup(model: UserModel) {
+        if let URLString = model.avatar_url {
+            avatarBtn.kf.setImage(with: URL(string: URLString), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"))
+        }
         
+        nameLabel.text = model.name
+        
+        descriptionLabel.text = model.intro
+        
+        var string = "\(model.videos ?? 0) 视频"
+        var attributedString = NSMutableAttributedString(string: string)
+        attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "视频"))
+        videosCountLabel.attributedText = attributedString
+        
+        string = "\(model.video_likes ?? 0) 点赞"
+        attributedString = NSMutableAttributedString(string: string)
+        attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "点赞"))
+        likeCountLabel.attributedText = attributedString
+        
+        string = "\(model.video_comments ?? 0) 评论"
+        attributedString = NSMutableAttributedString(string: string)
+        attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "评论"))
+        commentCountLabel.attributedText = attributedString
     }
 }

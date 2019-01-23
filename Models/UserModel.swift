@@ -18,6 +18,11 @@ class UserModel: HandyJSON {
     var wechat_name: String?
     var balance: String?
     var reward: String?
+    var intro: String?
+    
+    var videos: Int?
+    var video_likes: Int?
+    var video_comments: Int?
     
     required init() {
         

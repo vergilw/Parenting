@@ -15,6 +15,7 @@ enum UserAPI {
     case updateUser(name: String?, avatar: String?)
     case user
     case updatePushToken(String)
+    case users(Int)
 }
 
 extension UserAPI: TargetType {
@@ -31,6 +32,8 @@ extension UserAPI: TargetType {
             return "/app/profile"
         case .updatePushToken:
             return "/app/profile/update_getui_token"
+        case let .users(userID):
+            return "/app/users/\(userID)"
         }
     }
     
@@ -42,6 +45,8 @@ extension UserAPI: TargetType {
             return .get
         case .updatePushToken:
             return .put
+        case .users:
+            return .get
         }
     }
     
@@ -64,6 +69,8 @@ extension UserAPI: TargetType {
             return .requestPlain
         case let .updatePushToken(pushToken):
             return .requestParameters(parameters: ["token": pushToken], encoding: URLEncoding.default)
+        case .users:
+            return .requestPlain
         }
         
     }

@@ -12,9 +12,13 @@ class DVideoUserViewController: BaseViewController {
 
     var userID: Int?
     
+    var userModel: UserModel?
+    
     var videoModels: [VideoModel]?
     
     fileprivate lazy var pageNumber: Int = 1
+    
+    fileprivate lazy var dispatchGroup = DispatchGroup()
     
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -78,10 +82,45 @@ class DVideoUserViewController: BaseViewController {
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
+        dispatchGroup.enter()
+        fetchUserData()
+        
+        dispatchGroup.enter()
+        fetchVideoData()
+        
+        dispatchGroup.notify(queue: DispatchQueue.main) {
+            HUDService.sharedInstance.hideFetchingView(target: self.view)
+        }
+    }
+    
+    fileprivate func fetchUserData() {
+        
+        UserProvider.request(.users(userID ?? 0), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            self.dispatchGroup.leave()
+            
+            if code >= 0 {
+                if let data = JSON?["user"] as? [String: Any] {
+                    
+                    if let model = UserModel.deserialize(from: data) {
+                        self.userModel = model
+                    }
+                    self.collectionView.reloadData()
+                    
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                    self?.fetchData()
+                }
+            }
+        }))
+    }
+    
+    fileprivate func fetchVideoData() {
         
         VideoProvider.request(.videos_user(userID ?? 0, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            self.dispatchGroup.leave()
             
             if code >= 0 {
                 if let data = JSON?["videos"] as? [[String: Any]] {
@@ -162,7 +201,10 @@ extension DVideoUserViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: VideoUserHeaderView.className(), for: indexPath)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: VideoUserHeaderView.className(), for: indexPath) as! VideoUserHeaderView
+            if let model = userModel {
+                view.setup(model: model)
+            }
             return view
         }
         return UICollectionReusableView()

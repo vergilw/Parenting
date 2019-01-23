@@ -10,6 +10,8 @@ import UIKit
 
 class DVideoForwardViewController: BaseViewController {
 
+    fileprivate let videoModel: VideoModel
+    
     fileprivate lazy var forwardCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -65,6 +67,16 @@ class DVideoForwardViewController: BaseViewController {
         return button
     }()
     
+    init(model: VideoModel) {
+        videoModel = model
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -111,6 +123,28 @@ class DVideoForwardViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func favoriteRequest() {
+        guard let videoIDString = videoModel.id, let videoID = Int(videoIDString) else { return }
+        
+        if videoModel.starred == false {
+            VideoProvider.request(.video_favorite(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                
+                if code >= 0 {
+                    self.videoModel.starred = true
+                    self.othersCollectionView.reloadData()
+                }
+            }))
+            
+        } else {
+            VideoProvider.request(.video_favorite_delete(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+                
+                if code >= 0 {
+                    self.videoModel.starred = false
+                    self.othersCollectionView.reloadData()
+                }
+            }))
+        }
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -155,7 +189,11 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
             if indexPath.row == 0 {
                 cell.setup(imgNamed: "public_actionItemReport", bgColor: UIColor("#f3f4f6"), text: "举报")
             } else if indexPath.row == 1 {
-                cell.setup(imgNamed: "public_actionItemFavorite", bgColor: UIColor("#f3f4f6"), text: "收藏")
+                if videoModel.starred == true {
+                    cell.setup(imgNamed: "public_actionItemFavoriteHighlight", bgColor: UIColor("#f3f4f6"), text: "已收藏")
+                } else {
+                    cell.setup(imgNamed: "public_actionItemFavorite", bgColor: UIColor("#f3f4f6"), text: "收藏")
+                }
             } else if indexPath.row == 2 {
                 cell.setup(imgNamed: "public_actionItemClipboard", bgColor: UIColor("#f3f4f6"), text: "复制链接")
             } else if indexPath.row == 3 {
@@ -169,7 +207,30 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        
+        if collectionView == forwardCollectionView {
+//            if indexPath.row == 0 {
+//                cell.setup(imgNamed: "public_forwardItemWechatTimeline", bgColor: UIColor("#4ecf01"), text: "朋友圈")
+//            } else if indexPath.row == 1 {
+//                cell.setup(imgNamed: "public_forwardItemWechatSession", bgColor: UIColor("#00c80c"), text: "微信")
+//            } else if indexPath.row == 2 {
+//                cell.setup(imgNamed: "public_forwardItemQQZone", bgColor: UIColor("#ffbd01"), text: "QQ空间")
+//            } else if indexPath.row == 3 {
+//                cell.setup(imgNamed: "public_forwardItemQQ", bgColor: UIColor("#00bcff"), text: "QQ")
+//            } else if indexPath.row == 4 {
+//                cell.setup(imgNamed: "public_forwardItemWeibo", bgColor: UIColor("#ff8143"), text: "微博")
+//            }
+        } else if collectionView == othersCollectionView {
+//            if indexPath.row == 0 {
+//                cell.setup(imgNamed: "public_actionItemReport", bgColor: UIColor("#f3f4f6"), text: "举报")
+            if indexPath.row == 1 {
+                favoriteRequest()
+            }
+//            } else if indexPath.row == 2 {
+//                cell.setup(imgNamed: "public_actionItemClipboard", bgColor: UIColor("#f3f4f6"), text: "复制链接")
+//            } else if indexPath.row == 3 {
+//                cell.setup(imgNamed: "public_actionItemDownload", bgColor: UIColor("#f3f4f6"), text: "保存本地")
+//            }
+        }
     }
     
 }
