@@ -54,6 +54,8 @@ class DVideoUserViewController: BaseViewController {
 
         navigationItem.title = "小视频"
         
+        extendedLayoutIncludesOpaqueBars = true
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -70,7 +72,8 @@ class DVideoUserViewController: BaseViewController {
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo((navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
     
@@ -226,7 +229,7 @@ extension DVideoUserViewController: UICollectionViewDataSource, UICollectionView
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if let models = videoModels {
-            navigationController?.pushViewController(DVideoDetailViewController(models: models, index: indexPath.row), animated: true)
+            navigationController?.pushViewController(DVideoDetailViewController(mode: .paging, models: models, index: indexPath.row), animated: true)
         }
     }
     

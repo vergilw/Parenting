@@ -64,7 +64,7 @@ extension CommonAPI: TargetType {
         case let .uploadToken(size, contentType):
             return .requestParameters(parameters: ["blob": ["byte_size": size,
                                                    "content_type": contentType,
-                                                   "filename": "",
+                                                   "filename": Date().timeIntervalSince1970,
                                                    "checksum": ""]], encoding: JSONEncoding.default)
         }
     }

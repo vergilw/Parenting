@@ -12,6 +12,8 @@ class DVideoDetailViewModel {
     
     var videoModels: [VideoModel]?
     
+    var listMode: DVideoDetailViewController.VideoListMode?
+    
     lazy var hasMoreHeader: Bool = true
     
     lazy var hasMoreFooter: Bool = true

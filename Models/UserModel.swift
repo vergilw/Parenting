@@ -19,6 +19,7 @@ class UserModel: HandyJSON {
     var balance: String?
     var reward: String?
     var intro: String?
+    var badge: String?
     
     var videos: Int?
     var video_likes: Int?

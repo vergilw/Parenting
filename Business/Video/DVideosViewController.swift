@@ -214,8 +214,8 @@ extension DVideosViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        if let models = videoModels {
-            navigationController?.pushViewController(DVideoDetailViewController(models: models, index: indexPath.row), animated: true)
+        if let models = videoModels, let model = models[exist: indexPath.row] {
+            navigationController?.pushViewController(DVideoDetailViewController(mode: .fragment, models: [model], index: 0), animated: true)
         }
     }
     

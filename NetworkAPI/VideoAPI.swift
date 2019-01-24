@@ -13,7 +13,7 @@ let VideoProvider = MoyaProvider<VideoAPI>(manager: DefaultAlamofireManager.shar
 
 enum VideoAPI {
     case video_category
-    case videos(String, Int?)
+    case videos(String?, Int?)
     case video_like(String, Bool)
     case video_comments(Int, Int)
     case videos_user(Int, Int)
@@ -89,9 +89,12 @@ extension VideoAPI: TargetType {
         case .video_category:
             return .requestPlain
         case let .videos(scope, videoID):
-            var parameters = ["scope": scope, "per":"10"]
+            var parameters = ["per":"10"]
             if let videoID = videoID {
                 parameters["id"] = String(videoID)
+            }
+            if let scope = scope {
+                parameters["scope"] = scope
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .video_like(_, isLike):

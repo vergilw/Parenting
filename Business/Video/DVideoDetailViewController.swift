@@ -11,6 +11,11 @@ import AVFoundation
 import Presentr
 
 class DVideoDetailViewController: BaseViewController {
+    
+    enum VideoListMode {
+        case paging
+        case fragment
+    }
 
     lazy fileprivate var viewModel = DVideoDetailViewModel()
     
@@ -45,9 +50,10 @@ class DVideoDetailViewController: BaseViewController {
 //        return viewController
 //    }()
     
-    init(models: [VideoModel], index: Int) {
+    init(mode: VideoListMode, models: [VideoModel], index: Int) {
         super.init(nibName: nil, bundle: nil)
         
+        viewModel.listMode = mode
         viewModel.videoModels = models
         currentIndex = index
     }
@@ -63,6 +69,7 @@ class DVideoDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -72,18 +79,28 @@ class DVideoDetailViewController: BaseViewController {
         try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.moviePlayback)
         try? AVAudioSession.sharedInstance().setActive(true)
         
+        //TODO: change assign observer
         PlayListService.sharedInstance.invalidateObserver = true
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
-            self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+        
+        if viewModel.listMode == .fragment {
+            refetchData()
+            
             self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
+            
+        } else if viewModel.listMode == .paging {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+                self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
+            }
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     // MARK: - ============= Initialize View =============
@@ -126,28 +143,47 @@ class DVideoDetailViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     @objc fileprivate func refetchData() {
-        VideoProvider.request(.videos("next", 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        guard let model = viewModel.videoModels?[exist: currentIndex], let string = model.id, let videoID = Int(string) else { return }
+        
+        VideoProvider.request(.videos(nil, videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                if let data = JSON?["videos"] as? [[String: Any]] {
-                    
+                self.viewModel.videoModels = [model]
+                
+                //pre
+                if let data = JSON?["pre"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
-                        self.viewModel.videoModels = models
+                        self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
+                        
+                        let indexPaths: [IndexPath] = (0..<models.count).compactMap({ (i) -> IndexPath in
+                            return IndexPath(row: i, section: 0)
+                        })
+                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+                        self.tableView.scrollToRow(at: IndexPath(row: models.count, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
+                        self.currentIndex = models.count
                     }
-                    self.tableView.reloadData()
-                    
-                    //                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                    //                        if totalPages > self.pageNumber {
-                    //                            self.pageNumber += 1
-                    //                            self.collectionView.mj_footer.isHidden = false
-                    //                            self.collectionView.mj_footer.resetNoMoreData()
-                    //
-                    //                        } else {
-                    //                            self.collectionView.mj_footer.isHidden = true
-                    //                        }
-                    //                    }
                 }
                 
+                //current
+//                if let data = JSON?["video"] as? [String: Any] {
+//                    if let model = VideoModel.deserialize(from: data) {
+//                        self.viewModel.videoModels?.append(model)
+//                    }
+//                }
+                
+                //next
+                if let data = JSON?["next"] as? [[String: Any]] {
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        self.viewModel.videoModels?.append(contentsOf: models)
+                    }
+                }
+                
+                self.orderedSet.removeAllObjects()
+                if let ids = (self.viewModel.videoModels?.map { $0.id }) as? [String] {
+                    self.orderedSet.addObjects(from: ids)
+                }
+                
+                self.tableView.reloadData()
             }
         }))
     }
@@ -162,6 +198,10 @@ class DVideoDetailViewController: BaseViewController {
                     
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
+                        
+                        if let ids = (models.map { $0.id }) as? [String] {
+                            self.orderedSet.insert(ids, at: IndexSet(0...ids.count-1))
+                        }
                     }
                     self.tableView.reloadData()
                     
@@ -191,6 +231,10 @@ class DVideoDetailViewController: BaseViewController {
                     
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.viewModel.videoModels?.append(contentsOf: models)
+                        
+                        if let ids = (models.map { $0.id }) as? [String] {
+                            self.orderedSet.addObjects(from: ids)
+                        }
                     }
                     self.tableView.reloadData()
                     
@@ -219,6 +263,7 @@ class DVideoDetailViewController: BaseViewController {
 
     deinit {
         removeObserver(self, forKeyPath: "currentIndex", context: nil)
+        
         NotificationCenter.default.removeObserver(self)
         
         PlayListService.sharedInstance.invalidateObserver = false

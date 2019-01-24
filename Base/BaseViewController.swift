@@ -54,7 +54,7 @@ class BaseViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if let navigationController = navigationController {
-            navigationController.setNavigationBarHidden(false, animated: true)
+            navigationController.setNavigationBarHidden(false, animated: animated)
         }
     }
 

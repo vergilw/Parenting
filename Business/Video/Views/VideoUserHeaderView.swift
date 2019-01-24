@@ -25,6 +25,12 @@ class VideoUserHeaderView: UICollectionReusableView {
         return label
     }()
     
+    fileprivate lazy var badgeImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleToFill
+        return imgView
+    }()
+    
     lazy fileprivate var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.body
@@ -71,7 +77,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         profilesStackView.addArrangedSubview(nameLabel)
         profilesStackView.addArrangedSubview(descriptionLabel)
         
-        addSubviews([avatarBtn, profilesStackView])
+        addSubviews([avatarBtn, profilesStackView, badgeImgView])
         avatarBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(UIConstants.Margin.leading)
@@ -82,6 +88,11 @@ class VideoUserHeaderView: UICollectionReusableView {
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalTo(avatarBtn)
         }
+        badgeImgView.snp.makeConstraints { make in
+            make.leading.equalTo(nameLabel.snp.trailing).offset(5)
+            make.centerY.equalTo(nameLabel)
+        }
+        
         
         
         //statistics view
@@ -118,6 +129,19 @@ class VideoUserHeaderView: UICollectionReusableView {
         nameLabel.text = model.name
         
         descriptionLabel.text = model.intro
+        
+        if let URLString = model.badge {
+            badgeImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { (image, error, type, url) in
+                if let image = image {
+                    self.badgeImgView.snp.remakeConstraints { make in
+                        make.leading.equalTo(self.nameLabel.snp.trailing).offset(5)
+                        make.centerY.equalTo(self.nameLabel)
+                        make.size.equalTo(CGSize(width: 20/image.size.height*image.size.width, height: 20))
+                    }
+                    self.badgeImgView.image = image
+                }
+            }
+        }
         
         var string = "\(model.videos ?? 0) 视频"
         var attributedString = NSMutableAttributedString(string: string)
