@@ -232,11 +232,11 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 4 {
+        if section == 5 {
             return 0
         }
         return 1
@@ -255,14 +255,16 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
         } else if indexPath.section == 2 {
-            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
+            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的视频")
         } else if indexPath.section == 3 {
-            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
+            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
         } else if indexPath.section == 4 {
-            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
+            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
         } else if indexPath.section == 5 {
-            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
+            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
         } else if indexPath.section == 6 {
+            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
+        } else if indexPath.section == 7 {
             cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
         }
         return cell
@@ -292,19 +294,28 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
-            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
+            let viewController = DVideoUserViewController()
+            viewController.userID = AuthorizationService.sharedInstance.user?.id
+            navigationController?.pushViewController(viewController, animated: true)
         } else if indexPath.section == 3 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
-            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
+            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.section == 4 {
-            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
+            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
         } else if indexPath.section == 5 {
-            navigationController?.pushViewController(DSettingsViewController(), animated: true)
+            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
         } else if indexPath.section == 6 {
+            navigationController?.pushViewController(DSettingsViewController(), animated: true)
+        } else if indexPath.section == 7 {
             let viewController = WebViewController()
             viewController.navigationItem.title = "帮助中心"
             #if DEBUG

@@ -92,7 +92,7 @@ class DExchangeViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("注意事项：\n1. 目前仅支持金币兑换氧育币；\n2. 金币与氧育币的兑换关系：1氧育币约等于100金币；")
+        label.setParagraphText("注意事项：\n1. 目前仅支持金币兑换氧育币；\n2. 金币与氧育币的兑换关系：1氧育币约等于100金币；\n3.如果遇到其他问题，请和客服取得联系协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
         return label
     }()
     

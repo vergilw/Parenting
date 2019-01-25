@@ -22,6 +22,8 @@ enum VideoAPI {
     case video_favorite(Int)
     case video_favorite_delete(Int)
     case video_viewed(Int)
+    case video_delete(Int)
+    case video_favorites(Int)
 }
 
 extension VideoAPI: TargetType {
@@ -52,6 +54,10 @@ extension VideoAPI: TargetType {
             return "/api/Video/\(videoID)/stars"
         case let .video_viewed(videoID):
             return "/api/videos/\(videoID)/viewed"
+        case let .video_delete(videoID):
+            return "/api/videos/\(videoID)"
+        case .video_favorites:
+            return "/api/videos/starred"
         }
     }
     
@@ -77,6 +83,10 @@ extension VideoAPI: TargetType {
             return .delete
         case .video_viewed:
             return .patch
+        case .video_delete:
+            return .delete
+        case .video_favorites:
+            return .get
         }
     }
     
@@ -89,7 +99,8 @@ extension VideoAPI: TargetType {
         case .video_category:
             return .requestPlain
         case let .videos(scope, videoID):
-            var parameters = ["per":"10"]
+            //FIXME: DEBUG per = 10
+            var parameters = ["per":"2"]
             if let videoID = videoID {
                 parameters["id"] = String(videoID)
             }
@@ -113,6 +124,10 @@ extension VideoAPI: TargetType {
             return .requestPlain
         case .video_viewed:
             return .requestPlain
+        case .video_delete:
+            return .requestPlain
+        case let .video_favorites(page):
+            return .requestParameters(parameters: ["page":page, "per": "12"], encoding: URLEncoding.default)
         }
     }
     

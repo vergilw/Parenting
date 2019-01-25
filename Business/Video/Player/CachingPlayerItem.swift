@@ -55,7 +55,8 @@ open class CachingPlayerItem: AVPlayerItem {
                 // If we're playing from a url, we need to download the file.
                 // We start loading the file on first request only.
                 guard let initialUrl = owner?.url else {
-                    fatalError("internal inconsistency")
+//                    fatalError("internal inconsistency")
+                    return false
                 }
 
                 startDataRequest(with: initialUrl)

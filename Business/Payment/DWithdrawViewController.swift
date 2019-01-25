@@ -90,7 +90,7 @@ class DWithdrawViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("注意事项：\n1. 提现申请将在1-3个工作日内审批到账，如遇到高峰期，可能会有延迟到账，烦请耐心等待；\n2. 提现到账查询：微信->我->钱包->零钱->零钱明细，如果有名称为“企业付款：氧育亲子提现成功”的数据，既提现到账成功；")
+        label.setParagraphText("注意事项：\n1. 提现申请将在1-3个工作日内审批到账，如遇到高峰期，可能会有延迟到账，烦请耐心等待；\n2. 提现到账查询：微信->我->钱包->零钱->零钱明细，如果有名称为“企业付款：氧育亲子提现成功”的数据，既提现到账成功；\n3.如果遇到其他问题，请和客服取得联系协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
         return label
     }()
     

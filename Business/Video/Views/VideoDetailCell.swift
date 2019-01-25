@@ -476,9 +476,16 @@ class VideoDetailCell: UITableViewCell {
         self.model = model
         
         if let URLString = model.media?.url, let url = URL(string: URLString) {
-            player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+            if let currentURL = (player.currentItem?.asset as? AVURLAsset)?.url {
+                if currentURL.path != url.path.appending(".mp4") {
+                    player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+                    NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+                }
+            } else {
+                player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+                NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+            }
             
-            NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         }
         
         if let URLString = model.author?.avatar_url {
@@ -512,14 +519,14 @@ class VideoDetailCell: UITableViewCell {
         }
         
         //FIXME: codes name
-        if (model.rewardable_codes?.count ?? 0) > 0 {
+        if (model.rewardable_codes?.count ?? 0) > 0 && model.viewed == true {
             if model.rewardable_codes?.contains("like") ?? false {
                 likeMarkLabel.isHidden = false
             }
             if model.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
                 commentMarkLabel.isHidden = false
             }
-            if model.rewardable_codes?.contains("share") ?? false {
+            if model.rewardable_codes?.contains("share_video") ?? false {
                 shareMarkLabel.isHidden = false
             }
         } else {
@@ -564,7 +571,6 @@ class VideoDetailCell: UITableViewCell {
     }
     
     @objc func playToEndTimeAction() {
-        print(#function)
         player.seek(to: CMTime.zero)
         
         //FIXME: codes name

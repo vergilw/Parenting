@@ -23,6 +23,8 @@ class DVideoDetailViewController: BaseViewController {
     
     lazy fileprivate var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
     
+    lazy fileprivate var insertHeaderCount: Int = 0
+    
     lazy fileprivate var players = [AVPlayer]()
     
     lazy fileprivate var dismissBtn: UIButton = {
@@ -107,6 +109,8 @@ class DVideoDetailViewController: BaseViewController {
     fileprivate func initContentView() {
         tableView.contentInset = UIEdgeInsets(top: UIScreenHeight, left: 0, bottom: UIScreenHeight * 3, right: 0);
         tableView.rowHeight = UIScreenHeight
+        
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "Previous\(VideoDetailCell.className())")
         tableView.register(VideoDetailCell.self, forCellReuseIdentifier: VideoDetailCell.className())
         tableView.dataSource = self
         tableView.delegate = self
@@ -148,42 +152,42 @@ class DVideoDetailViewController: BaseViewController {
         VideoProvider.request(.videos(nil, videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                self.viewModel.videoModels = [model]
+                var index = 0
+                var videoModels = [VideoModel]()
                 
                 //pre
                 if let data = JSON?["pre"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
-                        self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
-                        
-                        let indexPaths: [IndexPath] = (0..<models.count).compactMap({ (i) -> IndexPath in
-                            return IndexPath(row: i, section: 0)
-                        })
-                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
-                        self.tableView.scrollToRow(at: IndexPath(row: models.count, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
-                        self.currentIndex = models.count
+                        videoModels.append(contentsOf: models.reversed())
+                        index = models.count
                     }
                 }
                 
                 //current
-//                if let data = JSON?["video"] as? [String: Any] {
-//                    if let model = VideoModel.deserialize(from: data) {
-//                        self.viewModel.videoModels?.append(model)
-//                    }
-//                }
+                if let data = JSON?["video"] as? [String: Any] {
+                    if let model = VideoModel.deserialize(from: data) {
+                        videoModels.append(model)
+                    }
+                }
                 
                 //next
                 if let data = JSON?["next"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
-                        self.viewModel.videoModels?.append(contentsOf: models)
+                        videoModels.append(contentsOf: models)
                     }
                 }
                 
                 self.orderedSet.removeAllObjects()
-                if let ids = (self.viewModel.videoModels?.map { $0.id }) as? [String] {
+                if let ids = (videoModels.map { $0.id }) as? [String], ids.count > 0 {
                     self.orderedSet.addObjects(from: ids)
                 }
                 
+                self.viewModel.videoModels = videoModels
                 self.tableView.reloadData()
+                
+                
+                self.tableView.setContentOffset(CGPoint(x: 0, y: CGFloat(index-1)*UIScreenHeight), animated: false)
+                self.currentIndex = index
             }
         }))
     }
@@ -191,33 +195,48 @@ class DVideoDetailViewController: BaseViewController {
     fileprivate func fetchHeaderData() {
         guard let videoID = orderedSet.firstObject as? String else { return }
         
+        removeObserver(self, forKeyPath: "currentIndex", context: nil)
+        
         VideoProvider.request(.videos("pre", Int(videoID)), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
                 if let data = JSON?["pre"] as? [[String: Any]] {
                     
-                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
-                        self.viewModel.videoModels?.insert(contentsOf: models, at: 0)
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel], models.count > 0 {
                         
-                        if let ids = (models.map { $0.id }) as? [String] {
+                        self.viewModel.videoModels?.insert(contentsOf: models.reversed(), at: 0)
+                        
+                        if let ids = (models.map { $0.id }) as? [String], ids.count > 0 {
                             self.orderedSet.insert(ids, at: IndexSet(0...ids.count-1))
                         }
+                        
+//                        self.tableView.beginUpdates()
+//                        let indexPaths: [IndexPath] = (0..<models.count).compactMap({ (i) -> IndexPath in
+//                            return IndexPath(row: i, section: 0)
+//                        })
+//                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+                        
+//                        self.isReuseCurrentIndexCell = true
+                        self.insertHeaderCount = models.count
+                        self.tableView.reloadData()
+                        self.tableView.layoutIfNeeded()
+                        self.insertHeaderCount = 0
+//                        self.isReuseCurrentIndexCell = false
+//                        self.tableView.endUpdates()
+                        
+                        self.currentIndex += models.count
+                        
+                        
+                        self.tableView.delegate = nil
+                        self.tableView.contentOffset = CGPoint(x: 0, y: CGFloat(self.currentIndex-1)*UIScreenHeight)
+                        self.tableView.delegate = self
                     }
-                    self.tableView.reloadData()
                     
-//                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-//                        if totalPages > self.pageNumber {
-//                            self.pageNumber += 1
-//                            self.collectionView.mj_footer.isHidden = false
-//                            self.collectionView.mj_footer.resetNoMoreData()
-//
-//                        } else {
-//                            self.collectionView.mj_footer.isHidden = true
-//                        }
-//                    }
                 }
                 
             }
+            
+            self.addObserver(self, forKeyPath: "currentIndex", options: [.new], context: nil)
         }))
     }
     
@@ -232,22 +251,16 @@ class DVideoDetailViewController: BaseViewController {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
                         self.viewModel.videoModels?.append(contentsOf: models)
                         
-                        if let ids = (models.map { $0.id }) as? [String] {
+                        if let ids = (models.map { $0.id }) as? [String], ids.count > 0 {
                             self.orderedSet.addObjects(from: ids)
                         }
+                        
+                        let startIndex = (self.viewModel.videoModels?.count ?? 0)-models.count
+                        let indexPaths: [IndexPath] = (startIndex..<startIndex+models.count).compactMap({ (i) -> IndexPath in
+                            return IndexPath(row: i, section: 0)
+                        })
+                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
                     }
-                    self.tableView.reloadData()
-                    
-                    //                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                    //                        if totalPages > self.pageNumber {
-                    //                            self.pageNumber += 1
-                    //                            self.collectionView.mj_footer.isHidden = false
-                    //                            self.collectionView.mj_footer.resetNoMoreData()
-                    //
-                    //                        } else {
-                    //                            self.collectionView.mj_footer.isHidden = true
-                    //                        }
-                    //                    }
                 }
                 
             }
@@ -282,7 +295,18 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: VideoDetailCell.className(), for: indexPath) as! VideoDetailCell
+        var cellIndentifier = VideoDetailCell.className()
+        if insertHeaderCount == 0 && indexPath.row == self.currentIndex-1 {
+            cellIndentifier = "Previous\(VideoDetailCell.className())"
+            print("isReuseCurrentIndexCell", indexPath.row)
+        } else if insertHeaderCount != 0 && indexPath.row == self.currentIndex+insertHeaderCount {
+            cellIndentifier = "Previous\(VideoDetailCell.className())"
+            print("isReuseCurrentIndexCell", indexPath.row)
+        }
+        
+        print(#function, indexPath.row)
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIndentifier, for: indexPath) as! VideoDetailCell
         cell.delegate = self
         addPlayer(cell.player)
         if let model = viewModel.videoModels?[exist: indexPath.row] {
@@ -290,6 +314,7 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
         }
         return cell
     }
+    
 }
 
 
@@ -301,26 +326,35 @@ extension DVideoDetailViewController: UIScrollViewDelegate {
             let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
             scrollView.panGestureRecognizer.isEnabled = false
 
+            var isTop: Bool? = nil
             if translatedPoint.y < -50 && self.currentIndex < (models.count - 1) {
                 self.currentIndex += 1
                 
-                //向下翻页prefetching
-                if self.currentIndex >= models.count-4 && self.viewModel.hasMoreFooter {
-                    self.fetchFooterData()
-                }
+                isTop = false
+                
             }
             if translatedPoint.y > 50 && self.currentIndex > 0 {
                 self.currentIndex -= 1
                 
-                //向上翻页prefetching
-                if self.currentIndex <= 3 && self.viewModel.hasMoreHeader {
-                    self.fetchHeaderData()
-                }
+                isTop = true
+                
             }
             UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseOut, animations: {
-                self.tableView.scrollToRow(at: IndexPath.init(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+                self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
             }, completion: { finished in
                 scrollView.panGestureRecognizer.isEnabled = true
+                
+                if isTop == true {
+                    //向上翻页prefetching
+                    if self.currentIndex <= 3 && self.viewModel.hasMoreHeader {
+                        self.fetchHeaderData()
+                    }
+                } else if isTop == false {
+                    //向下翻页prefetching
+                    if self.currentIndex >= models.count-4 && self.viewModel.hasMoreFooter {
+                        self.fetchFooterData()
+                    }
+                }
             })
         }
     }
@@ -331,9 +365,13 @@ extension DVideoDetailViewController {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "currentIndex") {
+            print(self.currentIndex)
             weak var cell = tableView.cellForRow(at: IndexPath.init(row: currentIndex, section: 0)) as? VideoDetailCell
             pauseAllPlayers()
-            cell?.player.play()
+            if cell?.player.currentItem != nil {
+                cell?.player.play()
+            }
+            
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }

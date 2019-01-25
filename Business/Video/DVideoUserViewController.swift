@@ -38,7 +38,6 @@ class DVideoUserViewController: BaseViewController {
         view.dataSource = self
         view.delegate = self
         view.backgroundColor = .white
-        
         view.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self, weak view] in
             self?.fetchMoreData()
         })
@@ -135,7 +134,7 @@ class DVideoUserViewController: BaseViewController {
                     }
                     self.collectionView.reloadData()
                     
-                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
                             self.collectionView.mj_footer.isHidden = false
@@ -168,7 +167,7 @@ class DVideoUserViewController: BaseViewController {
                     }
                     self.collectionView.reloadData()
                     
-                    if let pagination = JSON?["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
                             self.collectionView.mj_footer.endRefreshing()
@@ -176,6 +175,27 @@ class DVideoUserViewController: BaseViewController {
                             self.collectionView.mj_footer.endRefreshingWithNoMoreData()
                         }
                     }
+                }
+                
+            }
+        }))
+    }
+    
+    fileprivate func deleteVideoRequest(videoID: Int, button: ActionButton) {
+        button.startAnimating()
+        
+        VideoProvider.request(.video_delete(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        
+            button.stopAnimating()
+            
+            if code >= 0 {
+                if let index = self.videoModels?.firstIndex(where: { (model) -> Bool in
+                    return model.id == String(videoID)
+                }) {
+                    self.videoModels?.remove(at: index)
+                    self.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+                } else {
+                    self.fetchVideoData()
                 }
                 
             }
@@ -220,8 +240,12 @@ extension DVideoUserViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoUserCell.className(), for: indexPath) as! VideoUserCell
         if let model = videoModels?[exist: indexPath.row] {
-            cell.setup(model: model)
+            let isHidden: Bool = model.author?.id != AuthorizationService.sharedInstance.user?.id
+            cell.setup(model: model, hideDelete: isHidden)
         }
+        cell.deleteHandler = { [weak self] (videoID, button) in
+            self?.deleteVideoRequest(videoID: videoID, button: button)
+        } 
         return cell
     }
     
