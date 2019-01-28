@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1309E14D21FEE9EA0005E770 /* VideoPlayedCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */; };
 		130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518721D4B89B00C42610 /* CoinLogModel.swift */; };
 		130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518A21D4C48800C42610 /* RewardExchangeModel.swift */; };
 		130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */; };
@@ -201,6 +202,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayedCacheService.swift; sourceTree = "<group>"; };
 		130A518721D4B89B00C42610 /* CoinLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinLogModel.swift; sourceTree = "<group>"; };
 		130A518A21D4C48800C42610 /* RewardExchangeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardExchangeModel.swift; sourceTree = "<group>"; };
 		130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawViewController.swift; sourceTree = "<group>"; };
@@ -580,7 +582,6 @@
 		1320C34B217EB66E00902A5C = {
 			isa = PBXGroup;
 			children = (
-				130C86B421F1721B005BBFF7 /* plsfilters.json */,
 				1320C36A217EB76600902A5C /* Profiles */,
 				1320C375217EB76600902A5C /* Base */,
 				1320C377217EB76600902A5C /* Business */,
@@ -656,6 +657,7 @@
 		1320C36E217EB76600902A5C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				130C86B421F1721B005BBFF7 /* plsfilters.json */,
 				1316F4E621D0C85B00F5A756 /* Gif */,
 				1320C36F217EB76600902A5C /* Public.xcassets */,
 				1320C370217EB76600902A5C /* LaunchScreen.storyboard */,
@@ -682,6 +684,7 @@
 				13B7F6EC21B65D18001BF15D /* PaymentService.swift */,
 				13B7F6F121B67745001BF15D /* UploadService.swift */,
 				1314250E21D316EE00B35346 /* PlaybackRecordService.swift */,
+				1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1252,6 +1255,7 @@
 				130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */,
+				1309E14D21FEE9EA0005E770 /* VideoPlayedCacheService.swift in Sources */,
 				13B7F6F221B67745001BF15D /* UploadService.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,

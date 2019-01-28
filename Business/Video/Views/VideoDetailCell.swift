@@ -432,7 +432,6 @@ class VideoDetailCell: UITableViewCell {
         player.addObserver(self, forKeyPath: "timeControlStatus", options: NSKeyValueObservingOptions.new, context: nil)
         
         
-        
         //add time observer
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: CMTimeScale(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
             
@@ -444,6 +443,9 @@ class VideoDetailCell: UITableViewCell {
             self?.rewardCountdownLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
             
         })
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(rewardStatusDidChange(sender:)), name: Notification.Video.rewardStatusDidChange, object: nil)
     }
     
     fileprivate func initConstraints() {
@@ -512,28 +514,64 @@ class VideoDetailCell: UITableViewCell {
         
         descriptionLabel.text = model.title
         
-        if (model.rewardable_codes?.count ?? 0) > 0 && model.viewed == false {
-            rewardCountdownView.isHidden = false
-        } else {
-            rewardCountdownView.isHidden = true
+        
+        //是否已读优先从本地缓存读取
+        if let string = model.id, let videoID = Int(string) {
+            if VideoPlayedCacheService.shared.finishedPlayingIDs?.contains(videoID) ?? false {
+                model.viewed = true
+            }
         }
         
-        //FIXME: codes name
-        if (model.rewardable_codes?.count ?? 0) > 0 && model.viewed == true {
-            if model.rewardable_codes?.contains("like") ?? false {
-                likeMarkLabel.isHidden = false
+        //赏金显示逻辑
+        if AuthorizationService.sharedInstance.isSignIn() {
+            if (model.rewardable_codes?.count ?? 0) > 0 {
+                
+                //FIXME: codes name
+                if model.viewed == true {
+                    rewardCountdownView.isHidden = true
+                    
+                    if model.rewardable_codes?.contains("like") ?? false {
+                        likeMarkLabel.isHidden = false
+                    }
+                    if model.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+                        commentMarkLabel.isHidden = false
+                    }
+                    if model.rewardable_codes?.contains("share_video") ?? false {
+                        shareMarkLabel.isHidden = false
+                    }
+                } else {
+                    rewardCountdownView.isHidden = false
+                    
+                    likeMarkLabel.isHidden = true
+                    commentMarkLabel.isHidden = true
+                    shareMarkLabel.isHidden = true
+                }
+            } else {
+                rewardCountdownView.isHidden = true
+                
+                likeMarkLabel.isHidden = true
+                commentMarkLabel.isHidden = true
+                shareMarkLabel.isHidden = true
             }
-            if model.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
-                commentMarkLabel.isHidden = false
-            }
-            if model.rewardable_codes?.contains("share_video") ?? false {
-                shareMarkLabel.isHidden = false
-            }
+            
         } else {
-            likeMarkLabel.isHidden = true
-            commentMarkLabel.isHidden = true
-            shareMarkLabel.isHidden = true
+            if model.rewardable == true {
+                if model.viewed == true {
+                    likeMarkLabel.isHidden = false
+                    commentMarkLabel.isHidden = false
+                    shareMarkLabel.isHidden = false
+                } else {
+                    likeMarkLabel.isHidden = true
+                    commentMarkLabel.isHidden = true
+                    shareMarkLabel.isHidden = true
+                    
+                    rewardCountdownView.isHidden = false
+                }
+            }
         }
+        
+        
+        
     }
     
     @objc func playerStatusBtnAction() {
@@ -573,22 +611,36 @@ class VideoDetailCell: UITableViewCell {
     @objc func playToEndTimeAction() {
         player.seek(to: CMTime.zero)
         
-        //FIXME: codes name
-        if model?.rewardable_codes?.contains("like") ?? false {
-            likeMarkLabel.isHidden = false
+        //记录播放过的视频，下次不显示赏金倒计时
+        if !AuthorizationService.sharedInstance.isSignIn(), let string = model?.id, let videoID = Int(string) {
+            VideoPlayedCacheService.shared.cacheFinishedID(videoID)
         }
-        if model?.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
-            commentMarkLabel.isHidden = false
-        }
-        if model?.rewardable_codes?.contains("share") ?? false {
-            shareMarkLabel.isHidden = false
-        }
-        if model?.viewed == false {
-            model?.viewed = true
-            rewardCountdownView.isHidden = true
+        
+        if AuthorizationService.sharedInstance.isSignIn() {
+            //FIXME: codes name
+            if model?.rewardable_codes?.contains("like") ?? false {
+                likeMarkLabel.isHidden = false
+            }
+            if model?.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+                commentMarkLabel.isHidden = false
+            }
+            if model?.rewardable_codes?.contains("share") ?? false {
+                shareMarkLabel.isHidden = false
+            }
+            if model?.viewed == false {
+                model?.viewed = true
+                rewardCountdownView.isHidden = true
+                
+                asReadRequest()
+            }
             
-            asReadRequest()
+        } else {
+            likeMarkLabel.isHidden = false
+            commentMarkLabel.isHidden = false
+            shareMarkLabel.isHidden = false
+            rewardCountdownView.isHidden = true
         }
+        
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -610,6 +662,29 @@ class VideoDetailCell: UITableViewCell {
             rewardCountdownView.isHidden = true
         }
         
+    }
+    
+    // MARK: - ============= Reward Observer =============
+    @objc func rewardStatusDidChange(sender: Notification) {
+        if let info = sender.userInfo, let videoID = info["id"] as? String, videoID == model?.id, let rewardable_codes = info["rewardable_codes"] as? [String] {
+            
+            //FIXME: DEBUG
+            if rewardable_codes.contains("like") {
+                likeMarkLabel.isHidden = false
+            } else {
+                likeMarkLabel.isHidden = true
+            }
+            if rewardable_codes.contains("api/v1/app/comments#create") {
+                commentMarkLabel.isHidden = false
+            } else {
+                commentMarkLabel.isHidden = true
+            }
+            if rewardable_codes.contains("share_video") {
+                shareMarkLabel.isHidden = false
+            } else {
+                shareMarkLabel.isHidden = true
+            }
+        }
     }
     
     // MARK: - ============= Action =============
@@ -680,6 +755,20 @@ extension VideoDetailCell {
                     self.likeImgView.tintColor = UIConstants.Color.primaryRed
                 } else {
                     self.likeImgView.tintColor = .white
+                }
+                
+                if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success" {
+                    let view = RewardView()
+                    UIApplication.shared.keyWindow?.addSubview(view)
+                    view.snp.makeConstraints { make in
+                        make.edges.equalToSuperview()
+                    }
+                    
+                    if let rewardCodes = reward["rewardable_codes"] as? [String] {
+                        NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: ["id": videoID, "rewardable_codes": rewardCodes])
+                    }
+                    
+                    return
                 }
             }
         }))

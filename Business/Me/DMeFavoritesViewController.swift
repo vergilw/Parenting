@@ -100,11 +100,11 @@ class DMeFavoritesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.view)
+        HUDService.sharedInstance.showFetchingView(target: self.tableView)
         
         CourseProvider.request(.course_favorites(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            HUDService.sharedInstance.hideFetchingView(target: self.tableView)
             
             if code >= 0 {
                 if let data = JSON?["data"] as? [[String: Any]] {
@@ -126,13 +126,13 @@ class DMeFavoritesViewController: BaseViewController {
                 }
                 
                 if self.favoritesModels?.count ?? 0 == 0 {
-                    HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                    HUDService.sharedInstance.showNoDataView(target: self.tableView) { [weak self] in
                         self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
                     }
                 }
                 
             } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
                     self?.fetchData()
                 }
             }

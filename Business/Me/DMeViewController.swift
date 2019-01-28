@@ -209,7 +209,8 @@ class DMeViewController: BaseViewController {
         initHeaderView()
         
         //update balance display
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: UITableView.RowAnimation.none)
+        tableView.reloadData()
+        
     }
     
     // MARK: - ============= Action =============
@@ -236,7 +237,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 5 {
+        if section == 1 && !AuthorizationService.sharedInstance.isSignIn() {
+            return 0
+        } else if section == 2 {
+            return 0
+        } else if section == 5 {
             return 0
         }
         return 1

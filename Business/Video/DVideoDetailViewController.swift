@@ -23,6 +23,8 @@ class DVideoDetailViewController: BaseViewController {
     
     lazy fileprivate var reusingIdentifiersMapping = [Int: String]()
     
+    lazy fileprivate var isRefetchingData = false
+    
     lazy fileprivate var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
     
     lazy fileprivate var players = [AVPlayer]()
@@ -234,12 +236,15 @@ class DVideoDetailViewController: BaseViewController {
                     return a.key < b.key
                 }))
                 
+                self.isRefetchingData = true
                 self.viewModel.videoModels = videoModels
                 self.tableView.reloadData()
                 
                 
                 self.tableView.setContentOffset(CGPoint(x: 0, y: CGFloat(index-1)*UIScreenHeight), animated: false)
                 self.currentIndex = index
+                
+                self.isRefetchingData = false
             }
         }))
     }
@@ -259,7 +264,7 @@ class DVideoDetailViewController: BaseViewController {
                         self.viewModel.videoModels?.insert(contentsOf: models.reversed(), at: 0)
                         
                         if let ids = (models.map { $0.id }) as? [String], ids.count > 0 {
-                            self.orderedSet.insert(ids, at: IndexSet(0...ids.count-1))
+                            self.orderedSet.insert(ids.reversed(), at: IndexSet(0...ids.count-1))
                         }
                         
 //                        print(self.reusingIdentifiersMapping.sorted(by: { (a, b) -> Bool in
@@ -372,7 +377,10 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
             return UITableViewCell()
         }
         
-        if tableView.indexPathsForVisibleRows?.count == 4 {
+//        if tableView.indexPathsForVisibleRows?.count == 4 {
+//            startRow -= 1
+//        }
+        if isRefetchingData == true {
             startRow -= 1
         }
         

@@ -146,6 +146,60 @@ class DVideoForwardViewController: BaseViewController {
         }
     }
     
+    fileprivate func reportBtnAction() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+        alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "色情低俗", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "政治敏感", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "违法犯罪", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "垃圾广告、售卖假货", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "造谣传谣、涉嫌欺诈", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "侮辱谩骂", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "盗用TA人作品", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "未成年人不当行为", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "内容不适合未成年观看", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "引人不适", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "疑似自我伤害", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        alertController.addAction(UIAlertAction(title: "诱导点赞、分享", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest()
+        }))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    fileprivate func reportRequest() {
+        guard let string = videoModel.id, let videoID = Int(string) else { return }
+        
+        VideoProvider.request(.video_report(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code > 0 {
+                HUDService.sharedInstance.show(string: "举报成功")
+            }
+            
+        }))
+    }
+    
     // MARK: - ============= Reload =============
     @objc func reload() {
         
@@ -220,9 +274,9 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
 //                cell.setup(imgNamed: "public_forwardItemWeibo", bgColor: UIColor("#ff8143"), text: "微博")
 //            }
         } else if collectionView == othersCollectionView {
-//            if indexPath.row == 0 {
-//                cell.setup(imgNamed: "public_actionItemReport", bgColor: UIColor("#f3f4f6"), text: "举报")
-            if indexPath.row == 1 {
+            if indexPath.row == 0 {
+                reportBtnAction()
+            } else if indexPath.row == 1 {
                 favoriteRequest()
             }
 //            } else if indexPath.row == 2 {
