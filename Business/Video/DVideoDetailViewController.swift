@@ -21,9 +21,9 @@ class DVideoDetailViewController: BaseViewController {
     
     @objc dynamic var currentIndex: Int = 0
     
-    lazy fileprivate var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
+    lazy fileprivate var reusingIdentifiersMapping = [Int: String]()
     
-    lazy fileprivate var insertHeaderCount: Int = 0
+    lazy fileprivate var orderedSet: NSMutableOrderedSet = NSMutableOrderedSet()
     
     lazy fileprivate var players = [AVPlayer]()
     
@@ -58,6 +58,11 @@ class DVideoDetailViewController: BaseViewController {
         viewModel.listMode = mode
         viewModel.videoModels = models
         currentIndex = index
+        
+        //TODO: complete all mode
+        if mode == .fragment {
+            reusingIdentifiersMapping = [0: "A"]
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -86,6 +91,7 @@ class DVideoDetailViewController: BaseViewController {
         
         
         if viewModel.listMode == .fragment {
+            
             refetchData()
             
             self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
@@ -110,7 +116,12 @@ class DVideoDetailViewController: BaseViewController {
         tableView.contentInset = UIEdgeInsets(top: UIScreenHeight, left: 0, bottom: UIScreenHeight * 3, right: 0);
         tableView.rowHeight = UIScreenHeight
         
-        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "Previous\(VideoDetailCell.className())")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "A")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "B")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "C")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "D")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "E")
+        tableView.register(VideoDetailCell.self, forCellReuseIdentifier: "F")
         tableView.register(VideoDetailCell.self, forCellReuseIdentifier: VideoDetailCell.className())
         tableView.dataSource = self
         tableView.delegate = self
@@ -154,10 +165,14 @@ class DVideoDetailViewController: BaseViewController {
             if code >= 0 {
                 var index = 0
                 var videoModels = [VideoModel]()
+                var previousModels = [VideoModel]()
+                var currentModel = VideoModel()
+                var nextModels = [VideoModel]()
                 
                 //pre
                 if let data = JSON?["pre"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        previousModels = models.reversed()
                         videoModels.append(contentsOf: models.reversed())
                         index = models.count
                     }
@@ -166,6 +181,7 @@ class DVideoDetailViewController: BaseViewController {
                 //current
                 if let data = JSON?["video"] as? [String: Any] {
                     if let model = VideoModel.deserialize(from: data) {
+                        currentModel = model
                         videoModels.append(model)
                     }
                 }
@@ -173,6 +189,7 @@ class DVideoDetailViewController: BaseViewController {
                 //next
                 if let data = JSON?["next"] as? [[String: Any]] {
                     if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        nextModels = models
                         videoModels.append(contentsOf: models)
                     }
                 }
@@ -181,6 +198,41 @@ class DVideoDetailViewController: BaseViewController {
                 if let ids = (videoModels.map { $0.id }) as? [String], ids.count > 0 {
                     self.orderedSet.addObjects(from: ids)
                 }
+                
+                //AVPlayer重用
+                var currentReusingIdentifier: String?
+                if let identifier = self.reusingIdentifiersMapping[1] {
+                    currentReusingIdentifier = identifier
+                } else if let identifier = self.reusingIdentifiersMapping[0] {
+                    currentReusingIdentifier = identifier
+                }
+                if let identifier = currentReusingIdentifier {
+                    var reusableIndentifiers = ["A", "B", "C", "D", "E", "F"].filter({ (string) -> Bool in
+                        return string != identifier
+                    })
+                    
+                    if previousModels.count > 0 {
+                        self.reusingIdentifiersMapping[0] = reusableIndentifiers[0]
+                        self.reusingIdentifiersMapping[1] = reusableIndentifiers[1]
+                        self.reusingIdentifiersMapping[2] = identifier
+                        self.reusingIdentifiersMapping[3] = reusableIndentifiers[2]
+                        self.reusingIdentifiersMapping[4] = reusableIndentifiers[3]
+                        self.reusingIdentifiersMapping[5] = reusableIndentifiers[4]
+                        
+                        
+                    } else {
+                        self.reusingIdentifiersMapping[0] = identifier
+                        self.reusingIdentifiersMapping[1] = reusableIndentifiers[0]
+                        self.reusingIdentifiersMapping[2] = reusableIndentifiers[1]
+                        self.reusingIdentifiersMapping[3] = reusableIndentifiers[2]
+                        self.reusingIdentifiersMapping[4] = reusableIndentifiers[3]
+                        self.reusingIdentifiersMapping[5] = reusableIndentifiers[4]
+                    }
+                }
+                
+                print(self.reusingIdentifiersMapping.sorted(by: { (a, b) -> Bool in
+                    return a.key < b.key
+                }))
                 
                 self.viewModel.videoModels = videoModels
                 self.tableView.reloadData()
@@ -210,19 +262,12 @@ class DVideoDetailViewController: BaseViewController {
                             self.orderedSet.insert(ids, at: IndexSet(0...ids.count-1))
                         }
                         
-//                        self.tableView.beginUpdates()
-//                        let indexPaths: [IndexPath] = (0..<models.count).compactMap({ (i) -> IndexPath in
-//                            return IndexPath(row: i, section: 0)
-//                        })
-//                        self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+//                        print(self.reusingIdentifiersMapping.sorted(by: { (a, b) -> Bool in
+//                            return a.key < b.key
+//                        }))
                         
-//                        self.isReuseCurrentIndexCell = true
-                        self.insertHeaderCount = models.count
+                        
                         self.tableView.reloadData()
-                        self.tableView.layoutIfNeeded()
-                        self.insertHeaderCount = 0
-//                        self.isReuseCurrentIndexCell = false
-//                        self.tableView.endUpdates()
                         
                         self.currentIndex += models.count
                         
@@ -230,6 +275,21 @@ class DVideoDetailViewController: BaseViewController {
                         self.tableView.delegate = nil
                         self.tableView.contentOffset = CGPoint(x: 0, y: CGFloat(self.currentIndex-1)*UIScreenHeight)
                         self.tableView.delegate = self
+                        
+                        
+                        print(self.reusingIdentifiersMapping.sorted(by: { (a, b) -> Bool in
+                            return a.key < b.key
+                        }))
+                        
+                        //AVPlayer重用
+                        self.tableView.layoutIfNeeded()
+                        let swapIdentifiers = self.reusingIdentifiersMapping[5]
+                        self.reusingIdentifiersMapping[5] = self.reusingIdentifiersMapping[4]
+                        self.reusingIdentifiersMapping[4] = self.reusingIdentifiersMapping[3]
+                        self.reusingIdentifiersMapping[3] = self.reusingIdentifiersMapping[2]
+                        self.reusingIdentifiersMapping[2] = self.reusingIdentifiersMapping[1]
+                        self.reusingIdentifiersMapping[1] = self.reusingIdentifiersMapping[0]
+                        self.reusingIdentifiersMapping[0] = swapIdentifiers
                     }
                     
                 }
@@ -260,6 +320,18 @@ class DVideoDetailViewController: BaseViewController {
                             return IndexPath(row: i, section: 0)
                         })
                         self.tableView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+                        
+                        
+                        //AVPlayer重用
+                        self.tableView.layoutIfNeeded()
+                        let swapIdentifiers = self.reusingIdentifiersMapping[0]
+                        self.reusingIdentifiersMapping[0] = self.reusingIdentifiersMapping[1]
+                        self.reusingIdentifiersMapping[1] = self.reusingIdentifiersMapping[2]
+                        self.reusingIdentifiersMapping[2] = self.reusingIdentifiersMapping[3]
+                        self.reusingIdentifiersMapping[3] = self.reusingIdentifiersMapping[4]
+                        self.reusingIdentifiersMapping[4] = self.reusingIdentifiersMapping[5]
+                        self.reusingIdentifiersMapping[5] = swapIdentifiers
+
                     }
                 }
                 
@@ -296,15 +368,21 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cellIndentifier = VideoDetailCell.className()
-        if insertHeaderCount == 0 && indexPath.row == self.currentIndex-1 {
-            cellIndentifier = "Previous\(VideoDetailCell.className())"
-            print("isReuseCurrentIndexCell", indexPath.row)
-        } else if insertHeaderCount != 0 && indexPath.row == self.currentIndex+insertHeaderCount {
-            cellIndentifier = "Previous\(VideoDetailCell.className())"
-            print("isReuseCurrentIndexCell", indexPath.row)
+        guard var startRow = (tableView.indexPathsForVisibleRows?.map { $0.row })?.first else {
+            return UITableViewCell()
         }
         
-        print(#function, indexPath.row)
+        if tableView.indexPathsForVisibleRows?.count == 4 {
+            startRow -= 1
+        }
+        
+        if reusingIdentifiersMapping.keys.contains(indexPath.row-startRow) {
+            cellIndentifier = (reusingIdentifiersMapping[indexPath.row-startRow])!
+        } else {
+            cellIndentifier =  VideoDetailCell.className()
+        }
+        
+        print("visibleRows \(tableView.indexPathsForVisibleRows) \n reuse \(cellIndentifier) at \(indexPath.row)")
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIndentifier, for: indexPath) as! VideoDetailCell
         cell.delegate = self
