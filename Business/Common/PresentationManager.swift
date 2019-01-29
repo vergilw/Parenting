@@ -12,6 +12,8 @@ class PresentationManager: UIPresentationController {
 
     lazy var layoutHeight: CGFloat = 440
     
+    var dismissHandler: (()->Void)?
+    
     lazy fileprivate var dismissBtn: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(white: 0, alpha: 0.3)
@@ -57,6 +59,12 @@ class PresentationManager: UIPresentationController {
         }
         
         containerView?.removeGestureRecognizer(panGesture)
+    }
+    
+    override func dismissalTransitionDidEnd(_ completed: Bool) {
+        if let closure = dismissHandler, completed == true {
+            closure()
+        }
     }
     
     @objc func dismissBtnAction() {

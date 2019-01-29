@@ -28,6 +28,12 @@ class VideoStickerView: UIView {
         return imgView
     }()
     
+    fileprivate lazy var contentView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
     fileprivate lazy var removeBtn: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "video_stickerRemove"), for: .normal)
@@ -47,9 +53,9 @@ class VideoStickerView: UIView {
         
         imgView.image = img
         
-        imgView.layer.borderColor = UIColor.white.cgColor
-        imgView.layer.borderWidth = 1
-        imgView.layer.cornerRadius = 4
+        contentView.layer.borderColor = UIColor.white.cgColor
+        contentView.layer.borderWidth = 1
+        contentView.layer.cornerRadius = 4
 //        let sublayer = CAShapeLayer()
 //        let circlePath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: 11, y: 11), size: CGSize(width: img.size.width, height: img.size.height)), cornerRadius: 4)
 //        sublayer.path = circlePath.cgPath
@@ -58,10 +64,13 @@ class VideoStickerView: UIView {
 //        sublayer.strokeColor = UIColor.white.cgColor
 //        layer.addSublayer(sublayer)
         
-        addSubviews([imgView, removeBtn, transformBtn])
+        addSubviews([contentView, imgView, removeBtn, transformBtn])
         
-        imgView.snp.makeConstraints { make in
+        contentView.snp.makeConstraints { make in
             make.edges.equalTo(UIEdgeInsets(top: 11, left: 11, bottom: 11, right: 11))
+        }
+        imgView.snp.makeConstraints { make in
+            make.edges.equalTo(UIEdgeInsets(top: 11+10, left: 11+10, bottom: 11+10, right: 11+10))
         }
         removeBtn.snp.makeConstraints { make in
             make.leading.top.equalToSuperview()

@@ -150,7 +150,7 @@ class DVideoClipViewController: BaseViewController {
         let contentWidth: CGFloat = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
         
         leftMaskImgView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading+contentWidth/assetDurationSeconds*clipStartSeconds)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(74)
             make.height.equalTo(55)
             make.trailing.equalTo(clipImgView.snp.leading).offset(12.5)

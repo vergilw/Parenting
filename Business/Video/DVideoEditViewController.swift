@@ -41,6 +41,8 @@ class DVideoEditViewController: BaseViewController {
         return imgView
     }()
     
+    fileprivate lazy var videoCoverTime: Double = 0
+    
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -192,9 +194,9 @@ class DVideoEditViewController: BaseViewController {
         }
         
         stackView.addArrangedSubview(composerVideoBtn)
-        stackView.addArrangedSubview(composerMusicBtn)
+//        stackView.addArrangedSubview(composerMusicBtn)
         stackView.addArrangedSubview(volumeBtn)
-        stackView.addArrangedSubview(selectSoundBtn)
+//        stackView.addArrangedSubview(selectSoundBtn)
         
         view.addSubview(stackView)
         stackView.snp.makeConstraints { make in
@@ -235,7 +237,7 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("选封面", for: .normal)
             button.setImage(UIImage(named: "video_editCover"), for: .normal)
             button.padding = 4.5
-            //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
+            button.addTarget(self, action: #selector(videoCoverBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -353,12 +355,35 @@ class DVideoEditViewController: BaseViewController {
     }
 
     @objc func videoStickersBtnAction() {
-        let stickerView = VideoStickerView(img: UIImage(named: "payment_coinLargeIcon")!)
-        view.addSubview(stickerView)
-        stickerView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        let viewController = DVideoStickersViewController()
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        viewController.stickerHandler = { [weak self] (image) in
+            let stickerView = VideoStickerView(img: image)
+            self?.view.addSubview(stickerView)
+            stickerView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+            }
+            self?.stickerViews.append(stickerView)
         }
-        stickerViews.append(stickerView)
+        present(viewController, animated: true, completion: nil)
+        
+    }
+    
+    @objc func videoCoverBtnAction() {
+        let viewController = DVideoCoverViewController(asset: asset)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        viewController.completionHandler = { [weak self] (double) in
+            guard let weakself = self else { return }
+                
+            weakself.editor.stopEditing()
+            weakself.editor.seek(to: CMTime(seconds: double, preferredTimescale: 600), completionHandler: { (bool) in
+            })
+            
+            weakself.videoCoverTime = double
+        }
+        present(viewController, animated: true, completion: nil)
     }
     
     @objc func submitBtnAction(sender: ActionButton) {
@@ -426,7 +451,7 @@ class DVideoEditViewController: BaseViewController {
         imgGenerator.requestedTimeToleranceAfter = .zero
         imgGenerator.appliesPreferredTrackTransform = true
         imgGenerator.maximumSize = asset.pls_videoSize
-        guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: 0, preferredTimescale: 600), actualTime: nil) else {
+        guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: videoCoverTime, preferredTimescale: 600), actualTime: nil) else {
             sender.stopAnimating()
             return
         }
@@ -474,6 +499,22 @@ extension DVideoEditViewController: UIViewControllerTransitioningDelegate {
                 presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
             } else {
                 presentation.layoutHeight = 170
+            }
+        } else if presented.isKind(of: DVideoStickersViewController.self) {
+            if #available(iOS 11, *) {
+                presentation.layoutHeight = 218 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 218
+            }
+            
+        } else if presented.isKind(of: DVideoCoverViewController.self) {
+            if #available(iOS 11, *) {
+                presentation.layoutHeight = 170 + (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 170
+            }
+            presentation.dismissHandler = { [weak self] in
+                self?.editor.startEditing()
             }
         }
         return presentation

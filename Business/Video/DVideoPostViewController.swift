@@ -175,7 +175,10 @@ class DVideoPostViewController: BaseViewController {
             
             self.videoSignedID = signedID
             
-            guard let config = PLSUploaderConfiguration(token: token, videoKey: key, https: true, recorder: nil) else { return }
+            guard let config = PLSUploaderConfiguration(token: token, videoKey: key, https: true, recorder: nil) else {
+                self.dispatchGroup.leave()
+                return
+            }
             self.videoUploader = PLShortVideoUploader(configuration: config)
             self.videoUploader?.delegate = self
             self.videoUploader?.uploadVideoFile(fileURL.path)

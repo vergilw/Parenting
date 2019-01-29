@@ -8,6 +8,8 @@
 
 import UIKit
 import PLShortVideoKit
+import Photos
+import MobileCoreServices
 
 class DVideoShootViewController: BaseViewController {
 
@@ -18,6 +20,8 @@ class DVideoShootViewController: BaseViewController {
         recorder.delegate = self
         return recorder
     }()
+    
+    fileprivate lazy var transcoder: PLShortVideoTranscoder? = nil
     
     fileprivate lazy var dismissBtn: UIButton = {
         let button = UIButton()
@@ -87,6 +91,15 @@ class DVideoShootViewController: BaseViewController {
         return button
     }()
     
+    fileprivate lazy var albumsBtn: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 4
+        button.clipsToBounds = true
+        button.backgroundColor = UIColor(white: 1, alpha: 0.65)
+        button.addTarget(self, action: #selector(albumBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var submitBtn: UIButton = {
         let button = UIButton()
         button.layer.borderColor = UIColor(white: 1, alpha: 1.0).cgColor
@@ -112,6 +125,8 @@ class DVideoShootViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchAlbumsCover()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -197,7 +212,7 @@ class DVideoShootViewController: BaseViewController {
     }
     
     fileprivate func initBottomView() {
-        view.addSubviews([recordBtn, deleteFragmentBtn, submitBtn])
+        view.addSubviews([recordBtn, deleteFragmentBtn, submitBtn, albumsBtn])
         
         recordBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -217,6 +232,11 @@ class DVideoShootViewController: BaseViewController {
             make.leading.equalTo(recordBtn.snp.trailing).offset(50)
             make.centerY.equalTo(recordBtn)
             make.size.equalTo(CGSize(width: 30, height: 30))
+        }
+        albumsBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(recordBtn.snp.leading).offset(-50)
+            make.centerY.equalTo(recordBtn)
+            make.size.equalTo(CGSize(width: 44, height: 44))
         }
     }
     
@@ -251,6 +271,31 @@ class DVideoShootViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchAlbumsCover() {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
+            let options = PHFetchOptions()
+            options.includeHiddenAssets = false
+            options.includeAllBurstAssets = false
+            options.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false),
+                                       NSSortDescriptor(key: "creationDate", ascending: false)]
+            
+            let result = PHAsset.fetchAssets(with: PHAssetMediaType.video, options: options)
+            
+            var assets = [PHAsset]()
+            result.enumerateObjects({ (asset, index, stop) in
+                assets.append(asset)
+            })
+            
+            guard let asset = assets.first else { return }
+            
+            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: PHImageContentMode.aspectFill, options: nil, resultHandler: { (image, info) in
+                DispatchQueue.main.async {
+                    self.albumsBtn.setImage(image, for: UIControl.State.normal)
+                }
+                
+            })
+        }
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -259,6 +304,10 @@ class DVideoShootViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func recordBtnAction() {
+        if albumsBtn.isHidden == false {
+            albumsBtn.isHidden = true
+        }
+        
         if recorder.isRecording {
             recordBtn.setImage(nil, for: UIControl.State.normal)
             recordBtn.backgroundColor = UIColor(white: 1, alpha: 0.7)
@@ -285,7 +334,13 @@ class DVideoShootViewController: BaseViewController {
     }
     
     @objc func albumBtnAction() {
-        
+        let imgPicker = UIImagePickerController()
+        imgPicker.sourceType = .photoLibrary
+        imgPicker.mediaTypes = [kUTTypeMovie as String]
+        imgPicker.videoQuality = .typeHigh
+        imgPicker.allowsEditing = false
+        imgPicker.delegate = self
+        self.present(imgPicker, animated: true, completion: nil)
     }
     
     @objc func switchBtnAction() {
@@ -311,6 +366,11 @@ class DVideoShootViewController: BaseViewController {
             
             if self.recorder.getTotalDuration() < self.recorder.minDuration {
                 self.submitBtn.isHidden = true
+            }
+            
+            if self.recorder.getFilesCount() == 0 {
+                self.deleteFragmentBtn.isHidden = true
+                self.albumsBtn.isHidden = false
             }
         }))
         self.present(alertController, animated: true, completion: nil)
@@ -384,5 +444,60 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didFinishRecordingMaxDuration maxDuration: CGFloat) {
         
+    }
+}
+
+
+// MARK: - ============= UIImagePickerControllerDelegate, UINavigationControllerDelegate =============
+extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+        
+        if let URL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
+            
+            transcoder = PLShortVideoTranscoder(url: URL)
+            transcoder?.outputFileType = .MPEG4
+            transcoder?.outputFilePreset = .presetHighestQuality
+            
+            transcoder?.completionBlock = { [weak self] (URL) in
+                guard let URL = URL else { return }
+                let asset = AVAsset(url: URL)
+                
+                var plsMovieSettings = [String: Any]()
+                plsMovieSettings[PLSAssetKey] = asset
+                plsMovieSettings[PLSStartTimeKey] = NSNumber(value: 0.0)
+                plsMovieSettings[PLSDurationKey] = NSNumber(value: asset.duration.seconds)
+                plsMovieSettings[PLSVolumeKey] = NSNumber(value: 1.0)
+                
+                let outputSettings = [PLSMovieSettingsKey: plsMovieSettings]
+                
+                DispatchQueue.main.async {
+                    if asset.duration.seconds > 60 {
+                        self?.navigationController?.pushViewController(DVideoImportViewController(settings: outputSettings), animated: true)
+                    } else {
+                        self?.navigationController?.pushViewController(DVideoEditViewController(settings: outputSettings), animated: true)
+                    }
+                }
+                
+            }
+            
+            transcoder?.failureBlock = { error in
+                print(error)
+            }
+            
+            transcoder?.processingBlock = { progress in
+                print(progress)
+            }
+            transcoder?.startTranscoding()
+        }
+        
+        
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }

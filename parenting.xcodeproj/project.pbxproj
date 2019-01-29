@@ -199,6 +199,11 @@
 		13B7F73C21B68728001BF15D /* QNSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72021B68728001BF15D /* QNSessionManager.m */; };
 		13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72321B68728001BF15D /* QNFileRecorder.m */; };
 		13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F72921B68728001BF15D /* QNPipeline.m */; };
+		13E5FC792200556E00DA6271 /* DVideoImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5FC782200556E00DA6271 /* DVideoImportViewController.swift */; };
+		13E5FC7B22005C1800DA6271 /* DVideoStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5FC7A22005C1800DA6271 /* DVideoStickersViewController.swift */; };
+		13E5FC7D22005D4E00DA6271 /* VideoStickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */; };
+		13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */; };
+		13E5FC81220068F700DA6271 /* stickers.json in Resources */ = {isa = PBXBuildFile; fileRef = 13E5FC80220068F700DA6271 /* stickers.json */; };
 		99D84AC96BCF9FFE3687D6E3 /* Pods_parenting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */; };
 /* End PBXBuildFile section */
 
@@ -427,6 +432,11 @@
 		13B7F72621B68728001BF15D /* QiniuSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuSDK.h; sourceTree = "<group>"; };
 		13B7F72821B68728001BF15D /* QNPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNPipeline.h; sourceTree = "<group>"; };
 		13B7F72921B68728001BF15D /* QNPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QNPipeline.m; sourceTree = "<group>"; };
+		13E5FC782200556E00DA6271 /* DVideoImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoImportViewController.swift; sourceTree = "<group>"; };
+		13E5FC7A22005C1800DA6271 /* DVideoStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoStickersViewController.swift; sourceTree = "<group>"; };
+		13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStickerCell.swift; sourceTree = "<group>"; };
+		13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoStickers.xcassets; sourceTree = "<group>"; };
+		13E5FC80220068F700DA6271 /* stickers.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stickers.json; sourceTree = "<group>"; };
 		40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.debug.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.debug.xcconfig"; sourceTree = "<group>"; };
 		A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.release.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.release.xcconfig"; sourceTree = "<group>"; };
 		F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_parenting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -670,6 +680,8 @@
 				137A82B921B529040099A070 /* parenting.entitlements */,
 				130D569D21E5C5C800CE65CB /* Video.xcassets */,
 				1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */,
+				13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */,
+				13E5FC80220068F700DA6271 /* stickers.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -786,9 +798,11 @@
 				130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */,
 				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
 				1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */,
+				13E5FC7A22005C1800DA6271 /* DVideoStickersViewController.swift */,
 				130B0C9821FFE7B500505165 /* DVideoCoverViewController.swift */,
 				130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */,
 				130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */,
+				13E5FC782200556E00DA6271 /* DVideoImportViewController.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -808,6 +822,7 @@
 				1312C81B21F084CE00F6B039 /* VideoFilterCell.swift */,
 				130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */,
 				130C86B821F1D13E005BBFF7 /* VideoStickerView.swift */,
+				13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1018,6 +1033,7 @@
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
 				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
+				13E5FC81220068F700DA6271 /* stickers.json in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
@@ -1026,6 +1042,7 @@
 				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
 				130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
+				13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
 				13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */,
@@ -1146,6 +1163,7 @@
 				1316F4E121D0ADDA00F5A756 /* DRewardRankingViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */,
+				13E5FC7D22005D4E00DA6271 /* VideoStickerCell.swift in Sources */,
 				130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */,
 				1320C38D217EB93A00902A5C /* UIColor+Extension.swift in Sources */,
 				1310A0A321E71D32006399D8 /* PresentationActionCell.swift in Sources */,
@@ -1159,6 +1177,8 @@
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
 				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
 				130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */,
+				13E5FC792200556E00DA6271 /* DVideoImportViewController.swift in Sources */,
+				13E5FC7B22005C1800DA6271 /* DVideoStickersViewController.swift in Sources */,
 				1311201A218170410088F5BF /* CourseModel.swift in Sources */,
 				130D8E2321D60A2D008833C7 /* DWithdrawDetailsViewController.swift in Sources */,
 				130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */,

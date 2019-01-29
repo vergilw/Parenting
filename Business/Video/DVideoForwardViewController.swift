@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import Photos
 
 class DVideoForwardViewController: BaseViewController {
 
@@ -315,6 +317,35 @@ class DVideoForwardViewController: BaseViewController {
         
         dismiss(animated: true, completion: nil)
     }
+    
+    fileprivate func downloadBtnAction() {
+        //TODO: 视频水印
+        guard let URLString = videoModel.media?.url, let URL = URL(string: URLString) else {
+            HUDService.sharedInstance.show(string: "视频地址缺失")
+            return
+        }
+        
+        Alamofire.download(URL) { (URL, response) -> (destinationURL: URL, options: DownloadRequest.DownloadOptions) in
+            let documentsURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!
+            return (documentsURL.appendingPathComponent("\(Date().timeIntervalSince1970).mp4"), DownloadRequest.DownloadOptions())
+            }.downloadProgress(closure: { (progress) in
+                print(progress.fractionCompleted)
+            }).response { (response) in
+                if let URL = response.destinationURL {
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL)
+                    }) { (saved, error) in
+                        if saved {
+                            DispatchQueue.main.async {
+                                HUDService.sharedInstance.show(string: "保存成功")
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        }
+                    }
+                }
+        }
+        
+    }
 }
 
 
@@ -327,7 +358,7 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == forwardCollectionView {
-            return 5
+            return 2
         } else if collectionView == othersCollectionView {
             return 4
         }
@@ -390,10 +421,9 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
                 favoriteRequest()
             } else if indexPath.row == 2 {
                 pasteboardBtnAction()
+            } else if indexPath.row == 3 {
+                downloadBtnAction()
             }
-//            } else if indexPath.row == 3 {
-//                cell.setup(imgNamed: "public_actionItemDownload", bgColor: UIColor("#f3f4f6"), text: "保存本地")
-//            }
         }
     }
     
