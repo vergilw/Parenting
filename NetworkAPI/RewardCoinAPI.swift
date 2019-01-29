@@ -12,7 +12,7 @@ import HandyJSON
 let RewardCoinProvider = MoyaProvider<RewardCoinAPI>(manager: DefaultAlamofireManager.sharedManager)
 
 enum RewardCoinAPI {
-    case reward(Int)
+    case reward_fetch(String, Int, String)
     case reward_detail(Int)
     case reward_ranking(Int)
     case reward_courses(Int)
@@ -28,8 +28,8 @@ extension RewardCoinAPI: TargetType {
     
     public var path: String {
         switch self {
-        case let .reward(storyID):
-            return "/api/Course/\(storyID)/aim_logs"
+        case let .reward_fetch(type, typeID, _):
+            return "/api/\(type)/\(typeID)/aim_logs"
         case .reward_detail:
             return "/api/coin_logs"
         case .reward_ranking:
@@ -45,7 +45,7 @@ extension RewardCoinAPI: TargetType {
     
     public var method: Moya.Method {
         switch self {
-        case .reward:
+        case .reward_fetch:
             return .post
         case .reward_detail:
             return .get
@@ -66,8 +66,8 @@ extension RewardCoinAPI: TargetType {
     
     var task: Task {
         switch self {
-        case .reward:
-            return .requestParameters(parameters: ["code": "share"], encoding: URLEncoding.default)
+        case let .reward_fetch(_, _, code):
+            return .requestParameters(parameters: ["code": code], encoding: URLEncoding.default)
         case let .reward_detail(page):
             return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
         case let .reward_ranking(page):

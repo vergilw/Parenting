@@ -326,18 +326,18 @@ extension DVideoCommentViewController: UITextFieldDelegate {
                 
                 
                 //赏金逻辑
-                if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success" {
+                if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let amount = reward["amount"] as? String {
                     let view = RewardView()
                     UIApplication.shared.keyWindow?.addSubview(view)
                     view.snp.makeConstraints { make in
                         make.edges.equalToSuperview()
                     }
+                    view.present(string: amount, mode: RewardView.DRewardMode.comment)
                     
                     if let rewardCodes = reward["rewardable_codes"] as? [String] {
-                        NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: ["id": String(self.videoID), "rewardable_codes": rewardCodes])
+                        NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: nil, userInfo: ["id": String(self.videoID), "rewardable_codes": rewardCodes])
                     }
                     
-                    return
                 }
             }
         }))

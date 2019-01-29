@@ -16,6 +16,7 @@
 		130AAF6121E48AC600992596 /* CachingPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AAF6021E48AC600992596 /* CachingPlayerItem.swift */; };
 		130AC5EE21EEC93C00D0286C /* DVideoClipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */; };
 		130AC5F021EED3DC00D0286C /* VideoPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130AC5EF21EED3DC00D0286C /* VideoPreviewCell.swift */; };
+		130B0C9921FFE7B500505165 /* DVideoCoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B0C9821FFE7B500505165 /* DVideoCoverViewController.swift */; };
 		130B639A21C7410100BE79A0 /* PriceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B639921C7410100BE79A0 /* PriceLabel.swift */; };
 		130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */; };
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
@@ -211,6 +212,7 @@
 		130AAF6021E48AC600992596 /* CachingPlayerItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingPlayerItem.swift; sourceTree = "<group>"; };
 		130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoClipViewController.swift; sourceTree = "<group>"; };
 		130AC5EF21EED3DC00D0286C /* VideoPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewCell.swift; sourceTree = "<group>"; };
+		130B0C9821FFE7B500505165 /* DVideoCoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoCoverViewController.swift; sourceTree = "<group>"; };
 		130B639921C7410100BE79A0 /* PriceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceLabel.swift; sourceTree = "<group>"; };
 		130B80B2218FD2500076BB50 /* public_audioAnimationItem.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_audioAnimationItem.gif; sourceTree = "<group>"; };
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
@@ -784,6 +786,7 @@
 				130AC5ED21EEC93C00D0286C /* DVideoClipViewController.swift */,
 				1312C81721F0709100F6B039 /* DVideoVolumeViewController.swift */,
 				1312C81921F07FEB00F6B039 /* DVideoFiltersViewController.swift */,
+				130B0C9821FFE7B500505165 /* DVideoCoverViewController.swift */,
 				130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */,
 				130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */,
 			);
@@ -1170,6 +1173,7 @@
 				132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */,
 				13B7F73521B68728001BF15D /* QNSystem.m in Sources */,
 				130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */,
+				130B0C9921FFE7B500505165 /* DVideoCoverViewController.swift in Sources */,
 				1310A0A121E719F8006399D8 /* DVideoForwardViewController.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */,

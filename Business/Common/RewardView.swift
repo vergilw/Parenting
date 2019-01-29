@@ -14,6 +14,7 @@ class RewardView: UIView {
         case share
         case comment
         case study
+        case like
     }
     
     lazy fileprivate var dismissBtn: UIButton = {
@@ -97,6 +98,8 @@ class RewardView: UIView {
             footnoteLabel.text = "本次评论金币奖励"
         } else if mode == .study {
             footnoteLabel.text = "本次学习金币奖励"
+        } else if mode == .like {
+            footnoteLabel.text = "本次点赞金币奖励"
         }
         
         contentView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)

@@ -146,7 +146,49 @@ class DVideoForwardViewController: BaseViewController {
         }
     }
     
+    fileprivate func reportRequest() {
+        guard let string = videoModel.id, let videoID = Int(string) else { return }
+        
+        VideoProvider.request(.video_report(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code > 0 {
+                HUDService.sharedInstance.show(string: "举报成功")
+            }
+            
+        }))
+    }
+    
+    fileprivate func rewardShareRequest() {
+        guard let string = videoModel.id, let videoID = Int(string) else { return }
+        
+        RewardCoinProvider.request(.reward_fetch("Video", videoID, "share_video"), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0, let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let amount = reward["amount"] as? String {
+                let view = RewardView()
+                UIApplication.shared.keyWindow?.addSubview(view)
+                view.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+                view.present(string: amount, mode: RewardView.DRewardMode.share)
+                
+                if let rewardCodes = reward["rewardable_codes"] as? [String] {
+                    NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: nil, userInfo: ["id": String(videoID), "rewardable_codes": rewardCodes])
+                }
+                
+            }
+            
+        }))
+    }
+    
+    // MARK: - ============= Reload =============
+    @objc func reload() {
+        
+    }
+    
+    // MARK: - ============= Action =============
     fileprivate func reportBtnAction() {
+        
+        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: "色情低俗", style: UIAlertAction.Style.default, handler: { (action) in
@@ -185,31 +227,98 @@ class DVideoForwardViewController: BaseViewController {
         alertController.addAction(UIAlertAction(title: "诱导点赞、分享", style: UIAlertAction.Style.default, handler: { (action) in
             self.reportRequest()
         }))
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-    fileprivate func reportRequest() {
-        guard let string = videoModel.id, let videoID = Int(string) else { return }
         
-        VideoProvider.request(.video_report(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            
-            if code > 0 {
-                HUDService.sharedInstance.show(string: "举报成功")
-            }
-            
-        }))
-    }
-    
-    // MARK: - ============= Reload =============
-    @objc func reload() {
+        present(alertController, animated: true, completion: nil)
         
     }
     
-    // MARK: - ============= Action =============
+    fileprivate func shareBtnAction(isAlertHidden: Bool, shareType: UMSocialPlatformType) {
+        
+        //登录检测
+        if isAlertHidden == false && videoModel.rewardable == true && !AuthorizationService.sharedInstance.isSignIn() {
+            let alertController = UIAlertController(title: nil, message: "登录后进行分享才可获取赏金哟", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "继续分享", style: UIAlertAction.Style.default, handler: { (action) in
+                self.shareBtnAction(isAlertHidden: true, shareType: shareType)
+            }))
+            alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.default, handler: { (action) in
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                self.present(authorizationNavigationController, animated: true, completion: nil)
+            }))
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        }
+        
+        
+        //开始分享
+        guard let shareURL = videoModel.share_url else {
+            HUDService.sharedInstance.show(string: "分享信息缺失")
+            return
+        }
+        
+        let title: String = videoModel.title ?? ""
+        let descr: String = videoModel.author?.name ?? ""
+        let imgURL: String = videoModel.cover_url ?? ""
 
+        
+        if shareType == .wechatSession {
+            
+            let shareObj = UMShareWebpageObject.shareObject(withTitle: title, descr: descr, thumImage: imgURL)
+            shareObj?.webpageUrl = shareURL
+            let msgObj = UMSocialMessageObject(mediaObject: shareObj)
+            UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatSession, messageObject: msgObj, currentViewController: self, completion: { [weak self] (result, error) in
+                if let response = result as? UMSocialShareResponse {
+                    if let status = response.originalResponse as? Int, status == 0 {
+                        HUDService.sharedInstance.show(string: "分享完成")
+                        
+                        self?.rewardShareRequest()
+                    } else {
+                        HUDService.sharedInstance.show(string: "分享失败")
+                    }
+                } else {
+                    HUDService.sharedInstance.show(string: "分享失败")
+                }
+                self?.dismiss(animated: true, completion: nil)
+            })
+            
+        } else if shareType == .wechatTimeLine {
+            
+            let shareObj = UMShareWebpageObject.shareObject(withTitle: title, descr: descr, thumImage: imgURL)
+            shareObj?.webpageUrl = shareURL
+            let msgObj = UMSocialMessageObject(mediaObject: shareObj)
+            UMSocialManager.default()?.share(to: UMSocialPlatformType.wechatTimeLine, messageObject: msgObj, currentViewController: self, completion: { [weak self] (result, error) in
+                if let response = result as? UMSocialShareResponse {
+                    if let status = response.originalResponse as? Int, status == 0 {
+                        HUDService.sharedInstance.show(string: "分享完成")
+                        
+                        self?.rewardShareRequest()
+                    } else {
+                        HUDService.sharedInstance.show(string: "分享失败")
+                    }
+                } else {
+                    HUDService.sharedInstance.show(string: "分享失败")
+                }
+                self?.dismiss(animated: true, completion: nil)
+            })
+            
+        }
+    }
+    
+    fileprivate func pasteboardBtnAction() {
+        guard let shareURL = videoModel.share_url else {
+            HUDService.sharedInstance.show(string: "分享信息缺失")
+            return
+        }
+        
+        UIPasteboard.general.string = shareURL
+        HUDService.sharedInstance.show(string: "已将链接复制至剪贴板")
+        
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 
+// MARK: - ============= UICollectionViewDataSource, UICollectionViewDelegate =============
 extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -262,10 +371,11 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if collectionView == forwardCollectionView {
-//            if indexPath.row == 0 {
-//                cell.setup(imgNamed: "public_forwardItemWechatTimeline", bgColor: UIColor("#4ecf01"), text: "朋友圈")
-//            } else if indexPath.row == 1 {
-//                cell.setup(imgNamed: "public_forwardItemWechatSession", bgColor: UIColor("#00c80c"), text: "微信")
+            if indexPath.row == 0 {
+                shareBtnAction(isAlertHidden: false, shareType: UMSocialPlatformType.wechatTimeLine)
+            } else if indexPath.row == 1 {
+                shareBtnAction(isAlertHidden: false, shareType: UMSocialPlatformType.wechatSession)
+            }
 //            } else if indexPath.row == 2 {
 //                cell.setup(imgNamed: "public_forwardItemQQZone", bgColor: UIColor("#ffbd01"), text: "QQ空间")
 //            } else if indexPath.row == 3 {
@@ -278,9 +388,9 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
                 reportBtnAction()
             } else if indexPath.row == 1 {
                 favoriteRequest()
+            } else if indexPath.row == 2 {
+                pasteboardBtnAction()
             }
-//            } else if indexPath.row == 2 {
-//                cell.setup(imgNamed: "public_actionItemClipboard", bgColor: UIColor("#f3f4f6"), text: "复制链接")
 //            } else if indexPath.row == 3 {
 //                cell.setup(imgNamed: "public_actionItemDownload", bgColor: UIColor("#f3f4f6"), text: "保存本地")
 //            }

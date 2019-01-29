@@ -526,14 +526,13 @@ class VideoDetailCell: UITableViewCell {
         if AuthorizationService.sharedInstance.isSignIn() {
             if (model.rewardable_codes?.count ?? 0) > 0 {
                 
-                //FIXME: codes name
                 if model.viewed == true {
                     rewardCountdownView.isHidden = true
                     
-                    if model.rewardable_codes?.contains("like") ?? false {
+                    if model.rewardable_codes?.contains("interact/api/attitudes#create") ?? false {
                         likeMarkLabel.isHidden = false
                     }
-                    if model.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+                    if model.rewardable_codes?.contains("interact/api/comments#create") ?? false {
                         commentMarkLabel.isHidden = false
                     }
                     if model.rewardable_codes?.contains("share_video") ?? false {
@@ -617,14 +616,13 @@ class VideoDetailCell: UITableViewCell {
         }
         
         if AuthorizationService.sharedInstance.isSignIn() {
-            //FIXME: codes name
-            if model?.rewardable_codes?.contains("like") ?? false {
+            if model?.rewardable_codes?.contains("interact/api/attitudes#create") ?? false {
                 likeMarkLabel.isHidden = false
             }
-            if model?.rewardable_codes?.contains("api/v1/app/comments#create") ?? false {
+            if model?.rewardable_codes?.contains("interact/api/comments#create") ?? false {
                 commentMarkLabel.isHidden = false
             }
-            if model?.rewardable_codes?.contains("share") ?? false {
+            if model?.rewardable_codes?.contains("share_video") ?? false {
                 shareMarkLabel.isHidden = false
             }
             if model?.viewed == false {
@@ -668,13 +666,12 @@ class VideoDetailCell: UITableViewCell {
     @objc func rewardStatusDidChange(sender: Notification) {
         if let info = sender.userInfo, let videoID = info["id"] as? String, videoID == model?.id, let rewardable_codes = info["rewardable_codes"] as? [String] {
             
-            //FIXME: DEBUG
-            if rewardable_codes.contains("like") {
+            if rewardable_codes.contains("interact/api/attitudes#create") {
                 likeMarkLabel.isHidden = false
             } else {
                 likeMarkLabel.isHidden = true
             }
-            if rewardable_codes.contains("api/v1/app/comments#create") {
+            if rewardable_codes.contains("interact/api/comments#create") {
                 commentMarkLabel.isHidden = false
             } else {
                 commentMarkLabel.isHidden = true
@@ -733,6 +730,10 @@ extension VideoDetailCell {
         guard let videoID = model?.id, let liked = model?.liked else { return }
         guard isRequesting == false else { return }
         
+        
+        //TODO: 赏金视频点赞后不能取消(服务端未识别当前用户是否已点赞)
+        if model?.rewardable == true && liked == true { return }
+        
         isRequesting = true
         VideoProvider.request(.video_like(videoID, !liked), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
@@ -757,15 +758,16 @@ extension VideoDetailCell {
                     self.likeImgView.tintColor = .white
                 }
                 
-                if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success" {
+                if let reward = JSON?["reward"] as? [String: Any], let status = reward["code"] as? String, status == "success", let amount = reward["amount"] as? String {
                     let view = RewardView()
                     UIApplication.shared.keyWindow?.addSubview(view)
                     view.snp.makeConstraints { make in
                         make.edges.equalToSuperview()
                     }
+                    view.present(string: amount, mode: RewardView.DRewardMode.like)
                     
                     if let rewardCodes = reward["rewardable_codes"] as? [String] {
-                        NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: ["id": videoID, "rewardable_codes": rewardCodes])
+                        NotificationCenter.default.post(name: Notification.Video.rewardStatusDidChange, object: nil, userInfo: ["id": videoID, "rewardable_codes": rewardCodes])
                     }
                     
                     return
