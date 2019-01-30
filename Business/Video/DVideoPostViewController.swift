@@ -34,7 +34,7 @@ class DVideoPostViewController: BaseViewController {
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainerInset = UIEdgeInsets.zero
         textView.font = UIConstants.Font.body
-        textView.placeholder = "写标题并使用合适的话题～"
+        textView.placeholder = "#点击下方标签或创造一个标签 找到更多同道中人"
         textView.delegate = self
         return textView
     }()
@@ -86,7 +86,7 @@ class DVideoPostViewController: BaseViewController {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h2_regular
-        button.setTitle("存入草稿箱 ", for: .normal)
+        button.setTitle("存入本地 ", for: .normal)
         button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(.alwaysTemplate), for: .normal)
         button.tintColor = UIConstants.Color.primaryGreen
         button.semanticContentAttribute = .forceRightToLeft
@@ -143,7 +143,7 @@ class DVideoPostViewController: BaseViewController {
         collectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(previewBtn.snp.bottom).offset(60)
-            make.height.lessThanOrEqualTo((35+15)*3)
+            make.height.equalTo((35+15)*3)
         }
         draftsBtn.snp.makeConstraints { make in
             make.leading.equalTo(50)

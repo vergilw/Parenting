@@ -25,6 +25,7 @@
 		130B8496220135D6006A4B21 /* VideoTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B8495220135D6006A4B21 /* VideoTagCell.swift */; };
 		130B84982201386E006A4B21 /* VideoTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B84972201386E006A4B21 /* VideoTagModel.swift */; };
 		130B849A220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */; };
+		130B849C22018E7E006A4B21 /* VideoRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B849B22018E7E006A4B21 /* VideoRewardView.swift */; };
 		130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */; };
 		130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */; };
 		130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */; };
@@ -228,6 +229,7 @@
 		130B8495220135D6006A4B21 /* VideoTagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagCell.swift; sourceTree = "<group>"; };
 		130B84972201386E006A4B21 /* VideoTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagModel.swift; sourceTree = "<group>"; };
 		130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewLeftAlignedLayout.swift; sourceTree = "<group>"; };
+		130B849B22018E7E006A4B21 /* VideoRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRewardView.swift; sourceTree = "<group>"; };
 		130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawDetailsModel.swift; sourceTree = "<group>"; };
 		130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewLayout.swift; sourceTree = "<group>"; };
 		130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCoursesCell.swift; sourceTree = "<group>"; };
@@ -829,6 +831,7 @@
 				13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */,
 				130B8495220135D6006A4B21 /* VideoTagCell.swift */,
 				130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */,
+				130B849B22018E7E006A4B21 /* VideoRewardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1322,6 +1325,7 @@
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
 				130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */,
 				130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */,
+				130B849C22018E7E006A4B21 /* VideoRewardView.swift in Sources */,
 				130B849A220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,

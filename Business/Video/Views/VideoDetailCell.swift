@@ -163,17 +163,10 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
-    fileprivate lazy var rewardCountdownView: UIView = {
-        let view = UIView()
+    fileprivate lazy var rewardCountdownView: VideoRewardView = {
+        let view = VideoRewardView()
         view.isHidden = true
         return view
-    }()
-    
-    fileprivate lazy var rewardCountdownLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIConstants.Font.foot
-        label.textColor = UIColor("#ffd35b")
-        return label
     }()
     
     fileprivate var timeObserverToken: Any?
@@ -404,21 +397,21 @@ class VideoDetailCell: UITableViewCell {
     }
     
     fileprivate func initRewardCountdownView() {
-        let img = YYImage(named: "reward_videoAnimation")!
-        let imgView = YYAnimatedImageView(image: img)
-        
-        
-        rewardCountdownView.addSubviews([imgView, rewardCountdownLabel])
-            
-            
-        imgView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.size.equalTo(CGSize(width: 55, height: 55))
-        }
-        rewardCountdownLabel.snp.makeConstraints { make in
-            make.centerX.bottom.equalToSuperview()
-            make.top.equalTo(imgView.snp.bottom)
-        }
+//        let img = YYImage(named: "reward_videoAnimation")!
+//        let imgView = YYAnimatedImageView(image: img)
+//
+//
+//        rewardCountdownView.addSubviews([imgView, rewardCountdownLabel])
+//
+//
+//        imgView.snp.makeConstraints { make in
+//            make.leading.trailing.top.equalToSuperview()
+//            make.size.equalTo(CGSize(width: 55, height: 55))
+//        }
+//        rewardCountdownLabel.snp.makeConstraints { make in
+//            make.centerX.bottom.equalToSuperview()
+//            make.top.equalTo(imgView.snp.bottom)
+//        }
         
         
         contentView.addSubview(rewardCountdownView)
@@ -440,7 +433,7 @@ class VideoDetailCell: UITableViewCell {
             
             let timeInterval: TimeInterval = TimeInterval(duationSeconds - currentSeconds)
             let date = Date(timeIntervalSince1970: timeInterval)
-            self?.rewardCountdownLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
+            self?.rewardCountdownView.countdownLabel.text = CourseCatalogueCell.timeFormatter.string(from: date)
             
         })
         
@@ -649,8 +642,10 @@ class VideoDetailCell: UITableViewCell {
         if (keyPath == "timeControlStatus") {
             if player.timeControlStatus == .playing {
                 self.playerStatusImgView.isHidden = true
+                self.startCountdown()
             } else if player.timeControlStatus == .paused {
                 self.playerStatusImgView.isHidden = false
+                self.rewardCountdownView.invalidateCountdown()
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -658,10 +653,9 @@ class VideoDetailCell: UITableViewCell {
     }
     
     func startCountdown() {
-        if (model?.rewardable_codes?.count ?? 0) > 0 && model?.viewed == false {
-            rewardCountdownView.isHidden = false
-        } else {
-            rewardCountdownView.isHidden = true
+        if rewardCountdownView.isHidden == false {
+            guard let playerItem = player.currentItem else { return }
+            rewardCountdownView.startCountdown(startSeconds: playerItem.currentTime().seconds, durationSeconds: playerItem.duration.seconds)
         }
         
     }
@@ -736,7 +730,7 @@ extension VideoDetailCell {
         
         
         //TODO: 赏金视频点赞后不能取消(服务端未识别当前用户是否已点赞)
-        if model?.rewardable == true && liked == true { return }
+        if model?.rewardable == true && !(model?.rewardable_codes?.contains("interact/api/attitudes#create") ?? false) && liked == true { return }
         
         isRequesting = true
         VideoProvider.request(.video_like(videoID, !liked), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in

@@ -457,6 +457,7 @@ extension DVideoDetailViewController {
             if cell?.player.currentItem != nil {
                 cell?.player.play()
             }
+            cell?.startCountdown()
             
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)

@@ -51,7 +51,7 @@ class DVideoUserViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "小视频"
+        navigationItem.title = "个人中心"
         
         extendedLayoutIncludesOpaqueBars = true
         

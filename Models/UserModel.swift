@@ -21,9 +21,9 @@ class UserModel: HandyJSON {
     var intro: String?
     var badge: String?
     
-    var videos: Int?
-    var video_likes: Int?
-    var video_comments: Int?
+    var videos_count: Int?
+    var video_liked_count: Int?
+    var video_comments_count: Int?
     
     required init() {
         
