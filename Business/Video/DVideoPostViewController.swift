@@ -24,14 +24,18 @@ class DVideoPostViewController: BaseViewController {
     
     fileprivate let dispatchGroup = DispatchGroup()
     
+    fileprivate lazy var tagModels: [VideoTagModel]? = nil
+    
     fileprivate lazy var textView: UITextView = {
         let textView = UITextView()
         textView.returnKeyType = .done
+        textView.keyboardType = .twitter
 //        textView.backgroundColor = UIConstants.Color.background
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainerInset = UIEdgeInsets.zero
         textView.font = UIConstants.Font.body
         textView.placeholder = "写标题并使用合适的话题～"
+        textView.delegate = self
         return textView
     }()
     
@@ -47,6 +51,22 @@ class DVideoPostViewController: BaseViewController {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_playerPlay")
         return imgView
+    }()
+    
+    fileprivate lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewLeftAlignedLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = UICollectionViewLeftAlignedLayout.automaticSize
+        layout.estimatedItemSize = CGSize(width: 108, height: 35)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        layout.minimumLineSpacing = 15
+        layout.minimumInteritemSpacing = 15
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.register(VideoTagCell.self, forCellWithReuseIdentifier: VideoTagCell.className())
+        view.dataSource = self
+        view.delegate = self
+        view.backgroundColor = .white
+        return view
     }()
     
     fileprivate lazy var submitBtn: ActionButton = {
@@ -94,13 +114,14 @@ class DVideoPostViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchTagsData()
     }
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        view.addSubviews([textView, previewBtn, previewImgView, submitBtn, draftsBtn])
+        view.addSubviews([textView, previewBtn, previewImgView, collectionView, submitBtn, draftsBtn])
         
-        view.drawSeparator(startPoint: CGPoint(x: 0, y: 210), endPoint: CGPoint(x: UIScreenWidth, y: 210))
     }
     
     // MARK: - ============= Constraints =============
@@ -118,6 +139,11 @@ class DVideoPostViewController: BaseViewController {
             make.trailing.equalTo(previewBtn.snp.leading).offset(-10)
             make.top.equalTo(20)
             make.bottom.equalTo(previewBtn.snp.bottom)
+        }
+        collectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(previewBtn.snp.bottom).offset(60)
+            make.height.lessThanOrEqualTo((35+15)*3)
         }
         draftsBtn.snp.makeConstraints { make in
             make.leading.equalTo(50)
@@ -143,6 +169,23 @@ class DVideoPostViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchTagsData() {
+        
+        VideoProvider.request(.video_tags, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["video_tags"] as? [[String: Any]] {
+                    
+                    if let models = [VideoTagModel].deserialize(from: data) as? [VideoTagModel] {
+                        self.tagModels = models
+                    }
+                    self.collectionView.reloadData()
+                }
+                
+            }
+        }))
+    }
+    
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -249,4 +292,61 @@ extension DVideoPostViewController: PLShortVideoUploaderDelegate {
         dispatchGroup.leave()
         
     }
+}
+
+
+// MARK: - ============= UITextView Delegate =============
+extension DVideoPostViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        
+        let text = textView.attributedText.string
+        
+        guard let expression = try? NSRegularExpression(pattern: "#[^#]+#", options: [.caseInsensitive]) else { return }
+        
+        let results = expression.matches(in: text, options: NSRegularExpression.MatchingOptions(), range: NSString(string: text).rangeOfAll())
+        
+        let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
+        attributedText.addAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head], range: NSString(string: text).rangeOfAll())
+        for result in results {
+            attributedText.addAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.primaryGreen], range: result.range)
+        }
+        
+        textView.attributedText = attributedText
+    }
+}
+
+
+// MARK: - ============= UICollectionViewDataSource, UICollectionViewDelegate =============
+extension DVideoPostViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tagModels?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoTagCell.className(), for: indexPath) as! VideoTagCell
+        if let model = tagModels?[exist: indexPath.row] {
+            cell.setup(model: model)
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        if let model = tagModels?[exist: indexPath.row], let text = model.name {
+            let text = " #\(text)#"
+            
+            guard let startPosition = textView.position(from: textView.beginningOfDocument, offset: textView.text.count) else { return }
+            guard let endPosition = textView.position(from: startPosition, offset: 0) else { return }
+            guard let range = textView.textRange(from: startPosition, to: endPosition) else { return }
+            textView.replace(range, withText: text)
+        }
+    }
+    
 }

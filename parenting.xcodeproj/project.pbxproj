@@ -22,6 +22,9 @@
 		130B80B5218FE5380076BB50 /* EvaluationStarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */; };
 		130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B6218FF0750076BB50 /* CommentModel.swift */; };
 		130B80B921902ABF0076BB50 /* DCourseEvaluationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */; };
+		130B8496220135D6006A4B21 /* VideoTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B8495220135D6006A4B21 /* VideoTagCell.swift */; };
+		130B84982201386E006A4B21 /* VideoTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B84972201386E006A4B21 /* VideoTagModel.swift */; };
+		130B849A220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */; };
 		130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */; };
 		130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */; };
 		130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */; };
@@ -203,7 +206,6 @@
 		13E5FC7B22005C1800DA6271 /* DVideoStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5FC7A22005C1800DA6271 /* DVideoStickersViewController.swift */; };
 		13E5FC7D22005D4E00DA6271 /* VideoStickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */; };
 		13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */; };
-		13E5FC81220068F700DA6271 /* stickers.json in Resources */ = {isa = PBXBuildFile; fileRef = 13E5FC80220068F700DA6271 /* stickers.json */; };
 		99D84AC96BCF9FFE3687D6E3 /* Pods_parenting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */; };
 /* End PBXBuildFile section */
 
@@ -223,6 +225,9 @@
 		130B80B4218FE5380076BB50 /* EvaluationStarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationStarsView.swift; sourceTree = "<group>"; };
 		130B80B6218FF0750076BB50 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		130B80B821902ABF0076BB50 /* DCourseEvaluationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCourseEvaluationViewController.swift; sourceTree = "<group>"; };
+		130B8495220135D6006A4B21 /* VideoTagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagCell.swift; sourceTree = "<group>"; };
+		130B84972201386E006A4B21 /* VideoTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagModel.swift; sourceTree = "<group>"; };
+		130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewLeftAlignedLayout.swift; sourceTree = "<group>"; };
 		130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawDetailsModel.swift; sourceTree = "<group>"; };
 		130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewLayout.swift; sourceTree = "<group>"; };
 		130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCoursesCell.swift; sourceTree = "<group>"; };
@@ -436,7 +441,6 @@
 		13E5FC7A22005C1800DA6271 /* DVideoStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoStickersViewController.swift; sourceTree = "<group>"; };
 		13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStickerCell.swift; sourceTree = "<group>"; };
 		13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoStickers.xcassets; sourceTree = "<group>"; };
-		13E5FC80220068F700DA6271 /* stickers.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stickers.json; sourceTree = "<group>"; };
 		40F1F8BDA3A52C2CE6DC7DD5 /* Pods-parenting.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.debug.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.debug.xcconfig"; sourceTree = "<group>"; };
 		A70A1A9A2C5C472442AC68C9 /* Pods-parenting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-parenting.release.xcconfig"; path = "Pods/Target Support Files/Pods-parenting/Pods-parenting.release.xcconfig"; sourceTree = "<group>"; };
 		F4DBC758DE70820A16B656B7 /* Pods_parenting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_parenting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -515,6 +519,7 @@
 			children = (
 				130F3C0721DDF08300AE2EF6 /* MediaModel.swift */,
 				130D56A121E5F99900CE65CB /* VideoCommentModel.swift */,
+				130B84972201386E006A4B21 /* VideoTagModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -681,7 +686,6 @@
 				130D569D21E5C5C800CE65CB /* Video.xcassets */,
 				1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */,
 				13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */,
-				13E5FC80220068F700DA6271 /* stickers.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -823,6 +827,8 @@
 				130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */,
 				130C86B821F1D13E005BBFF7 /* VideoStickerView.swift */,
 				13E5FC7C22005D4E00DA6271 /* VideoStickerCell.swift */,
+				130B8495220135D6006A4B21 /* VideoTagCell.swift */,
+				130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1033,7 +1039,6 @@
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
 				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
-				13E5FC81220068F700DA6271 /* stickers.json in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
@@ -1219,6 +1224,7 @@
 				13B7F73121B68728001BF15D /* QNCrc32.m in Sources */,
 				130C67FA21A3E9A500E30307 /* TeacherStoriesCell.swift in Sources */,
 				13B7F73C21B68728001BF15D /* QNSessionManager.m in Sources */,
+				130B8496220135D6006A4B21 /* VideoTagCell.swift in Sources */,
 				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
 				132A492521B52AF700038027 /* AppService.swift in Sources */,
 				1310A0AB21E7473C006399D8 /* VideoUserHeaderView.swift in Sources */,
@@ -1285,6 +1291,7 @@
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
 				130D56A221E5F99900CE65CB /* VideoCommentModel.swift in Sources */,
 				130DD43521CC863F0008259F /* CategoryView.swift in Sources */,
+				130B84982201386E006A4B21 /* VideoTagModel.swift in Sources */,
 				13B7F73621B68728001BF15D /* QNAsyncRun.m in Sources */,
 				1310A0A521E737FF006399D8 /* DVideoUserViewController.swift in Sources */,
 				1310A09F21E6E638006399D8 /* PresentationManager.swift in Sources */,
@@ -1313,6 +1320,7 @@
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
 				130DDE5C21D21257007D0619 /* DCoinDetailsViewController.swift in Sources */,
 				130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */,
+				130B849A220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
 				131160C321831AC70000F105 /* CourseEvaluationCell.swift in Sources */,
 				1310680421A6974A00F79E92 /* DHomeViewModel.swift in Sources */,

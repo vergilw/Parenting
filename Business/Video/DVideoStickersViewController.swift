@@ -12,13 +12,41 @@ class DVideoStickersViewController: BaseViewController {
 
     var stickerHandler: ((UIImage)->Void)?
     
-    fileprivate lazy var stickersImgs = [String]()
+    fileprivate lazy var stickersImgNames: [String] = [
+        "stickers_duck",
+        "stickers_strawberry",
+        "stickers_swimRing",
+        "stickers_gloves",
+        "stickers_horn",
+        "stickers_airplane",
+        "stickers_couplet",
+        "stickers_gift",
+        "stickers_candy",
+        "stickers_ingotPig",
+        "stickers_nipple",
+        "stickers_trumpet",
+        "stickers_sachet",
+        "stickers_heartEnvelope",
+        "stickers_goldBell",
+        "stickers_loveBear",
+        "stickers_strawberryPie",
+        "stickers_bathtub",
+        "stickers_stockings",
+        "stickers_briefs",
+        "stickers_topHat",
+        "stickers_lantern",
+        "stickers_teapot",
+        "stickers_birthdayCake",
+        "stickers_feeder",
+        "stickers_lollipop",
+        "stickers_heartGift"
+    ]
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "PingFangSC-Semibold", size: 15)!
         label.textColor = .white
-        label.text = "选择滤镜"
+        label.text = "添加贴纸"
         return label
     }()
     
@@ -101,24 +129,22 @@ extension DVideoStickersViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5//stickersImgs.count
+        return stickersImgNames.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoStickerCell.className(), for: indexPath) as! VideoStickerCell
-        cell.setup(img: UIImage(named: "stickers_a")!)
-//        if let imgString = filterData.filterPreviewImgs[exist: indexPath.row], let img = UIImage(contentsOfFile: imgString), let filterString = filterData.filterNames[exist: indexPath.row] {
-//            cell.setup(img: img, string: filterString)
-//        }
+        if let imgName = stickersImgNames[exist: indexPath.row], let img = UIImage(named: imgName) {
+            cell.setup(img: img)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if let closure = stickerHandler {
-            closure(UIImage(named: "stickers_a")!)
+        if let closure = stickerHandler, let imgName = stickersImgNames[exist: indexPath.row], let img = UIImage(named: imgName) {
+            closure(img)
         }
-        collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
     }
     
 }

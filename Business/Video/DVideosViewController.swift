@@ -181,14 +181,17 @@ class DVideosViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func cameraBtnAction() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            present(authorizationNavigationController, animated: true, completion: nil)
-            return
-        }
+        //FIXME: DEBUG
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//            present(authorizationNavigationController, animated: true, completion: nil)
+//            return
+//        }
+//
+//        let navigationController = BaseNavigationController(rootViewController: DVideoShootViewController())
+//        present(navigationController, animated: true, completion: nil)
         
-        let navigationController = BaseNavigationController(rootViewController: DVideoShootViewController())
-        present(navigationController, animated: true, completion: nil)
+        navigationController?.pushViewController(DVideoPostViewController(fileURL: URL(fileURLWithPath: "T##String"), coverImg: UIImage()), animated: true)
     }
 }
 

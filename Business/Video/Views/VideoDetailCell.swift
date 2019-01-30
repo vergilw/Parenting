@@ -479,12 +479,16 @@ class VideoDetailCell: UITableViewCell {
         
         if let URLString = model.media?.url, let url = URL(string: URLString) {
             if let currentURL = (player.currentItem?.asset as? AVURLAsset)?.url {
-                if currentURL.path != url.path.appending(".mp4") {
-                    player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+                //TODO: cache asset
+//                if currentURL.path != url.path.appending(".mp4") {
+//                    player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+                if currentURL.path != url.path {
+                    player.replaceCurrentItem(with: AVPlayerItem(url: url))
                     NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
                 }
             } else {
-                player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
+                player.replaceCurrentItem(with: AVPlayerItem(url: url))
+//                player.replaceCurrentItem(with: CachingPlayerItem(url: url, customFileExtension: "mp4"))
                 NotificationCenter.default.addObserver(self, selector: #selector(playToEndTimeAction), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
             }
             
