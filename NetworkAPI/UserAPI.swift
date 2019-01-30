@@ -12,7 +12,7 @@ import HandyJSON
 let UserProvider = MoyaProvider<UserAPI>(manager: DefaultAlamofireManager.sharedManager)
 
 enum UserAPI {
-    case updateUser(name: String?, avatar: String?)
+    case updateUser(name: String?, avatar: String?, signature: String?)
     case user
     case updatePushToken(String)
     case users(Int)
@@ -56,13 +56,16 @@ extension UserAPI: TargetType {
     
     var task: Task {
         switch self {
-        case let .updateUser(name, avatar):
+        case let .updateUser(name, avatar, signature):
             var parameters: [String: Any] = [String: Any]()
             if let name = name {
                 parameters["user"] = ["name": name]
             }
             if let avatar = avatar {
                 parameters["user"] = ["avatar": avatar]
+            }
+            if let signature = signature {
+                parameters["user"] = ["intro": signature]
             }
             return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         case .user:

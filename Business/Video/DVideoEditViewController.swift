@@ -270,6 +270,7 @@ class DVideoEditViewController: BaseViewController {
     fileprivate func initSubmitBtn() {
         let submitBtn: ActionButton = {
             let button = ActionButton()
+            button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
             button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
             button.titleLabel?.font = UIConstants.Font.body
             button.setTitle("下一步", for: .normal)
@@ -394,7 +395,13 @@ class DVideoEditViewController: BaseViewController {
             return
         }
         
-        sender.startAnimating()
+//        sender.startAnimating()
+        
+        let progressView = MBProgressHUD(view: view)
+        progressView.mode = .annularDeterminate
+        progressView.label.text = "正在导出..."
+        view.addSubview(progressView)
+        progressView.show(animated: true)
         
         editor.stopEditing()
         
@@ -463,16 +470,27 @@ class DVideoEditViewController: BaseViewController {
             return
         }
         
+        exportSession?.processingBlock = { progress in
+            progressView.progress = progress
+        }
         exportSession?.failureBlock = { error in
-            sender.stopAnimating()
+//            sender.stopAnimating()
+            DispatchQueue.main.async {
+                progressView.hide(animated: true)
+            }
         }
         exportSession?.completionBlock = { fileURL in
             guard let fileURL = fileURL else {
-                sender.stopAnimating()
+//                sender.stopAnimating()
+                DispatchQueue.main.async {
+                    progressView.hide(animated: true)
+                }
                 return
             }
             
             DispatchQueue.main.async {
+                progressView.hide(animated: true)
+                
                 let viewController = DVideoPostViewController(fileURL: fileURL, coverImg: UIImage(cgImage: cgImg))
                 self.navigationController?.pushViewController(viewController, animated: true)
                 sender.stopAnimating()
