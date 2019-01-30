@@ -53,7 +53,7 @@ class BaseViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let navigationController = navigationController {
+        if let navigationController = navigationController, parent == nil {
             navigationController.setNavigationBarHidden(false, animated: animated)
         }
     }

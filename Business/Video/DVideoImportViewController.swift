@@ -51,10 +51,8 @@ class DVideoImportViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if !(navigationController?.isNavigationBarHidden ?? true) {
-            navigationController?.setNavigationBarHidden(true, animated: true)
-        }
+
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -70,6 +68,7 @@ class DVideoImportViewController: BaseViewController {
         
         initBackBtn()
         initSubmitBtn()
+        initClipView()
     }
     
     fileprivate func initBackBtn() {
@@ -123,6 +122,8 @@ class DVideoImportViewController: BaseViewController {
         viewController.clipHandler = { [weak self] (startSeconds, endSeconds) in
             self?.movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds)
             self?.movieSettings[PLSDurationKey] = NSNumber(value: endSeconds-startSeconds)
+            self?.outputSettings[PLSMovieSettingsKey] = self?.movieSettings
+            
             self?.editor.timeRange = CMTimeRange(start: CMTime(seconds: startSeconds, preferredTimescale: 600), end: CMTime(seconds: endSeconds, preferredTimescale: 600))
             self?.editor.startEditing()
         }
@@ -131,9 +132,7 @@ class DVideoImportViewController: BaseViewController {
         
         viewController.view.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.trailing.equalTo(16)
-            make.top.equalTo(16)
-            make.bottom.equalTo(16)
+            make.height.equalTo(170)
         }
     }
     
@@ -156,6 +155,11 @@ class DVideoImportViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func submitBtnAction(sender: ActionButton) {
+        guard let duration = movieSettings[PLSDurationKey] as? NSNumber, duration.doubleValue <= 60 else {
+            HUDService.sharedInstance.show(string: "视频不能超过60秒")
+            return
+        }
         
+        navigationController?.pushViewController(DVideoEditViewController(settings: outputSettings), animated: true)
     }
 }

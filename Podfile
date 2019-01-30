@@ -25,6 +25,7 @@ target "parenting" do
     pod 'UITableView+FDTemplateLayoutCell'
     pod 'UITextView+Placeholder'
     pod 'TYCyclePagerView'
+    pod 'MBProgressHUD'
     
     pod 'GTSDK'
     pod 'Bugly' 

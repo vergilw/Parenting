@@ -59,7 +59,7 @@ class DVideoEditViewController: BaseViewController {
         return view
     }()
     
-    init(settings: [String: Any]) {
+    init(settings: [AnyHashable: Any]) {
         outputSettings = settings
         movieSettings = settings[PLSMovieSettingsKey] as! [AnyHashable : Any]
         asset = movieSettings[PLSAssetKey] as! AVAsset
@@ -322,6 +322,8 @@ class DVideoEditViewController: BaseViewController {
         viewController.clipHandler = { [weak self] (startSeconds, endSeconds) in
             self?.movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds)
             self?.movieSettings[PLSDurationKey] = NSNumber(value: endSeconds-startSeconds)
+            self?.outputSettings[PLSMovieSettingsKey] = self?.movieSettings
+            
             self?.editor.timeRange = CMTimeRange(start: CMTime(seconds: startSeconds, preferredTimescale: 600), end: CMTime(seconds: endSeconds, preferredTimescale: 600))
             self?.editor.startEditing()
         }
@@ -387,6 +389,11 @@ class DVideoEditViewController: BaseViewController {
     }
     
     @objc func submitBtnAction(sender: ActionButton) {
+        guard let duration = movieSettings[PLSDurationKey] as? NSNumber, duration.doubleValue <= 60 else {
+            HUDService.sharedInstance.show(string: "视频不能超过60秒")
+            return
+        }
+        
         sender.startAnimating()
         
         editor.stopEditing()

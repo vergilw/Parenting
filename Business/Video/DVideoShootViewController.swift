@@ -458,11 +458,22 @@ extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigati
         
         if let URL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
             
+            let progressView = MBProgressHUD(view: view)
+            progressView.mode = .annularDeterminate
+            progressView.label.text = "正在转码..."
+            view.addSubview(progressView)
+            progressView.show(animated: true)
+            
             transcoder = PLShortVideoTranscoder(url: URL)
             transcoder?.outputFileType = .MPEG4
             transcoder?.outputFilePreset = .presetHighestQuality
             
             transcoder?.completionBlock = { [weak self] (URL) in
+                DispatchQueue.main.async {
+                    progressView.hide(animated: true)
+                }
+                
+                
                 guard let URL = URL else { return }
                 let asset = AVAsset(url: URL)
                 
@@ -485,11 +496,15 @@ extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigati
             }
             
             transcoder?.failureBlock = { error in
+                DispatchQueue.main.async {
+                    progressView.hide(animated: true)
+                }
                 print(error)
             }
             
             transcoder?.processingBlock = { progress in
                 print(progress)
+                progressView.progress = progress
             }
             transcoder?.startTranscoding()
         }
