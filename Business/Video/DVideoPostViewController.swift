@@ -94,6 +94,12 @@ class DVideoPostViewController: BaseViewController {
         return button
     }()
     
+    fileprivate lazy var progressView: MBProgressHUD = {
+        let HUD = MBProgressHUD(view: view)
+        HUD.mode = .annularDeterminate
+        return HUD
+    }()
+    
     init(fileURL: URL, coverImg: UIImage) {
         super.init(nibName: nil, bundle: nil)
         
@@ -122,6 +128,7 @@ class DVideoPostViewController: BaseViewController {
     fileprivate func initContentView() {
         view.addSubviews([textView, previewBtn, previewImgView, collectionView, submitBtn, draftsBtn])
         
+        view.drawSeparator(startPoint: CGPoint(x: 0, y: 20+160+20), endPoint: CGPoint(x: UIScreenWidth, y: 20+160+20))
     }
     
     // MARK: - ============= Constraints =============
@@ -204,7 +211,11 @@ class DVideoPostViewController: BaseViewController {
         guard let fileData = try? Data(contentsOf: fileURL) else { return }
         guard let coverImg = coverImg else { return }
         
-        submitBtn.startAnimating()
+        
+        
+        progressView.label.text = "正在上传..."
+        view.addSubview(progressView)
+        progressView.show(animated: true)
         
         dispatchGroup.enter()
         //TODO: video mimetype detect
@@ -239,15 +250,17 @@ class DVideoPostViewController: BaseViewController {
         
         
         dispatchGroup.notify(queue: DispatchQueue.main) {
+            self.progressView.label.text = "正在发布..."
             
             guard let videoSignedID = self.videoSignedID, let coverSignedID = self.coverSignedID else {
-                self.submitBtn.stopAnimating()
+                self.progressView.hide(animated: true)
+                HUDService.sharedInstance.show(string: "发布失败")
                 return
             }
             
             VideoProvider.request(.video(self.textView.text, videoSignedID, coverSignedID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                 
-                self.submitBtn.stopAnimating()
+                self.progressView.hide(animated: true)
                 
                 guard code >= 0 else {
                     return
@@ -279,6 +292,9 @@ class DVideoPostViewController: BaseViewController {
 // MARK: - ============= PLShortVideoUploaderDelegate =============
 extension DVideoPostViewController: PLShortVideoUploaderDelegate {
     func shortVideoUploader(_ uploader: PLShortVideoUploader, uploadKey: String?, uploadPercent: Float) {
+        DispatchQueue.main.async {
+            self.progressView.progress = uploadPercent
+        }
         
     }
     
@@ -312,6 +328,14 @@ extension DVideoPostViewController: UITextViewDelegate {
         }
         
         textView.attributedText = attributedText
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if range.length == 0 && text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
     }
 }
 

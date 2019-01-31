@@ -83,11 +83,13 @@ class DMeFavoritesViewController: BaseViewController {
         })
         tableView.mj_footer.isHidden = true
         
+        //FIXME: DEBUG 1.1.0
         view.addSubview(contentView)
     }
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
+        //FIXME: DEBUG 1.1.0
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }

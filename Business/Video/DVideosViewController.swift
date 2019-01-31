@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class DVideosViewController: BaseViewController {
 
     var videoModels: [VideoModel]?
@@ -192,6 +193,8 @@ class DVideosViewController: BaseViewController {
         present(navigationController, animated: true, completion: nil)
         
 //        navigationController?.pushViewController(DVideoPostViewController(fileURL: URL(fileURLWithPath: "T##String"), coverImg: UIImage()), animated: true)
+        
+        
     }
 }
 

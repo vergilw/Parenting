@@ -30,6 +30,7 @@ class VideoCollectionCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = .white
+        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return label
     }()
     
@@ -45,12 +46,14 @@ class VideoCollectionCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = .white
+        label.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return label
     }()
     
     lazy fileprivate var viewsImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_viewsIcon")
+        imgView.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return imgView
     }()
     

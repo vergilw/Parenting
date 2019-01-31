@@ -96,6 +96,7 @@ class DVideoShootViewController: BaseViewController {
         button.layer.cornerRadius = 4
         button.clipsToBounds = true
         button.backgroundColor = UIColor(white: 1, alpha: 0.65)
+        button.contentMode = .scaleAspectFill
         button.addTarget(self, action: #selector(albumBtnAction), for: .touchUpInside)
         return button
     }()
@@ -305,7 +306,7 @@ class DVideoShootViewController: BaseViewController {
             
             guard let asset = assets.first else { return }
             
-            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: PHImageContentMode.aspectFill, options: nil, resultHandler: { (image, info) in
+            PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 88, height: 88), contentMode: PHImageContentMode.aspectFill, options: nil, resultHandler: { (image, info) in
                 DispatchQueue.main.async {
                     self.albumsBtn.setImage(image, for: UIControl.State.normal)
                 }
@@ -485,7 +486,7 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
     }
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didFinishRecordingMaxDuration maxDuration: CGFloat) {
-        
+        submitBtnAction()
     }
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didGetCameraAuthorizationStatus status: PLSAuthorizationStatus) {

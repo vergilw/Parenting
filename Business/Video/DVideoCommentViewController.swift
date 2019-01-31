@@ -192,11 +192,13 @@ class DVideoCommentViewController: BaseViewController {
                     }
                     self.tableView.reloadData()
                     
-                    if let totalCount = JSON?["total_count"] as? Int {
-                        self.titleLabel.text = "\(totalCount)条评论"
-                    }
+                    
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        
+                        if let totalCount = pagination["total_count"] as? Int {
+                            self.titleLabel.text = "\(totalCount)条评论"
+                        }
                         
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1

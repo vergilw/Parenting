@@ -239,6 +239,9 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && !AuthorizationService.sharedInstance.isSignIn() {
             return 0
+        //FIXME: DEBUG 1.1.0
+        } else if section == 2 {
+            return 1
         } else if section == 5 {
             return 0
         }

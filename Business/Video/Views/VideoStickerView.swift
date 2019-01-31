@@ -108,8 +108,10 @@ class VideoStickerView: UIView {
     }
     
     func hideBorder() {
-        imgView.layer.borderWidth = 0
-        imgView.layer.cornerRadius = 0
+        contentView.layer.borderWidth = 0
+        contentView.layer.cornerRadius = 0
+        removeBtn.isHidden = true
+        transformBtn.isHidden = true
     }
     
     @objc fileprivate func moveGestureAction(sender: UIPanGestureRecognizer) {

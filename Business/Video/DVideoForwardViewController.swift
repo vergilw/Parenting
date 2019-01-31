@@ -325,12 +325,19 @@ class DVideoForwardViewController: BaseViewController {
             return
         }
         
+        let progressView = MBProgressHUD(view: view)
+        progressView.mode = .annularDeterminate
+        progressView.label.text = "正在下载..."
+        view.addSubview(progressView)
+        progressView.show(animated: true)
+        
         Alamofire.download(URL) { (URL, response) -> (destinationURL: URL, options: DownloadRequest.DownloadOptions) in
             let documentsURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.cachesDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!
             return (documentsURL.appendingPathComponent("\(Date().timeIntervalSince1970).mp4"), DownloadRequest.DownloadOptions())
             }.downloadProgress(closure: { (progress) in
-                print(progress.fractionCompleted)
+                progressView.progress = Float(progress.fractionCompleted)
             }).response { (response) in
+                progressView.hide(animated: true)
                 if let URL = response.destinationURL {
                     PHPhotoLibrary.shared().performChanges({
                         PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL)

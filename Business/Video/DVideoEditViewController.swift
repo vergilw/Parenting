@@ -408,7 +408,7 @@ class DVideoEditViewController: BaseViewController {
         //stickers
         var stickerSettings = [[AnyHashable: Any]]()
         for stickerView in stickerViews {
-//            stickerView.hideBorder()
+            stickerView.hideBorder()
             
             var stickerSetting = [AnyHashable: Any]()
             

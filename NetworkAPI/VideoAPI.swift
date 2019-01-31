@@ -18,6 +18,7 @@ enum VideoAPI {
     case video_comments(Int, Int)
     case videos_user(Int, Int)
     case video_comment(Int, String)
+    case video_comment_like(String, String)
     case video(String, String, String)
     case video_favorite(Int)
     case video_favorite_delete(Int)
@@ -48,6 +49,8 @@ extension VideoAPI: TargetType {
             return "/api/videos"
         case let .video_comment(videoID, _):
             return "/api/Video/\(videoID)/comments"
+        case let .video_comment_like(commentID, _):
+            return "/api/Comment/\(commentID)/attitudes"
         case .video:
             return "/api/videos"
         case let .video_favorite(videoID):
@@ -80,6 +83,8 @@ extension VideoAPI: TargetType {
         case .videos_user:
             return .get
         case .video_comment:
+            return .post
+        case .video_comment_like:
             return .post
         case .video:
             return .post
@@ -126,6 +131,8 @@ extension VideoAPI: TargetType {
             return .requestParameters(parameters: ["author_id": userID, "page":page, "per":"12"], encoding: URLEncoding.default)
         case let .video_comment(_, string):
             return .requestParameters(parameters: ["comment": ["content": string]], encoding: JSONEncoding.default)
+        case let .video_comment_like(_, string):
+            return .requestParameters(parameters: ["opinion": string], encoding: URLEncoding.default)
         case let .video(title, media, cover):
             return .requestParameters(parameters: ["video": ["title": title, "media": media, "cover": cover]], encoding: JSONEncoding.default)
         case .video_favorite:

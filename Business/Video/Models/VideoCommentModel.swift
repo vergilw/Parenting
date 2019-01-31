@@ -10,9 +10,10 @@ import HandyJSON
 
 class VideoCommentModel: HandyJSON {
     
-    var id: Int?
+    var id: String?
     var content: String?
     var liked_count: Int?
+    var liked: Bool?
     var commenter: UserModel?
     var created_at: Date?
     

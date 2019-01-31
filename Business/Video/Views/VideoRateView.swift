@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AudioToolbox
 
 class VideoRateView: UIView {
     
@@ -114,6 +115,13 @@ class VideoRateView: UIView {
     
     var lastOffsetX: CGFloat = 0
     
+    fileprivate lazy var sound: SystemSoundID = {
+        let soundPath = Bundle.main.path(forResource: "dita", ofType: "wav")!
+        var shakeSound: SystemSoundID = 0
+        AudioServicesCreateSystemSoundID(URL(fileURLWithPath: soundPath) as CFURL, &shakeSound)
+        return shakeSound
+    }()
+    
     init() {
         super.init(frame: .zero)
         
@@ -186,7 +194,7 @@ class VideoRateView: UIView {
     @objc func gestureAction(sender: UIPanGestureRecognizer) {
         
         if sender.state == .changed {
-            let amountX = sender.velocity(in: self).x/150
+            let amountX = sender.velocity(in: self).x/300
             lastOffsetX += amountX
             
             var offset: CGFloat = 0
@@ -205,7 +213,11 @@ class VideoRateView: UIView {
 //                topSlowIndicatorImgView.isHidden = true
 //            }
             
+            
+            
             translatePanOffset(offset: lastOffsetX)
+            
+            
             
         } else if sender.state == .ended {
             if lastOffsetX >= 15 {
@@ -248,6 +260,11 @@ class VideoRateView: UIView {
                 if let closure = completionHandler {
                     closure(.topfast)
                 }
+                
+//                if lastOffsetX > 10 {
+//                    AudioServicesPlaySystemSound(sound)
+                
+//                }
             }
         }
         
@@ -271,5 +288,9 @@ class VideoRateView: UIView {
         topFastLabel.transform = CGAffineTransform(rotationAngle: CGFloat.pi/180*offset)
         
         contentView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/180*offset)
+    }
+    
+    deinit {
+        AudioServicesDisposeSystemSoundID(sound)
     }
 }
