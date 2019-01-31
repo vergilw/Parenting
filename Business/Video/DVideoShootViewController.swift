@@ -119,6 +119,8 @@ class DVideoShootViewController: BaseViewController {
         return view
     }()
     
+    fileprivate lazy var dispatchGroup: DispatchGroup? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -130,7 +132,7 @@ class DVideoShootViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
+        super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
@@ -273,6 +275,21 @@ class DVideoShootViewController: BaseViewController {
     // MARK: - ============= Request =============
     fileprivate func fetchAlbumsCover() {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
+            if PHPhotoLibrary.authorizationStatus() == .notDetermined {
+                PHPhotoLibrary.requestAuthorization({ (status) in
+                    if status == .authorized {
+                        self.fetchAlbumsCover()
+                    } else {
+                        HUDService.sharedInstance.show(string: "没有访问照片权限，获取相册失败")
+                    }
+                })
+                return
+                
+            } else if PHPhotoLibrary.authorizationStatus() == .denied || PHPhotoLibrary.authorizationStatus() == .restricted {
+                HUDService.sharedInstance.show(string: "没有访问照片权限，获取相册失败")
+                return
+            }
+            
             let options = PHFetchOptions()
             options.includeHiddenAssets = false
             options.includeAllBurstAssets = false
@@ -321,6 +338,11 @@ class DVideoShootViewController: BaseViewController {
     }
     
     @objc func dimissBtnAction() {
+        guard recorder.getTotalDuration() > 0 else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         alertController.addAction(UIAlertAction(title: "重新拍摄", style: UIAlertAction.Style.destructive, handler: { (action) in
             self.progressBar.deleteAllFragment()
@@ -378,12 +400,27 @@ class DVideoShootViewController: BaseViewController {
     }
     
     @objc func submitBtnAction() {
+        //未暂停直接点击下一步，需要异步等待视频保存完成
+        if recorder.isRecording {
+            dispatchGroup = DispatchGroup()
+            dispatchGroup?.enter()
+            
+            recordBtn.setImage(nil, for: UIControl.State.normal)
+            recordBtn.backgroundColor = UIColor(white: 1, alpha: 0.7)
+            recorder.stopRecording()
+            
+            dispatchGroup?.notify(queue: DispatchQueue.main, execute: {
+                self.submitBtnAction()
+            })
+            
+            return
+        }
+        
         var plsMovieSettings = [String: Any]()
         plsMovieSettings[PLSAssetKey] = recorder.assetRepresentingAllFiles()
         plsMovieSettings[PLSStartTimeKey] = NSNumber(value: 0.0)
         plsMovieSettings[PLSDurationKey] = NSNumber(value: recorder.assetRepresentingAllFiles().duration.seconds)
         plsMovieSettings[PLSVolumeKey] = NSNumber(value: 1.0)
-//        plsMovieSettings["DActualDuration"] = NSNumber(value: Float(recorder.getTotalDuration()))
         
         let outputSettings = [PLSMovieSettingsKey: plsMovieSettings]
         
@@ -440,10 +477,37 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
             self.rightStackView.alpha = 1.0
             self.rateView.alpha = 1.0
         })
+        
+        //未暂停直接点击下一步，需要异步等待视频保存完成
+        if let dispatchGroup = dispatchGroup {
+            dispatchGroup.leave()
+        }
     }
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didFinishRecordingMaxDuration maxDuration: CGFloat) {
         
+    }
+    
+    func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didGetCameraAuthorizationStatus status: PLSAuthorizationStatus) {
+        if status == .authorized {
+            if !recorder.isRecording {
+                recorder.startCaptureSession()
+            }
+            
+        } else {
+            HUDService.sharedInstance.show(string: "没有访问摄像头权限，拍摄失败")
+        }
+    }
+    
+    func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didGetMicrophoneAuthorizationStatus status: PLSAuthorizationStatus) {
+        if status == .authorized {
+            if !recorder.isRecording {
+                recorder.startCaptureSession()
+            }
+            
+        } else {
+            HUDService.sharedInstance.show(string: "没有访问麦克风权限，拍摄失败")
+        }
     }
 }
 
