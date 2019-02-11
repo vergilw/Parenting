@@ -17,6 +17,7 @@ enum AuthorizationAPI {
     case signInWithWechat(openID: String, accessToken: String)
     case signUpWithWechat(openID: String, phone: String, code: String)
     case bindWechat(parameters: [String: Any])
+    case signUpWithDeviceID
 }
 
 extension AuthorizationAPI: TargetType {
@@ -37,6 +38,8 @@ extension AuthorizationAPI: TargetType {
             return "/app/wechats/bind_mobile"
         case .bindWechat:
             return "/app/login/bind_wechat"
+        case .signUpWithDeviceID:
+            return "/backend/mock"
         }
     }
     
@@ -51,6 +54,8 @@ extension AuthorizationAPI: TargetType {
         case .signUpWithWechat:
             return .post
         case .bindWechat:
+            return .post
+        case .signUpWithDeviceID:
             return .post
         }
     }
@@ -75,6 +80,9 @@ extension AuthorizationAPI: TargetType {
             
         case let .bindWechat(parameters):
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            
+        case .signUpWithDeviceID:
+            return .requestParameters(parameters: ["account":AppService.sharedInstance.uniqueIdentifier], encoding: URLEncoding.default)
         }
     }
     

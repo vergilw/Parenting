@@ -81,7 +81,7 @@ class DTopUpViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("1. 氧育币为虚拟货币，充值后的氧育币不会过期仅限于购买APP内的虚拟内容，不可转增给他人\n2. 氧育币在仅限iOS系统消费，无法在其他系统使用\n3. 您充值的氧育币会和您当前登录的氧育亲子账号相关联，且您能够从任何iOS设备使用这些氧育币\n4. 如果有其他问题，请联系客服协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
+        label.setParagraphText("1. 氧育币为虚拟货币，充值后的氧育币不会过期仅限于购买APP内的虚拟内容，不可转增给他人\n2. 氧育币在仅限iOS系统消费，无法在其他系统使用\n3. 您充值的氧育币会和您当前登录的氧育亲子账号相关联\n4. 如果有其他问题，请联系客服协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
         return label
     }()
     
@@ -100,7 +100,9 @@ class DTopUpViewController: BaseViewController {
         
         reload()
         fetchData()
-        AuthorizationService.sharedInstance.updateUserInfo()
+        if AuthorizationService.sharedInstance.isSignIn() {
+            AuthorizationService.sharedInstance.updateUserInfo()
+        }
     }
     
     // MARK: - ============= Initialize View =============
@@ -197,6 +199,8 @@ class DTopUpViewController: BaseViewController {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
             balanceValueLabel.textColor = UIConstants.Color.primaryOrange
             balanceValueLabel.setPriceText(text: balance, discount: nil)
+        } else {
+            balanceValueLabel.setPriceText(text: "0", discount: nil)
         }
         
     }
@@ -229,6 +233,16 @@ extension DTopUpViewController: UICollectionViewDataSource, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         guard let models = advanceModels else { return }
+        
+        guard AuthorizationService.sharedInstance.isDeviceSignIn() else {
+            let view = IAPSignInView()
+            UIApplication.shared.keyWindow?.addSubview(view)
+            view.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            view.present()
+            return
+        }
         
         if let model = advanceModels?[exist: indexPath.row], let productID = model.apple_product_id {
             indicatorBtn.startAnimating()

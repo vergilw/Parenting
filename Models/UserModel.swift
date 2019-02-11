@@ -20,6 +20,7 @@ class UserModel: HandyJSON {
     var reward: String?
     var intro: String?
     var badge: String?
+    var isDeviceSignIn: Bool? = false
     
     var videos_count: Int?
     var video_liked_count: Int?

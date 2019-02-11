@@ -49,7 +49,17 @@ class AuthorizationService {
     }
     
     func isSignIn() -> Bool {
-        return user != nil
+        if user != nil && user?.isDeviceSignIn == false {
+            return true
+        }
+        return false
+    }
+    
+    func isDeviceSignIn() -> Bool {
+        if user != nil {
+            return true
+        }
+        return false
     }
     
     func cacheSignInInfo(model: UserModel) {
@@ -66,6 +76,7 @@ class AuthorizationService {
         UserProvider.request(.user, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON) {
+                model.isDeviceSignIn = self.user?.isDeviceSignIn
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
             }
         }))

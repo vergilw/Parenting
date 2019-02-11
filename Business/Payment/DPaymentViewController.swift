@@ -117,7 +117,10 @@ class DPaymentViewController: BaseViewController {
         addNotificationObservers()
         
         reload()
-        AuthorizationService.sharedInstance.updateUserInfo()
+        
+        if AuthorizationService.sharedInstance.isSignIn() {
+            AuthorizationService.sharedInstance.updateUserInfo()
+        }
     }
     
     // MARK: - ============= Initialize View =============
@@ -472,6 +475,10 @@ class DPaymentViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchRewardData() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            return
+        }
+        
         HUDService.sharedInstance.showFetchingView(target: rewardView)
         
         RewardCoinProvider.request(.reward_detail(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
@@ -549,6 +556,8 @@ class DPaymentViewController: BaseViewController {
     @objc func reload() {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
             coinBalanceLabel.setPriceText(text: balance, discount: nil)
+        } else {
+            coinBalanceLabel.setPriceText(text: "0", discount: nil)
         }
         if let balance = AuthorizationService.sharedInstance.user?.reward {
             rewardBalanceLabel.setPriceText(text: balance, discount: nil)
@@ -557,6 +566,8 @@ class DPaymentViewController: BaseViewController {
 //            if let balanceFloat = Float(balance), balanceFloat < 100 {
 //                withdrawBtn.isHidden = true
 //            }
+        } else {
+            rewardBalanceLabel.setPriceText(text: "0", discount: nil)
         }
         
     }

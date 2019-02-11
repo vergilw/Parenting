@@ -438,12 +438,6 @@ class DVideoEditViewController: BaseViewController {
         exportSession?.outputFileType = .MPEG4
         exportSession?.shouldOptimizeForNetworkUse = true
         
-        //FIXME: Qiniu SDK sticker bug
-//        let startSeconds = (movieSettings[PLSStartTimeKey] as! NSNumber).doubleValue
-//        let durationSeconds = (movieSettings[PLSDurationKey] as! NSNumber).doubleValue
-//        movieSettings[PLSStartTimeKey] = NSNumber(value: startSeconds+1.5)
-//        movieSettings[PLSDurationKey] = NSNumber(value: durationSeconds-1.5)
-//        outputSettings[PLSMovieSettingsKey] = movieSettings
         exportSession?.outputSettings = outputSettings
         exportSession?.isExportMovieToPhotosAlbum = false
         exportSession?.audioChannel = 2

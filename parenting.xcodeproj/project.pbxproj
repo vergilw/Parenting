@@ -67,7 +67,6 @@
 		130E69E321EDB47900C20915 /* DVideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E69E221EDB47900C20915 /* DVideoEditViewController.swift */; };
 		130EA23A21F8093C00D59D32 /* DVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */; };
 		130EA23C21F8507800D59D32 /* reward_videoAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */; };
-		130EE81C2202D68900651587 /* shake.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 130EE81B2202D68900651587 /* shake.mp3 */; };
 		130EE8202202E03800651587 /* dita.wav in Resources */ = {isa = PBXBuildFile; fileRef = 130EE81F2202E03800651587 /* dita.wav */; };
 		130EF267219A5E6E008F61FA /* ResponseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF266219A5E6E008F61FA /* ResponseService.swift */; };
 		130EF269219A73BA008F61FA /* AuthorizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EF268219A73BA008F61FA /* AuthorizationService.swift */; };
@@ -180,6 +179,7 @@
 		132DA5FE21C3A227004F0F42 /* DVideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */; };
 		132DA60021C3A3EE004F0F42 /* DVideoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */; };
 		132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */; };
+		13477B8822114A5B00F09782 /* IAPSignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13477B8722114A5B00F09782 /* IAPSignInView.swift */; };
 		13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13796B3021B7D15A00E0C3D9 /* ShareView.swift */; };
 		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
 		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
@@ -272,7 +272,6 @@
 		130E69E221EDB47900C20915 /* DVideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoEditViewController.swift; sourceTree = "<group>"; };
 		130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoPreviewViewController.swift; sourceTree = "<group>"; };
 		130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward_videoAnimation.gif; sourceTree = "<group>"; };
-		130EE81B2202D68900651587 /* shake.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shake.mp3; sourceTree = "<group>"; };
 		130EE81F2202E03800651587 /* dita.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dita.wav; sourceTree = "<group>"; };
 		130EF266219A5E6E008F61FA /* ResponseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseService.swift; sourceTree = "<group>"; };
 		130EF268219A73BA008F61FA /* AuthorizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationService.swift; sourceTree = "<group>"; };
@@ -390,6 +389,7 @@
 		132DA5FD21C3A227004F0F42 /* DVideoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoDetailViewController.swift; sourceTree = "<group>"; };
 		132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoDetailViewModel.swift; sourceTree = "<group>"; };
 		132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailCell.swift; sourceTree = "<group>"; };
+		13477B8722114A5B00F09782 /* IAPSignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPSignInView.swift; sourceTree = "<group>"; };
 		13796B3021B7D15A00E0C3D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
 		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -479,7 +479,6 @@
 			isa = PBXGroup;
 			children = (
 				130EE81F2202E03800651587 /* dita.wav */,
-				130EE81B2202D68900651587 /* shake.mp3 */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -515,6 +514,7 @@
 				130D8E2021D5BE6C008833C7 /* AssociateWechatView.swift */,
 				130D8E2421D60B69008833C7 /* WithdrawDetailsCell.swift */,
 				130D8E2A21D631F2008833C7 /* DetailsNotDataCell.swift */,
+				13477B8722114A5B00F09782 /* IAPSignInView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1065,7 +1065,6 @@
 				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
 				130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
-				130EE81C2202D68900651587 /* shake.mp3 in Resources */,
 				13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
@@ -1235,6 +1234,7 @@
 				13B7F73421B68728001BF15D /* QNEtag.m in Sources */,
 				130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */,
 				132DA5FA21C35C21004F0F42 /* VideoModel.swift in Sources */,
+				13477B8822114A5B00F09782 /* IAPSignInView.swift in Sources */,
 				1320C38A217EB93A00902A5C /* String+Extension.swift in Sources */,
 				130C86B921F1D13E005BBFF7 /* VideoStickerView.swift in Sources */,
 				130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */,

@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    var tabBarController: UITabBarController = {
+    let tabBarController: UITabBarController = {
         let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
         let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
         homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
@@ -77,6 +77,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //FIXME: shutdown constraints log
 //        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
+        
+        //FIXME: generate filter preview
+//        let filters = VideoFilter()
+        
         return true
     }
     
@@ -91,47 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         
-        if AuthorizationService.sharedInstance.isSignIn() {
-            let tabBarController: UITabBarController = {
-                let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-                let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-                homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
-                homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
-                homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-                
-                let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
-                let videoImg = UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-                videoNavigationController.tabBarItem = UITabBarItem(title: "视频", image: videoImg, tag: 1)
-                videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_videoSelected")?.withRenderingMode(.alwaysOriginal)
-                videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-                
-                let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
-                let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-                meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
-                meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
-                meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-                
-                let tabBarController = UITabBarController()
-                tabBarController.tabBar.isTranslucent = false
-                
-                tabBarController.tabBar.backgroundImage = UIImage(color: .white)
-                tabBarController.tabBar.shadowImage = UIImage()
-                
-                tabBarController.tabBar.layer.shadowOffset = CGSize(width: 0, height: -3.0)
-                tabBarController.tabBar.layer.shadowOpacity = 0.05
-                tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
-                
-                //FIXME: DEBUG VIDEO
-                tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: true)
-                
-                return tabBarController
-            }()
-            
-            self.window?.rootViewController = tabBarController
-        } else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            self.window?.rootViewController = authorizationNavigationController
-        }
+        self.window?.rootViewController = tabBarController
         
         NotificationCenter.default.addObserver(self, selector: #selector(setupRootViewController), name: Notification.Authorization.signInDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(setupRootViewController), name: Notification.Authorization.signOutDidSuccess, object: nil)

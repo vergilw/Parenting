@@ -167,7 +167,7 @@ struct VideoFilter {
         setupData()
         
         //FIXME: generate filter preview programmed
-        //        generateFilterPreviews()
+//        generateFilterPreviews()
     }
     
     fileprivate mutating func setupData() {
@@ -208,6 +208,7 @@ struct VideoFilter {
             let paths = URL(fileURLWithPath: filterImg).pathComponents
             let filterName = paths[paths.count-2]
             
+            //FIXME: video_filterAndroid
             let result: UIImage = PLSFilter.apply(UIImage(named: "video_filterOriginImg"), colorImagePath: filterImg)!
             let filePath = documentURL.appendingPathComponent("\(filterName).png")
             let data: Data = result.pngData()!

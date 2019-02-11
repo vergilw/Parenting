@@ -54,7 +54,7 @@ class DVideoCommentViewController: BaseViewController {
         if #available(iOS 11.0, *) {
             textField.keyboardDistanceFromTextField = -11-(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
         } else {
-            textField.keyboardDistanceFromTextField = -11
+            textField.keyboardDistanceFromTextField = 5
         }
         return textField
     }()

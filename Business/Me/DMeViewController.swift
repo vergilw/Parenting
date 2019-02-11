@@ -237,10 +237,8 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 1 && !AuthorizationService.sharedInstance.isSignIn() {
-            return 0
-        //FIXME: DEBUG 1.1.0
-        } else if section == 2 {
+        //FIXME: release 1.1.0
+        if section == 2 {
             return 1
         } else if section == 5 {
             return 0
@@ -288,11 +286,11 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             navigationController?.pushViewController(DOrdersViewController(), animated: true)
         } else if indexPath.section == 1 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
+//            guard AuthorizationService.sharedInstance.isSignIn() else {
+//                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//                present(authorizationNavigationController, animated: true, completion: nil)
+//                return
+//            }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
         } else if indexPath.section == 2 {
             guard AuthorizationService.sharedInstance.isSignIn() else {

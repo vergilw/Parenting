@@ -14,6 +14,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         let button = UIButton()
         button.layer.cornerRadius = 34
         button.clipsToBounds = true
+        button.setImage(UIImage(named: "public_avatarPlaceholder"), for: .normal)
         //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
         return button
     }()

@@ -71,7 +71,11 @@ class DVideoUserViewController: BaseViewController {
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo((navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight)
+            if #available(iOS 11, *) {
+                make.top.equalTo((navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight)
+            } else {
+                make.top.equalTo(0)
+            }
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
