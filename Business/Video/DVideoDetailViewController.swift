@@ -498,6 +498,12 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
     }
     
     func tableViewCellAvatar(_ tableViewCell: VideoDetailCell) {
+        if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navigationController = tabBarController.selectedViewController as? UINavigationController, navigationController.viewControllers.contains(where: { (viewController) -> Bool in
+            return viewController.isKind(of: DVideoUserViewController.self)
+        }) {
+            return
+        }
+        
         guard let userID = tableViewCell.model?.author?.id else { return }
         
         let viewController = DVideoUserViewController()

@@ -17,6 +17,7 @@ class DVideoShootViewController: BaseViewController {
         let recorder = PLShortVideoRecorder(videoConfiguration: PLSVideoConfiguration.default(), audioConfiguration: PLSAudioConfiguration.default())
         recorder.maxDuration = 60
         recorder.minDuration = 5
+        recorder.setBeautifyModeOn(true)
         recorder.delegate = self
         return recorder
     }()
@@ -545,7 +546,7 @@ extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigati
                 var plsMovieSettings = [String: Any]()
                 plsMovieSettings[PLSAssetKey] = asset
                 plsMovieSettings[PLSStartTimeKey] = NSNumber(value: 0.0)
-                plsMovieSettings[PLSDurationKey] = NSNumber(value: asset.duration.seconds)
+                plsMovieSettings[PLSDurationKey] = NSNumber(value: min(asset.duration.seconds, 60))
                 plsMovieSettings[PLSVolumeKey] = NSNumber(value: 1.0)
                 
                 let outputSettings = [PLSMovieSettingsKey: plsMovieSettings]

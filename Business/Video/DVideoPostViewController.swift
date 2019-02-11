@@ -267,7 +267,13 @@ class DVideoPostViewController: BaseViewController {
                 }
                 
                 HUDService.sharedInstance.show(string: "发布成功")
-                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: {
+                    if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navigationController = tabBarController.selectedViewController as? UINavigationController, !(navigationController.topViewController?.isKind(of: DVideoUserViewController.self) ?? false) {
+                        let viewController = DVideoUserViewController()
+                        viewController.userID = AuthorizationService.sharedInstance.user?.id
+                        navigationController.pushViewController(viewController, animated: true)
+                    }
+                })
             }))
         }
     }

@@ -102,7 +102,13 @@ class DMeFavoritesViewController: BaseViewController {
     
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
-        HUDService.sharedInstance.showFetchingView(target: self.tableView)
+        var HUDHeight: CGFloat = 0
+        if #available(iOS 11, *) {
+            HUDHeight = UIScreenHeight-(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        } else {
+            HUDHeight = UIScreenHeight-UIStatusBarHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        }
+        HUDService.sharedInstance.showFetchingView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
         
         CourseProvider.request(.course_favorites(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
@@ -128,13 +134,13 @@ class DMeFavoritesViewController: BaseViewController {
                 }
                 
                 if self.favoritesModels?.count ?? 0 == 0 {
-                    HUDService.sharedInstance.showNoDataView(target: self.tableView) { [weak self] in
+                    HUDService.sharedInstance.showNoDataView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
                         self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
                     }
                 }
                 
             } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.tableView) { [weak self] in
+                HUDService.sharedInstance.showNoNetworkView(target: self.tableView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
                     self?.fetchData()
                 }
             }
@@ -169,7 +175,13 @@ class DMeFavoritesViewController: BaseViewController {
     }
     
     fileprivate func fetchVideoData() {
-        HUDService.sharedInstance.showFetchingView(target: self.collectionView)
+        var HUDHeight: CGFloat = 0
+        if #available(iOS 11, *) {
+            HUDHeight = UIScreenHeight-(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        } else {
+            HUDHeight = UIScreenHeight-UIStatusBarHeight-(navigationController?.navigationBar.bounds.size.height ?? 0)-46
+        }
+        HUDService.sharedInstance.showFetchingView(target: self.collectionView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
         
         VideoProvider.request(.video_favorites(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
@@ -195,14 +207,18 @@ class DMeFavoritesViewController: BaseViewController {
                     }
                 }
                 
-                if self.favoritesModels?.count ?? 0 == 0 {
-                    HUDService.sharedInstance.showNoDataView(target: self.collectionView) { [weak self] in
-                        self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                if self.videoModels?.count ?? 0 == 0 {
+                    HUDService.sharedInstance.showNoDataView(target: self.collectionView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
+                        
+                        if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let viewController = tabBarController.viewControllers?[exist: 1] {
+                            tabBarController.selectedViewController = viewController
+                        }
+                        self?.navigationController?.popToRootViewController(animated: true)
                     }
                 }
                 
             } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.collectionView) { [weak self] in
+                HUDService.sharedInstance.showNoNetworkView(target: self.collectionView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight))) { [weak self] in
                     self?.fetchData()
                 }
             }

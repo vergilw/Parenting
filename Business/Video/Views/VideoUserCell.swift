@@ -95,7 +95,14 @@ class VideoUserCell: UICollectionViewCell {
     
     @objc func deleteBtnAction() {
         if let closure = deleteHandler, let string = model?.id, let videoID = Int(string) {
-            closure(videoID, deleteBtn)
+            
+            let alertController = UIAlertController(title: nil, message: "确定删除吗？", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
+                closure(videoID, self.deleteBtn)
+            }))
+            self.viewController?.present(alertController, animated: true, completion: nil)
+            
         }
     }
 }

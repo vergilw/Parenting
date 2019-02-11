@@ -150,6 +150,33 @@ class DVideoUserViewController: BaseViewController {
                     }
                 }
                 
+                //FIXME: DEBUG no data
+                if self.videoModels?.count ?? 0 == 0 {
+                    let HUD = ResultView()
+                    if self.userID == AuthorizationService.sharedInstance.user?.id {
+                        HUD.setupNoData(isSolutionHidden: false)
+                        HUD.solutionBtn.setTitle("   前去拍摄   ", for: UIControl.State.normal)
+                        HUD.actionBlock = { [weak self] in
+                            guard AuthorizationService.sharedInstance.isSignIn() else {
+                                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                                self?.present(authorizationNavigationController, animated: true, completion: nil)
+                                return
+                            }
+                            
+                            let navigationController = BaseNavigationController(rootViewController: DVideoShootViewController())
+                            self?.present(navigationController, animated: true, completion: nil)
+                        }
+                    } else {
+                        HUD.setupNoData(isSolutionHidden: true)
+                    }
+                    
+                    self.view.addSubview(HUD)
+                    
+                    HUD.snp.makeConstraints { make in
+                        make.edges.equalToSuperview()
+                    }
+                }
+                
             } else if code == -2 {
                 HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
                     self?.fetchData()
