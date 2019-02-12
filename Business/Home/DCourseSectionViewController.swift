@@ -220,6 +220,17 @@ class DCourseSectionViewController: BaseViewController {
             self?.dismissDimBtn.sendActions(for: .touchUpInside)
         }
         view.selectedSectionBlock = { [weak self] sectionID in
+            guard (self?.viewModel.courseSectionModel?.course?.is_bought ?? false) == true else {
+                HUDService.sharedInstance.show(string: "请先购买课程")
+                return
+            }
+            
+            guard AuthorizationService.sharedInstance.isDeviceSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
+                self?.present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
+            
             self?.reload(sectionID: sectionID)
         }
         return view

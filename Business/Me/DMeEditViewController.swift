@@ -42,7 +42,7 @@ class DMeEditViewController: BaseViewController {
         button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h3
         button.setTitle("保存", for: .normal)
-        button.addTarget(self, action: #selector(nameSaveBtnAction), for: .touchUpInside)
+        button.addTarget(self, action: #selector(saveBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -240,6 +240,8 @@ class DMeEditViewController: BaseViewController {
             } else {
                 wechatBtn.setTitle("未绑定微信，点击绑定", for: .normal)
             }
+            
+            signatureTextField.text = model.intro
         }
     }
     
@@ -269,6 +271,14 @@ class DMeEditViewController: BaseViewController {
             
         } else {
             self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc func saveBtnAction() {
+        if nameTextField.isFirstResponder {
+            nameSaveBtnAction()
+        } else if signatureTextField.isFirstResponder {
+            signatureSaveBtnAction()
         }
     }
     

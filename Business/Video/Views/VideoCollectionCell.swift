@@ -119,6 +119,8 @@ class VideoCollectionCell: UICollectionViewCell {
         
         if let URLString = model.author?.avatar_url {
             avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"))
+        } else {
+            avatarImgView.image = UIImage(named: "public_avatarDefault")
         }
         
         nameLabel.text = model.author?.name

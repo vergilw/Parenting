@@ -65,6 +65,8 @@ class PlaybackRecordService {
     }
     
     func updateRecords(courseID: Int, sectionID: Int, seconds: TimeInterval) {
+        guard AuthorizationService.sharedInstance.isSignIn() else { return }
+        
         if let _ = records?[courseID] {
             records?[courseID]?[sectionID] = seconds
             //用0来记录课程最新播放索引
@@ -77,6 +79,7 @@ class PlaybackRecordService {
     }
     
     func syncRecords() {
+        guard AuthorizationService.sharedInstance.isSignIn() else { return }
         guard let records = records, isSynchronizing == false else { return }
         guard Alamofire.NetworkReachabilityManager(host: ServerHost)?.isReachableOnEthernetOrWiFi ?? false else { return }
         

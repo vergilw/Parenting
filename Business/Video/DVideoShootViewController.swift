@@ -484,8 +484,16 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
         if let dispatchGroup = dispatchGroup {
             dispatchGroup.leave()
         }
+        
+        //录制到最大时间，自动暂停
+        if recorder.isRecording == false && recorder.assetRepresentingAllFiles().duration.seconds >= 60 {
+            recordBtn.setImage(nil, for: UIControl.State.normal)
+            recordBtn.backgroundColor = UIColor(white: 1, alpha: 0.7)
+            submitBtnAction()
+        }
     }
     
+    //MARK: never callback
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didFinishRecordingMaxDuration maxDuration: CGFloat) {
         submitBtnAction()
     }

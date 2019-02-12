@@ -562,10 +562,6 @@ class DPaymentViewController: BaseViewController {
         if let balance = AuthorizationService.sharedInstance.user?.reward {
             rewardBalanceLabel.setPriceText(text: balance, discount: nil)
             
-            //FIXME: DEBUG
-//            if let balanceFloat = Float(balance), balanceFloat < 100 {
-//                withdrawBtn.isHidden = true
-//            }
         } else {
             rewardBalanceLabel.setPriceText(text: "0", discount: nil)
         }

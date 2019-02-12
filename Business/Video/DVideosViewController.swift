@@ -239,37 +239,50 @@ extension DVideosViewController: UIScrollViewDelegate {
         }
         
         //TODO: iOS 10 first
-        let offsetY = scrollView.contentOffset.y - lastOffsetY
-        if scrollView.contentOffset.y < 0 {
-            cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-            lastOffsetY = 0
-        } else if offsetY > 0 {
-            if cameraBtn.frame.minY < view.bounds.height {
-                if cameraBtn.center.y+offsetY > view.frame.maxY+cameraBtn.bounds.midY {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY+cameraBtn.bounds.midY)
-                } else {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: cameraBtn.center.y+offsetY)
-                }
-                
-            } else {
-                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY+cameraBtn.bounds.midY)
-            }
-            
-            lastOffsetY = scrollView.contentOffset.y
+        let offsetY = lastOffsetY - scrollView.contentOffset.y
+        
+        if cameraBtn.center.y-offsetY > view.bounds.height+cameraBtn.bounds.midY {
+            cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height+cameraBtn.bounds.midY)
+        } else if cameraBtn.center.y-offsetY < view.bounds.height-45-cameraBtn.bounds.midY || scrollView.contentOffset.y <= 0 {
+            cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height-45-cameraBtn.bounds.midY)
         } else {
-            if cameraBtn.frame.maxY > view.bounds.height-45 {
-                if ((cameraBtn.center.y+offsetY) as CGFloat) < ((view.frame.maxY-45-55-cameraBtn.bounds.height/2) as CGFloat) {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-                } else {
-                    cameraBtn.center = CGPoint(x: view.frame.midX, y: cameraBtn.center.y+offsetY)
-                }
-                
-            } else {
-                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.frame.maxY-45-55-cameraBtn.bounds.height/2)
-            }
-            
-            lastOffsetY = scrollView.contentOffset.y
+            cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y-offsetY)
         }
+        print(cameraBtn.center.y-offsetY, offsetY)
+//        if scrollView.contentOffset.y < 0 {
+//            cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height-45-55-cameraBtn.bounds.height/2)
+//            lastOffsetY = 0
+//        } else if offsetY > 0 {
+//            if cameraBtn.frame.minY < view.bounds.height {
+//                if cameraBtn.center.y+offsetY > view.bounds.height+cameraBtn.bounds.midY {
+//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height+cameraBtn.bounds.midY)
+//                } else {
+//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y+offsetY)
+//                }
+//
+//            } else {
+//                cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height+cameraBtn.bounds.midY)
+//            }
+//
+//            lastOffsetY = scrollView.contentOffset.y
+//        } else {
+//
+//            if cameraBtn.frame.maxY > view.bounds.height-45 {
+//                if ((cameraBtn.center.y+offsetY) as CGFloat) < ((view.bounds.height-45-55+cameraBtn.bounds.height/2) as CGFloat) {
+//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height-45-55+cameraBtn.bounds.height/2)
+//                    print("1", lastOffsetY)
+//                } else {
+//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y+offsetY)
+//                    print("2", lastOffsetY)
+//                }
+//
+//            } else {
+//                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.bounds.height-45-55+cameraBtn.bounds.height/2)
+//                print("3", lastOffsetY)
+//            }
+//
+            lastOffsetY = scrollView.contentOffset.y
+//        }
         
     }
 }

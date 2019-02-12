@@ -482,6 +482,7 @@ class DCourseDetailViewController: BaseViewController {
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(courseRecordDidChanged(sender:)), name: Notification.Course.courseRecordDidChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchData), name: Notification.Authorization.signInDidSuccess, object: nil)
         
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
             self?.reloadNavigationItem()
@@ -512,7 +513,7 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
-    fileprivate func fetchData() {
+    @objc fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         self.viewModel.fetchCourse { (status) in
             HUDService.sharedInstance.hideFetchingView(target: self.view)
@@ -1003,11 +1004,11 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func auditionBtnAction() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            present(authorizationNavigationController, animated: true, completion: nil)
-            return
-        }
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//            present(authorizationNavigationController, animated: true, completion: nil)
+//            return
+//        }
         
         
         guard let course = viewModel.courseModel, let sections = viewModel.courseModel?.course_catalogues else { return }
@@ -1025,8 +1026,8 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     @objc func toolActionBtnAction() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+        guard AuthorizationService.sharedInstance.isDeviceSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
             present(authorizationNavigationController, animated: true, completion: nil)
             return
         }
@@ -1465,11 +1466,11 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         guard indexPath.section == 1, indexPath.row > 0 else { return }
         
         //return if not sign in
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            present(authorizationNavigationController, animated: true, completion: nil)
-            return
-        }
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//            present(authorizationNavigationController, animated: true, completion: nil)
+//            return
+//        }
         
         if let model = viewModel.courseModel?.course_catalogues?[indexPath.row-1] {
             

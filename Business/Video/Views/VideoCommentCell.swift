@@ -17,7 +17,7 @@ class VideoCommentCell: UITableViewCell {
         let button = UIButton()
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
-//        button.setImage(UIImage(named: <#T##String#>)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.setImage(UIImage(named: "public_avatarDefault"), for: .normal)
 //        button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
         return button
     }()

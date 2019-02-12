@@ -310,9 +310,12 @@ extension DVideoCommentViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        textField.resignFirstResponder()
+        guard let text = textField.text, text.count > 0 else {
+            HUDService.sharedInstance.show(string: "您还没有添加评论内容哟！")
+            return false
+        }
         
-        let text = textField.text!
+        textField.resignFirstResponder()
         
         VideoProvider.request(.video_comment(videoID, text), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
@@ -322,6 +325,14 @@ extension DVideoCommentViewController: UITextFieldDelegate {
                     self.tableView.reloadData()
                     
                     HUDService.sharedInstance.hideResultView(target: self.tableView)
+                    
+                    if let amount = self.titleLabel.text {
+                        self.titleLabel.text = "\(atoi(amount)+1)条评论"
+                        
+                        NotificationCenter.default.post(name: Notification.Video.commentCountDidChange, object: nil, userInfo: ["count": atoi(amount)+1])
+                    }
+                    
+                    
                 }
                 
                 textField.text = nil

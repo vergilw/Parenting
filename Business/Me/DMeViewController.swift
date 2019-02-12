@@ -91,7 +91,7 @@ class DMeViewController: BaseViewController {
             button.layer.cornerRadius = 35
             button.imageView?.contentMode = .scaleAspectFill
             button.setImage(UIImage(named: "public_avatarPlaceholder")?.withRenderingMode(.alwaysOriginal), for: .normal)
-            button.addTarget(self, action: #selector(avatarBtnAction), for: .touchUpInside)
+            button.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)
             button.isUserInteractionEnabled = false
             return button
         }()

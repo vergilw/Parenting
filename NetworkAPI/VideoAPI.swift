@@ -115,7 +115,7 @@ extension VideoAPI: TargetType {
             return .requestPlain
         case let .videos(scope, videoID):
             //FIXME: DEBUG per = 10
-            var parameters = ["per":"10"]
+            var parameters = ["per":"2"]
             if let videoID = videoID {
                 parameters["id"] = String(videoID)
             }

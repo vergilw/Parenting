@@ -439,6 +439,7 @@ class VideoDetailCell: UITableViewCell {
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(rewardStatusDidChange(sender:)), name: Notification.Video.rewardStatusDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(commentCountDidChange(sender:)), name: Notification.Video.commentCountDidChange, object: nil)
     }
     
     fileprivate func initConstraints() {
@@ -490,6 +491,8 @@ class VideoDetailCell: UITableViewCell {
         if let URLString = model.author?.avatar_url {
 //            let processor = RoundCornerImageProcessor(cornerRadius: 50, targetSize: CGSize(width: 100, height: 100))
             avatarBtn.kf.setImage(with: URL(string: URLString), for: .normal, placeholder: UIImage(named: "public_avatarPlaceholder"))
+        } else {
+            avatarBtn.setImage(UIImage(named: "public_avatarDefault"), for: .normal)
         }
         
         if let likedCount = model.liked_count {
@@ -661,7 +664,7 @@ class VideoDetailCell: UITableViewCell {
     }
     
     // MARK: - ============= Reward Observer =============
-    @objc func rewardStatusDidChange(sender: Notification) {
+    @objc fileprivate func rewardStatusDidChange(sender: Notification) {
         if let info = sender.userInfo, let videoID = info["id"] as? String, videoID == model?.id, let rewardable_codes = info["rewardable_codes"] as? [String] {
             
             if rewardable_codes.contains("interact/api/attitudes#create") {
@@ -679,6 +682,12 @@ class VideoDetailCell: UITableViewCell {
             } else {
                 shareMarkLabel.isHidden = true
             }
+        }
+    }
+    
+    @objc fileprivate func commentCountDidChange(sender: Notification) {
+        if let info = sender.userInfo, let count = info["count"] {
+            commentCountLabel.text = "\(count)"
         }
     }
     

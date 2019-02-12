@@ -89,7 +89,7 @@ class DVideoDetailViewController: BaseViewController {
         try? AVAudioSession.sharedInstance().setActive(true)
         
         //TODO: change assign observer
-        PlayListService.sharedInstance.invalidateObserver = true
+//        PlayListService.sharedInstance.invalidateObserver = true
         
         
         if viewModel.listMode == .fragment {
@@ -356,7 +356,7 @@ class DVideoDetailViewController: BaseViewController {
         
         NotificationCenter.default.removeObserver(self)
         
-        PlayListService.sharedInstance.invalidateObserver = false
+//        PlayListService.sharedInstance.invalidateObserver = false
     }
 }
 

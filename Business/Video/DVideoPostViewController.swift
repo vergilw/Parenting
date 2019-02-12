@@ -43,6 +43,7 @@ class DVideoPostViewController: BaseViewController {
         let button = UIButton()
         button.layer.cornerRadius = 4
         button.clipsToBounds = true
+        button.backgroundColor = UIConstants.Color.background
         button.addTarget(self, action: #selector(previewBtnAction), for: .touchUpInside)
         return button
     }()
@@ -51,6 +52,18 @@ class DVideoPostViewController: BaseViewController {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_playerPlay")
         return imgView
+    }()
+    
+    fileprivate lazy var tagTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Medium", size: 12)!
+        label.textColor = UIConstants.Color.head
+        label.backgroundColor = UIConstants.Color.background
+        label.layer.cornerRadius = 13
+        label.clipsToBounds = true
+        label.text = "#话题"
+        label.textAlignment = .center
+        return label
     }()
     
     fileprivate lazy var collectionView: UICollectionView = {
@@ -126,9 +139,9 @@ class DVideoPostViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        view.addSubviews([textView, previewBtn, previewImgView, collectionView, submitBtn, draftsBtn])
+        view.addSubviews([textView, previewBtn, previewImgView, tagTitleLabel, collectionView, submitBtn, draftsBtn])
         
-        view.drawSeparator(startPoint: CGPoint(x: 0, y: 20+160+20), endPoint: CGPoint(x: UIScreenWidth, y: 20+160+20))
+        view.drawSeparator(startPoint: CGPoint(x: 0, y: 20+160+26+10), endPoint: CGPoint(x: UIScreenWidth, y: 20+160+26+10))
     }
     
     // MARK: - ============= Constraints =============
@@ -146,6 +159,11 @@ class DVideoPostViewController: BaseViewController {
             make.trailing.equalTo(previewBtn.snp.leading).offset(-10)
             make.top.equalTo(20)
             make.bottom.equalTo(previewBtn.snp.bottom)
+        }
+        tagTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(previewBtn.snp.bottom)
+            make.size.equalTo(CGSize(width: 56, height: 26))
         }
         collectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -267,13 +285,12 @@ class DVideoPostViewController: BaseViewController {
                 }
                 
                 HUDService.sharedInstance.show(string: "发布成功")
-                self.dismiss(animated: true, completion: {
-                    if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navigationController = tabBarController.selectedViewController as? UINavigationController, !(navigationController.topViewController?.isKind(of: DVideoUserViewController.self) ?? false) {
-                        let viewController = DVideoUserViewController()
-                        viewController.userID = AuthorizationService.sharedInstance.user?.id
-                        navigationController.pushViewController(viewController, animated: true)
-                    }
-                })
+                self.dismiss(animated: false, completion: nil)
+                if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navigationController = tabBarController.selectedViewController as? UINavigationController, !(navigationController.topViewController?.isKind(of: DVideoUserViewController.self) ?? false) {
+                    let viewController = DVideoUserViewController()
+                    viewController.userID = AuthorizationService.sharedInstance.user?.id
+                    navigationController.pushViewController(viewController, animated: true)
+                }
             }))
         }
     }
