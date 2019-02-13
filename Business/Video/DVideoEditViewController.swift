@@ -277,7 +277,7 @@ class DVideoEditViewController: BaseViewController {
             button.backgroundColor = .white
             button.layer.cornerRadius = 20
             button.clipsToBounds = true
-            button.addTarget(self, action: #selector(submitBtnAction(sender:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(submitBtnAction), for: .touchUpInside)
             return button
         }()
         
@@ -389,13 +389,11 @@ class DVideoEditViewController: BaseViewController {
         present(viewController, animated: true, completion: nil)
     }
     
-    @objc func submitBtnAction(sender: ActionButton) {
+    @objc func submitBtnAction() {
         guard let duration = movieSettings[PLSDurationKey] as? NSNumber, duration.doubleValue <= 60 else {
             HUDService.sharedInstance.show(string: "视频不能超过60秒")
             return
         }
-        
-//        sender.startAnimating()
         
         let progressView = MBProgressHUD(view: view)
         progressView.mode = .annularDeterminate
@@ -416,7 +414,7 @@ class DVideoEditViewController: BaseViewController {
             let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
             let size = CGSize(width: stickerView.bounds.width*scale, height: stickerView.bounds.height*scale)
             let center = stickerView.center
-            let point = CGPoint(x: center.x - size.width/2, y: center.y - size.height/2)
+            let point = CGPoint(x: center.x - 10-11, y: center.y - 10-11)
             print(point, scale, size)
             stickerSetting[PLSStickerKey] = stickerView
             stickerSetting[PLSSizeKey] = NSValue(cgSize: size)
@@ -460,22 +458,22 @@ class DVideoEditViewController: BaseViewController {
         imgGenerator.appliesPreferredTrackTransform = true
         imgGenerator.maximumSize = asset.pls_videoSize
         guard let cgImg = try? imgGenerator.copyCGImage(at: CMTime(seconds: videoCoverTime, preferredTimescale: 600), actualTime: nil) else {
-            sender.stopAnimating()
+            progressView.hide(animated: true)
             return
         }
         
         exportSession?.processingBlock = { progress in
-            progressView.progress = progress
+            DispatchQueue.main.async {
+                progressView.progress = progress
+            }
         }
         exportSession?.failureBlock = { error in
-//            sender.stopAnimating()
             DispatchQueue.main.async {
                 progressView.hide(animated: true)
             }
         }
         exportSession?.completionBlock = { fileURL in
             guard let fileURL = fileURL else {
-//                sender.stopAnimating()
                 DispatchQueue.main.async {
                     progressView.hide(animated: true)
                 }
@@ -487,7 +485,6 @@ class DVideoEditViewController: BaseViewController {
                 
                 let viewController = DVideoPostViewController(fileURL: fileURL, coverImg: UIImage(cgImage: cgImg))
                 self.navigationController?.pushViewController(viewController, animated: true)
-                sender.stopAnimating()
             }
             
         }

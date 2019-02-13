@@ -173,7 +173,9 @@ class DVideoUserViewController: BaseViewController {
                     self.view.addSubview(HUD)
                     
                     HUD.snp.makeConstraints { make in
-                        make.edges.equalToSuperview()
+                        make.size.equalTo(CGSize(width: UIScreenWidth, height: self.collectionView.bounds.height-180))
+                        make.leading.equalToSuperview()
+                        make.top.equalTo(self.collectionView.snp.top).offset(180)
                     }
                 }
                 

@@ -15,6 +15,7 @@ class DVideoShootViewController: BaseViewController {
 
     lazy fileprivate var recorder: PLShortVideoRecorder = {
         let recorder = PLShortVideoRecorder(videoConfiguration: PLSVideoConfiguration.default(), audioConfiguration: PLSAudioConfiguration.default())
+        //FIXME: DEBUG maxDuration
         recorder.maxDuration = 60
         recorder.minDuration = 5
         recorder.setBeautifyModeOn(true)
@@ -413,6 +414,7 @@ class DVideoShootViewController: BaseViewController {
             
             dispatchGroup?.notify(queue: DispatchQueue.main, execute: {
                 self.submitBtnAction()
+                self.dispatchGroup = nil
             })
             
             return
@@ -486,7 +488,8 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
         }
         
         //录制到最大时间，自动暂停
-        if recorder.isRecording == false && recorder.assetRepresentingAllFiles().duration.seconds >= 60 {
+        //TODO: 录制最大时间不精确 CGFloat(recorder.assetRepresentingAllFiles().duration.seconds)
+        if recorder.isRecording == false && recorder.getTotalDuration() >= recorder.maxDuration {
             recordBtn.setImage(nil, for: UIControl.State.normal)
             recordBtn.backgroundColor = UIColor(white: 1, alpha: 0.7)
             submitBtnAction()

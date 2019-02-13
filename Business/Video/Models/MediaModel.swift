@@ -12,6 +12,7 @@ class MediaModel: HandyJSON {
     
     var url: String?
     var duration: String?
+    var wm_url: String?
     
     required init() { }
         

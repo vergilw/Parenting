@@ -81,7 +81,7 @@ class DTopUpViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
-        label.setParagraphText("1. 氧育币为虚拟货币，充值后的氧育币不会过期仅限于购买APP内的虚拟内容，不可转增给他人\n2. 氧育币在仅限iOS系统消费，无法在其他系统使用\n3. 您充值的氧育币会和您当前登录的氧育亲子账号相关联\n4. 如果有其他问题，请联系客服协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
+        label.setParagraphText("1. 氧育币为虚拟货币，充值后的氧育币不会过期，仅限于购买APP内的虚拟内容，不可转赠给他人\n2. 氧育币在仅限iOS系统消费，无法在其他系统使用\n3. 您充值的氧育币会和您当前登录的App账号相关联\n4. 如果有其他问题，请联系客服协同解决，客服微信：Yangyuqinzi1314    客服电话：027-87775828")
         return label
     }()
     

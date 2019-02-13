@@ -320,7 +320,7 @@ class DVideoForwardViewController: BaseViewController {
     
     fileprivate func downloadBtnAction() {
         //TODO: 视频水印
-        guard let URLString = videoModel.media?.url, let URL = URL(string: URLString) else {
+        guard let URLString = videoModel.media?.wm_url, let URL = URL(string: URLString) else {
             HUDService.sharedInstance.show(string: "视频地址缺失")
             return
         }

@@ -223,8 +223,8 @@ class DVideoDetailViewController: BaseViewController {
                         
                         
                     } else {
-                        self.reusingIdentifiersMapping[0] = identifier
-                        self.reusingIdentifiersMapping[1] = reusableIndentifiers[0]
+                        self.reusingIdentifiersMapping[0] = reusableIndentifiers[0]
+                        self.reusingIdentifiersMapping[1] = identifier
                         self.reusingIdentifiersMapping[2] = reusableIndentifiers[1]
                         self.reusingIdentifiersMapping[3] = reusableIndentifiers[2]
                         self.reusingIdentifiersMapping[4] = reusableIndentifiers[3]
@@ -377,9 +377,6 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
             return UITableViewCell()
         }
         
-//        if tableView.indexPathsForVisibleRows?.count == 4 {
-//            startRow -= 1
-//        }
         if isRefetchingData == true {
             startRow -= 1
         }
@@ -397,6 +394,12 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
         addPlayer(cell.player)
         if let model = viewModel.videoModels?[exist: indexPath.row] {
             cell.setup(model: model)
+            if viewModel.videoModels?.count == 1 {
+                if cell.player.currentItem != nil {
+                    cell.player.play()
+                }
+                cell.startCountdown()
+            }
         }
         return cell
     }
