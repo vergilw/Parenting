@@ -194,7 +194,6 @@ class DVideosViewController: BaseViewController {
         
 //        navigationController?.pushViewController(DVideoPostViewController(fileURL: URL(fileURLWithPath: "T##String"), coverImg: UIImage()), animated: true)
         
-        
     }
 }
 

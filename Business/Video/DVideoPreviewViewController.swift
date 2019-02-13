@@ -29,7 +29,7 @@ class DVideoPreviewViewController: BaseViewController {
         option.setOptionValue(NSNumber(value: PLLogLevel(rawValue: 3).rawValue), forKey: PLPlayerOptionKeyLogLevel)
         player = PLPlayer(url: fileURL, option: option)
         player?.loopPlay = true
-        player?.playerView?.contentMode = .scaleAspectFit
+        player?.playerView?.contentMode = .scaleAspectFill
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,11 +46,45 @@ class DVideoPreviewViewController: BaseViewController {
         addNotificationObservers()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
+        
         guard let playerView = player?.playerView else { return }
         view.addSubview(playerView)
         player?.play()
+        
+        initBackBtn()
+    }
+    
+    fileprivate func initBackBtn() {
+        let img = UIImage(named: "public_backBarItem")
+        let backBarBtn: UIButton = {
+            let button = UIButton()
+            button.setImage(img?.withRenderingMode(.alwaysTemplate), for: .normal)
+            button.tintColor = .white
+            button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+            return button
+        }()
+        view.addSubview(backBarBtn)
+        backBarBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            if #available(iOS 11, *) {
+                make.top.equalTo(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+            } else {
+                make.top.equalTo(0)
+            }
+            make.size.equalTo(CGSize(width: UIConstants.Margin.leading*2+12, height: 60+22))
+        }
     }
     
     // MARK: - ============= Constraints =============

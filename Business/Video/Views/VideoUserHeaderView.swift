@@ -23,6 +23,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = UIConstants.Font.h1
         label.textColor = UIConstants.Color.head
+        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return label
     }()
     
@@ -78,7 +79,10 @@ class VideoUserHeaderView: UICollectionReusableView {
         profilesStackView.addArrangedSubview(nameLabel)
         profilesStackView.addArrangedSubview(descriptionLabel)
         
-        addSubviews([avatarBtn, profilesStackView, badgeImgView])
+        addSubviews([avatarBtn, profilesStackView])
+        
+        profilesStackView.addSubview(badgeImgView)
+        
         avatarBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(UIConstants.Margin.leading)
@@ -92,6 +96,7 @@ class VideoUserHeaderView: UICollectionReusableView {
         badgeImgView.snp.makeConstraints { make in
             make.leading.equalTo(nameLabel.snp.trailing).offset(5)
             make.centerY.equalTo(nameLabel)
+            make.trailing.equalTo(-10).priority(.required)
         }
         
         

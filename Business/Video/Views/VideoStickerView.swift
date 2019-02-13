@@ -22,6 +22,8 @@ class VideoStickerView: UIView {
     fileprivate lazy var originPoint: CGPoint = .zero
     fileprivate lazy var originTransform: CGAffineTransform = .identity
     
+    fileprivate lazy var lastPoint: CGPoint = .zero
+    
     fileprivate lazy var imgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleToFill
@@ -109,20 +111,32 @@ class VideoStickerView: UIView {
     
     func hideBorder() {
         contentView.layer.borderWidth = 0
-        contentView.layer.cornerRadius = 0
         removeBtn.isHidden = true
         transformBtn.isHidden = true
+    }
+    
+    func showBorder() {
+        contentView.layer.borderWidth = 1
+        removeBtn.isHidden = false
+        transformBtn.isHidden = false
     }
     
     @objc fileprivate func moveGestureAction(sender: UIPanGestureRecognizer) {
         guard let stickerView = sender.view else { return }
         
+        let point = sender.location(in: stickerView.superview)
+        
+        if sender.state == .began {
+            lastPoint = point
+            return
+        }
+        
         if stickerView.translatesAutoresizingMaskIntoConstraints == false {
             stickerView.translatesAutoresizingMaskIntoConstraints = true
         }
         
-        let point = sender.location(in: stickerView.superview)
-        stickerView.center = point
+        stickerView.center = CGPoint(x: stickerView.center.x - (lastPoint.x-point.x), y: stickerView.center.y - (lastPoint.y-point.y))
+        lastPoint = point
     }
     
     @objc fileprivate func transformGestureAction(sender: UIPanGestureRecognizer) {
@@ -142,7 +156,10 @@ class VideoStickerView: UIView {
         //distance
         let originDistance = distancePoint(pointA: originPoint, pointB: stickerView.center)
         let newestDistance = distancePoint(pointA: point, pointB: stickerView.center)
-        let scale = newestDistance / originDistance
+        var scale = newestDistance / originDistance
+        if scale < 0.3 {
+            scale = 0.3
+        }
         
         //radius
         let originRadius = radiusPoint(pointA: stickerView.center, pointB: originPoint)

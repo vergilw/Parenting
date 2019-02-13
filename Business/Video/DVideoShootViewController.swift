@@ -352,6 +352,7 @@ class DVideoShootViewController: BaseViewController {
             self.recorder.deleteAllFiles()
         }))
         alertController.addAction(UIAlertAction(title: "退出", style: UIAlertAction.Style.default, handler: { (action) in
+            self.recorder.cancelRecording()
             self.dismiss(animated: true, completion: nil)
         }))
         alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))

@@ -101,6 +101,10 @@ class DVideoEditViewController: BaseViewController {
         if !(navigationController?.isNavigationBarHidden ?? true) {
             navigationController?.setNavigationBarHidden(true, animated: true)
         }
+        
+        if !editor.isEditing {
+            editor.startEditing()
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -133,6 +137,7 @@ class DVideoEditViewController: BaseViewController {
             return button
         }()
         view.addSubview(backBarBtn)
+        
         backBarBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             if #available(iOS 11, *) {
@@ -414,16 +419,16 @@ class DVideoEditViewController: BaseViewController {
             let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
             let size = CGSize(width: stickerView.bounds.width*scale, height: stickerView.bounds.height*scale)
             let center = stickerView.center
-            let point = CGPoint(x: center.x - 10-11, y: center.y - 10-11)
+            let point = CGPoint(x: (center.x-size.width/2), y: (center.y-size.height/2))
             print(point, scale, size)
             stickerSetting[PLSStickerKey] = stickerView
             stickerSetting[PLSSizeKey] = NSValue(cgSize: size)
             stickerSetting[PLSPointKey] = NSValue(cgPoint: point)
             stickerSetting[PLSRotationKey] = NSNumber(value: Float(atan2(transform.b, transform.a) * (180 / CGFloat.pi)))
-            stickerSetting[PLSStartTimeKey] = movieSettings[PLSStartTimeKey]
+            stickerSetting[PLSStartTimeKey] = NSNumber(value: 0)
             stickerSetting[PLSDurationKey] = movieSettings[PLSDurationKey]
             
-            stickerSetting[PLSVideoPreviewSizeKey] = asset.pls_videoSize
+            stickerSetting[PLSVideoPreviewSizeKey] = view.bounds.size
             stickerSetting[PLSVideoOutputSizeKey] = asset.pls_videoSize
             
             stickerSettings.append(stickerSetting)
@@ -485,8 +490,11 @@ class DVideoEditViewController: BaseViewController {
                 
                 let viewController = DVideoPostViewController(fileURL: fileURL, coverImg: UIImage(cgImage: cgImg))
                 self.navigationController?.pushViewController(viewController, animated: true)
+                
+                for stickerView in self.stickerViews {
+                    stickerView.showBorder()
+                }
             }
-            
         }
         exportSession?.exportAsynchronously()
     }

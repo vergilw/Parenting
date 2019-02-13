@@ -54,16 +54,16 @@ class DVideoPostViewController: BaseViewController {
         return imgView
     }()
     
-    fileprivate lazy var tagTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Medium", size: 12)!
-        label.textColor = UIConstants.Color.head
-        label.backgroundColor = UIConstants.Color.background
-        label.layer.cornerRadius = 13
-        label.clipsToBounds = true
-        label.text = "#话题"
-        label.textAlignment = .center
-        return label
+    fileprivate lazy var insertTagBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.Color.head, for: .normal)
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Medium", size: 12)!
+        button.setTitle("#话题#", for: .normal)
+        button.backgroundColor = UIConstants.Color.background
+        button.layer.cornerRadius = 13
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(insertTagBtnAction), for: .touchUpInside)
+        return button
     }()
     
     fileprivate lazy var collectionView: UICollectionView = {
@@ -139,7 +139,7 @@ class DVideoPostViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        view.addSubviews([textView, previewBtn, previewImgView, tagTitleLabel, collectionView, submitBtn, draftsBtn])
+        view.addSubviews([textView, previewBtn, previewImgView, insertTagBtn, collectionView, submitBtn, draftsBtn])
         
         view.drawSeparator(startPoint: CGPoint(x: 0, y: 20+160+26+10), endPoint: CGPoint(x: UIScreenWidth, y: 20+160+26+10))
     }
@@ -160,7 +160,7 @@ class DVideoPostViewController: BaseViewController {
             make.top.equalTo(20)
             make.bottom.equalTo(previewBtn.snp.bottom)
         }
-        tagTitleLabel.snp.makeConstraints { make in
+        insertTagBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(previewBtn.snp.bottom)
             make.size.equalTo(CGSize(width: 56, height: 26))
@@ -224,12 +224,37 @@ class DVideoPostViewController: BaseViewController {
         navigationController?.pushViewController(viewController, animated: true)
     }
     
+    @objc func insertTagBtnAction() {
+        if !textView.isFirstResponder {
+            textView.insertText("##")
+            
+            textView.becomeFirstResponder()
+            
+            let range = NSRange(location: self.textView.text.count-1, length: 0)
+            let beginning = self.textView.beginningOfDocument
+            guard let startPosition = self.textView.position(from: beginning, offset: range.location) else { return }
+            guard let endPosition = self.textView.position(from: beginning, offset: NSMaxRange(range)) else { return }
+            let selectionRange = self.textView.textRange(from: startPosition, to: endPosition)
+            
+            self.textView.selectedTextRange = selectionRange
+            
+        } else {
+            textView.insertText("##")
+            
+            let range = NSRange(location: self.textView.selectedRange.location-1, length: 0)
+            let beginning = self.textView.beginningOfDocument
+            guard let startPosition = self.textView.position(from: beginning, offset: range.location) else { return }
+            guard let endPosition = self.textView.position(from: beginning, offset: NSMaxRange(range)) else { return }
+            let selectionRange = self.textView.textRange(from: startPosition, to: endPosition)
+            
+            self.textView.selectedTextRange = selectionRange
+        }
+    }
+    
     @objc func submitBtnAction() {
         guard let fileURL = fileURL else { return }
         guard let fileData = try? Data(contentsOf: fileURL) else { return }
         guard let coverImg = coverImg else { return }
-        
-        
         
         progressView.label.text = "正在上传..."
         view.addSubview(progressView)
@@ -338,19 +363,25 @@ extension DVideoPostViewController: PLShortVideoUploaderDelegate {
 extension DVideoPostViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         
+        guard textView.markedTextRange == nil else { return }
+
+        let selectionRange = textView.selectedTextRange
+        
         let text = textView.attributedText.string
-        
+
         guard let expression = try? NSRegularExpression(pattern: "#[^#]+#", options: [.caseInsensitive]) else { return }
-        
+
         let results = expression.matches(in: text, options: NSRegularExpression.MatchingOptions(), range: NSString(string: text).rangeOfAll())
-        
+
         let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
         attributedText.addAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head], range: NSString(string: text).rangeOfAll())
         for result in results {
             attributedText.addAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.primaryGreen], range: result.range)
         }
-        
+
         textView.attributedText = attributedText
+        
+        textView.selectedTextRange = selectionRange
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

@@ -173,9 +173,13 @@ class DVideoUserViewController: BaseViewController {
                     self.view.addSubview(HUD)
                     
                     HUD.snp.makeConstraints { make in
-                        make.size.equalTo(CGSize(width: UIScreenWidth, height: self.collectionView.bounds.height-180))
+                        var height = (self.navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight
+                        if #available(iOS 11, *) {
+                            height = 0
+                        }
+                        make.size.equalTo(CGSize(width: UIScreenWidth, height: self.collectionView.bounds.height-180-height))
                         make.leading.equalToSuperview()
-                        make.top.equalTo(self.collectionView.snp.top).offset(180)
+                        make.top.equalTo(self.collectionView.snp.top).offset(180+height)
                     }
                 }
                 
