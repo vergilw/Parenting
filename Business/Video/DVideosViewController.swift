@@ -247,41 +247,8 @@ extension DVideosViewController: UIScrollViewDelegate {
         } else {
             cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y-offsetY)
         }
-        print(cameraBtn.center.y-offsetY, offsetY)
-//        if scrollView.contentOffset.y < 0 {
-//            cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height-45-55-cameraBtn.bounds.height/2)
-//            lastOffsetY = 0
-//        } else if offsetY > 0 {
-//            if cameraBtn.frame.minY < view.bounds.height {
-//                if cameraBtn.center.y+offsetY > view.bounds.height+cameraBtn.bounds.midY {
-//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height+cameraBtn.bounds.midY)
-//                } else {
-//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y+offsetY)
-//                }
-//
-//            } else {
-//                cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height+cameraBtn.bounds.midY)
-//            }
-//
-//            lastOffsetY = scrollView.contentOffset.y
-//        } else {
-//
-//            if cameraBtn.frame.maxY > view.bounds.height-45 {
-//                if ((cameraBtn.center.y+offsetY) as CGFloat) < ((view.bounds.height-45-55+cameraBtn.bounds.height/2) as CGFloat) {
-//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: view.bounds.height-45-55+cameraBtn.bounds.height/2)
-//                    print("1", lastOffsetY)
-//                } else {
-//                    cameraBtn.center = CGPoint(x: view.bounds.midX, y: cameraBtn.center.y+offsetY)
-//                    print("2", lastOffsetY)
-//                }
-//
-//            } else {
-//                cameraBtn.center = CGPoint(x: view.frame.midX, y: view.bounds.height-45-55+cameraBtn.bounds.height/2)
-//                print("3", lastOffsetY)
-//            }
-//
-            lastOffsetY = scrollView.contentOffset.y
-//        }
+        
+        lastOffsetY = scrollView.contentOffset.y
         
     }
 }

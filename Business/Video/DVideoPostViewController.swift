@@ -41,6 +41,7 @@ class DVideoPostViewController: BaseViewController {
     
     fileprivate lazy var previewBtn: UIButton = {
         let button = UIButton()
+        button.imageView?.contentMode = .scaleAspectFill
         button.layer.cornerRadius = 4
         button.clipsToBounds = true
         button.backgroundColor = UIConstants.Color.background
@@ -310,6 +311,9 @@ class DVideoPostViewController: BaseViewController {
                 }
                 
                 HUDService.sharedInstance.show(string: "发布成功")
+                
+                NotificationCenter.default.post(name: Notification.Video.videoSubmitDidSuccess, object: nil)
+                
                 self.dismiss(animated: false, completion: nil)
                 if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController, let navigationController = tabBarController.selectedViewController as? UINavigationController, !(navigationController.topViewController?.isKind(of: DVideoUserViewController.self) ?? false) {
                     let viewController = DVideoUserViewController()

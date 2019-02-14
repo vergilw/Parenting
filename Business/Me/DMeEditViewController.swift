@@ -261,7 +261,8 @@ class DMeEditViewController: BaseViewController {
     @objc override func backBarItemAction() {
         view.endEditing(true)
         
-        if nameTextField.text != AuthorizationService.sharedInstance.user?.name {
+        if nameTextField.text != AuthorizationService.sharedInstance.user?.name ||
+           signatureTextField.text != AuthorizationService.sharedInstance.user?.intro {
             let alertController = UIAlertController(title: nil, message: "您有未保存的资料，确定不保存吗？", preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in

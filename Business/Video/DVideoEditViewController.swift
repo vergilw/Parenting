@@ -417,7 +417,7 @@ class DVideoEditViewController: BaseViewController {
     }
     
     @objc func videoCoverBtnAction() {
-        let viewController = DVideoCoverViewController(asset: asset)
+        let viewController = DVideoCoverViewController(asset: asset, coverTime: videoCoverTime)
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
         viewController.completionHandler = { [weak self] (double) in
@@ -430,10 +430,16 @@ class DVideoEditViewController: BaseViewController {
             weakself.videoCoverTime = double
         }
         present(viewController, animated: true, completion: nil)
+        
+        if self.videoCoverTime != 0 {
+            self.editor.stopEditing()
+            self.editor.seek(to: CMTime(seconds: self.videoCoverTime, preferredTimescale: 600), completionHandler: { (bool) in
+            })
+        }
     }
     
     @objc func submitBtnAction() {
-        guard let duration = movieSettings[PLSDurationKey] as? NSNumber, duration.doubleValue <= 60 else {
+        guard let duration = movieSettings[PLSDurationKey] as? NSNumber, duration.doubleValue <= 61 else {
             HUDService.sharedInstance.show(string: "视频不能超过60秒")
             return
         }

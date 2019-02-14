@@ -250,6 +250,15 @@ class DVideoCommentViewController: BaseViewController {
         }))
     }
     
+    fileprivate func reportRequest(commentID: Int) {
+        VideoProvider.request(.video_comment_report(commentID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code > 0 {
+                HUDService.sharedInstance.show(string: "举报成功")
+            }
+        }))
+    }
+    
     // MARK: - ============= Reload =============
     @objc func reload() {
         
@@ -281,6 +290,30 @@ extension DVideoCommentViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        guard let model = commentModels?[exist: indexPath.row], let string = model.id, let commentID = Int(string) else { return }
+        
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+        alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "色情低俗", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        alertController.addAction(UIAlertAction(title: "政治敏感", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        alertController.addAction(UIAlertAction(title: "违法犯罪", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        alertController.addAction(UIAlertAction(title: "垃圾广告", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        alertController.addAction(UIAlertAction(title: "造谣传谣、涉嫌欺诈", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        alertController.addAction(UIAlertAction(title: "侮辱谩骂", style: UIAlertAction.Style.default, handler: { (action) in
+            self.reportRequest(commentID: commentID)
+        }))
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 

@@ -29,7 +29,8 @@ class DVideoPreviewViewController: BaseViewController {
         option.setOptionValue(NSNumber(value: PLLogLevel(rawValue: 3).rawValue), forKey: PLPlayerOptionKeyLogLevel)
         player = PLPlayer(url: fileURL, option: option)
         player?.loopPlay = true
-        player?.playerView?.contentMode = .scaleAspectFill
+        //FIXME: DEBUG horizontal video
+        player?.playerView?.contentMode = .scaleAspectFit
     }
     
     required init?(coder aDecoder: NSCoder) {

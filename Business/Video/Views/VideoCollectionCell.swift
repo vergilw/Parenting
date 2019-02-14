@@ -11,6 +11,21 @@ import Kingfisher
 
 class VideoCollectionCell: UICollectionViewCell {
     
+    fileprivate lazy var blurPreviewImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleAspectFill
+        imgView.clipsToBounds = true
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let effectView = UIVisualEffectView(effect: blurEffect)
+        imgView.addSubview(effectView)
+        effectView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        return imgView
+    }()
+    
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFit
@@ -73,7 +88,7 @@ class VideoCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.backgroundColor = UIColor("#353535")
-        contentView.addSubviews([previewImgView, shadowLayerView, avatarImgView, nameLabel, contentLabel, viewsCountLabel, viewsImgView, markImgView])
+        contentView.addSubviews([blurPreviewImgView, previewImgView, shadowLayerView, avatarImgView, nameLabel, contentLabel, viewsCountLabel, viewsImgView, markImgView])
         
         initShadowLayer()
         
@@ -102,6 +117,9 @@ class VideoCollectionCell: UICollectionViewCell {
     }
     
     fileprivate func initConstraints() {
+        blurPreviewImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         previewImgView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -142,7 +160,12 @@ class VideoCollectionCell: UICollectionViewCell {
         if let URLString = model.cover_url {
 //            let width = (UIScreenWidth-1)/2.0
 //            let processor = RoundCornerImageProcessor(cornerRadius: 0, targetSize: CGSize(width: width*2, height: width/9.0*16*2))
-            previewImgView.kf.setImage(with: URL(string: URLString))
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { (image, error, type, URL) in
+                guard let image = image else { return }
+                if image.size.width > image.size.height {
+                    self.blurPreviewImgView.image = image
+                }
+            }
         }
         
         if let URLString = model.author?.avatar_url {
@@ -153,7 +176,7 @@ class VideoCollectionCell: UICollectionViewCell {
         
         nameLabel.text = model.author?.name
         
-        viewsCountLabel.text = "\(model.view_count ?? "0")"
+        viewsCountLabel.text = "\(model.view_count?.simplifiedNumber() ?? "0")"
         
         contentLabel.text = model.title
         

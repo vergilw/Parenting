@@ -27,6 +27,7 @@ enum VideoAPI {
     case video_favorites(Int)
     case video_report(Int)
     case video_tags
+    case video_comment_report(Int)
 }
 
 extension VideoAPI: TargetType {
@@ -67,6 +68,8 @@ extension VideoAPI: TargetType {
             return "/api/Video/\(videoID)/abuses"
         case .video_tags:
             return "/api/video_tags"
+        case let .video_comment_report(commentID):
+            return "/api/Comment/\(commentID)/abuses"
         }
     }
     
@@ -102,6 +105,8 @@ extension VideoAPI: TargetType {
             return .post
         case .video_tags:
             return .get
+        case .video_comment_report:
+            return .post
         }
     }
     
@@ -148,6 +153,8 @@ extension VideoAPI: TargetType {
         case .video_report:
             return .requestPlain
         case .video_tags:
+            return .requestPlain
+        case .video_comment_report:
             return .requestPlain
         }
     }

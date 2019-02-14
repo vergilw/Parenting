@@ -115,6 +115,20 @@ extension String {
         return nil
     }
     
+    func simplifiedNumber() -> String? {
+        guard let number = Int(self) else { return nil }
+        
+        if number >= 100000 {
+            return "10w+"
+        } else if number >= 10000 {
+            return String(format: "%.1fw+", Double(number)/10000.0)
+        } else if number >= 1000 {
+            return String(format: "%.1fk+", Double(number)/1000.0)
+        } else {
+            return String(number)
+        }
+    }
+    
     /*
     /// Hashing algorithm for hashing a string instance.
     ///

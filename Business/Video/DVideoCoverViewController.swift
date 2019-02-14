@@ -53,10 +53,14 @@ class DVideoCoverViewController: BaseViewController {
     
     lazy fileprivate var lastOffsetX: CGFloat = 0
     
-    init(asset: AVAsset) {
+    fileprivate lazy var videoCoverTime: Double = 0
+    
+    init(asset: AVAsset, coverTime: Double) {
         self.asset = asset
         
         super.init(nibName: nil, bundle: nil)
+        
+        self.videoCoverTime = coverTime
         
         extractImages(asset: asset) { (image) in
             //TODO: sclae img
@@ -115,7 +119,9 @@ class DVideoCoverViewController: BaseViewController {
             make.height.equalTo(56)
         }
         sliderView.snp.makeConstraints { make in
-            make.leading.top.bottom.equalTo(collectionView)
+            let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-55
+            make.leading.equalTo(CGFloat(self.videoCoverTime/asset.duration.seconds)*width + UIConstants.Margin.leading)
+            make.top.bottom.equalTo(collectionView)
             make.width.equalTo(sliderView.snp.height)
         }
     }
@@ -178,9 +184,8 @@ class DVideoCoverViewController: BaseViewController {
             lastOffsetX = offsetX
             
         } else if sender.state == .ended {
-            
             if let closure = completionHandler {
-                closure(asset.duration.seconds/Double(collectionView.bounds.size.width)*Double(sliderView.frame.minX))
+                closure(asset.duration.seconds/Double(collectionView.bounds.size.width-55)*Double(sliderView.frame.minX-UIConstants.Margin.leading))
             }
         }
     }

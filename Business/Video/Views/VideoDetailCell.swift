@@ -25,7 +25,7 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var playerLayer: AVPlayerLayer = {
         let view = AVPlayerLayer(player: player)
-        view.videoGravity = .resizeAspectFill
+        view.videoGravity = .resizeAspect
         return view
     }()
     
@@ -172,6 +172,11 @@ class VideoDetailCell: UITableViewCell {
         label.font = UIConstants.Font.body
         label.textColor = .white
         label.numberOfLines = 2
+        label.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        label.layer.shadowOpacity = 0.2
+        label.layer.shadowRadius = 1.9
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.clipsToBounds = false
         return label
     }()
     
@@ -569,7 +574,7 @@ class VideoDetailCell: UITableViewCell {
         }
         
         if let likedCount = model.liked_count {
-            likeCountLabel.text = "\(likedCount)"
+            likeCountLabel.text = String(likedCount).simplifiedNumber()
         }
         if model.liked == true {
             likeImgView.tintColor = UIConstants.Color.primaryRed
@@ -577,10 +582,10 @@ class VideoDetailCell: UITableViewCell {
             likeImgView.tintColor = .white
         }
         if let commentedCount = model.comments_count {
-            commentCountLabel.text = "\(commentedCount)"
+            commentCountLabel.text = String(commentedCount).simplifiedNumber()
         }
         if let sharedCount = model.share_count {
-            shareCountLabel.text = "\(sharedCount)"
+            shareCountLabel.text = String(sharedCount).simplifiedNumber()
         }
         
         authorNameLabel.text = "@\(model.author?.name ?? "")"

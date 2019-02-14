@@ -164,17 +164,17 @@ class VideoUserHeaderView: UICollectionReusableView {
             }
         }
         
-        var string = "\(model.videos_count ?? 0) 视频"
+        var string = (String(model.videos_count ?? 0).simplifiedNumber() ?? "0") + " 视频"
         var attributedString = NSMutableAttributedString(string: string)
         attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "视频"))
         videosCountLabel.attributedText = attributedString
         
-        string = "\(model.video_liked_count ?? 0) 点赞"
+        string = (String(model.video_liked_count ?? 0).simplifiedNumber() ?? "0") + " 点赞"
         attributedString = NSMutableAttributedString(string: string)
         attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "点赞"))
         likeCountLabel.attributedText = attributedString
         
-        string = "\(model.video_comments_count ?? 0) 评论"
+        string = (String(model.video_comments_count ?? 0).simplifiedNumber() ?? "0") + " 评论"
         attributedString = NSMutableAttributedString(string: string)
         attributedString.addAttributes([NSAttributedString.Key.font: UIConstants.Font.foot], range: NSString(string: string).range(of: "评论"))
         commentCountLabel.attributedText = attributedString

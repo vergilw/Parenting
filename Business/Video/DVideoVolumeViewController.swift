@@ -33,6 +33,7 @@ class DVideoVolumeViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = .white
         label.text = "配乐"
+        label.isHidden = true
         return label
     }()
     
@@ -49,6 +50,7 @@ class DVideoVolumeViewController: BaseViewController {
         label.font = UIConstants.Font.foot
         label.textColor = .white
         label.text = "100%"
+        label.isHidden = true
         return label
     }()
     
@@ -65,6 +67,7 @@ class DVideoVolumeViewController: BaseViewController {
         view.maximumTrackTintColor = UIColor(white: 1, alpha: 0.3)
         view.minimumTrackTintColor = .white
         view.addTarget(self, action: #selector(sliderValueChanged), for: UIControl.Event.valueChanged)
+        view.isHidden = true
         return view
     }()
     

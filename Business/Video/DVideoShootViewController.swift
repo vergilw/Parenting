@@ -423,6 +423,11 @@ class DVideoShootViewController: BaseViewController {
     }
     
     @objc func switchBtnAction() {
+        if recorder.captureDevicePosition == .front {
+            flashlightBtn.isHidden = false
+        } else {
+            flashlightBtn.isHidden = true
+        }
         recorder.toggleCamera()
     }
     

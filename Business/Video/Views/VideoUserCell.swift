@@ -22,6 +22,11 @@ class VideoUserCell: UICollectionViewCell {
         return imgView
     }()
     
+    fileprivate lazy var shadowLayerView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     fileprivate lazy var deleteBtn: ActionButton = {
         let button = ActionButton()
         button.setImage(UIImage(named: "video_videoDelete"), for: .normal)
@@ -47,7 +52,9 @@ class VideoUserCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.backgroundColor = UIColor("#353535")
-        contentView.addSubviews([previewImgView, deleteBtn, viewsCountLabel, viewsImgView])
+        contentView.addSubviews([previewImgView, shadowLayerView, deleteBtn, viewsCountLabel, viewsImgView])
+        
+        initShadowLayer()
         initConstraints()
     }
     
@@ -55,8 +62,28 @@ class VideoUserCell: UICollectionViewCell {
         fatalError()
     }
     
+    fileprivate func initShadowLayer() {
+        let gradientLayer: CAGradientLayer = {
+            let layer = CAGradientLayer()
+            layer.colors = [UIColor.clear.cgColor, UIColor(white: 0, alpha: 0.2).cgColor, UIColor(white: 0, alpha: 0.4).cgColor]
+            layer.locations = [0.3, 0.6, 1.0]
+            layer.startPoint = CGPoint.init(x: 0.0, y: 0.0)
+            layer.endPoint = CGPoint.init(x: 0.0, y: 1.0)
+            return layer
+        }()
+        
+        shadowLayerView.layer.addSublayer(gradientLayer)
+        
+        let width = (UIScreenWidth-2)/3.0
+        let height = width/9.0*16
+        gradientLayer.frame = CGRect(x: 0, y: height - 200, width: width, height: 200)
+    }
+    
     fileprivate func initConstraints() {
         previewImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        shadowLayerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         if let imgSize = deleteBtn.imageView?.image?.size {
@@ -89,7 +116,7 @@ class VideoUserCell: UICollectionViewCell {
         deleteBtn.isHidden = hideDelete
         
         
-        viewsCountLabel.text = "\(model.view_count ?? "0")"
+        viewsCountLabel.text = "\(model.view_count?.simplifiedNumber() ?? "0")"
         
     }
     

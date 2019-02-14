@@ -82,7 +82,7 @@ class DVideoUserViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchVideoData), name: Notification.Video.videoSubmitDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -122,7 +122,7 @@ class DVideoUserViewController: BaseViewController {
         }))
     }
     
-    fileprivate func fetchVideoData() {
+    @objc fileprivate func fetchVideoData() {
         
         VideoProvider.request(.videos_user(userID ?? 0, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
