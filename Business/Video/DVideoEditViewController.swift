@@ -133,6 +133,11 @@ class DVideoEditViewController: BaseViewController {
             let button = UIButton()
             button.setImage(img?.withRenderingMode(.alwaysTemplate), for: .normal)
             button.tintColor = .white
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
             return button
         }()
@@ -166,6 +171,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("剪视频", for: .normal)
             button.setImage(UIImage(named: "video_editComposeVideo"), for: .normal)
             button.padding = 4.5
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(videoClipBtnAction), for: .touchUpInside)
             return button
         }()
@@ -177,6 +187,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("音量", for: .normal)
             button.setImage(UIImage(named: "video_editVolume"), for: .normal)
             button.padding = 7.5
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(videoVolumeBtnAction), for: .touchUpInside)
             return button
         }()
@@ -188,6 +203,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("选音乐", for: .normal)
             button.setImage(UIImage(named: "video_editSelectSoundBg"), for: .normal)
             button.padding = 0
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             //            button.addTarget(self, action: #selector(<#BtnAction#>), for: .touchUpInside)
             return button
         }()
@@ -231,6 +251,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("滤镜", for: .normal)
             button.setImage(UIImage(named: "video_editFilters"), for: .normal)
             button.padding = 4.5
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(videoFiltersBtnAction), for: .touchUpInside)
             return button
         }()
@@ -242,6 +267,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("选封面", for: .normal)
             button.setImage(UIImage(named: "video_editCover"), for: .normal)
             button.padding = 4.5
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(videoCoverBtnAction), for: .touchUpInside)
             return button
         }()
@@ -253,6 +283,11 @@ class DVideoEditViewController: BaseViewController {
             button.setTitle("贴纸", for: .normal)
             button.setImage(UIImage(named: "video_editStickers"), for: .normal)
             button.padding = 4.5
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(videoStickersBtnAction), for: .touchUpInside)
             return button
         }()
@@ -367,12 +402,15 @@ class DVideoEditViewController: BaseViewController {
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
         viewController.stickerHandler = { [weak self] (image) in
+            guard let `self` = self else { return }
+            
             let stickerView = VideoStickerView(img: image)
-            self?.view.addSubview(stickerView)
+            self.view.addSubview(stickerView)
             stickerView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
             }
-            self?.stickerViews.append(stickerView)
+            self.stickerViews.append(stickerView)
+            stickerView.delegate = self
         }
         present(viewController, animated: true, completion: nil)
         

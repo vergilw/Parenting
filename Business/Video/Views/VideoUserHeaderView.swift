@@ -23,7 +23,8 @@ class VideoUserHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = UIConstants.Font.h1
         label.textColor = UIConstants.Color.head
-        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
+//        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
+        label.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
         return label
     }()
     
@@ -76,12 +77,12 @@ class VideoUserHeaderView: UICollectionReusableView {
             view.spacing = 7
             return view
         }()
-        profilesStackView.addArrangedSubview(nameLabel)
-        profilesStackView.addArrangedSubview(descriptionLabel)
+        
+//        profilesStackView.addArrangedSubview(descriptionLabel)
         
         addSubviews([avatarBtn, profilesStackView])
         
-        profilesStackView.addSubview(badgeImgView)
+//        profilesStackView.addSubview(badgeImgView)
         
         avatarBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -90,14 +91,28 @@ class VideoUserHeaderView: UICollectionReusableView {
         }
         profilesStackView.snp.makeConstraints { make in
             make.leading.equalTo(avatarBtn.snp.trailing).offset(15)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.centerY.equalTo(avatarBtn)
         }
-        badgeImgView.snp.makeConstraints { make in
-            make.leading.equalTo(nameLabel.snp.trailing).offset(5)
-            make.centerY.equalTo(nameLabel)
-            make.trailing.equalTo(-10).priority(.required)
-        }
+        
+        let nameStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 5
+            return view
+        }()
+        nameStackView.addArrangedSubview(nameLabel)
+        nameStackView.addArrangedSubview(badgeImgView)
+        
+        profilesStackView.addArrangedSubview(nameStackView)
+        profilesStackView.addArrangedSubview(descriptionLabel)
+//        badgeImgView.snp.makeConstraints { make in
+//            make.leading.equalTo(nameLabel.snp.trailing).offset(5)
+//            make.centerY.equalTo(nameLabel)
+//            make.trailing.equalTo(self.snp.trailing).offset(-10)
+//        }
         
         
         

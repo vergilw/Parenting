@@ -18,6 +18,11 @@ class VideoCollectionCell: UICollectionViewCell {
         return imgView
     }()
     
+    fileprivate lazy var shadowLayerView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     lazy fileprivate var avatarImgView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -68,7 +73,10 @@ class VideoCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.backgroundColor = UIColor("#353535")
-        contentView.addSubviews([previewImgView, avatarImgView, nameLabel, contentLabel, viewsCountLabel, viewsImgView, markImgView])
+        contentView.addSubviews([previewImgView, shadowLayerView, avatarImgView, nameLabel, contentLabel, viewsCountLabel, viewsImgView, markImgView])
+        
+        initShadowLayer()
+        
         initConstraints()
     }
     
@@ -76,8 +84,28 @@ class VideoCollectionCell: UICollectionViewCell {
         fatalError()
     }
     
+    fileprivate func initShadowLayer() {
+        let gradientLayer: CAGradientLayer = {
+            let layer = CAGradientLayer()
+            layer.colors = [UIColor.clear.cgColor, UIColor(white: 0, alpha: 0.2).cgColor, UIColor(white: 0, alpha: 0.4).cgColor]
+            layer.locations = [0.3, 0.6, 1.0]
+            layer.startPoint = CGPoint.init(x: 0.0, y: 0.0)
+            layer.endPoint = CGPoint.init(x: 0.0, y: 1.0)
+            return layer
+        }()
+        
+        shadowLayerView.layer.addSublayer(gradientLayer)
+        
+        let width = (UIScreenWidth-1)/2.0
+        let height = width/9.0*16
+        gradientLayer.frame = CGRect(x: 0, y: height - 200, width: width, height: 200)
+    }
+    
     fileprivate func initConstraints() {
         previewImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        shadowLayerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         avatarImgView.snp.makeConstraints { make in

@@ -68,8 +68,9 @@ class VideoDetailCell: UITableViewCell {
     lazy fileprivate var likeImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "video_playerLike")?.withRenderingMode(.alwaysTemplate)
-        imgView.layer.shadowOffset = CGSize(width: 0, height: 3.0)
-        imgView.layer.shadowOpacity = 0.6
+        imgView.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        imgView.layer.shadowOpacity = 0.2
+        imgView.layer.shadowRadius = 1.9
         imgView.layer.shadowColor = UIColor.black.cgColor
         imgView.clipsToBounds = false
         return imgView
@@ -79,8 +80,9 @@ class VideoDetailCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = .white
-        label.layer.shadowOffset = CGSize(width: 0, height: 3.0)
-        label.layer.shadowOpacity = 0.6
+        label.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        label.layer.shadowOpacity = 0.2
+        label.layer.shadowRadius = 1.9
         label.layer.shadowColor = UIColor.black.cgColor
         label.clipsToBounds = false
         return label
@@ -103,6 +105,11 @@ class VideoDetailCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = .white
+        label.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        label.layer.shadowOpacity = 0.2
+        label.layer.shadowRadius = 1.9
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.clipsToBounds = false
         return label
     }()
     
@@ -123,6 +130,11 @@ class VideoDetailCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = .white
+        label.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        label.layer.shadowOpacity = 0.2
+        label.layer.shadowRadius = 1.9
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.clipsToBounds = false
         return label
     }()
     
@@ -176,6 +188,55 @@ class VideoDetailCell: UITableViewCell {
     
     lazy fileprivate var isRequesting: Bool = false
     
+    //FIXME: adjust shadow
+    fileprivate lazy var shadowOffsetLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 25)!
+        label.textColor = .black
+        label.text = "高度 0.0"
+        return label
+    }()
+    
+    fileprivate lazy var shadowOffsetSlider: UISlider = {
+        let view = UISlider()
+        view.maximumTrackTintColor = UIConstants.Color.primaryGreen
+        view.minimumTrackTintColor = UIConstants.Color.primaryRed
+        view.addTarget(self, action: #selector(sliderValueChanged(sender:)), for: UIControl.Event.valueChanged)
+        return view
+    }()
+    
+    fileprivate lazy var shadowOpacityLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 25)!
+        label.textColor = .black
+        label.text = "透明 0.0"
+        return label
+    }()
+    
+    fileprivate lazy var shadowOpacitySlider: UISlider = {
+        let view = UISlider()
+        view.maximumTrackTintColor = UIConstants.Color.primaryGreen
+        view.minimumTrackTintColor = UIConstants.Color.primaryRed
+        view.addTarget(self, action: #selector(sliderValueChanged(sender:)), for: UIControl.Event.valueChanged)
+        return view
+    }()
+    
+    fileprivate lazy var shadowRadiusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 25)!
+        label.textColor = .black
+        label.text = "弧度 0.0"
+        return label
+    }()
+    
+    fileprivate lazy var shadowRadiusSlider: UISlider = {
+        let view = UISlider()
+        view.maximumTrackTintColor = UIConstants.Color.primaryGreen
+        view.minimumTrackTintColor = UIConstants.Color.primaryRed
+        view.addTarget(self, action: #selector(sliderValueChanged(sender:)), for: UIControl.Event.valueChanged)
+        return view
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -200,6 +261,8 @@ class VideoDetailCell: UITableViewCell {
         initCaptionView()
         initRewardCountdownView()
         
+        //FIXME: adjust shadow
+//        initShadowPanelView()
         
         initGesture()
         initObserver()
@@ -301,6 +364,11 @@ class VideoDetailCell: UITableViewCell {
         let commentImgView: UIImageView = {
             let imgView = UIImageView()
             imgView.image = UIImage(named: "video_playerComment")
+            imgView.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            imgView.layer.shadowOpacity = 0.2
+            imgView.layer.shadowRadius = 1.9
+            imgView.layer.shadowColor = UIColor.black.cgColor
+            imgView.clipsToBounds = false
             return imgView
         }()
         commentStackView.addArrangedSubview(commentImgView)
@@ -334,6 +402,11 @@ class VideoDetailCell: UITableViewCell {
         let shareImgView: UIImageView = {
             let imgView = UIImageView()
             imgView.image = UIImage(named: "video_playerForward")
+            imgView.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            imgView.layer.shadowOpacity = 0.2
+            imgView.layer.shadowRadius = 1.9
+            imgView.layer.shadowColor = UIColor.black.cgColor
+            imgView.clipsToBounds = false
             return imgView
         }()
         shareStackView.addArrangedSubview(shareImgView)
@@ -632,7 +705,7 @@ class VideoDetailCell: UITableViewCell {
                 asReadRequest()
             }
             
-        } else {
+        } else if model?.rewardable == true {
             likeMarkLabel.isHidden = false
             commentMarkLabel.isHidden = false
             shareMarkLabel.isHidden = false
@@ -718,6 +791,7 @@ class VideoDetailCell: UITableViewCell {
         }))
     }
     
+    
     deinit {
         player.removeObserver(self, forKeyPath: "timeControlStatus")
         
@@ -792,4 +866,83 @@ protocol VideoDetailCellDelegate: NSObjectProtocol {
     func tableViewCellForward(_ tableViewCell: VideoDetailCell)
     
     func tableViewCellAvatar(_ tableViewCell: VideoDetailCell)
+}
+
+
+//MARK: adjust shadow
+extension VideoDetailCell {
+    
+    @objc fileprivate func sliderValueChanged(sender: UISlider) {
+        if sender == shadowOffsetSlider {
+            likeImgView.layer.shadowOffset = CGSize(width: 0.0, height: Double(sender.value*10.0))
+            shadowOffsetLabel.text = String(format: "高度 %.1f", likeImgView.layer.shadowOffset.height)
+        } else if sender == shadowOpacitySlider {
+            likeImgView.layer.shadowOpacity = sender.value
+            shadowOpacityLabel.text = String(format: "透明 %.1f", likeImgView.layer.shadowOpacity)
+        } else if sender == shadowRadiusSlider {
+            likeImgView.layer.shadowRadius = CGFloat(sender.value*10.0)
+            shadowRadiusLabel.text = String(format: "弧度 %.1f", likeImgView.layer.shadowRadius)
+        }
+    }
+    
+    fileprivate func initShadowPanelView() {
+        
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            view.spacing = 20
+            return view
+        }()
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        let offsetStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 10
+            return view
+        }()
+        shadowOffsetLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        shadowOffsetSlider.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        offsetStackView.addArrangedSubview(shadowOffsetLabel)
+        offsetStackView.addArrangedSubview(shadowOffsetSlider)
+        
+        let opacityStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 10
+            return view
+        }()
+        shadowOpacityLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        shadowOpacitySlider.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        opacityStackView.addArrangedSubview(shadowOpacityLabel)
+        opacityStackView.addArrangedSubview(shadowOpacitySlider)
+        
+        let radiusStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 10
+            return view
+        }()
+        shadowRadiusLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        shadowRadiusSlider.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        radiusStackView.addArrangedSubview(shadowRadiusLabel)
+        radiusStackView.addArrangedSubview(shadowRadiusSlider)
+        
+        stackView.addArrangedSubview(offsetStackView)
+        stackView.addArrangedSubview(opacityStackView)
+        stackView.addArrangedSubview(radiusStackView)
+        
+        
+    }
 }

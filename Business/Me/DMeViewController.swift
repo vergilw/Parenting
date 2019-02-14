@@ -237,7 +237,6 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //FIXME: release 1.1.0
         if section == 2 {
             return 1
         } else if section == 5 {

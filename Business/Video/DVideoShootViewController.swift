@@ -29,6 +29,11 @@ class DVideoShootViewController: BaseViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysTemplate), for: .normal)
         button.tintColor = .white
+        button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 1.9
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.clipsToBounds = false
         button.addTarget(self, action: #selector(dimissBtnAction), for: .touchUpInside)
         return button
     }()
@@ -57,6 +62,11 @@ class DVideoShootViewController: BaseViewController {
         button.titleLabel?.font = UIConstants.Font.foot
         button.titleLabel?.textColor = .white
         button.padding = 6
+        button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 1.9
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.clipsToBounds = false
         button.addTarget(self, action: #selector(beautifyBtnAction), for: .touchUpInside)
         return button
     }()
@@ -70,8 +80,18 @@ class DVideoShootViewController: BaseViewController {
         button.titleLabel?.font = UIConstants.Font.foot
         button.titleLabel?.textColor = .white
         button.padding = 6
+        button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 1.9
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.clipsToBounds = false
         button.addTarget(self, action: #selector(flashlightBtnAction), for: .touchUpInside)
         return button
+    }()
+    
+    fileprivate lazy var shadowLayerView: UIView = {
+        let view = UIView()
+        return view
     }()
     
     lazy fileprivate var recordBtn: UIButton = {
@@ -89,6 +109,11 @@ class DVideoShootViewController: BaseViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "video_deleteFragment"), for: .normal)
         button.addTarget(self, action: #selector(deleteFragmentBtnAction), for: .touchUpInside)
+        button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 1.9
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.clipsToBounds = false
         button.isHidden = true
         return button
     }()
@@ -153,6 +178,8 @@ class DVideoShootViewController: BaseViewController {
             recorder.startCaptureSession()
         }
         
+        view.addSubview(shadowLayerView)
+        
         rateView.completionHandler = { [weak self] mode in
             switch mode {
             case .topfast:
@@ -171,6 +198,7 @@ class DVideoShootViewController: BaseViewController {
         
         initTopView()
         initRightView()
+        initBottomShadowLayer()
         initBottomView()
     }
     
@@ -197,6 +225,11 @@ class DVideoShootViewController: BaseViewController {
             button.titleLabel?.font = UIConstants.Font.foot
             button.titleLabel?.textColor = .white
             button.padding = 6
+            button.layer.shadowOffset = CGSize(width: 0, height: 1.7)
+            button.layer.shadowOpacity = 0.2
+            button.layer.shadowRadius = 1.9
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.clipsToBounds = false
             button.addTarget(self, action: #selector(switchBtnAction), for: .touchUpInside)
             return button
         }()
@@ -216,8 +249,24 @@ class DVideoShootViewController: BaseViewController {
         }
     }
     
+    fileprivate func initBottomShadowLayer() {
+        let gradientLayer: CAGradientLayer = {
+            let layer = CAGradientLayer()
+            layer.colors = [UIColor.clear.cgColor, UIColor(white: 0, alpha: 0.2).cgColor, UIColor(white: 0, alpha: 0.4).cgColor]
+            layer.locations = [0.3, 0.6, 1.0]
+            layer.startPoint = CGPoint.init(x: 0.0, y: 0.0)
+            layer.endPoint = CGPoint.init(x: 0.0, y: 1.0)
+            return layer
+        }()
+        
+        shadowLayerView.layer.addSublayer(gradientLayer)
+        
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: UIScreenWidth, height: 400)
+    }
+    
     fileprivate func initBottomView() {
         view.addSubviews([recordBtn, deleteFragmentBtn, submitBtn, albumsBtn])
+        
         
         recordBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -249,6 +298,10 @@ class DVideoShootViewController: BaseViewController {
     fileprivate func initConstraints() {
         recorder.previewView?.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        shadowLayerView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(400)
         }
         rateView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
