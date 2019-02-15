@@ -18,6 +18,10 @@ class DVideoDetailViewModel {
     
     lazy var hasMoreFooter: Bool = true
     
+    lazy var pageNumber: Int = 1
+    
+    lazy var extraParameters: [String: Any]? = nil
+    
 //    func fetchVideos(completion: @escaping (_ code: Int, _ next: Bool, _ models: [VideoModel]?)->Void) {
 //        VideoProvider.request(.videos(categoryID, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
 //

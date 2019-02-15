@@ -13,6 +13,7 @@ let VideoProvider = MoyaProvider<VideoAPI>(manager: DefaultAlamofireManager.shar
 
 enum VideoAPI {
     case video_category
+    case videos_paging([String: Any])
     case videos(String?, Int?)
     case video_like(String, Bool)
     case video_comments(Int, Int)
@@ -40,6 +41,8 @@ extension VideoAPI: TargetType {
         switch self {
         case .video_category:
             return "/api/video_taxons"
+        case .videos_paging:
+            return "/api/videos"
         case .videos:
             return "/api/videos/list"
         case let .video_like(videoID, _):
@@ -76,6 +79,8 @@ extension VideoAPI: TargetType {
     public var method: Moya.Method {
         switch self {
         case .video_category:
+            return .get
+        case .videos_paging:
             return .get
         case .videos:
             return .get
@@ -118,6 +123,8 @@ extension VideoAPI: TargetType {
         switch self {
         case .video_category:
             return .requestPlain
+        case let .videos_paging(parameters):
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .videos(scope, videoID):
             //FIXME: DEBUG per = 10
             var parameters = ["per":"10"]

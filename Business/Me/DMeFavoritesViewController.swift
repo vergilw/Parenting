@@ -181,7 +181,7 @@ class DMeFavoritesViewController: BaseViewController {
         }
         HUDService.sharedInstance.showFetchingView(target: self.collectionView, frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: HUDHeight)))
         
-        VideoProvider.request(.video_favorites(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos_paging(["page": 1, "per": 12, "starred": "true"]), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             HUDService.sharedInstance.hideFetchingView(target: self.collectionView)
             self.collectionView.alpha = 1.0
@@ -194,8 +194,8 @@ class DMeFavoritesViewController: BaseViewController {
                     self.collectionView.reloadData()
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                        if totalPages > self.pageNumber {
-                            self.pageNumber = 2
+                        if totalPages > self.videoPageNumber {
+                            self.videoPageNumber = 2
                             self.collectionView.mj_footer.isHidden = false
                             self.collectionView.mj_footer.resetNoMoreData()
                             
@@ -225,7 +225,7 @@ class DMeFavoritesViewController: BaseViewController {
     
     fileprivate func fetchMoreVideosData() {
         
-        VideoProvider.request(.video_favorites(videoPageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.videos_paging(["page": videoPageNumber, "per": 12, "starred": "true"]), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             self.collectionView.mj_footer.endRefreshing()
             
@@ -237,8 +237,8 @@ class DMeFavoritesViewController: BaseViewController {
                     self.collectionView.reloadData()
                     
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                        if totalPages > self.pageNumber {
-                            self.pageNumber += 1
+                        if totalPages > self.videoPageNumber {
+                            self.videoPageNumber += 1
                             self.collectionView.mj_footer.endRefreshing()
                         } else {
                             self.collectionView.mj_footer.endRefreshingWithNoMoreData()

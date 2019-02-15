@@ -54,16 +54,22 @@ class DVideoDetailViewController: BaseViewController {
 //        return viewController
 //    }()
     
-    init(mode: VideoListMode, models: [VideoModel], index: Int) {
+    init(mode: VideoListMode, models: [VideoModel], index: Int, extraParameters: [String: Any]? = nil) {
         super.init(nibName: nil, bundle: nil)
         
         viewModel.listMode = mode
         viewModel.videoModels = models
         currentIndex = index
         
+        
         //TODO: complete all mode
         if mode == .fragment {
             reusingIdentifiersMapping = [0: "A"]
+        } else if mode == .paging {
+            if let page = extraParameters?["page"] as? Int {
+                viewModel.pageNumber = page
+            }
+            viewModel.extraParameters = extraParameters
         }
     }
     
@@ -350,6 +356,34 @@ class DVideoDetailViewController: BaseViewController {
         }))
     }
     
+    fileprivate func fetchMoreData() {
+        var parameters: [String: Any] = viewModel.extraParameters ?? [:]
+        parameters["per"] = "12"
+        parameters["page"] = viewModel.pageNumber
+        VideoProvider.request(.videos_paging(parameters), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            
+            if code >= 0 {
+                if let data = JSON?["videos"] as? [[String: Any]] {
+                    if let models = [VideoModel].deserialize(from: data) as? [VideoModel] {
+                        self.viewModel.videoModels?.append(contentsOf: models)
+                    }
+                    self.tableView.reloadData()
+                    
+                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                        if totalPages > self.viewModel.pageNumber {
+                            self.viewModel.pageNumber += 1
+                            self.viewModel.hasMoreFooter = true
+                        } else {
+                            self.viewModel.hasMoreFooter = false
+                        }
+                    }
+                }
+                
+            }
+        }))
+    }
+    
     // MARK: - ============= Reload =============
     @objc func reload() {
         
@@ -441,13 +475,18 @@ extension DVideoDetailViewController: UIScrollViewDelegate {
                 
                 if isTop == true {
                     //向上翻页prefetching
-                    if self.currentIndex <= 3 && self.viewModel.hasMoreHeader {
+                    if self.currentIndex <= 3 && self.viewModel.hasMoreHeader && self.viewModel.listMode == .fragment {
                         self.fetchHeaderData()
                     }
                 } else if isTop == false {
                     //向下翻页prefetching
                     if self.currentIndex >= models.count-4 && self.viewModel.hasMoreFooter {
-                        self.fetchFooterData()
+                        if self.viewModel.listMode == .fragment {
+                            self.fetchFooterData()
+                        } else {
+                            self.fetchMoreData()
+                        }
+                        
                     }
                 }
             })

@@ -290,7 +290,7 @@ extension DVideoUserViewController: UICollectionViewDataSource, UICollectionView
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if let models = videoModels {
-            navigationController?.pushViewController(DVideoDetailViewController(mode: .paging, models: models, index: indexPath.row), animated: true)
+            navigationController?.pushViewController(DVideoDetailViewController(mode: .paging, models: models, index: indexPath.row, extraParameters: ["author_id": userID ?? 0, "page":pageNumber]), animated: true)
         }
     }
     
