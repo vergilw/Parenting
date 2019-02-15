@@ -134,6 +134,8 @@ class DVideoForwardViewController: BaseViewController {
                 if code >= 0 {
                     self.videoModel.starred = true
                     self.othersCollectionView.reloadData()
+                    
+                    NotificationCenter.default.post(name: Notification.Video.videoFavoritesDidChange, object: nil)
                 }
             }))
             
@@ -143,6 +145,8 @@ class DVideoForwardViewController: BaseViewController {
                 if code >= 0 {
                     self.videoModel.starred = false
                     self.othersCollectionView.reloadData()
+                    
+                    NotificationCenter.default.post(name: Notification.Video.videoFavoritesDidChange, object: nil)
                 }
             }))
         }
@@ -423,8 +427,20 @@ extension DVideoForwardViewController: UICollectionViewDataSource, UICollectionV
 //            }
         } else if collectionView == othersCollectionView {
             if indexPath.row == 0 {
+                guard AuthorizationService.sharedInstance.isSignIn() else {
+                    let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                    present(authorizationNavigationController, animated: true, completion: nil)
+                    return
+                }
+                
                 reportBtnAction()
             } else if indexPath.row == 1 {
+                guard AuthorizationService.sharedInstance.isSignIn() else {
+                    let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                    present(authorizationNavigationController, animated: true, completion: nil)
+                    return
+                }
+                
                 favoriteRequest()
             } else if indexPath.row == 2 {
                 pasteboardBtnAction()

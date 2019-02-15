@@ -113,6 +113,12 @@ class DVideoDetailViewController: BaseViewController {
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        pauseAllPlayers()
+    }
+    
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         tableView.contentInset = UIEdgeInsets(top: UIScreenHeight, left: 0, bottom: UIScreenHeight * 3, right: 0);

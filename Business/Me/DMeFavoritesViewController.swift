@@ -95,7 +95,7 @@ class DMeFavoritesViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchVideoData), name: Notification.Video.videoFavoritesDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -172,7 +172,7 @@ class DMeFavoritesViewController: BaseViewController {
         }))
     }
     
-    fileprivate func fetchVideoData() {
+    @objc fileprivate func fetchVideoData() {
         var HUDHeight: CGFloat = 0
         if #available(iOS 11, *) {
             HUDHeight = UIScreenHeight-(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)-(navigationController?.navigationBar.bounds.size.height ?? 0)-46

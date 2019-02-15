@@ -60,7 +60,8 @@ class VideoRewardView: UIView {
     
     func startCountdown(startSeconds: Double, durationSeconds: Double) {
         if animator == nil {
-            animator = UIViewPropertyAnimator(duration: durationSeconds-startSeconds, curve: UIView.AnimationCurve.linear) {
+            animator = UIViewPropertyAnimator(duration: durationSeconds-startSeconds, curve: UIView.AnimationCurve.linear) { [weak self] in
+                guard let `self` = self else { return }
                 self.animatedImgView.transform = CGAffineTransform(translationX: 0, y: -55)
             }
         } else {
@@ -74,5 +75,9 @@ class VideoRewardView: UIView {
             animator?.pauseAnimation()
             print(#function)
         }
+    }
+    
+    deinit {
+        animator?.stopAnimation(true)
     }
 }

@@ -735,7 +735,7 @@ class VideoDetailCell: UITableViewCell {
     
     func startCountdown() {
         if rewardCountdownView.isHidden == false {
-            guard let playerItem = player.currentItem else { return }
+            guard let playerItem = player.currentItem, !playerItem.duration.seconds.isNaN else { return }
             rewardCountdownView.startCountdown(startSeconds: playerItem.currentTime().seconds, durationSeconds: playerItem.duration.seconds)
         }
         
@@ -799,7 +799,6 @@ class VideoDetailCell: UITableViewCell {
     
     deinit {
         player.removeObserver(self, forKeyPath: "timeControlStatus")
-        
     }
 }
 

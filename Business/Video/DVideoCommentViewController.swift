@@ -343,7 +343,7 @@ extension DVideoCommentViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        guard let text = textField.text, text.count > 0 else {
+        guard let text = textField.text, text.trimmingCharacters(in: CharacterSet.whitespaces).count > 0 else {
             HUDService.sharedInstance.show(string: "您还没有添加评论内容哟！")
             return false
         }
