@@ -15,7 +15,6 @@ class DVideoShootViewController: BaseViewController {
 
     lazy fileprivate var recorder: PLShortVideoRecorder = {
         let recorder = PLShortVideoRecorder(videoConfiguration: PLSVideoConfiguration.default(), audioConfiguration: PLSAudioConfiguration.default())
-        //FIXME: DEBUG maxDuration
         recorder.maxDuration = 60
         recorder.minDuration = 5
         recorder.setBeautifyModeOn(true)
@@ -635,7 +634,6 @@ extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigati
                 DispatchQueue.main.async {
                     progressView.hide(animated: true)
                 }
-                print(error)
             }
             
             transcoder?.processingBlock = { progress in

@@ -18,7 +18,7 @@ class DVideoUserViewController: BaseViewController {
     
     fileprivate lazy var pageNumber: Int = 1
     
-    fileprivate lazy var dispatchGroup = DispatchGroup()
+    fileprivate lazy var dispatchGroup: DispatchGroup? = nil
     
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -88,21 +88,25 @@ class DVideoUserViewController: BaseViewController {
     // MARK: - ============= Request =============
     fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
-        dispatchGroup.enter()
+        dispatchGroup = DispatchGroup()
+        dispatchGroup?.enter()
         fetchUserData()
         
-        dispatchGroup.enter()
+        dispatchGroup?.enter()
         fetchVideoData()
         
-        dispatchGroup.notify(queue: DispatchQueue.main) {
+        dispatchGroup?.notify(queue: DispatchQueue.main) {
             HUDService.sharedInstance.hideFetchingView(target: self.view)
+            self.dispatchGroup = nil
         }
     }
     
     fileprivate func fetchUserData() {
         
         UserProvider.request(.users(userID ?? 0), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            self.dispatchGroup.leave()
+            if let dispatchGroup = self.dispatchGroup {
+                dispatchGroup.leave()
+            }
             
             if code >= 0 {
                 if let data = JSON?["user"] as? [String: Any] {
@@ -126,7 +130,9 @@ class DVideoUserViewController: BaseViewController {
         
         VideoProvider.request(.videos_user(userID ?? 0, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
-            self.dispatchGroup.leave()
+            if let dispatchGroup = self.dispatchGroup {
+                dispatchGroup.leave()
+            }
             
             if code >= 0 {
                 if let data = JSON?["videos"] as? [[String: Any]] {
@@ -150,7 +156,6 @@ class DVideoUserViewController: BaseViewController {
                     }
                 }
                 
-                //FIXME: DEBUG no data
                 if self.videoModels?.count ?? 0 == 0 {
                     let HUD = ResultView()
                     if self.userID == AuthorizationService.sharedInstance.user?.id {

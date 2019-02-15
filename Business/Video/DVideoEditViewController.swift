@@ -421,13 +421,18 @@ class DVideoEditViewController: BaseViewController {
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
         viewController.completionHandler = { [weak self] (double) in
-            guard let weakself = self else { return }
-                
-            weakself.editor.stopEditing()
-            weakself.editor.seek(to: CMTime(seconds: double, preferredTimescale: 600), completionHandler: { (bool) in
+            guard let `self` = self else { return }
+            
+            //TODO: last mircosecond can not select
+            var seconds = double
+            if self.asset.duration.seconds - seconds < 0.01 {
+                seconds = self.asset.duration.seconds - 0.01
+            }
+            self.editor.stopEditing()
+            self.editor.seek(to: CMTime(seconds: seconds, preferredTimescale: 600), completionHandler: { (bool) in
             })
             
-            weakself.videoCoverTime = double
+            self.videoCoverTime = seconds
         }
         present(viewController, animated: true, completion: nil)
         

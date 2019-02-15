@@ -29,7 +29,6 @@ class PlaybackRecordService {
         set {
             if newValue != nil {
                 cache?.setObject(newValue as NSCoding?, forKey: "records")
-                print(newValue)
             } else {
                 cache?.removeObject(forKey: "records")
             }
