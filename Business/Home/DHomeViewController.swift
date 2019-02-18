@@ -15,13 +15,13 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DHomeViewModel()
     
-    lazy fileprivate var section0HeaderHeight: CGFloat = 25 + 8 + 18 + 32
-    lazy fileprivate var section0FooterHeight: CGFloat = 10 + 42 + 60
-    lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 30
+    lazy fileprivate var section0HeaderHeight: CGFloat = 25 + 6 + 18 + 10
+    lazy fileprivate var section0FooterHeight: CGFloat = 15 + 35
+    lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 10
     lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-    lazy fileprivate var item0Height: CGFloat = 4.5 + itemWidth/16.0*9 + 10 + 12 + 7 + 37
-    lazy fileprivate var item1Height: CGFloat = 4.5 + itemWidth/16.0*9 + 10 + 37
-    lazy fileprivate var item0Spacing: CGFloat = 22
+    lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
+    lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 7 + 40 + 10 + 12
+    lazy fileprivate var item0Spacing: CGFloat = 15
     lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
     
     lazy fileprivate var scrollView: UIScrollView = {
@@ -73,6 +73,12 @@ class DHomeViewController: BaseViewController {
         return button
     }()
     
+    fileprivate lazy var topBannerBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        return view
+    }()
+    
     lazy fileprivate var carouselView: TYCyclePagerView = {
         let view = TYCyclePagerView()
         view.isInfiniteLoop = false
@@ -91,11 +97,10 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var storyView: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIConstants.Color.head, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 18)
-        button.setTitle("氧育者故事", for: .normal)
-        button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(teacherStoriesBtnAction), for: .touchUpInside)
+        button.backgroundColor = .white
+        button.roundCorners(corners: [.topLeft, .topRight], radius: 9)
+        button.drawSeparator(startPoint: CGPoint(x: 0, y: 51.5), endPoint: CGPoint(x: UIScreenWidth, y: 51.5))
         return button
     }()
     
@@ -170,12 +175,28 @@ class DHomeViewController: BaseViewController {
         fetchData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        storyView.roundCorners(corners: [.topLeft, .topRight], radius: 8)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
         
         view.addSubview(scrollView)
         
-        tableView.rowHeight = item1Height
+        tableView.rowHeight = item1Height + 15
         tableView.register(TeacherCoursesCell.self, forCellReuseIdentifier: TeacherCoursesCell.className())
         tableView.alwaysBounceVertical = false
         tableView.alwaysBounceVertical = false
@@ -187,7 +208,7 @@ class DHomeViewController: BaseViewController {
             self?.fetchData()
         })
 //        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        scrollView.addSubviews([carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([topBannerBgView, carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
     }
@@ -250,17 +271,22 @@ class DHomeViewController: BaseViewController {
 //            make.height.equalTo(42)
 //            make.width.equalTo(15+22+25)
 //        }
+        topBannerBgView.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.width.equalTo(UIScreenWidth)
+            var height: CGFloat = self.navigationController?.navigationBar.bounds.height ?? 0
+            height += 5
+            make.height.equalTo(height + (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9+50)
+        }
         carouselView.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.trailing.equalTo(scrollView)
-            make.top.equalTo(25)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(topBannerBgView.snp.bottom).offset(-50)
             make.width.equalTo(UIScreenWidth)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
         }
         storyView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(carouselView.snp.bottom).offset(22)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(topBannerBgView.snp.bottom).offset(-35)
             make.height.equalTo(52)
         }
         
@@ -280,18 +306,18 @@ class DHomeViewController: BaseViewController {
         teacherBannerBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(coursesCollectionView.snp.bottom).offset(0)
+            make.top.equalTo(coursesCollectionView.snp.bottom).offset(30)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
         }
         tableView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(teacherBannerBtn.snp.bottom).offset(60)
-            make.height.equalTo((section1HeaderHeight+item1Height))
+            make.top.equalTo(teacherBannerBtn.snp.bottom).offset(30)
+            make.height.equalTo((section1HeaderHeight+item1Height+15))
         }
         bottomBannerView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(tableView.snp.bottom).offset(40)
+            make.top.equalTo(tableView.snp.bottom).offset(15)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*5)
             make.bottom.equalTo(-UIConstants.Margin.bottom)
@@ -316,7 +342,7 @@ class DHomeViewController: BaseViewController {
         
         //story view
         storyIndicatorImgView.snp.makeConstraints { make in
-            make.trailing.equalToSuperview()
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalToSuperview()
         }
         storyAvatarsView.snp.makeConstraints { make in
@@ -357,6 +383,20 @@ class DHomeViewController: BaseViewController {
         carouselView.reloadData()
         
         coursesCollectionView.reloadData()
+        
+        //重新排版精选课程高度
+        var collectionHeight: CGFloat = section0HeaderHeight + item0Spacing + section0FooterHeight
+        if let cellLayout1 = coursesCollectionView.layoutAttributesForItem(at: IndexPath(item: 0, section: 0)),
+            let cellLayout2 = coursesCollectionView.layoutAttributesForItem(at: IndexPath(item: 2, section: 0)) {
+            collectionHeight += cellLayout1.bounds.height + cellLayout2.bounds.height
+        }
+        coursesCollectionView.snp.remakeConstraints { make in
+            make.leading.trailing.equalTo(scrollView)
+            make.top.equalTo(rewardCoursesBtn.snp.bottom).offset(35)
+            make.width.equalTo(UIScreen.main.bounds.size.width)
+            make.height.equalTo(collectionHeight)
+        }
+        
         
         if let teacherModel = viewModel.recommendedCourseModel, let URLString = teacherModel.recommended_cover_attribute?.service_url {
             let width = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
@@ -490,14 +530,14 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if collectionView == coursesCollectionView {
-            return CGSize(width: UIScreenWidth, height: 25 + 8 + 18 + 32)
+            return CGSize(width: UIScreenWidth, height: section0HeaderHeight)
         }
         return .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         if collectionView == coursesCollectionView {
-            return CGSize(width: UIScreenWidth, height: 64+42)
+            return CGSize(width: UIScreenWidth, height: section0FooterHeight)
         }
         return .zero
     }
@@ -520,6 +560,27 @@ extension DHomeViewController: UICollectionViewDataSource, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.hottestCourseModels?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.row == 0 || indexPath.row == 1 {
+            if let model1 = viewModel.hottestCourseModels?[exist: 0], let model2 = viewModel.hottestCourseModels?[exist: 1] {
+                let height = max(PickedCourseCell.cellHeight(title: model1.title ?? ""),
+                                 PickedCourseCell.cellHeight(title: model2.title ?? ""))
+                let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+                return CGSize(width: width, height: height)
+            }
+            
+        } else if indexPath.row == 2 || indexPath.row == 3 {
+            if let model1 = viewModel.hottestCourseModels?[exist: 2], let model2 = viewModel.hottestCourseModels?[exist: 3] {
+                let height = max(PickedCourseCell.cellHeight(title: model1.title ?? ""),
+                                 PickedCourseCell.cellHeight(title: model2.title ?? ""))
+                let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+                return CGSize(width: width, height: height)
+            }
+        }
+        
+        return .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -565,17 +626,17 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
 //            headerView.snp.makeConstraints { make in
 //                make.edges.equalToSuperview()
 //            }
-            let titleLabel: ParagraphLabel = {
-                let label = ParagraphLabel()
-                label.font = UIConstants.Font.h1
+            let titleLabel: UILabel = {
+                let label = UILabel()
+                label.font = UIConstants.Font.h2
                 label.textColor = UIConstants.Color.head
-                label.setParagraphText("最新课程")
+                label.text = "最新课程"
                 return label
             }()
             view?.addSubview(titleLabel)
             titleLabel.snp.makeConstraints { make in
                 make.leading.equalTo(UIConstants.Margin.leading)
-                make.top.equalTo(1)
+                make.top.equalTo(0)
             }
         }
         
@@ -606,7 +667,7 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         
         let titleLabel: UILabel = {
             let label = UILabel()
-            label.font = UIConstants.Font.h1
+            label.font = UIConstants.Font.h2
             label.textColor = UIConstants.Color.head
             label.text = "精选课程"
             return label
@@ -614,8 +675,8 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         
         let footnoteLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont(name: "PingFangSC-Regular", size: 15)
-            label.textColor = UIConstants.Color.body
+            label.font = UIConstants.Font.body
+            label.textColor = UIConstants.Color.foot
             label.text = "让孩子更优秀的秘密，百万家长的选择推荐"
             return label
         }()
@@ -623,13 +684,14 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         addSubviews(titleLabel, footnoteLabel)
         
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(0)
         }
         
         footnoteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
-            make.top.equalTo(titleLabel.snp.lastBaseline).offset(8)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(titleLabel.snp.lastBaseline).offset(6)
         }
     }
     
@@ -648,12 +710,11 @@ fileprivate class MoreFooterView: UICollectionReusableView {
         
         let moreBtn: UIButton = {
             let button = UIButton()
-            button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.h2_regular
+            button.setTitleColor(UIColor("#8e9197"), for: .normal)
+            button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
             button.setTitle("查看更多", for: .normal)
-            button.layer.cornerRadius = 21
-            button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
-            button.layer.borderWidth = 0.5
+            button.layer.cornerRadius = 4
+            button.backgroundColor = UIConstants.Color.background
             button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
             return button
         }()
@@ -662,9 +723,9 @@ fileprivate class MoreFooterView: UICollectionReusableView {
         
         moreBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(10)
-            make.width.equalTo(158)
-            make.height.equalTo(42)
+            make.top.equalTo(15)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.height.equalTo(35)
         }
     }
     
@@ -746,6 +807,8 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
             let imgView: UIImageView = {
                 let imgView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)))
                 imgView.contentMode = .scaleAspectFill
+                imgView.layer.cornerRadius = 6
+                imgView.clipsToBounds = true
                 imgView.tag = 1
                 return imgView
             }()

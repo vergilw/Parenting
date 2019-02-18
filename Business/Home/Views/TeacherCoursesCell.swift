@@ -17,11 +17,11 @@ class TeacherCoursesCell: UITableViewCell {
     lazy fileprivate var teachersCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 15, right: UIConstants.Margin.trailing)
         layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 12
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        layout.itemSize = CGSize(width: width, height: width/16.0*9+10+37)
+        layout.itemSize = CGSize(width: width, height: width/16.0*9 + 7 + 40 + 10 + 12)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(PickedCourseCell.self, forCellWithReuseIdentifier: PickedCourseCell.className())
         view.dataSource = self

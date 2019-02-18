@@ -119,23 +119,24 @@ class ParagraphLabel: UILabel {
     
     fileprivate func multilineHeight(font: UIFont) -> CGFloat {
         var lineHeight: CGFloat = 0
-        if font == UIConstants.Font.h1 {
-            lineHeight = UIConstants.ParagraphLineHeight.h1
-            
-        } else if font == UIConstants.Font.h2 {
-            lineHeight = UIConstants.ParagraphLineHeight.h2
-            
-        } else if font == UIConstants.Font.h3 {
-            lineHeight = UIConstants.ParagraphLineHeight.h3
-            
-        } else if font == UIConstants.Font.body {
-            lineHeight = UIConstants.ParagraphLineHeight.body
-            
-        } else if font == UIConstants.Font.foot {
-            lineHeight = UIConstants.ParagraphLineHeight.foot
-        } else {
-            lineHeight = font.pointSize * 1.2
-        }
+//        if font == UIConstants.Font.h1 {
+//            lineHeight = UIConstants.ParagraphLineHeight.h1
+//
+//        } else if font == UIConstants.Font.h2 {
+//            lineHeight = UIConstants.ParagraphLineHeight.h2
+//
+//        } else if font == UIConstants.Font.h3 {
+//            lineHeight = UIConstants.ParagraphLineHeight.h3
+//
+//        } else if font == UIConstants.Font.body {
+//            lineHeight = UIConstants.ParagraphLineHeight.body
+//
+//        } else if font == UIConstants.Font.foot {
+//            lineHeight = UIConstants.ParagraphLineHeight.foot
+//        } else {
+//            lineHeight = font.pointSize * 1.2
+//        }
+        lineHeight = font.pointSize * 1.6
         return lineHeight
     }
 }

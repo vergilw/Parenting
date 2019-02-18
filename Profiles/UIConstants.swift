@@ -16,8 +16,8 @@ let UIStatusBarHeight = UIApplication.shared.statusBarFrame.size.height
 public struct UIConstants {
     
     public struct Color {
-        public static let primaryGreen: UIColor = UIColor("#00a7a9")
-        public static let primaryOrange: UIColor = UIColor("#f6a500")
+        public static let primaryGreen: UIColor = UIColor("#00cddd")
+        public static let primaryOrange: UIColor = UIColor("#ffb701")
         public static let primaryRed: UIColor = UIColor("#f05053")
         
         public static let head: UIColor = UIColor("#222")
@@ -27,17 +27,19 @@ public struct UIConstants {
         public static let disable: UIColor = UIColor("#ccc")
         
         public static let background: UIColor = UIColor("#f3f4f6")
-        public static let separator: UIColor = UIColor("#e7e8ea")
+        public static let separator: UIColor = UIColor("#f1f1f1")
     }
     
     public struct Font {
         public static let h1: UIFont = UIFont(name: "PingFangSC-Semibold", size: 25)!
-        public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 18)!
-        public static let h2_regular: UIFont = UIFont(name: "PingFangSC-Regular", size: 18)!
+        public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 20)!
+        public static let h2_regular: UIFont = UIFont(name: "PingFangSC-Regular", size: 20)!
         public static let h3: UIFont = UIFont(name: "PingFangSC-Medium", size: 17)!
+        public static let h4: UIFont = UIFont(name: "PingFangSC-Regular", size: 14)!
         
-        public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 15)!
+        public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 13)!
         public static let foot: UIFont = UIFont(name: "PingFangSC-Regular", size: 12)!
+        public static let foot2: UIFont = UIFont(name: "PingFangSC-Regular", size: 10)!
         
 //        func h2(weight: UIFont.Weight) -> UIFont {
 //            return UIFont(name: "PingFangSC-Regular", size: 18)!
@@ -77,8 +79,8 @@ public struct UIConstants {
     }
     
     public struct Margin {
-        public static let leading: CGFloat = 25
-        public static let trailing: CGFloat = 25
+        public static let leading: CGFloat = 18
+        public static let trailing: CGFloat = 18
         public static let top: CGFloat = 16
         public static let bottom: CGFloat = 16
     }

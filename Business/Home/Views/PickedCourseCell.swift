@@ -26,13 +26,6 @@ class PickedCourseCell: UICollectionViewCell {
         return imgView
     }()
     
-    lazy fileprivate var gradientShadowImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "me_courseGradientShadow")
-        imgView.contentMode = .scaleToFill
-        return imgView
-    }()
-    
     lazy fileprivate var rewardMarkImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "course_rewardMark")
@@ -40,18 +33,17 @@ class PickedCourseCell: UICollectionViewCell {
         return imgView
     }()
     
-    lazy fileprivate var footnoteLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
+    lazy fileprivate var footnoteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot2
         label.textColor = .white
         return label
     }()
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
-//        label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 2
         label.preferredMaxLayoutWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         return label
@@ -64,11 +56,10 @@ class PickedCourseCell: UICollectionViewCell {
         return imgView
     }()
     
-    lazy fileprivate var nameLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var nameLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.foot
         label.textColor = UIConstants.Color.foot
-        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -77,19 +68,54 @@ class PickedCourseCell: UICollectionViewCell {
         
         contentView.addSubviews([previewImgView, rewardMarkImgView, titleLabel, nameLabel])
         
-//        let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-//        let height = width/16.0*9
-//        previewImgView.drawGradientBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: height-10-12-10), size: CGSize(width: width, height: (10+12+10))), colors: [UIColor(white: 1.0, alpha: 0.0).cgColor, UIColor(white: 0.0, alpha: 0.2).cgColor])
-        
-        previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
+        initPreviewFooterView()
         
         initConstraints()
+    }
+    
+    fileprivate func initPreviewFooterView() {
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+            imgView.layer.cornerRadius = 7.5
+            imgView.clipsToBounds = true
+            return imgView
+        }()
+        
+        let iconImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "")
+            return imgView
+        }()
+        
+        stackView.addSubview(bgImgView)
+        bgImgView.snp.makeConstraints { make in
+            make.edges.equalTo(UIEdgeInsets(top: 0, left: -8, bottom: 0, right: -8))
+        }
+        
+        stackView.addArrangedSubview(iconImgView)
+        stackView.addArrangedSubview(footnoteLabel)
+        
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.trailing.equalTo(previewImgView.snp.trailing).offset(-5-8)
+            make.bottom.equalTo(previewImgView.snp.bottom).offset(-5)
+            make.height.equalTo(15)
+        }
     }
     
     fileprivate func initConstraints() {
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         previewImgView.snp.makeConstraints { make in
-            make.top.equalTo(4.5)
+            make.top.equalTo(0)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(width/16.0*9)
         }
@@ -97,22 +123,11 @@ class PickedCourseCell: UICollectionViewCell {
             make.leading.equalTo(10)
             make.top.equalToSuperview()
         }
-        footnoteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(10)
-            make.bottom.equalTo(-10)
-        }
-        gradientShadowImgView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalTo(previewImgView)
-        }
-//        avatarImgView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-//            make.size.equalTo(CGSize(width: 20, height: 20))
-//        }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.equalTo(previewImgView.snp.bottom).offset(10)
+            make.top.equalTo(previewImgView.snp.bottom).offset(8)
             make.trailing.lessThanOrEqualToSuperview()
+            make.height.equalTo(12)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -128,24 +143,44 @@ class PickedCourseCell: UICollectionViewCell {
     func setup(model: CourseModel, mode: DisplayMode) {
         if mode != displayMode {
             if mode == .picked {
-                nameLabel.isHidden = false
-                
                 titleLabel.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
                     make.trailing.lessThanOrEqualToSuperview()
                     make.top.equalTo(nameLabel.snp.bottom).offset(7)
                 }
-            } else if mode == .latest {
-                nameLabel.isHidden = true
-                
-                titleLabel.snp.remakeConstraints { make in
+                nameLabel.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
+                    make.top.equalTo(previewImgView.snp.bottom).offset(8)
                     make.trailing.lessThanOrEqualToSuperview()
-                    make.top.equalTo(previewImgView.snp.bottom).offset(10)
+                    make.height.equalTo(12)
                 }
+                
+                
+            } else if mode == .latest {
+                titleLabel.snp.remakeConstraints { make in
+                    make.leading.equalTo(10)
+                    make.trailing.lessThanOrEqualTo(-10)
+                    make.top.equalTo(previewImgView.snp.bottom).offset(7)
+                }
+                nameLabel.snp.remakeConstraints { make in
+                    make.leading.equalTo(10)
+                    make.trailing.lessThanOrEqualTo(-10)
+                    make.top.equalTo(titleLabel.snp.bottom).offset(10)
+                    make.height.equalTo(12)
+                }
+                
+                layer.cornerRadius = 4
+                layer.backgroundColor = UIColor.white.cgColor
+                layer.shadowRadius = 4
+                layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
+                layer.shadowOpacity = 0.05
+                layer.shadowColor = UIColor.black.cgColor
             }
             
+            displayMode = mode
         }
+        
+        
         
         if model.rewardable == true {
             rewardMarkImgView.isHidden = false
@@ -160,32 +195,36 @@ class PickedCourseCell: UICollectionViewCell {
             previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
         }
         
-//        if let URLString = model.teacher?.headshot_attribute?.service_url {
-//            let processor = RoundCornerImageProcessor(cornerRadius: 20, targetSize: CGSize(width: 40, height: 40))
-//            avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
-//        }
-        
-        footnoteLabel.setParagraphText(String((model.students_count ?? 0)) + "人已学习")
+        footnoteLabel.text = String((model.students_count ?? 0)) + "人已学习"
         
         var nameString = model.teacher?.name ?? ""
         if let tags = model.teacher?.tags, tags.count > 0 {
             let tagString = tags.joined(separator: " | ")
             nameString = nameString.appendingFormat(" : %@", tagString)
         }
-        nameLabel.setParagraphText(nameString)
+        nameLabel.text = nameString
         
         
         
         
-        let paragraph = NSMutableParagraphStyle()
-        let lineHeight: CGFloat = 18.5
-        paragraph.maximumLineHeight = lineHeight
-        paragraph.minimumLineHeight = lineHeight
-        paragraph.lineBreakMode = .byTruncatingTail
+//        let paragraph = NSMutableParagraphStyle()
+//        let lineHeight: CGFloat = 18.5
+//        paragraph.maximumLineHeight = lineHeight
+//        paragraph.minimumLineHeight = lineHeight
+//        paragraph.lineBreakMode = .byTruncatingTail
+//
+//        let attributedString = NSMutableAttributedString(string: model.title ?? "")
+//        attributedString.addAttributes([
+//            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-titleLabel.font.lineHeight)/4+1.25, NSAttributedString.Key.font: titleLabel.font], range: NSRange(location: 0, length: attributedString.length))
+//        titleLabel.attributedText = attributedString
         
-        let attributedString = NSMutableAttributedString(string: model.title ?? "")
-        attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (lineHeight-titleLabel.font.lineHeight)/4+1.25, NSAttributedString.Key.font: titleLabel.font], range: NSRange(location: 0, length: attributedString.length))
-        titleLabel.attributedText = attributedString
+        titleLabel.text = model.title ?? ""
+    }
+    
+    class func cellHeight(title: String) -> CGFloat {
+        let maxWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
+        let size = NSString(string: title).boundingRect(with: CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : UIConstants.Font.h4], context: nil).size
+        
+        return maxWidth/16.0*9 + 8 + 12 + 7 + size.height
     }
 }

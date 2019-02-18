@@ -28,7 +28,7 @@ extension UIView {
         }
     }
     
-    public func drawSeparator(startPoint: CGPoint, endPoint: CGPoint, color: UIColor = UIColor("#e7e8ea")) {
+    public func drawSeparator(startPoint: CGPoint, endPoint: CGPoint, color: UIColor = UIColor("#f1f1f1")) {
         let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: startPoint)
@@ -55,5 +55,12 @@ extension UIView {
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         layer.addSublayer(gradientLayer)
+    }
+    
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
     }
 }

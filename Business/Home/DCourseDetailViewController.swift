@@ -117,18 +117,18 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var categoryView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-//        view.setLayerShadow(UIColor(white: 0, alpha: 0.2), offset: CGSize(width: 0, height: 3), radius: 0.5)
-        view.layer.shadowOffset = CGSize(width: 0, height: 3)
-        view.layer.shadowOpacity = 0.6
-        view.layer.shadowRadius = 3.0
-        view.layer.shadowColor = UIColor(white: 0, alpha: 0.2).cgColor
+//        view.layer.shadowOffset = CGSize(width: 0, height: 3)
+//        view.layer.shadowOpacity = 0.6
+//        view.layer.shadowRadius = 3.0
+//        view.layer.shadowColor = UIColor(white: 0, alpha: 0.2).cgColor
+        view.drawSeparator(startPoint: CGPoint(x: 0, y: 41.5), endPoint: CGPoint(x: UIScreenWidth, y: 41.5))
         return view
     }()
     
     lazy fileprivate var introductionBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.h2
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         button.setTitle("简介", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -137,7 +137,7 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var catalogueBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.body
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
         button.setTitle("目录", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -146,7 +146,7 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var evaluationBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.body
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
         button.setTitle("留言", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -154,7 +154,7 @@ class DCourseDetailViewController: BaseViewController {
     
     lazy fileprivate var categoryIndicatorImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.backgroundColor = UIColor("#00a7a9")
+        imgView.backgroundColor = UIColor("#00cddd")
         return imgView
     }()
     
@@ -218,7 +218,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = ActionButton()
         button.layer.cornerRadius = 20
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.h2
+        button.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         button.setTitle("立即学习", for: .normal)
         button.backgroundColor = UIConstants.Color.primaryGreen
         button.addTarget(self, action: #selector(toolActionBtnAction), for: .touchUpInside)
@@ -354,18 +354,9 @@ class DCourseDetailViewController: BaseViewController {
         stackView.addArrangedSubview(catalogueBtn)
         stackView.addArrangedSubview(evaluationBtn)
         
-        let separatorImgView: UIImageView = {
-            let imgView = UIImageView()
-            imgView.backgroundColor = UIColor("#f3f4f6")
-            return imgView
-        }()
-        categoryView.addSubviews(stackView, separatorImgView, categoryIndicatorImgView)
+        categoryView.addSubviews(stackView, categoryIndicatorImgView)
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-        separatorImgView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(0.5)
         }
         categoryIndicatorImgView.snp.makeConstraints { make in
             make.centerX.equalTo(introductionBtn)
@@ -397,8 +388,8 @@ class DCourseDetailViewController: BaseViewController {
         }
         categoryView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo((tableView.tableHeaderView?.bounds.size.height ?? 0) - 62)
-            make.height.equalTo(62)
+            make.top.equalTo((tableView.tableHeaderView?.bounds.size.height ?? 0) - 42)
+            make.height.equalTo(42)
         }
         favoriteBtn.snp.makeConstraints { make in
             make.leading.equalTo(10)
@@ -699,7 +690,7 @@ class DCourseDetailViewController: BaseViewController {
     }
     
     func reloadCategoryView() {
-        var offsetY = (tableView.tableHeaderView?.bounds.size.height ?? 0) - 62 - tableView.contentOffset.y
+        var offsetY = (tableView.tableHeaderView?.bounds.size.height ?? 0) - 42 - tableView.contentOffset.y
         if offsetY < 0 {
             offsetY = 0
             navigationItem.title = viewModel.courseModel?.title ?? "课程详情"
@@ -713,9 +704,9 @@ class DCourseDetailViewController: BaseViewController {
             let rect3 = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
             
             var sender: UIButton
-            if tableView.contentOffset.y+62 >= rect3.origin.y {
+            if tableView.contentOffset.y+42 >= rect3.origin.y {
                 sender = evaluationBtn
-            } else if tableView.contentOffset.y+62 >= rect2.origin.y {
+            } else if tableView.contentOffset.y+42 >= rect2.origin.y {
                 sender = catalogueBtn
             } else  {
                 sender = introductionBtn
@@ -731,21 +722,21 @@ class DCourseDetailViewController: BaseViewController {
             //            self.categoryView.layoutIfNeeded()
             //        }
             
-            introductionBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            catalogueBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            evaluationBtn.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-            introductionBtn.setTitleColor(UIColor("#777"), for: .normal)
-            catalogueBtn.setTitleColor(UIColor("#777"), for: .normal)
-            evaluationBtn.setTitleColor(UIColor("#777"), for: .normal)
+            introductionBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+            catalogueBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+            evaluationBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+            introductionBtn.setTitleColor(UIConstants.Color.body, for: .normal)
+            catalogueBtn.setTitleColor(UIConstants.Color.body, for: .normal)
+            evaluationBtn.setTitleColor(UIConstants.Color.body, for: .normal)
             
-            sender.setTitleColor(UIColor("#101010"), for: .normal)
-            sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+            sender.setTitleColor(UIConstants.Color.head, for: .normal)
+            sender.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         }
         
         categoryView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(offsetY)
-            make.height.equalTo(62)
+            make.height.equalTo(42)
         }
     }
     
@@ -767,23 +758,23 @@ class DCourseDetailViewController: BaseViewController {
             self.isTrackingCategoryEnable = true
         }
         
-        introductionBtn.titleLabel?.font = UIConstants.Font.body
-        catalogueBtn.titleLabel?.font = UIConstants.Font.body
-        evaluationBtn.titleLabel?.font = UIConstants.Font.body
+        introductionBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        catalogueBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        evaluationBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
         introductionBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         catalogueBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         evaluationBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         
         sender.setTitleColor(UIConstants.Color.head, for: .normal)
-        sender.titleLabel?.font = UIConstants.Font.h2
+        sender.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         
         if sender == introductionBtn {
 //            courseDisplayMode = .introduction
             
 //            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: true)
             let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
-            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
-                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            if rect.origin.y + tableView.bounds.size.height - 42 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-42), animated: true)
             } else {
                 tableView.scrollToBottom()
             }
@@ -792,8 +783,8 @@ class DCourseDetailViewController: BaseViewController {
 //            courseDisplayMode = .catalogue
 //            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: UITableView.ScrollPosition.top, animated: true)
             let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 1))
-            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
-                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            if rect.origin.y + tableView.bounds.size.height - 42 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-42), animated: true)
             } else {
                 tableView.scrollToBottom()
             }
@@ -802,8 +793,8 @@ class DCourseDetailViewController: BaseViewController {
 //            courseDisplayMode = .evaluation
 //            tableView.scrollToRow(at: IndexPath(row: 0, section: 2), at: UITableView.ScrollPosition.top, animated: true)
             let rect = tableView.rectForRow(at: IndexPath(row: 0, section: 2))
-            if rect.origin.y + tableView.bounds.size.height - 62 < tableView.contentSize.height {
-                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-62), animated: true)
+            if rect.origin.y + tableView.bounds.size.height - 42 < tableView.contentSize.height {
+                tableView.setContentOffset(CGPoint(x: 0, y: rect.origin.y-42), animated: true)
             } else {
                 tableView.scrollToBottom()
             }
@@ -1207,7 +1198,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
     func setupHeaderView() {
         
         let headerView: UIView = {
-            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 390+62)))
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 390+42)))
             view.backgroundColor = .white
             return view
         }()
@@ -1226,7 +1217,7 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         
         let titleLabel: ParagraphLabel = {
             let label = ParagraphLabel()
-            label.font = UIConstants.Font.h1
+            label.font = UIFont(name: "PingFangSC-Semibold", size: 17)!
             label.textColor = UIConstants.Color.head
             label.numberOfLines = 0
             label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
@@ -1235,14 +1226,14 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         
         let descriptionLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 12)
+            label.font = UIFont(name: "PingFangSC-Regular", size: 12)!
             label.textColor = UIColor("#777")
             return label
         }()
         
         let footnoteLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 12)
+            label.font = UIFont(name: "PingFangSC-Regular", size: 12)!
             label.textColor = UIColor("#f26a44")
             return label
         }()
@@ -1255,8 +1246,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             label.textColor = UIColor("#ef5226")
             return label
         }()
+        let separatorView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = UIConstants.Color.background
+            return imgView
+        }()
         
-        headerView.addSubviews(bannerView, titleLabel, descriptionLabel, footnoteLabel, tagLabel)
+        headerView.addSubviews(bannerView, titleLabel, descriptionLabel, footnoteLabel, tagLabel, separatorView)
         bannerView.addSubview(bannerImgView)
         
         bannerView.snp.makeConstraints { make in
@@ -1284,6 +1280,11 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
         tagLabel.snp.makeConstraints { make in
             make.trailing.equalTo(-25)
             make.centerY.equalTo(footnoteLabel)
+        }
+        separatorView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(-42)
+            make.height.equalTo(6)
         }
         
         if let URLString = viewModel.courseModel?.cover_attribute?.service_url {
@@ -1325,13 +1326,13 @@ extension DCourseDetailViewController: UITableViewDataSource, UITableViewDelegat
             }
         }
         
-        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: kBannerHeight+20+titleLabel.intrinsicContentSize.height+20+12+10+12+25+62))
+        headerView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: kBannerHeight+20+titleLabel.intrinsicContentSize.height+20+12+10+12+25+42))
         tableView.tableHeaderView = headerView
         
         categoryView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo((tableView.tableHeaderView?.bounds.size.height ?? 0) - 62)
-            make.height.equalTo(62)
+            make.top.equalTo((tableView.tableHeaderView?.bounds.size.height ?? 0) - 42)
+            make.height.equalTo(42)
         }
         
     }

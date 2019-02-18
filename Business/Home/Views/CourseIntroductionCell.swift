@@ -12,8 +12,8 @@ class CourseIntroductionCell: UITableViewCell {
 
     lazy var courseBriefLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.body
-        label.textColor = UIConstants.Color.body
+        label.font = UIConstants.Font.h4
+        label.textColor = UIConstants.Color.subhead
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
         return label
@@ -21,7 +21,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var teacherTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         label.textColor = UIConstants.Color.head
         label.text = "老师简介"
         return label
@@ -36,7 +36,7 @@ class CourseIntroductionCell: UITableViewCell {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
         imgView.image = UIImage(named: "public_avatarPlaceholder")
-        imgView.layer.cornerRadius = 22.5
+        imgView.layer.cornerRadius = 20
         imgView.clipsToBounds = true
         return imgView
     }()
@@ -48,7 +48,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var teacherNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h3
+        label.font = UIFont(name: "PingFangSC-Medium", size: 14)!
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -78,7 +78,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var courseTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         label.textColor = UIConstants.Color.head
         label.text = "课程介绍"
         return label
@@ -91,7 +91,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var noteTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
         label.textColor = UIConstants.Color.head
         label.text = "听课须知"
         return label
@@ -132,25 +132,24 @@ class CourseIntroductionCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
+//        contentView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
         
         contentView.addSubviews(courseBriefLabel, teacherTitleLabel, profileView, teacherBriefBgImgView, teacherBriefLabel, courseTitleLabel, courseImgContainerView, noteTitleLabel, noteLabel)
         profileView.addSubviews(teacherAvatarImgView, subProfileView)
         subProfileView.addSubviews(teacherNameLabel, teacherTagLabel)
         
         courseBriefLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
-            make.trailing.equalTo(-25)
-            make.top.equalTo(32)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(15)
         }
         teacherTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
-            make.top.equalTo(courseBriefLabel.snp.bottom).offset(60)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(courseBriefLabel.snp.bottom).offset(30)
         }
         profileView.snp.makeConstraints { make in
-            make.leading.equalTo(25)
-            make.top.equalTo(teacherTitleLabel.snp.bottom).offset(32)
-//            make.height.equalTo(35)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(teacherTitleLabel.snp.bottom).offset(20)
         }
         subProfileView.snp.makeConstraints { make in
             make.leading.equalTo(profileView.snp.trailing).offset(10)
@@ -162,13 +161,13 @@ class CourseIntroductionCell: UITableViewCell {
         teacherAvatarImgView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.centerY.equalTo(profileView)
-            make.height.equalTo(45)
-            make.width.equalTo(45)
+            make.height.equalTo(40)
+            make.width.equalTo(40)
         }
         teacherNameLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
-            make.bottom.equalTo(teacherAvatarImgView.snp.centerY).offset(-1.5)
-            make.trailing.lessThanOrEqualTo(-25)
+            make.bottom.equalTo(teacherAvatarImgView.snp.centerY).offset(1.5)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
         }
         teacherTagLabel.snp.makeConstraints { make in
             make.leading.equalTo(teacherAvatarImgView.snp.trailing).offset(10)
@@ -177,30 +176,30 @@ class CourseIntroductionCell: UITableViewCell {
         teacherBriefLabel.snp.makeConstraints { make in
             make.leading.equalTo(40)
             make.trailing.equalTo(-40)
-            make.top.equalTo(profileView.snp.bottom).offset(45)
+            make.top.equalTo(profileView.snp.bottom).offset(25)
         }
         teacherBriefBgImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(teacherBriefLabel.snp.top).offset(-32)
-            make.bottom.equalTo(teacherBriefLabel.snp.bottom).offset(24)
+            make.top.equalTo(teacherBriefLabel.snp.top).offset(-20)
+            make.bottom.equalTo(teacherBriefLabel.snp.bottom).offset(10)
         }
         courseTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
-            make.top.equalTo(teacherBriefLabel.snp.bottom).offset(84)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(teacherBriefLabel.snp.bottom).offset(30)
         }
         courseImgContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(courseTitleLabel.snp.bottom).offset(32)
+            make.top.equalTo(courseTitleLabel.snp.bottom).offset(20)
         }
         noteTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(courseImgContainerView.snp.bottom).offset(60)
             
         }
         noteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(contentView.snp_leadingMargin)
-            make.trailing.equalTo(contentView.snp_trailingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(noteTitleLabel.snp.bottom).offset(32)
             make.bottom.equalTo(-64)
         }
