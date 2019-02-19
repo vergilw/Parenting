@@ -12,7 +12,7 @@ class CourseCatalogueTitleCell: UITableViewCell {
 
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         label.text = "课程目录"
         return label
@@ -48,7 +48,7 @@ class CourseCatalogueTitleCell: UITableViewCell {
         
         contentView.addSubviews([titleLabel, videoTagLabel])
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(32)
             make.bottom.equalTo(-16)
         }

@@ -25,6 +25,7 @@ class DCoursesViewController: BaseViewController {
         scrollView.contentInset = UIEdgeInsets(top: 0, left: 9, bottom: 0, right: 9)
 //        scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.drawSeparator(startPoint: CGPoint(x: 0, y: 45.5), endPoint: CGPoint(x: UIScreenWidth, y: 45.5))
         return scrollView
     }()
     
@@ -70,28 +71,6 @@ class DCoursesViewController: BaseViewController {
     fileprivate func initContentView() {
         view.backgroundColor = UIConstants.Color.background
         
-        /*
-        tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = CourseCell.cellHeight()
-        tableView.contentInset = UIEdgeInsets(top: UIConstants.Margin.leading-10, left: 0, bottom: UIConstants.Margin.leading-10, right: 0)
-        tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.viewModel.fetchCourses(completion: { (code, next) in
-                if code < 0 || next {
-                    self?.tableView.mj_footer.endRefreshing()
-                } else {
-                    self?.tableView.mj_footer.endRefreshingWithNoMoreData()
-                }
-                self?.tableView.reloadData()
-            })
-        })
-        tableView.mj_footer.isHidden = true
-//        let footer = tableView.mj_footer as! MJRefreshAutoStateFooter
-//        footer.setTitle("没有更多", for: .noMoreData)
-        */
-        
         view.addSubviews([scrollView, tableViewScrollView])
         scrollView.addSubview(categoryIndicatorImgView)
         
@@ -110,7 +89,7 @@ class DCoursesViewController: BaseViewController {
             let button: UIButton = {
                 let button = UIButton()
                 button.setTitleColor(UIConstants.Color.body, for: .normal)
-                button.titleLabel?.font = UIConstants.Font.body
+                button.titleLabel?.font = UIConstants.Font.title1
                 if let string = model?.name {
                     button.setTitle(string, for: .normal)
                 } else {
@@ -143,13 +122,15 @@ class DCoursesViewController: BaseViewController {
             //setup tableview
             let tableView: UITableView = {
                 let tableView = UITableView(frame: .zero, style: .plain)
-                tableView.backgroundColor = UIConstants.Color.background
-                tableView.rowHeight = CourseCell.cellHeight()
-                tableView.contentInset = UIEdgeInsets(top: UIConstants.Margin.leading-10, left: 0, bottom: UIConstants.Margin.leading-10, right: 0)
+                tableView.backgroundColor = .white
+                tableView.rowHeight = 112
+                tableView.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
                 tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
                 tableView.dataSource = self
                 tableView.delegate = self
-                tableView.separatorStyle = .none
+                tableView.separatorStyle = .singleLine
+                tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+                tableView.separatorColor = UIConstants.Color.separator
                 tableView.tableFooterView = UIView()
                 tableView.tag = i+1
                 if #available(iOS 11, *) {
@@ -350,7 +331,7 @@ class DCoursesViewController: BaseViewController {
         for button in scrollView.subviews {
             guard let button = button as? UIButton else { continue }
             
-            button.titleLabel?.font = UIConstants.Font.body
+            button.titleLabel?.font = UIConstants.Font.title1
             button.setTitleColor(UIConstants.Color.body, for: .normal)
         }
         

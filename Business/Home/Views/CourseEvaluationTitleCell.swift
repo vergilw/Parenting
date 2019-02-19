@@ -14,7 +14,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         label.text = "留言"
         return label
@@ -23,7 +23,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
     lazy fileprivate var actionBtn: ActionButton = {
         let button = ActionButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.body
+        button.titleLabel?.font = UIConstants.Font.caption2
         button.setTitle("我要评价", for: .normal)
         button.addTarget(self, action: #selector(evaluationBtnAction), for: .touchUpInside)
         return button

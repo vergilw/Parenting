@@ -35,6 +35,14 @@ class DMeEditViewController: BaseViewController {
         return button
     }()
     
+    fileprivate lazy var avatarFootnoteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot1
+        label.textColor = UIConstants.Color.foot
+        label.text = "点击更换头像"
+        return label
+    }()
+    
     lazy fileprivate var saveBtn: ActionButton = {
         let button = ActionButton()
         button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
@@ -59,16 +67,17 @@ class DMeEditViewController: BaseViewController {
         if #available(iOS 10, *) {
             textField.textContentType = .name
         }
+        textField.textAlignment = .right
         textField.delegate = self
         textField.returnKeyType = .done
         textField.keyboardType = .namePhonePad
         textField.clearButtonMode = .whileEditing
-        textField.font = UIFont(name: "PingFangSC-Regular", size: 17)
+        textField.font = UIConstants.Font.h4
         textField.textColor = UIConstants.Color.head
         textField.attributedPlaceholder = NSAttributedString(string: "请输入你的名字（16个字符以内）", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
-        textField.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
+        textField.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
         return textField
     }()
     
@@ -83,11 +92,11 @@ class DMeEditViewController: BaseViewController {
     lazy fileprivate var wechatBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 17)
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("未绑定微信，点击绑定", for: .normal)
-        button.contentHorizontalAlignment = .left
+        button.contentHorizontalAlignment = .right
         button.addTarget(self, action: #selector(bindWechatBtnAction), for: .touchUpInside)
-        button.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
+        button.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
         return button
     }()
     
@@ -104,15 +113,16 @@ class DMeEditViewController: BaseViewController {
         if #available(iOS 10, *) {
             textField.textContentType = .name
         }
+        textField.textAlignment = .right
         textField.returnKeyType = .next
         textField.keyboardType = .phonePad
         textField.clearButtonMode = .whileEditing
-        textField.font = UIFont(name: "PingFangSC-Regular", size: 17)
-        textField.textColor = UIConstants.Color.foot
+        textField.font = UIConstants.Font.h4
+        textField.textColor = UIConstants.Color.disable
         textField.attributedPlaceholder = NSAttributedString(string: "手机号", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
-        textField.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
+        textField.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
         textField.isUserInteractionEnabled = false
         return textField
     }()
@@ -127,15 +137,16 @@ class DMeEditViewController: BaseViewController {
     
     lazy fileprivate var signatureTextField: UITextField = {
         let textField = UITextField()
+        textField.textAlignment = .right
         textField.delegate = self
         textField.returnKeyType = .done
         textField.clearButtonMode = .whileEditing
-        textField.font = UIFont(name: "PingFangSC-Regular", size: 17)
+        textField.font = UIConstants.Font.h4
         textField.textColor = UIConstants.Color.head
         textField.attributedPlaceholder = NSAttributedString(string: "请输入你的签名", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
-        textField.drawSeparator(startPoint: CGPoint(x: 0, y: 57), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 57))
+        textField.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
         return textField
     }()
     
@@ -160,7 +171,7 @@ class DMeEditViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         view.addSubview(scrollView)
-        scrollView.addSubviews([avatarBtn, nameTitleLabel, nameTextField, wechatTitleLabel, wechatBtn, phoneTitleLabel, phoneTextField, signatureTitleLabel, signatureTextField])
+        scrollView.addSubviews([avatarBtn, avatarFootnoteLabel, nameTextField, nameTitleLabel, wechatBtn, wechatTitleLabel, phoneTextField, phoneTitleLabel, signatureTextField, signatureTitleLabel])
     }
     
     // MARK: - ============= Constraints =============
@@ -170,48 +181,56 @@ class DMeEditViewController: BaseViewController {
         }
         avatarBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(60)
+            make.top.equalTo(35)
             make.size.equalTo(CGSize(width: 132, height: 132))
+        }
+        avatarFootnoteLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(avatarBtn.snp.bottom).offset(15)
         }
         nameTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(avatarBtn.snp.bottom).offset(60)
+            make.top.equalTo(avatarFootnoteLabel.snp.bottom).offset(28)
+            make.height.equalTo(52)
         }
         nameTextField.snp.makeConstraints { make in
-            make.top.equalTo(nameTitleLabel.snp.bottom).offset(12)
+            make.top.equalTo(nameTitleLabel)
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.height.equalTo(57)
+            make.height.equalTo(52)
         }
         wechatTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(nameTextField.snp.bottom).offset(60)
+            make.top.equalTo(nameTitleLabel.snp.bottom)
+            make.height.equalTo(52)
         }
         wechatBtn.snp.makeConstraints { make in
-            make.top.equalTo(wechatTitleLabel.snp.bottom).offset(12)
+            make.top.equalTo(wechatTitleLabel)
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.height.equalTo(57)
+            make.height.equalTo(52)
         }
         phoneTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(wechatBtn.snp.bottom).offset(60)
+            make.top.equalTo(wechatTitleLabel.snp.bottom)
+            make.height.equalTo(52)
         }
         phoneTextField.snp.makeConstraints { make in
-            make.top.equalTo(phoneTitleLabel.snp.bottom).offset(12)
+            make.top.equalTo(phoneTitleLabel)
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.height.equalTo(57)
+            make.height.equalTo(52)
         }
         signatureTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(phoneTextField.snp.bottom).offset(60)
+            make.top.equalTo(phoneTitleLabel.snp.bottom)
+            make.height.equalTo(52)
         }
         signatureTextField.snp.makeConstraints { make in
-            make.top.equalTo(signatureTitleLabel.snp.bottom).offset(12)
+            make.top.equalTo(signatureTitleLabel)
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.height.equalTo(57)
+            make.height.equalTo(52)
             
             make.width.equalTo(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)
             make.bottom.equalTo(-UIConstants.Margin.bottom)

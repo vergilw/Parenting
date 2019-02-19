@@ -218,7 +218,7 @@ class DCourseDetailViewController: BaseViewController {
         let button = ActionButton()
         button.layer.cornerRadius = 20
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("立即学习", for: .normal)
         button.backgroundColor = UIConstants.Color.primaryGreen
         button.addTarget(self, action: #selector(toolActionBtnAction), for: .touchUpInside)
@@ -846,7 +846,7 @@ class DCourseDetailViewController: BaseViewController {
         }
         
         let title: String = self.viewModel.courseModel?.title ?? ""
-        let descr: String = self.viewModel.courseModel?.sub_title ?? ""
+        let descr: String = self.viewModel.courseModel?.subhead ?? ""
         let imgURL: String = self.viewModel.courseModel?.cover_attribute?.service_url ?? ""
         
         let shareView = ShareView()

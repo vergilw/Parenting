@@ -28,20 +28,6 @@ class CourseCell: UITableViewCell {
         return view
     }()
     
-    lazy fileprivate var shadowImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "me_coursePreviewShadow")
-        imgView.contentMode = .scaleToFill
-        return imgView
-    }()
-    
-    lazy fileprivate var gradientShadowImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "me_courseGradientShadow")
-        imgView.contentMode = .scaleToFill
-        return imgView
-    }()
-    
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
@@ -56,49 +42,52 @@ class CourseCell: UITableViewCell {
         return imgView
     }()
     
-    lazy fileprivate var footnoteLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
+    lazy fileprivate var footnoteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot3
         label.textColor = .white
         return label
-    }()
-    
-    lazy fileprivate var avatarImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "public_avatarPlaceholder")
-        imgView.contentMode = .scaleAspectFill
-        return imgView
     }()
     
     lazy fileprivate var nameLabel: UILabel = {
         let label = UILabel()
 //        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
 //        label.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
-        label.text = "Gcide丨全职妈妈"
         return label
     }()
     
-    lazy fileprivate var titleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.h2
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
-        label.numberOfLines = 2
-        label.lineBreakMode = .byCharWrapping
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-CourseCell.previewImgWidth()-24
-        label.setParagraphText("如何规划幼儿英引引导成长的历...")
-        
+        return label
+    }()
+    
+    fileprivate lazy var subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.caption1
+        label.textColor = UIConstants.Color.body
         return label
     }()
     
     lazy fileprivate var priceLabel: PriceLabel = {
         let label = PriceLabel()
         label.setContentCompressionResistancePriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h3
         label.textColor = UIColor("#ef5226")
-//        label.text = "¥0.0"
-//        label.numberOfLines = 0
+        return label
+    }()
+    
+    fileprivate lazy var sectionCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot3
+        label.textColor = UIConstants.Color.body
+        label.backgroundColor = UIConstants.Color.separator
+        label.layer.cornerRadius = 9
+        label.clipsToBounds = true
         return label
     }()
     
@@ -112,24 +101,40 @@ class CourseCell: UITableViewCell {
         return button
     }()
     
-    lazy fileprivate var rewardFootnoteView: UIStackView = {
+    lazy fileprivate var rewardFootnoteView: UIView = {
+        let contentview = UIView()
+        contentview.isHidden = true
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = UIConstants.Color.primaryOrange.withAlphaComponent(0.15)
+            imgView.layer.cornerRadius = 10
+            imgView.clipsToBounds = true
+            return imgView
+        }()
+        
+        contentview.addSubview(bgImgView)
+        bgImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        
         let view = UIStackView()
         view.alignment = .center
         view.axis = .horizontal
         view.distribution = .fillProportionally
-        view.spacing = 5
-        view.isHidden = true
+        view.spacing = 3
         
-        var imgView: UIImageView = {
+        let imgView: UIImageView = {
             let imgView = UIImageView()
-            imgView.image = UIImage(named: "")
+            imgView.image = UIImage(named: "payment_coinIcon")
             return imgView
         }()
         
-        var label: UILabel = {
+        let label: UILabel = {
             let label = UILabel()
-            label.font = UIConstants.Font.body
-            label.textColor = UIColor("#f2b141")
+            label.font = UIConstants.Font.foot1
+            label.textColor = UIConstants.Color.primaryOrange
             label.text = "前往分享"
             return label
         }()
@@ -137,7 +142,12 @@ class CourseCell: UITableViewCell {
         view.addArrangedSubview(imgView)
         view.addArrangedSubview(label)
         
-        return view
+        contentview.addSubview(view)
+        view.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        return contentview
     }()
     
     override func awakeFromNib() {
@@ -155,12 +165,10 @@ class CourseCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
-        contentView.backgroundColor = UIConstants.Color.background
         
-        contentView.addSubview(panelView)
-        panelView.addSubviews([shadowImgView, previewImgView, rewardMarkImgView, avatarImgView, nameLabel, titleLabel, priceLabel, actionBtn, rewardFootnoteView])
+        contentView.addSubviews([previewImgView, rewardMarkImgView, nameLabel, titleLabel, subtitleLabel, priceLabel, sectionCountLabel, actionBtn, rewardFootnoteView])
         
-        previewImgView.addSubviews([gradientShadowImgView, footnoteLabel])
+        initPreviewFooterView()
         
         initConstraints()
     }
@@ -169,66 +177,97 @@ class CourseCell: UITableViewCell {
         fatalError()
     }
     
-    fileprivate func initConstraints() {
-        panelView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading+10)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(24.5)
-            make.bottom.equalTo(-20)
-        }
-        footnoteLabel.snp.makeConstraints { make in
-            make.leading.equalTo(10)
-            make.bottom.equalTo(-10)
-        }
-        shadowImgView.snp.makeConstraints { make in
-            make.centerX.equalTo(previewImgView)
-            make.top.equalTo(previewImgView.snp.top).offset(-3.5)
-            let imgWidth = CourseCell.previewImgWidth()
-            let imgHeight = imgWidth/160.0*90.0
-            make.width.equalTo(previewImgView.snp.width).multipliedBy(175.0/imgWidth)
-            make.height.equalTo(previewImgView.snp.height).multipliedBy(105.0/imgHeight)
-        }
-        gradientShadowImgView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalTo(previewImgView)
-        }
-        previewImgView.snp.makeConstraints { make in
-            make.leading.equalTo(-10)
-            make.top.equalTo(-10)
-            let imgWidth = CourseCell.previewImgWidth()
-            make.width.equalTo(imgWidth)
-            make.height.equalTo(imgWidth/16.0*9)
-        }
-        rewardMarkImgView.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.top.equalTo(-14.5)
+    fileprivate func initPreviewFooterView() {
+        let stackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .horizontal
+            view.distribution = .fillProportionally
+            view.spacing = 3
+            return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+            imgView.layer.cornerRadius = 7.5
+            imgView.clipsToBounds = true
+            return imgView
+        }()
+        
+        let iconImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "course_usersCountMark")
+            return imgView
+        }()
+        
+        stackView.addSubview(bgImgView)
+        bgImgView.snp.makeConstraints { make in
+            make.edges.equalTo(UIEdgeInsets(top: 0, left: -8, bottom: 0, right: -8))
         }
         
-        avatarImgView.snp.makeConstraints { make in
-            make.leading.equalTo(16)
-            make.top.equalTo(previewImgView.snp.bottom).offset(12)
-            make.size.equalTo(CGSize(width: 22, height: 22))
+        stackView.addArrangedSubview(iconImgView)
+        stackView.addArrangedSubview(footnoteLabel)
+        
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.trailing.equalTo(previewImgView.snp.trailing).offset(-5-8)
+            make.bottom.equalTo(previewImgView.snp.bottom).offset(-5)
+            make.height.equalTo(15)
+        }
+    }
+    
+    fileprivate func initConstraints() {
+        
+        previewImgView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.top.equalTo(15)
+            let imgHeight: CGFloat = 82
+            make.width.equalTo(imgHeight/9.0*16)
+            make.height.equalTo(imgHeight)
+        }
+        rewardMarkImgView.snp.makeConstraints { make in
+            make.leading.equalTo(previewImgView)
+            make.top.equalTo(previewImgView)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(previewImgView.snp.trailing).offset(15)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(previewImgView).offset(4.5)
+            make.height.equalTo(15)
+        }
+        subtitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(previewImgView.snp.trailing).offset(15)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(previewImgView).offset(4.5)
+            make.height.equalTo(15)
         }
         nameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
-            make.centerY.equalTo(avatarImgView)
-            make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+            make.leading.equalTo(titleLabel)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(8.5)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.height.equalTo(11)
         }
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(previewImgView.snp.trailing).offset(12)
-            make.trailing.equalTo(-12)
-            make.top.equalTo(12)
-        }
+        
         priceLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-12)
-            make.centerY.equalTo(avatarImgView)
+            make.leading.equalTo(titleLabel)
+            make.bottom.equalTo(previewImgView)
+        }
+        sectionCountLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.bottom.equalTo(previewImgView)
+            make.height.equalTo(18)
         }
         actionBtn.snp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
             make.size.equalTo(CGSize(width: 52, height: 12+20+20))
         }
         rewardFootnoteView.snp.makeConstraints { make in
-            make.trailing.equalTo(-12)
-            make.centerY.equalTo(avatarImgView)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.bottom.equalTo(previewImgView)
+            make.height.equalTo(20)
+            make.width.equalTo(85)
         }
     }
     
@@ -255,38 +294,38 @@ class CourseCell: UITableViewCell {
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
                 
-                priceLabel.snp.remakeConstraints { make in
-                    make.trailing.lessThanOrEqualTo(actionBtn.snp.leading).priority(.required)
-                    make.leading.equalTo(previewImgView.snp.trailing).offset(12).priority(.low)
-                    make.centerY.equalTo(avatarImgView)
-                }
-                nameLabel.snp.remakeConstraints { make in
-                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
-                    make.centerY.equalTo(avatarImgView)
-                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
-                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
-                }
+//                priceLabel.snp.remakeConstraints { make in
+//                    make.trailing.lessThanOrEqualTo(actionBtn.snp.leading).priority(.required)
+//                    make.leading.equalTo(previewImgView.snp.trailing).offset(12).priority(.low)
+//                    make.centerY.equalTo(avatarImgView)
+//                }
+//                nameLabel.snp.remakeConstraints { make in
+//                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
+//                    make.centerY.equalTo(avatarImgView)
+//                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+//                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
+//                }
                 
             } else if mode == .owned {
                 actionBtn.isHidden = true
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
                 
-                priceLabel.snp.remakeConstraints { make in
-                    make.trailing.equalTo(-12)
-                    make.centerY.equalTo(avatarImgView)
-                }
-                nameLabel.snp.remakeConstraints { make in
-                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
-                    make.centerY.equalTo(avatarImgView)
-                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
-                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
-                }
+//                priceLabel.snp.remakeConstraints { make in
+//                    make.trailing.equalTo(-12)
+//                    make.centerY.equalTo(avatarImgView)
+//                }
+//                nameLabel.snp.remakeConstraints { make in
+//                    make.leading.equalTo(avatarImgView.snp.trailing).offset(4)
+//                    make.centerY.equalTo(avatarImgView)
+//                    make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12).priority(.high)
+//                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
+//                }
             } else if mode == .reward {
                 actionBtn.isHidden = true
-                priceLabel.isHidden = true
+                priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = false
-                
+                sectionCountLabel.isHidden = true
             }
             displayMode = mode
         }
@@ -318,6 +357,13 @@ class CourseCell: UITableViewCell {
             } else {
                 priceLabel.text = "立即学习"
             }
+            
+        } else if mode == .reward {
+            priceLabel.textColor = UIColor("#ef5226")
+            priceLabel.font = UIConstants.Font.h2
+            if let price = model?.price {
+                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
+            }
         }
         
         
@@ -329,17 +375,14 @@ class CourseCell: UITableViewCell {
     
         
         if let URLString = model?.cover_attribute?.service_url {
-            let width: CGFloat = CourseCell.previewImgWidth()
-            let processor = RoundCornerImageProcessor(cornerRadius: 4, targetSize: CGSize(width: width*2, height: width/16.0*9*2))
+            let imgHeight: CGFloat = 82
+            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: imgHeight/9.0*16*2, height: imgHeight*2))
             previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
         }
         
-        if let URLString = model?.teacher?.headshot_attribute?.service_url {
-            let processor = RoundCornerImageProcessor(cornerRadius: 22, targetSize: CGSize(width: 44, height: 44))
-            avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"), options: [.processor(processor)])
-        }
+        titleLabel.text = model?.title
         
-        titleLabel.setParagraphText(model?.title ?? "")
+        subtitleLabel.text = model?.subhead
         
         nameLabel.text = model?.teacher?.name ?? ""
         if let tags = model?.teacher?.tags, tags.count > 0 {
@@ -348,9 +391,12 @@ class CourseCell: UITableViewCell {
         }
         
         if let count = model?.students_count {
-            footnoteLabel.setParagraphText(String(count) + "人已学习")
+            footnoteLabel.text = String(count).simplifiedNumber()
         }
         
+        if let count = model?.course_catalogues_count {
+            sectionCountLabel.text = "   \(count)课时   "
+        }
     }
     
     @objc func actionBtnAction() {

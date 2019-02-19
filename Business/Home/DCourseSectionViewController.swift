@@ -104,14 +104,14 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h4
         label.textColor = .white
         return label
     }()
     
     lazy fileprivate var tagLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot2
         label.textColor = .white
         return label
     }()
@@ -195,7 +195,7 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var sectionTitleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.h1
+        label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
@@ -334,31 +334,31 @@ class DCourseSectionViewController: BaseViewController {
         }
         
         avatarImgView.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(navigationController!.navigationBar.bounds.size.height+UIStatusBarHeight+32)
             make.size.equalTo(UIConstants.Size.avatar)
         }
         courseEntranceBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(scrollView.snp_trailingMargin)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalTo(avatarImgView)
             make.width.equalTo(80)
             make.height.equalTo(25)
         }
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
             make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.height.equalTo(14)
         }
         tagLabel.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.top.equalTo(titleLabel.snp.bottom).offset(9)
             make.height.equalTo(12)
         }
         audioPanelView.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
-            make.trailing.equalTo(scrollView.snp_trailingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(avatarImgView.snp.bottom).offset(32)
             make.height.equalTo(94)
         }
@@ -403,8 +403,8 @@ class DCourseSectionViewController: BaseViewController {
             make.top.equalTo(audioSlider.snp.bottom).offset(4)
         }
         sectionTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
-            make.trailing.equalTo(scrollView.snp_trailingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(audioPanelView.snp.bottom).offset(32)
 //            if #available(iOS 11.0, *) {
 //                make.bottom.greaterThanOrEqualTo(scrollView.safeAreaLayoutGuide.snp.bottom).offset(-16)
@@ -413,8 +413,8 @@ class DCourseSectionViewController: BaseViewController {
 //            }
         }
         containerView.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp_leadingMargin)
-            make.trailing.equalTo(scrollView.snp_trailingMargin)
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(sectionTitleLabel.snp.bottom).offset(32)
             make.bottom.equalTo(-32)
             make.width.equalTo(UIScreenWidth)
@@ -879,7 +879,7 @@ class DCourseSectionViewController: BaseViewController {
         }
         
         let title: String = self.viewModel.courseSectionModel?.course?.title ?? ""
-        let descr: String = self.viewModel.courseSectionModel?.course?.sub_title ?? ""
+        let descr: String = self.viewModel.courseSectionModel?.course?.subhead ?? ""
         let imgURL: String = self.viewModel.courseSectionModel?.course?.cover_attribute?.service_url ?? ""
         
         let shareView = ShareView()

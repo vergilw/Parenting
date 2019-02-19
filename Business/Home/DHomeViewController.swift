@@ -20,7 +20,7 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 10
     lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
     lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
-    lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 7 + 40 + 10 + 12
+    lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 7 + 40 + 10 + 12 + 15
     lazy fileprivate var item0Spacing: CGFloat = 15
     lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
     
@@ -31,6 +31,13 @@ class DHomeViewController: BaseViewController {
         }
         scrollView.showsVerticalScrollIndicator = false
         return scrollView
+    }()
+    
+    fileprivate lazy var titleImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_homeTitle")
+        imgView.contentMode = .center
+        return imgView
     }()
     
     lazy fileprivate var searchBtn: UIButton = {
@@ -75,7 +82,17 @@ class DHomeViewController: BaseViewController {
     
     fileprivate lazy var topBannerBgView: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue
+        
+        //FIXME: Debug bg
+        let imgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "debug_homeBg")
+            return imgView
+        }()
+        view.addSubview(imgView)
+        imgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         return view
     }()
     
@@ -102,6 +119,12 @@ class DHomeViewController: BaseViewController {
         button.roundCorners(corners: [.topLeft, .topRight], radius: 9)
         button.drawSeparator(startPoint: CGPoint(x: 0, y: 51.5), endPoint: CGPoint(x: UIScreenWidth, y: 51.5))
         return button
+    }()
+    
+    fileprivate lazy var storyTitleImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "course_homeStoryTitle")
+        return imgView
     }()
     
     lazy fileprivate var storyIndicatorImgView: UIImageView = {
@@ -208,9 +231,9 @@ class DHomeViewController: BaseViewController {
             self?.fetchData()
         })
 //        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        scrollView.addSubviews([topBannerBgView, carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([topBannerBgView, titleImgView, carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
-        storyView.addSubviews([storyIndicatorImgView, storyAvatarsView])
+        storyView.addSubviews([storyTitleImgView, storyIndicatorImgView, storyAvatarsView])
     }
     
     func initNavigationItem() {
@@ -248,7 +271,7 @@ class DHomeViewController: BaseViewController {
     // MARK: - ============= Constraints =============
     func initConstraints() {
         scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view)
+            make.edges.equalToSuperview()
         }
 //        searchBtn.snp.makeConstraints { make in
 //            make.leading.equalTo(UIConstants.Margin.leading)
@@ -275,8 +298,16 @@ class DHomeViewController: BaseViewController {
             make.leading.trailing.top.equalToSuperview()
             make.width.equalTo(UIScreenWidth)
             var height: CGFloat = self.navigationController?.navigationBar.bounds.height ?? 0
+            height += UIStatusBarHeight
             height += 5
             make.height.equalTo(height + (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9+50)
+        }
+        titleImgView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(UIStatusBarHeight)
+            if let height: CGFloat = self.navigationController?.navigationBar.bounds.height {
+                make.height.equalTo(height)
+            }
         }
         carouselView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -299,7 +330,7 @@ class DHomeViewController: BaseViewController {
         
         coursesCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(scrollView)
-            make.top.equalTo(rewardCoursesBtn.snp.bottom).offset(35)
+            make.top.equalTo(rewardCoursesBtn.snp.bottom).offset(25)
             make.width.equalTo(UIScreen.main.bounds.size.width)
             make.height.equalTo(collectionHeight)
         }
@@ -341,6 +372,10 @@ class DHomeViewController: BaseViewController {
         }
         
         //story view
+        storyTitleImgView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.centerY.equalToSuperview()
+        }
         storyIndicatorImgView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalToSuperview()

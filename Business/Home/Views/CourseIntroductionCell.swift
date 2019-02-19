@@ -12,7 +12,7 @@ class CourseIntroductionCell: UITableViewCell {
 
     lazy var courseBriefLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIFont(name: "PingFangSC-Regular", size: 14)!
         label.textColor = UIConstants.Color.subhead
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing

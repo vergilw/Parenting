@@ -12,7 +12,7 @@ class CourseCatalogueCell: UITableViewCell {
 
     lazy fileprivate var sequenceLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.foot
         label.numberOfLines = 0
         return label
@@ -27,7 +27,7 @@ class CourseCatalogueCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.body
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-54-25
@@ -43,17 +43,17 @@ class CourseCatalogueCell: UITableViewCell {
     
     lazy fileprivate var timeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
         return label
     }()
     
     lazy fileprivate var auditionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
-        label.textColor = UIColor("#f05053")
+        label.font = UIConstants.Font.foot3
+        label.textColor = .white
         label.text = "可试听"
-        label.backgroundColor = UIColor(hex6: 0xf05053, alpha: 0.1)
+        label.backgroundColor = UIConstants.Color.primaryOrange
         label.isHidden = true
         label.textAlignment = .center
         label.layer.cornerRadius = 8.5
@@ -87,7 +87,7 @@ class CourseCatalogueCell: UITableViewCell {
     
     var progressLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.primaryGreen
         return label
     }()
@@ -111,17 +111,17 @@ class CourseCatalogueCell: UITableViewCell {
         progressView.addArrangedSubview(progressLabel)
         
         sequenceLabel.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
 //            make.trailing.equalTo(titleLabel.snp.leading).offset(-10)
             make.firstBaseline.equalTo(titleLabel)
         }
         listeningIndicatorImgView.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(16+(UIConstants.ParagraphLineHeight.body-sequenceLabel.font.lineHeight)/4+1.25)
         }
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(54)
-            make.trailing.lessThanOrEqualTo(-25)
+            make.leading.equalTo(UIConstants.Margin.leading+28)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.top.equalTo(16)
         }
         timeImgView.snp.makeConstraints { make in

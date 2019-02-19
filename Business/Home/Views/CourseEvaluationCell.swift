@@ -11,8 +11,8 @@ import UIKit
 class CourseEvaluationCell: UITableViewCell {
 
     lazy fileprivate var teacherAvatarImgView: UIImageView = {
-        let imgView = UIImageView(frame: CGRect(origin: .zero, size: UIConstants.Size.avatar))
-        imgView.contentMode = .scaleToFill
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleAspectFill
         imgView.image = UIImage(named: "public_avatarPlaceholder")
         imgView.layer.cornerRadius = 15
         imgView.clipsToBounds = true
@@ -26,7 +26,7 @@ class CourseEvaluationCell: UITableViewCell {
     
     lazy fileprivate var teacherNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h3
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -42,7 +42,7 @@ class CourseEvaluationCell: UITableViewCell {
     
     lazy fileprivate var timeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
         return label
     }()

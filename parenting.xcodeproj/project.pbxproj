@@ -40,6 +40,7 @@
 		130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */ = {isa = PBXBuildFile; fileRef = 130C86B421F1721B005BBFF7 /* plsfilters.json */; };
 		130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */; };
 		130C86B921F1D13E005BBFF7 /* VideoStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C86B821F1D13E005BBFF7 /* VideoStickerView.swift */; };
+		130C9195221BD93300689E64 /* DMeSignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C9194221BD93300689E64 /* DMeSignatureViewController.swift */; };
 		130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46002189615B00CB4763 /* ParagraphLabel.swift */; };
 		130D46032189A5DB00CB4763 /* DPlayListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46022189A5DB00CB4763 /* DPlayListViewController.swift */; };
 		130D46052189A77900CB4763 /* PlayListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130D46042189A77900CB4763 /* PlayListService.swift */; };
@@ -245,6 +246,7 @@
 		130C86B421F1721B005BBFF7 /* plsfilters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = plsfilters.json; sourceTree = "<group>"; };
 		130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditFilterCell.swift; sourceTree = "<group>"; };
 		130C86B821F1D13E005BBFF7 /* VideoStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStickerView.swift; sourceTree = "<group>"; };
+		130C9194221BD93300689E64 /* DMeSignatureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeSignatureViewController.swift; sourceTree = "<group>"; };
 		130D46002189615B00CB4763 /* ParagraphLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphLabel.swift; sourceTree = "<group>"; };
 		130D46022189A5DB00CB4763 /* DPlayListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPlayListViewController.swift; sourceTree = "<group>"; };
 		130D46042189A77900CB4763 /* PlayListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListService.swift; sourceTree = "<group>"; };
@@ -797,6 +799,7 @@
 				131067F721A63D7400F79E92 /* DAboutViewController.swift */,
 				131067F921A63D8000F79E92 /* DFeedbackViewController.swift */,
 				131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */,
+				130C9194221BD93300689E64 /* DMeSignatureViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -1349,6 +1352,7 @@
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
 				132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */,
+				130C9195221BD93300689E64 /* DMeSignatureViewController.swift in Sources */,
 				130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */,
 				130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */,
 				1320C395217EB95200902A5C /* UIConstants.swift in Sources */,

@@ -29,8 +29,11 @@ class DMeCoursesViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = CourseCell.cellHeight()
+        tableView.rowHeight = 112
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        tableView.separatorColor = UIConstants.Color.separator
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in

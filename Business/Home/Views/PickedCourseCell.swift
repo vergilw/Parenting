@@ -35,14 +35,14 @@ class PickedCourseCell: UICollectionViewCell {
     
     lazy fileprivate var footnoteLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot2
+        label.font = UIConstants.Font.foot3
         label.textColor = .white
         return label
     }()
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIFont(name: "PingFangSC-Regular", size: 14)!
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 2
         label.preferredMaxLayoutWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
@@ -79,6 +79,7 @@ class PickedCourseCell: UICollectionViewCell {
             view.alignment = .center
             view.axis = .horizontal
             view.distribution = .fillProportionally
+            view.spacing = 3
             return view
         }()
         
@@ -92,7 +93,7 @@ class PickedCourseCell: UICollectionViewCell {
         
         let iconImgView: UIImageView = {
             let imgView = UIImageView()
-            imgView.image = UIImage(named: "")
+            imgView.image = UIImage(named: "course_usersCountMark")
             return imgView
         }()
         
@@ -120,7 +121,7 @@ class PickedCourseCell: UICollectionViewCell {
             make.height.equalTo(width/16.0*9)
         }
         rewardMarkImgView.snp.makeConstraints { make in
-            make.leading.equalTo(10)
+            make.leading.equalToSuperview()
             make.top.equalToSuperview()
         }
         nameLabel.snp.makeConstraints { make in
@@ -181,7 +182,6 @@ class PickedCourseCell: UICollectionViewCell {
         }
         
         
-        
         if model.rewardable == true {
             rewardMarkImgView.isHidden = false
         } else {
@@ -195,7 +195,7 @@ class PickedCourseCell: UICollectionViewCell {
             previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
         }
         
-        footnoteLabel.text = String((model.students_count ?? 0)) + "人已学习"
+        footnoteLabel.text = String((model.students_count ?? 0)).simplifiedNumber()
         
         var nameString = model.teacher?.name ?? ""
         if let tags = model.teacher?.tags, tags.count > 0 {
@@ -223,7 +223,7 @@ class PickedCourseCell: UICollectionViewCell {
     
     class func cellHeight(title: String) -> CGFloat {
         let maxWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        let size = NSString(string: title).boundingRect(with: CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : UIConstants.Font.h4], context: nil).size
+        let size = NSString(string: title).boundingRect(with: CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : UIFont(name: "PingFangSC-Regular", size: 14)!], context: nil).size
         
         return maxWidth/16.0*9 + 8 + 12 + 7 + size.height
     }

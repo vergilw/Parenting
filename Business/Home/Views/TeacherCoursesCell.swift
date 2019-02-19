@@ -21,7 +21,7 @@ class TeacherCoursesCell: UITableViewCell {
         layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 12
         let width = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-        layout.itemSize = CGSize(width: width, height: width/16.0*9 + 7 + 40 + 10 + 12)
+        layout.itemSize = CGSize(width: width, height: width/16.0*9 + 7 + 40 + 10 + 12 + 15)
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(PickedCourseCell.self, forCellWithReuseIdentifier: PickedCourseCell.className())
         view.dataSource = self

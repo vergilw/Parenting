@@ -31,19 +31,27 @@ public struct UIConstants {
     }
     
     public struct Font {
-        public static let h1: UIFont = UIFont(name: "PingFangSC-Semibold", size: 25)!
-        public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 20)!
+        public static let largeTitle: UIFont = UIFont(name: "PingFangSC-Semibold", size: 25)!
+        
+        public static let h1: UIFont = UIFont(name: "PingFangSC-Semibold", size: 20)!
+        public static let h2: UIFont = UIFont(name: "PingFangSC-Semibold", size: 17)!
+        public static let h3: UIFont = UIFont(name: "PingFangSC-Semibold", size: 15)!
+        public static let h4: UIFont = UIFont(name: "PingFangSC-Medium", size: 14)!
+        
+        public static let title1: UIFont = UIFont(name: "PingFangSC-Regular", size: 16)!
+        
+        public static let caption1: UIFont = UIFont(name: "PingFangSC-Regular", size: 13)!
+        public static let caption2: UIFont = UIFont(name: "PingFangSC-Medium", size: 15)!
+        
+        public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 14)!
+        
+        public static let foot1: UIFont = UIFont(name: "PingFangSC-Regular", size: 12)!
+        public static let foot2: UIFont = UIFont(name: "PingFangSC-Regular", size: 11)!
+        public static let foot3: UIFont = UIFont(name: "PingFangSC-Regular", size: 10)!
+        
+        //deprecated
         public static let h2_regular: UIFont = UIFont(name: "PingFangSC-Regular", size: 20)!
-        public static let h3: UIFont = UIFont(name: "PingFangSC-Medium", size: 17)!
-        public static let h4: UIFont = UIFont(name: "PingFangSC-Regular", size: 14)!
-        
-        public static let body: UIFont = UIFont(name: "PingFangSC-Regular", size: 13)!
         public static let foot: UIFont = UIFont(name: "PingFangSC-Regular", size: 12)!
-        public static let foot2: UIFont = UIFont(name: "PingFangSC-Regular", size: 10)!
-        
-//        func h2(weight: UIFont.Weight) -> UIFont {
-//            return UIFont(name: "PingFangSC-Regular", size: 18)!
-//        }
     }
     
     public struct Size {

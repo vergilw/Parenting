@@ -13,6 +13,7 @@ class CourseModel: HandyJSON {
     var id: Int?
     var title: String?
     var sub_title: String?
+    var subhead: String?
     var price: Float?
     var market_price: Float?
     var students_count: Int?
@@ -23,6 +24,7 @@ class CourseModel: HandyJSON {
     var is_bought: Bool?
     var is_favorite: Bool?
 //    var audition: Bool?
+    var course_catalogues_count: Int?
     var course_catalogues: [CourseSectionModel]?
     var is_comment: Bool?
     var recommended_cover_attribute: AssetModel?

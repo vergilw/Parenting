@@ -17,7 +17,7 @@ class DCourseEvaluationViewController: BaseViewController {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         label.text = "请写下您的评价"
         return label
@@ -41,7 +41,7 @@ class DCourseEvaluationViewController: BaseViewController {
     
     lazy fileprivate var starsTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot1
         label.textColor = UIConstants.Color.foot
         label.text = "请点击星星评价"
         return label
@@ -64,7 +64,7 @@ class DCourseEvaluationViewController: BaseViewController {
     
     lazy fileprivate var wordsCountLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
+        label.font = UIConstants.Font.foot1
         label.textColor = UIConstants.Color.foot
         label.text = "200"
         return label
@@ -73,7 +73,7 @@ class DCourseEvaluationViewController: BaseViewController {
     lazy fileprivate var actionBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.h2
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("提交评价", for: .normal)
         button.backgroundColor = UIConstants.Color.primaryGreen
         button.layer.cornerRadius = 25

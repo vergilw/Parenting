@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "赏金.png@2x.png",
+      "filename" : "shangjin.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "赏金.png@3x.png",
+      "filename" : "shangjin@1.5x.png",
       "scale" : "3x"
     }
   ],
