@@ -20,18 +20,14 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var displayMode: CellDisplayMode = .default
     
-    var actionBlock: ((ActionButton)->())?
-    
-    lazy fileprivate var panelView: UIView = {
-        let view = UIView()
-        view.drawRoundBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-10, height: CourseCell.cellHeight()-40)), cornerRadius: 4)
-        return view
-    }()
+    fileprivate lazy var isEditable: Bool = false
     
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
         imgView.image = UIImage(named: "public_coursePlaceholder")
+        imgView.layer.cornerRadius = 4
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -91,14 +87,17 @@ class CourseCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var actionBtn: ActionButton = {
-        let button = ActionButton()
-        button.setIndicatorStyle(style: UIActivityIndicatorView.Style.gray)
-        button.setImage(UIImage(named: "course_favoriteSelected")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.imageEdgeInsets = UIEdgeInsets(top: -5, left: 0, bottom: 5, right: 0)
-        button.isHidden = true
-        button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
-        return button
+    fileprivate lazy var studyStatusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot1
+        label.textColor = UIConstants.Color.primaryGreen
+        label.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
+        label.layer.borderWidth = 0.5
+        label.textAlignment = .center
+        label.layer.cornerRadius = 4
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
     }()
     
     lazy fileprivate var rewardFootnoteView: UIView = {
@@ -150,6 +149,17 @@ class CourseCell: UITableViewCell {
         return contentview
     }()
     
+    fileprivate lazy var deleteBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "video_videoDelete")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = UIConstants.Color.primaryRed
+        button.addTarget(self, action: #selector(deleteBtnAction), for: .touchUpInside)
+        button.drawSeparator(startPoint: CGPoint(x: 0, y: 27), endPoint: CGPoint(x: 0, y: 87))
+        return button
+    }()
+    
+    var deleteClosure: (()->Void)?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -166,7 +176,8 @@ class CourseCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews([previewImgView, rewardMarkImgView, nameLabel, titleLabel, subtitleLabel, priceLabel, sectionCountLabel, actionBtn, rewardFootnoteView])
+        addSubview(deleteBtn)
+        contentView.addSubviews([previewImgView, rewardMarkImgView, nameLabel, titleLabel, subtitleLabel, priceLabel, sectionCountLabel, studyStatusLabel, rewardFootnoteView])
         
         initPreviewFooterView()
         
@@ -223,7 +234,7 @@ class CourseCell: UITableViewCell {
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(15)
             let imgHeight: CGFloat = 82
-            make.width.equalTo(imgHeight/9.0*16)
+            make.width.equalTo(imgHeight/9.0*12)
             make.height.equalTo(imgHeight)
         }
         rewardMarkImgView.snp.makeConstraints { make in
@@ -234,34 +245,35 @@ class CourseCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(15)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(previewImgView).offset(4.5)
+            make.top.equalTo(previewImgView).offset(4)
             make.height.equalTo(15)
         }
         subtitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(15)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(previewImgView).offset(4.5)
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.height.equalTo(15)
         }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.top.equalTo(subtitleLabel.snp.bottom).offset(8.5)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(8)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.height.equalTo(11)
         }
         
         priceLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.bottom.equalTo(previewImgView)
+            make.lastBaseline.equalTo(previewImgView.snp.bottom).offset(-1)
         }
         sectionCountLabel.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.bottom.equalTo(previewImgView)
             make.height.equalTo(18)
         }
-        actionBtn.snp.makeConstraints { make in
-            make.trailing.bottom.equalToSuperview()
-            make.size.equalTo(CGSize(width: 52, height: 12+20+20))
+        studyStatusLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.bottom.equalTo(previewImgView)
+            make.size.equalTo(CGSize(width: 70, height: 25))
         }
         rewardFootnoteView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
@@ -269,14 +281,44 @@ class CourseCell: UITableViewCell {
             make.height.equalTo(20)
             make.width.equalTo(85)
         }
+        deleteBtn.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(contentView.snp.trailing)
+            make.width.equalTo(60)
+        }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+//        super.setEditing(editing, animated: animated)
+        
+        self.isEditable = editing
+        UIView.animate(withDuration: 0.25) {
+            if self.isEditable {
+                self.contentView.center.x = UIScreenWidth/2 - 60
+            } else {
+                self.contentView.center.x = UIScreenWidth/2
+            }
+        }
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        if isEditable {
+            contentView.center.x = UIScreenWidth/2 - 60
+        } else {
+            contentView.center.x = UIScreenWidth/2
+        }
+        
     }
     
     func setup(mode: CellDisplayMode, model: CourseModel? = nil) {
         if mode != displayMode {
             if mode == .default {
-                actionBtn.isHidden = true
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
+                studyStatusLabel.isHidden = true
                 
 //                priceLabel.snp.remakeConstraints { make in
 //                    make.trailing.equalTo(-12)
@@ -290,9 +332,9 @@ class CourseCell: UITableViewCell {
 //                }
                 
             } else if mode == .favirotes {
-                actionBtn.isHidden = false
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
+                studyStatusLabel.isHidden = true
                 
 //                priceLabel.snp.remakeConstraints { make in
 //                    make.trailing.lessThanOrEqualTo(actionBtn.snp.leading).priority(.required)
@@ -307,9 +349,10 @@ class CourseCell: UITableViewCell {
 //                }
                 
             } else if mode == .owned {
-                actionBtn.isHidden = true
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = true
+                sectionCountLabel.isHidden = true
+                studyStatusLabel.isHidden = false
                 
 //                priceLabel.snp.remakeConstraints { make in
 //                    make.trailing.equalTo(-12)
@@ -322,50 +365,36 @@ class CourseCell: UITableViewCell {
 //                    make.trailing.lessThanOrEqualTo(previewImgView.snp.trailing).offset(0).priority(.required)
 //                }
             } else if mode == .reward {
-                actionBtn.isHidden = true
                 priceLabel.isHidden = false
                 rewardFootnoteView.isHidden = false
                 sectionCountLabel.isHidden = true
+                studyStatusLabel.isHidden = true
+                
             }
             displayMode = mode
         }
         
         
-        if mode == .default {
-            priceLabel.textColor = UIColor("#ef5226")
-            priceLabel.font = UIConstants.Font.h2
-            if let price = model?.price {
-                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
-            }
-            
-        } else if mode == .favirotes {
-            priceLabel.textColor = UIColor("#ef5226")
-            priceLabel.font = UIConstants.Font.h2
-            if let price = model?.price {
-                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
-            }
-            
-        } else if mode == .owned {
-            priceLabel.textColor = UIConstants.Color.primaryGreen
-            priceLabel.font = UIConstants.Font.body
-            priceLabel.text = "开始学习"
-            
+        if mode == .owned {
             if model?.is_finished_course == true {
-                priceLabel.text = "完成学习"
+                studyStatusLabel.text = "已学完"
+                studyStatusLabel.textColor = UIConstants.Color.head
+                studyStatusLabel.layer.borderColor = UIConstants.Color.separator.cgColor
             } else if model?.lastest_play_catalogue != nil {
-                priceLabel.text = "继续学习"
+                studyStatusLabel.text = "继续学习"
+                studyStatusLabel.textColor = UIConstants.Color.primaryOrange
+                studyStatusLabel.layer.borderColor = UIConstants.Color.primaryOrange.cgColor
             } else {
-                priceLabel.text = "立即学习"
-            }
-            
-        } else if mode == .reward {
-            priceLabel.textColor = UIColor("#ef5226")
-            priceLabel.font = UIConstants.Font.h2
-            if let price = model?.price {
-                priceLabel.setPriceText(text: String(price), discount: model?.market_price)
+                studyStatusLabel.text = "开始学习"
+                studyStatusLabel.textColor = UIConstants.Color.primaryGreen
+                studyStatusLabel.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
             }
         }
         
+        
+        if let price = model?.price {
+            priceLabel.setPriceText(text: String(price), discount: model?.market_price)
+        }
         
         if model?.rewardable == true {
             rewardMarkImgView.isHidden = false
@@ -375,9 +404,10 @@ class CourseCell: UITableViewCell {
     
         
         if let URLString = model?.cover_attribute?.service_url {
-            let imgHeight: CGFloat = 82
-            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: imgHeight/9.0*16*2, height: imgHeight*2))
-            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: [.processor(processor)])
+//            let imgHeight: CGFloat = 82
+//            let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: imgHeight/9.0*16*2, height: imgHeight*2))
+//            let resizeProcessor = ResizingImageProcessor(referenceSize: CGSize(width: imgHeight/9.0*12*2, height: imgHeight*2), mode: .aspectFill)
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"), options: nil)
         }
         
         titleLabel.text = model?.title
@@ -399,20 +429,6 @@ class CourseCell: UITableViewCell {
         }
     }
     
-    @objc func actionBtnAction() {
-//        actionBtn.startAnimating()
-//
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+2) {
-//
-//            self.actionBtn.stopAnimating()
-//            self.actionBtn.setImage(UIImage(named: "course_favoriteNormal")?.withRenderingMode(.alwaysOriginal), for: .normal)
-//            HUDService.sharedInstance.show(string: "成功取消收藏")
-//        }
-        if let closure = actionBlock {
-            closure(actionBtn)
-        }
-    }
-    
     fileprivate class func previewImgWidth() -> CGFloat {
         let titleWidth: CGFloat = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing - 24 - 160
         let offset: CGFloat = (titleWidth + 1).truncatingRemainder(dividingBy: 17+1)
@@ -422,5 +438,11 @@ class CourseCell: UITableViewCell {
     
     class func cellHeight() -> CGFloat {
         return 10 + 4.5 + previewImgWidth()/16.0*9 + 12 + 22 + 20 + 20
+    }
+    
+    @objc fileprivate func deleteBtnAction() {
+        if let closure = deleteClosure {
+            closure()
+        }
     }
 }

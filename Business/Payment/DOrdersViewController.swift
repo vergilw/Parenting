@@ -67,9 +67,12 @@ class DOrdersViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = 192
+        tableView.backgroundColor = .white
+        tableView.rowHeight = 112+30+10
         tableView.register(OrderCell.self, forCellReuseIdentifier: OrderCell.className())
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        tableView.separatorColor = UIConstants.Color.separator
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
@@ -91,7 +94,8 @@ class DOrdersViewController: BaseViewController {
         }
         
         let headerView: UIView = {
-            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 37)))
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 27)))
+            view.backgroundColor = UIConstants.Color.background
             return view
         }()
         
@@ -102,7 +106,7 @@ class DOrdersViewController: BaseViewController {
             
             let text = "未支付订单将在2小时后自动取消"
             let attributedString = NSMutableAttributedString(string: text)
-            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryOrange], range: NSString(string: "未支付订单将在2小时后自动取消").range(of: "2"))
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryOrange], range: NSString(string: text).range(of: "2"))
             label.attributedText = attributedString
             
             return label
@@ -110,8 +114,7 @@ class DOrdersViewController: BaseViewController {
         headerView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(20)
-            make.height.equalTo(12)
+            make.top.bottom.equalToSuperview()
         }
         
         tableView.tableHeaderView = headerView

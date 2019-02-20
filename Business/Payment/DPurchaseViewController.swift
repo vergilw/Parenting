@@ -17,41 +17,67 @@ class DPurchaseViewController: BaseViewController {
     
     var completeClosure: (() -> Void)?
     
-    lazy fileprivate var statusLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    fileprivate lazy var bgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "payment_orderBg")?.resizableImage(withCapInsets: UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50))
+        return imgView
+    }()
+    
+    fileprivate lazy var backBarBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .white
+        if #available(iOS 11.0, *) {
+            var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+            if topHeight == 0 {
+                topHeight = 20
+            }
+            button.imageEdgeInsets = UIEdgeInsets(top: topHeight, left: 0, bottom: 0, right: 0)
+        } else {
+            button.imageEdgeInsets = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        }
+        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+        return button
+    }()
+    
+    fileprivate lazy var navigationTitleLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.h1
-        label.textColor = UIConstants.Color.head
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "支付订单"
+        return label
+    }()
+    
+    lazy fileprivate var statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h1
+        label.textColor = UIConstants.Color.primaryOrange
         return label
     }()
     
     lazy fileprivate var previewImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
+        imgView.layer.cornerRadius = 4
+        imgView.clipsToBounds = true
         return imgView
     }()
     
     lazy fileprivate var courseNameLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.numberOfLines = 2
-        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-previewImgWidth()-12
+        label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-previewImgWidth()-40-15
 //        label.lineBreakMode = .byCharWrapping
         return label
     }()
     
-    lazy fileprivate var courseTeacherLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.foot
-        return label
-    }()
-    
-    lazy fileprivate var orderNumberLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.head
-        label.numberOfLines = 0
+    lazy fileprivate var courseTeacherLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot2
+        label.textColor = UIConstants.Color.body
         return label
     }()
     
@@ -63,44 +89,60 @@ class DPurchaseViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var balanceTitleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var balanceTitleLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.body
-        label.setParagraphText("账户余额")
+        label.text = "账户余额"
         return label
     }()
     
     lazy fileprivate var balanceValueLabel: PriceLabel = {
         let label = PriceLabel()
-        label.font = UIConstants.Font.h3
+        label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.head
         label.textAlignment = .right
         return label
     }()
     
-    lazy fileprivate var timeTitleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    fileprivate lazy var orderNumberTitleLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.body
-        label.setParagraphText("订单号生成时间：")
+        label.text = "订单号"
         return label
     }()
     
-    lazy fileprivate var timeValueLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
+    lazy fileprivate var orderNumberLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h4
+        label.textColor = UIConstants.Color.head
+        label.textAlignment = .right
+        return label
+    }()
+    
+    lazy fileprivate var timeTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.body
+        label.textColor = UIConstants.Color.body
+        label.text = "生成时间"
+        return label
+    }()
+    
+    lazy fileprivate var timeValueLabel: UILabel = {
+        let label = UILabel()
         label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.body
         label.textAlignment = .right
         return label
     }()
     
-    lazy fileprivate var timeFootnoteLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
+    lazy fileprivate var timeFootnoteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
         label.textAlignment = .right
-        label.setParagraphText("2小时未付款自动取消订单")
+        label.text = "2小时未付款自动取消订单"
         return label
     }()
     
@@ -117,10 +159,10 @@ class DPurchaseViewController: BaseViewController {
     lazy fileprivate var actionBtn: ActionButton = {
         let button = ActionButton()
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIConstants.Font.h2
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("确认支付", for: .normal)
-        button.backgroundColor = UIConstants.Color.primaryRed
-        button.layer.cornerRadius = 26
+        button.backgroundColor = UIConstants.Color.primaryOrange
+        button.layer.cornerRadius = 17.5
         button.addTarget(self, action: #selector(payBtnAction), for: .touchUpInside)
         return button
     }()
@@ -146,63 +188,117 @@ class DPurchaseViewController: BaseViewController {
         fetchData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 230), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 230))
-        view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 338), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 338))
         
-        view.addSubviews([statusLabel, previewImgView, courseNameLabel, courseTeacherLabel, orderNumberLabel, priceLabel, balanceTitleLabel, balanceValueLabel, timeTitleLabel, timeValueLabel, timeFootnoteLabel, actionBtn])
+//        view.drawGradientBg(roundedRect: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: UIScreenHeight)), colors: [UIColor("#11D3E1").cgColor, UIColor("#00C8D7").cgColor])
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: UIScreenHeight))
+        gradientLayer.colors = [UIColor("#11D3E1").cgColor, UIColor("#00C8D7").cgColor]
+        gradientLayer.locations = [0.0, 0.5]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        view.layer.addSublayer(gradientLayer)
+        
+        
+        view.addSubviews([bgImgView, backBarBtn, navigationTitleLabel, statusLabel, previewImgView, courseNameLabel, courseTeacherLabel, orderNumberTitleLabel, orderNumberLabel, priceLabel, balanceTitleLabel, balanceValueLabel, timeTitleLabel, timeValueLabel, timeFootnoteLabel, actionBtn])
+        
+        bgImgView.drawSeparator(startPoint: CGPoint(x: 25, y: 80), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing-10-25, y: 80))
+        bgImgView.drawSeparator(startPoint: CGPoint(x: 25, y: 342), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing-10-25, y: 342))
     }
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
+        bgImgView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading-5)
+            make.trailing.equalTo(-UIConstants.Margin.trailing+5)
+            let navigationHeight = self.navigationController?.navigationBar.bounds.height ?? 0
+            make.top.equalTo(UIStatusBarHeight+navigationHeight+20)
+            make.bottom.equalTo(-30)
+        }
+        backBarBtn.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview()
+            make.width.equalTo(62.5)
+            if #available(iOS 11.0, *) {
+                var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+                if topHeight == 0 {
+                    topHeight = 20
+                }
+                make.height.equalTo(topHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
+            } else {
+                make.height.equalTo(20+(navigationController?.navigationBar.bounds.size.height ?? 0))
+            }
+        }
+        navigationTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(UIStatusBarHeight)
+            make.centerX.equalToSuperview()
+            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+        }
         statusLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading+20)
+            make.top.equalTo(bgImgView).offset(38)
         }
         previewImgView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing-20)
             make.top.equalTo(statusLabel.snp.bottom).offset(42)
-            make.size.equalTo(CGSize(width: previewImgWidth(), height: previewImgWidth()/160.0*90))
+            make.size.equalTo(CGSize(width: previewImgWidth(), height: previewImgWidth()/12.0*9))
         }
         courseNameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(previewImgView.snp.trailing).offset(12)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.leading.equalTo(statusLabel)
+            make.trailing.lessThanOrEqualTo(previewImgView.snp.leading).offset(-15)
             make.top.equalTo(previewImgView)
-//            make.height.lessThanOrEqualTo(62)
         }
         courseTeacherLabel.snp.makeConstraints { make in
-//            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.leading.equalTo(previewImgView.snp.trailing).offset(12)
-            make.top.equalTo(courseNameLabel.snp.bottom).offset(2.5)
-        }
-        orderNumberLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(previewImgView.snp.bottom).offset(12-5)
+            make.leading.equalTo(statusLabel)
+            make.trailing.lessThanOrEqualTo(previewImgView.snp.leading).offset(-15)
+            make.top.equalTo(courseNameLabel.snp.bottom).offset(15)
         }
         priceLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.centerY.equalTo(orderNumberLabel)
+            make.leading.equalTo(statusLabel)
+            make.lastBaseline.equalTo(previewImgView.snp.bottom)
         }
+        
+        
         balanceTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(orderNumberLabel.snp.bottom).offset(40)
+            make.leading.equalTo(statusLabel)
+            make.top.equalTo(previewImgView.snp.bottom).offset(42)
+            make.height.equalTo(14)
         }
         balanceValueLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.trailing.equalTo(previewImgView)
             make.centerY.equalTo(balanceTitleLabel)
         }
+        orderNumberTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(statusLabel)
+            make.top.equalTo(balanceTitleLabel.snp.bottom).offset(10)
+            make.height.equalTo(14)
+        }
+        orderNumberLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(previewImgView)
+            make.centerY.equalTo(orderNumberTitleLabel)
+        }
         timeTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(balanceTitleLabel.snp.bottom).offset(20)
+            make.leading.equalTo(statusLabel)
+            make.top.equalTo(orderNumberTitleLabel.snp.bottom).offset(10)
+            make.height.equalTo(14)
         }
         timeValueLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.trailing.equalTo(previewImgView)
             make.centerY.equalTo(timeTitleLabel)
         }
         timeFootnoteLabel.snp.makeConstraints { make in
-            make.top.equalTo(timeValueLabel.snp.bottom).offset(7)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(timeValueLabel.snp.bottom).offset(4)
+            make.trailing.equalTo(previewImgView)
         }
 //        footnoteLabel.snp.makeConstraints { make in
 //            make.leading.equalTo(UIConstants.Margin.leading)
@@ -210,22 +306,21 @@ class DPurchaseViewController: BaseViewController {
 //            make.top.equalTo(timeFootnoteLabel.snp.bottom).offset(32)
 //        }
         actionBtn.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading+25)
-            make.trailing.equalTo(-UIConstants.Margin.trailing-25)
-            make.height.equalTo(52)
-            if #available(iOS 11, *) {
-                make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-48)
-            } else {
-                make.bottom.equalTo(-48)
-            }
+            make.leading.equalTo(UIConstants.Margin.leading+40)
+            make.trailing.equalTo(-UIConstants.Margin.trailing-40)
+            make.height.equalTo(35)
+            make.bottom.equalTo(bgImgView).offset(-38)
         }
     }
     
     func previewImgWidth() -> CGFloat {
-        let titleWidth: CGFloat = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing - 12 - 160
-        let offset: CGFloat = (titleWidth + 1).truncatingRemainder(dividingBy: 17+1)
-        let imgWidth: CGFloat = 160+offset-1
-        return imgWidth
+//        let titleWidth: CGFloat = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing - 12 - 160
+//        let offset: CGFloat = (titleWidth + 1).truncatingRemainder(dividingBy: 17+1)
+//        let imgWidth: CGFloat = 160+offset-1
+//        return imgWidth
+        //TODO: round title width
+        let height: CGFloat = 95
+        return height/9.0*12
     }
     
     // MARK: - ============= Notification =============
@@ -255,24 +350,24 @@ class DPurchaseViewController: BaseViewController {
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        statusLabel.setParagraphText(orderModel?.payment_status_text ?? "")
+        statusLabel.text = orderModel?.payment_status_text
         
         if let URLString = orderModel?.order_items?[exist: 0]?.course?.cover_attribute?.service_url {
             let processor = RoundCornerImageProcessor(cornerRadius: 8, targetSize: CGSize(width: 160*2, height: 160/16.0*9*2))
             previewImgView.kf.setImage(with: URL(string: URLString), options: [.processor(processor)])
         }
         
-        courseNameLabel.setParagraphText(orderModel?.order_items?[exist: 0]?.course?.title ?? "")
+//        courseNameLabel.setParagraphText(orderModel?.order_items?[exist: 0]?.course?.title ?? "")
+        courseNameLabel.text = orderModel?.order_items?[exist: 0]?.course?.title
         
         var tagString = orderModel?.order_items?[exist: 0]?.course?.teacher?.name ?? ""
         if let tags = orderModel?.order_items?[exist: 0]?.course?.teacher?.tags, tags.count > 0 {
             let string = tags.joined(separator: " | ")
             tagString = tagString.appendingFormat(" : %@", string)
         }
-        courseTeacherLabel.setParagraphText(tagString)
+        courseTeacherLabel.text = tagString
         
-        let orderString = "订单号：" + (orderModel?.uuid ?? "")
-        orderNumberLabel.setSymbolText(orderString, symbolText: "订单号：", symbolAttributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.body])
+        orderNumberLabel.text = orderModel?.uuid
         
 //        let balanceString: String = String.priceFormatter.string(from: (NSNumber(string: orderModel?.balance ?? "") ?? NSNumber())) ?? ""
 //        balanceValueLabel.setParagraphText(balanceString)
@@ -285,7 +380,7 @@ class DPurchaseViewController: BaseViewController {
             priceLabel.setPriceText(text: price, discount: orderModel?.market_price)
         }
         
-        timeValueLabel.setParagraphText((orderModel?.created_at?.string(format: "yyyy.MM.dd HH:mm")) ?? "")
+        timeValueLabel.text = orderModel?.created_at?.string(format: "yyyy.MM.dd HH:mm")
         
         if orderModel?.payment_status == "unpaid" || orderModel?.payment_status == "part_paid" {
             actionBtn.isHidden = false

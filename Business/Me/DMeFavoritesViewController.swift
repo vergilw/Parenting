@@ -59,6 +59,16 @@ class DMeFavoritesViewController: BaseViewController {
         return view
     }()
     
+    lazy fileprivate var editBtn: UIButton = {
+        let button = UIButton()
+        button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
+        button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.h3
+        button.setTitle("编辑", for: .normal)
+        button.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -74,8 +84,11 @@ class DMeFavoritesViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         tableView.backgroundColor = UIConstants.Color.background
-        tableView.rowHeight = CourseCell.cellHeight()
+        tableView.rowHeight = 112
         tableView.register(CourseCell.self, forCellReuseIdentifier: CourseCell.className())
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        tableView.separatorColor = UIConstants.Color.separator
         tableView.dataSource = self
         tableView.delegate = self
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
@@ -84,6 +97,8 @@ class DMeFavoritesViewController: BaseViewController {
         tableView.mj_footer.isHidden = true
         
         view.addSubview(contentView)
+        
+        reloadNavigationItem(isHidden: false)
     }
     
     // MARK: - ============= Constraints =============
@@ -255,8 +270,29 @@ class DMeFavoritesViewController: BaseViewController {
         
     }
     
-    // MARK: - ============= Action =============
+    func reloadNavigationItem(isHidden: Bool) {
+        if isHidden == false {
+            let barBtnItem = UIBarButtonItem(customView: editBtn)
+            barBtnItem.width = 34+50
+            navigationItem.rightBarButtonItem = barBtnItem
+            navigationItem.rightMargin = 0
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
     
+    // MARK: - ============= Action =============
+    @objc fileprivate func editBtnAction() {
+        if editBtn.isSelected {
+            tableView.setEditing(false, animated: true)
+            editBtn.setTitle("编辑", for: UIControl.State.normal)
+        } else {
+            tableView.setEditing(true, animated: true)
+            editBtn.setTitle("取消", for: UIControl.State.normal)
+        }
+        
+        editBtn.isSelected = !editBtn.isSelected
+    }
 }
 
 
@@ -274,31 +310,32 @@ extension DMeFavoritesViewController: UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: CourseCell.className(), for: indexPath) as! CourseCell
         if let model = favoritesModels?[exist: indexPath.row], let courseID = model.id {
             cell.setup(mode: CourseCell.CellDisplayMode.favirotes, model: model)
-            cell.actionBlock = { [weak self] button in
-                button.startAnimating()
+            
+            cell.deleteClosure = { [weak self] in
+                guard let self = `self` else { return }
+                
+                let progressView = MBProgressHUD(view: self.tableView)
+                progressView.mode = .indeterminate
+                progressView.label.text = "正在删除"
+                self.tableView.addSubview(progressView)
+                progressView.show(animated: true)
                 
                 CourseProvider.request(.course_toggle_favorites(courseID: courseID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
                     
-                    if let isFavorite = JSON?["is_favorite"] as? Bool {
-                        button.stopAnimating()
-                        
-                        model.is_favorite = isFavorite
-                        
-                        if model.is_favorite == true {
-                            button.setImage(UIImage(named: "course_favoriteSelected"), for: .normal)
-                        } else {
-                            button.setImage(UIImage(named: "course_favoriteNormal"), for: .normal)
-                        }
-                        
-                        button.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.curveLinear, animations: {
-                            button.transform = CGAffineTransform.identity
-                        }, completion: nil)
+                    progressView.hide(animated: true)
+                    
+                    if code >= 0 {
+                        self.favoritesModels?.remove(at: indexPath.row)
+                        self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
                     }
                 }))
             }
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -345,6 +382,12 @@ extension DMeFavoritesViewController: UICollectionViewDataSource, UICollectionVi
 extension DMeFavoritesViewController: CategoryDelegate {
     
     func contentView(_ contentView: UIView, didScrollRowAt index: Int) {
+        if index == 0 {
+            reloadNavigationItem(isHidden: false)
+        } else {
+            reloadNavigationItem(isHidden: true)
+        }
+        
         if index == 1 && collectionView.alpha == 0 {
             fetchVideoData()
         }

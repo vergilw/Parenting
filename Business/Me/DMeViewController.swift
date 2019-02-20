@@ -34,7 +34,7 @@ class DMeViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        tableView.rowHeight = 75
+        tableView.rowHeight = 54
         tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = UIConstants.Color.separator
@@ -65,7 +65,7 @@ class DMeViewController: BaseViewController {
         let editTitleLabel: UILabel = {
             let label = UILabel()
             label.font = UIConstants.Font.body
-            label.textColor = UIConstants.Color.subhead
+            label.textColor = UIConstants.Color.foot
             label.text = "编辑个人资料"
             return label
         }()
@@ -258,7 +258,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
         } else if indexPath.section == 2 {
-            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的视频")
+            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
         } else if indexPath.section == 3 {
             cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
         } else if indexPath.section == 4 {

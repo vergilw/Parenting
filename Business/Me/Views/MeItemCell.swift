@@ -17,7 +17,7 @@ class MeItemCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2_regular
+        label.font = UIConstants.Font.caption2
         label.textColor = UIConstants.Color.head
         return label
     }()

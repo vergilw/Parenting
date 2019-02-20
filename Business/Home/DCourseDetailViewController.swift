@@ -128,7 +128,7 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var introductionBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.head, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("简介", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -137,7 +137,7 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var catalogueBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("目录", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -146,7 +146,7 @@ class DCourseDetailViewController: BaseViewController {
     lazy fileprivate var evaluationBtn: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIConstants.Color.body, for: .normal)
-        button.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        button.titleLabel?.font = UIConstants.Font.h4
         button.setTitle("留言", for: .normal)
         button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
         return button
@@ -758,9 +758,9 @@ class DCourseDetailViewController: BaseViewController {
             self.isTrackingCategoryEnable = true
         }
         
-        introductionBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
-        catalogueBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
-        evaluationBtn.titleLabel?.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        introductionBtn.titleLabel?.font = UIConstants.Font.h4
+        catalogueBtn.titleLabel?.font = UIConstants.Font.h4
+        evaluationBtn.titleLabel?.font = UIConstants.Font.h4
         introductionBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         catalogueBtn.setTitleColor(UIConstants.Color.body, for: .normal)
         evaluationBtn.setTitleColor(UIConstants.Color.body, for: .normal)
