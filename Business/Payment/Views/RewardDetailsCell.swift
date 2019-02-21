@@ -10,9 +10,9 @@ import UIKit
 
 class RewardDetailsCell: UITableViewCell {
 
-    lazy fileprivate var titleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.body
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -26,9 +26,9 @@ class RewardDetailsCell: UITableViewCell {
         return label
     }()
     
-    lazy fileprivate var headnoteLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
+    lazy fileprivate var headnoteLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
         return label
     }()
@@ -70,11 +70,11 @@ class RewardDetailsCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.lessThanOrEqualTo(priceLabel.snp.leading).offset(-12)
-            make.top.equalTo(20)
+            make.top.equalTo(12)
         }
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.top.equalTo(titleLabel.snp.bottom).offset(7.5)
         }
         coinIconImgView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
@@ -96,14 +96,16 @@ class RewardDetailsCell: UITableViewCell {
     
     func setup(model: CoinLogModel) {
         
-        titleLabel.setParagraphText(model.title ?? "")
-        headnoteLabel.setParagraphText(model.created_at?.string(format: "yyyy.MM.dd HH:mm") ?? "")
+        titleLabel.text = model.title
+        
+        headnoteLabel.text = model.created_at?.string(format: "yyyy.MM.dd HH:mm")
+        
         descLabel.text = model.tag_str
         let size = NSString(string: descLabel.text ?? "").boundingRect(with: CGSize(width: UIScreenWidth, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesFontLeading, attributes: [NSAttributedString.Key.font : descLabel.font], context: nil).size
         descLabel.snp.remakeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(titleLabel.snp.bottom).offset(15)
-            make.size.equalTo(CGSize(width: size.width+14, height: 21))
+            make.top.equalTo(titleLabel.snp.bottom).offset(7.5)
+            make.size.equalTo(CGSize(width: size.width+14, height: 20))
         }
         
         if let amount = model.amount, let amountInt = Float(amount) {

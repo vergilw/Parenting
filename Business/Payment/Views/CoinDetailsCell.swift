@@ -15,27 +15,27 @@ class CoinDetailsCell: UITableViewCell {
         view.alignment = .leading
         view.axis = .vertical
         view.distribution = .fillProportionally
-        view.spacing = 6
+        view.spacing = 4
         return view
     }()
     
-    lazy fileprivate var titleLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.h2_regular
+    lazy fileprivate var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
     
-    lazy fileprivate var descLabel: ParagraphLabel = {
-        let label = ParagraphLabel()
-        label.font = UIConstants.Font.foot
+    lazy fileprivate var descLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.foot
         return label
     }()
     
     lazy fileprivate var priceLabel: PriceLabel = {
         let label = PriceLabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -80,8 +80,8 @@ class CoinDetailsCell: UITableViewCell {
     
     func setup(model: CoinLogModel) {
         
-        titleLabel.setParagraphText(model.title ?? "")
-        descLabel.setParagraphText(model.created_at?.string(format: "yyyy.MM.dd HH:mm") ?? "")
+        titleLabel.text = model.title
+        descLabel.text = model.created_at?.string(format: "yyyy.MM.dd HH:mm")
         
         if let amount = model.amount, let amountInt = Float(amount) {
             if amountInt > 0 {

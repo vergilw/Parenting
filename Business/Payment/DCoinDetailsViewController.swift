@@ -29,7 +29,7 @@ class DCoinDetailsViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         tableView.backgroundColor = .white
-        tableView.rowHeight = 72
+        tableView.rowHeight = 60
         tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         tableView.separatorColor = UIConstants.Color.separator
         tableView.separatorStyle = .singleLine

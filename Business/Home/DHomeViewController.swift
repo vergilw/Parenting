@@ -295,7 +295,12 @@ class DHomeViewController: BaseViewController {
 //            make.width.equalTo(15+22+25)
 //        }
         topBannerBgView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            if #available(iOS 11.0, *) {
+                make.top.equalToSuperview()
+            } else {
+                make.top.equalTo(-UIStatusBarHeight)
+            }
+            make.leading.trailing.equalToSuperview()
             make.width.equalTo(UIScreenWidth)
             var height: CGFloat = self.navigationController?.navigationBar.bounds.height ?? 0
             height += UIStatusBarHeight
@@ -304,7 +309,11 @@ class DHomeViewController: BaseViewController {
         }
         titleImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(UIStatusBarHeight)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(UIStatusBarHeight)
+            } else {
+                make.top.equalTo(0)
+            }
             if let height: CGFloat = self.navigationController?.navigationBar.bounds.height {
                 make.height.equalTo(height)
             }

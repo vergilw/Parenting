@@ -43,6 +43,7 @@ class DWithdrawDetailsViewController: BaseViewController {
         let footer = tableView.mj_footer as! MJRefreshAutoNormalFooter
         footer.setTitle("仅显示3个月以内的提现记录", for: .noMoreData)
         footer.stateLabel.textColor = UIConstants.Color.foot
+        footer.stateLabel.font = UIConstants.Font.foot1
         
         view.addSubview(tableView)
     }

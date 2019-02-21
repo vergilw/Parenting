@@ -12,7 +12,7 @@ class WithdrawDetailsCell: UITableViewCell {
 
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -20,20 +20,20 @@ class WithdrawDetailsCell: UITableViewCell {
     lazy fileprivate var status1Label: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.body
+        label.textColor = UIConstants.Color.foot
         return label
     }()
     
     lazy fileprivate var status2Label: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.body
+        label.textColor = UIConstants.Color.foot
         return label
     }()
     
     lazy fileprivate var priceLabel: PriceLabel = {
         let label = PriceLabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()

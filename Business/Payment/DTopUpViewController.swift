@@ -21,17 +21,71 @@ class DTopUpViewController: BaseViewController {
         return scrollView
     }()
     
+    fileprivate lazy var bgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "payment_topBg")
+        return imgView
+    }()
+    
+    fileprivate lazy var backBarBtn: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .white
+        if #available(iOS 11.0, *) {
+            button.imageEdgeInsets = UIEdgeInsets(top: UIStatusBarHeight, left: 0, bottom: 0, right: 0)
+        }
+        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+        return button
+    }()
+    
+    fileprivate lazy var navigationTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIConstants.Font.h1
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "充值"
+        return label
+    }()
+    
+    fileprivate lazy var detailsBtn: ActionButton = {
+        let button = ActionButton()
+        button.setIndicatorColor(UIConstants.Color.primaryRed)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.h2
+        button.setTitle("记录", for: .normal)
+        button.addTarget(self, action: #selector(detailsBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     lazy fileprivate var balanceTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIConstants.Font.h2
-        label.textColor = UIConstants.Color.head
+        label.textColor = .white
         label.text = "氧育币余额"
         return label
     }()
     
+    fileprivate lazy var balanceView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 4
+        view.layer.shadowRadius = 4
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 3.0)
+        view.layer.shadowOpacity = 0.05
+        view.layer.shadowColor = UIColor.black.cgColor
+//        view.clipsToBounds = true
+        return view
+    }()
+    
+    fileprivate lazy var balanceIconImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "payment_appCoinIcon")
+        return imgView
+    }()
+    
     lazy fileprivate var balanceValueLabel: PriceLabel = {
         let label = PriceLabel()
-        label.font = UIConstants.Font.h1
+        label.font = UIConstants.Font.largeTitle
         label.textColor = UIConstants.Color.disable
         return label
     }()
@@ -105,33 +159,27 @@ class DTopUpViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        initNavigationItem()
         
         view.addSubview(scrollView)
         
         scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
         
-        scrollView.addSubviews([balanceTitleLabel, balanceValueLabel, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
-    }
-    
-    fileprivate func initNavigationItem() {
-        let detailsBtn: ActionButton = {
-            let button = ActionButton()
-            button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
-            button.setIndicatorColor(UIConstants.Color.primaryRed)
-            button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.h2_regular
-            button.setTitle("记录", for: .normal)
-            button.addTarget(self, action: #selector(detailsBtnAction), for: .touchUpInside)
-            return button
-        }()
+        scrollView.addSubviews([bgImgView, backBarBtn, navigationTitleLabel, detailsBtn, balanceTitleLabel, balanceView, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
         
-        let barBtnItem = UIBarButtonItem(customView: detailsBtn)
-        barBtnItem.width = 34+50
-        navigationItem.rightBarButtonItem = barBtnItem
-        navigationItem.rightMargin = 0
+        balanceView.addSubviews([balanceIconImgView, balanceValueLabel])
+        
     }
     
     // MARK: - ============= Constraints =============
@@ -139,21 +187,74 @@ class DTopUpViewController: BaseViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        bgImgView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(balanceView)
+        }
+        backBarBtn.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview()
+            make.width.equalTo(62.5)
+            if #available(iOS 11.0, *) {
+                var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+                if topHeight == 0 {
+                    topHeight = 20
+                }
+                make.height.equalTo(topHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
+            } else {
+                make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+            }
+        }
+        navigationTitleLabel.snp.makeConstraints { make in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(UIStatusBarHeight)
+            } else {
+                make.top.equalTo(0)
+            }
+            make.centerX.equalToSuperview()
+            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+        }
+        detailsBtn.snp.makeConstraints { make in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(UIStatusBarHeight)
+            } else {
+                make.top.equalTo(0)
+            }
+            make.trailing.equalToSuperview()
+            make.size.equalTo(CGSize(width: 34+UIConstants.Margin.leading+UIConstants.Margin.trailing, height: 44))
+        }
+        
         balanceTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(60)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(38+(self.navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight)
+            } else {
+                make.top.equalTo(38+(self.navigationController?.navigationBar.bounds.height ?? 0))
+            }
+        }
+        balanceView.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(balanceTitleLabel.snp.bottom).offset(18)
+            make.height.equalTo(62)
+        }
+        
+        balanceIconImgView.snp.makeConstraints { make in
+            make.leading.equalTo(18)
+            make.centerY.equalToSuperview()
         }
         balanceValueLabel.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(balanceTitleLabel.snp.bottom).offset(32)
+            make.leading.equalTo(balanceIconImgView.snp.trailing).offset(10)
+            make.centerY.equalToSuperview()
         }
+        
         topUpTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(balanceValueLabel.snp.bottom).offset(94)
+            make.top.equalTo(balanceView.snp.bottom).offset(45)
         }
         collectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(topUpTitleLabel.snp.bottom).offset(32)
+            make.top.equalTo(topUpTitleLabel.snp.bottom).offset(20)
             make.height.equalTo(150)
             make.width.equalTo(UIScreenWidth)
         }
@@ -197,7 +298,7 @@ class DTopUpViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
-            balanceValueLabel.textColor = UIConstants.Color.primaryOrange
+            balanceValueLabel.textColor = UIConstants.Color.head
             balanceValueLabel.setPriceText(text: balance, discount: nil)
         } else {
             balanceValueLabel.setPriceText(text: "0", discount: nil)

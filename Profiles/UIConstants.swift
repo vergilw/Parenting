@@ -27,7 +27,7 @@ public struct UIConstants {
         public static let disable: UIColor = UIColor("#ccc")
         
         public static let background: UIColor = UIColor("#f3f4f6")
-        public static let separator: UIColor = UIColor("#f1f1f1")
+        public static let separator: UIColor = UIColor("#e7e8ea")
     }
     
     public struct Font {

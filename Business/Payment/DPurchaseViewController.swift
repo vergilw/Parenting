@@ -213,8 +213,9 @@ class DPurchaseViewController: BaseViewController {
         
         view.addSubviews([bgImgView, backBarBtn, navigationTitleLabel, statusLabel, previewImgView, courseNameLabel, courseTeacherLabel, orderNumberTitleLabel, orderNumberLabel, priceLabel, balanceTitleLabel, balanceValueLabel, timeTitleLabel, timeValueLabel, timeFootnoteLabel, actionBtn])
         
-        bgImgView.drawSeparator(startPoint: CGPoint(x: 25, y: 80), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing-10-25, y: 80))
-        bgImgView.drawSeparator(startPoint: CGPoint(x: 25, y: 342), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing-10-25, y: 342))
+        bgImgView.drawSeparator(startPoint: CGPoint(x: 20+5, y: 80), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing+10-20, y: 80))
+        bgImgView.drawSeparator(startPoint: CGPoint(x: 20+5, y: 216), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing+10-20, y: 216))
+        bgImgView.drawSeparator(startPoint: CGPoint(x: 20+5, y: 342), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing+10-20, y: 342))
     }
     
     // MARK: - ============= Constraints =============

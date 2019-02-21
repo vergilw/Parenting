@@ -79,7 +79,7 @@ class CategoryView: UIView {
         contentScrollView.addSubview(contentStackView)
         titleStackView.addSubview(categoryIndicatorImgView)
         
-        titleScrollView.drawSeparator(startPoint: CGPoint(x: 0, y: 46), endPoint: CGPoint(x: UIScreenWidth, y: 46))
+        titleScrollView.drawSeparator(startPoint: CGPoint(x: 0, y: 45.5), endPoint: CGPoint(x: UIScreenWidth, y: 45.5))
         
         var i = 0
         var contentWidth: CGFloat = 0

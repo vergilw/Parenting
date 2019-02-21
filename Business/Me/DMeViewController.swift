@@ -39,6 +39,7 @@ class DMeViewController: BaseViewController {
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = UIConstants.Color.separator
         tableView.register(MeItemCell.self, forCellReuseIdentifier: MeItemCell.className())
+        tableView.register(PlaceholderTableViewCell.self, forCellReuseIdentifier: PlaceholderTableViewCell.className())
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -49,10 +50,21 @@ class DMeViewController: BaseViewController {
     
     func initHeaderView() {
         let headerView: UIView = {
-            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: 205)))
+            var height: CGFloat = 0
+            if #available(iOS 11.0, *) {
+                height = 145 + (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+            } else {
+                height = 145-UIStatusBarHeight
+            }
+            let view = UIView(frame: CGRect(origin: .zero, size: CGSize(width: UIScreenWidth, height: height)))
             view.backgroundColor = .white
-            view.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 205), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 205))
             return view
+        }()
+        
+        let bgImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "me_profileBg")
+            return imgView
         }()
         
         let nameLabel: UILabel = {
@@ -90,7 +102,7 @@ class DMeViewController: BaseViewController {
             button.clipsToBounds = true
             button.layer.cornerRadius = 35
             button.imageView?.contentMode = .scaleAspectFill
-            button.setImage(UIImage(named: "public_avatarPlaceholder")?.withRenderingMode(.alwaysOriginal), for: .normal)
+            button.setImage(UIImage(named: "public_avatarDefault")?.withRenderingMode(.alwaysOriginal), for: .normal)
             button.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)
             button.isUserInteractionEnabled = false
             return button
@@ -116,6 +128,12 @@ class DMeViewController: BaseViewController {
             button.addTarget(self, action: #selector(signInBtnAction), for: .touchUpInside)
             return button
         }()
+        
+        headerView.addSubview(bgImgView)
+        bgImgView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(-22)
+        }
         
         if AuthorizationService.sharedInstance.isSignIn() {
             avatarBtn.isUserInteractionEnabled = true
@@ -149,9 +167,13 @@ class DMeViewController: BaseViewController {
             }
             avatarBtn.snp.makeConstraints { make in
                 if #available(iOS 11, *) {
-                    make.centerY.equalToSuperview().offset((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)/2)
+                    if let safeTop = UIApplication.shared.keyWindow?.safeAreaInsets.top {
+                        make.centerY.equalToSuperview().offset((safeTop-20)/2)
+                    } else {
+                        make.centerY.equalToSuperview()
+                    }
                 } else {
-                    make.centerY.equalToSuperview()
+                    make.centerY.equalToSuperview().offset(-UIStatusBarHeight/2)
                 }
                 make.trailing.equalTo(-UIConstants.Margin.leading)
                 make.size.equalTo(CGSize(width: 70, height: 70))
@@ -170,9 +192,13 @@ class DMeViewController: BaseViewController {
             }
             avatarBtn.snp.makeConstraints { make in
                 if #available(iOS 11, *) {
-                    make.centerY.equalToSuperview().offset((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)/2)
+                    if let safeTop = UIApplication.shared.keyWindow?.safeAreaInsets.top {
+                        make.centerY.equalToSuperview().offset((safeTop-20)/2)
+                    } else {
+                        make.centerY.equalToSuperview()
+                    }
                 } else {
-                    make.centerY.equalToSuperview()
+                    make.centerY.equalToSuperview().offset(-UIStatusBarHeight/2)
                 }
                 make.trailing.equalTo(-UIConstants.Margin.leading)
                 make.size.equalTo(CGSize(width: 70, height: 70))
@@ -181,6 +207,8 @@ class DMeViewController: BaseViewController {
                 make.edges.equalToSuperview()
             }
         }
+        
+        headerView.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: headerView.bounds.height-6), size: CGSize(width: UIScreenWidth, height: 6)), cornerRadius: 0, color: UIConstants.Color.background)
         
         tableView.tableHeaderView = headerView
         tableView.layoutIfNeeded()
@@ -233,19 +261,32 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 8
+        return 10
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 2 {
             return 1
-        } else if section == 5 {
+        } else if section == 6 {
             return 0
         }
         return 1
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 2 || indexPath.section == 7 {
+            return 6
+        } else {
+            return 54
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 2 || indexPath.section == 7 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: PlaceholderTableViewCell.className(), for: indexPath) as! PlaceholderTableViewCell
+            return cell
+        }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: MeItemCell.className(), for: indexPath) as! MeItemCell
         if indexPath.section == 0 {
             cell.setup(img: UIImage(named: "me_itemOrder")!, title: "我的订单")
@@ -257,18 +298,25 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
+            
+        //placeholder
         } else if indexPath.section == 2 {
-            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
+            
         } else if indexPath.section == 3 {
-            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
+            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
         } else if indexPath.section == 4 {
-            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
+            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
         } else if indexPath.section == 5 {
-            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
+            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
         } else if indexPath.section == 6 {
-            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
+            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
+        //placeholder
         } else if indexPath.section == 7 {
+            
+        } else if indexPath.section == 8 {
             cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
+        } else if indexPath.section == 9 {
+            cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         }
         return cell
     }
@@ -291,7 +339,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
 //                return
 //            }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
-        } else if indexPath.section == 2 {
+        } else if indexPath.section == 3 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
@@ -300,25 +348,24 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             let viewController = DVideoUserViewController()
             viewController.userID = AuthorizationService.sharedInstance.user?.id
             navigationController?.pushViewController(viewController, animated: true)
-        } else if indexPath.section == 3 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.section == 4 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
-            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
+            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.section == 5 {
-            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
+            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
         } else if indexPath.section == 6 {
-            navigationController?.pushViewController(DSettingsViewController(), animated: true)
-        } else if indexPath.section == 7 {
+            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
+            
+        } else if indexPath.section == 8 {
             let viewController = WebViewController()
             viewController.navigationItem.title = "帮助中心"
             #if DEBUG
@@ -327,6 +374,9 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             viewController.url = URL(string: "https://yy.1314-edu.com/help/")
             #endif
             navigationController?.pushViewController(viewController, animated: true)
+        } else if indexPath.section == 9 {
+            navigationController?.pushViewController(DSettingsViewController(), animated: true)
+        
         }
     }
 }

@@ -25,6 +25,7 @@ class PlaceholderTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
+        contentView.backgroundColor = UIConstants.Color.background
     }
     
     required init?(coder aDecoder: NSCoder) {

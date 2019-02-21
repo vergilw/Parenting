@@ -178,8 +178,7 @@ class DPaymentViewController: BaseViewController {
         coinView.addSubview(coinContentView)
         coinContentView.addSubviews([bgImgView, coinBalanceLabel, balanceTitleLabel, topUpBtn, footnoteLabel])
         
-        let shadowWidth: CGFloat = 720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2)*20/2
-        coinContentView.drawSeparator(startPoint: CGPoint(x: 15+shadowWidth, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30-shadowWidth*2, y: 96), color: .white)
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 25, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-25, y: 96), color: .white)
         
         coinContentView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -188,9 +187,8 @@ class DPaymentViewController: BaseViewController {
             make.height.equalTo(146)
         }
         bgImgView.snp.makeConstraints { make in
-            make.top.centerX.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(350/290.0)
-            make.width.equalTo(720/650.0*(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing))
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(18)
         }
         coinBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -252,7 +250,7 @@ class DPaymentViewController: BaseViewController {
         let exchangeBtn: UIButton = {
             let button = UIButton()
             button.setTitleColor(.white, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.foot
+            button.titleLabel?.font = UIConstants.Font.caption2
             button.setTitle("去兑换 ", for: .normal)
             button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(.alwaysTemplate), for: .normal)
             button.tintColor = .white
@@ -266,8 +264,7 @@ class DPaymentViewController: BaseViewController {
         coinContentView.addSubviews([bgImgView, rewardBalanceLabel, balanceTitleLabel, withdrawBtn, footnoteLabel, exchangeBtn])
         initOverallView(superview: headerView)
         
-        let shadowWidth: CGFloat = 720/((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)*2)*20/2
-        coinContentView.drawSeparator(startPoint: CGPoint(x: 15+shadowWidth, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-30-shadowWidth*2, y: 96), color: .white)
+        coinContentView.drawSeparator(startPoint: CGPoint(x: 25, y: 96), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-25, y: 96), color: .white)
         headerView.drawSeparator(startPoint: CGPoint(x: 0, y: 324.5), endPoint: CGPoint(x: UIScreenWidth, y: 324.5))
         
         coinContentView.snp.makeConstraints { make in
@@ -277,9 +274,8 @@ class DPaymentViewController: BaseViewController {
             make.height.equalTo(146)
         }
         bgImgView.snp.makeConstraints { make in
-            make.top.centerX.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(350/290.0)
-            make.width.equalTo(720/650.0*(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing))
+            make.leading.trailing.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(18)
         }
         rewardBalanceLabel.snp.makeConstraints { make in
             make.leading.equalTo(25)
@@ -313,23 +309,53 @@ class DPaymentViewController: BaseViewController {
             view.alignment = .center
             view.axis = .horizontal
             view.distribution = .fillEqually
-            view.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 58)), cornerRadius: 29, color: UIConstants.Color.background)
+            view.drawSeparator(startPoint: CGPoint(x: 0, y: 0), endPoint: CGPoint(x: UIScreenWidth, y: 0))
+            view.drawSeparator(startPoint: CGPoint(x: UIScreenWidth/2, y: 22.5), endPoint: CGPoint(x: UIScreenWidth/2, y: 47.5))
+            view.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: 0, y: 70), size: CGSize(width: UIScreenWidth, height: 6)), cornerRadius: 0, color: UIConstants.Color.background)
+            return view
+        }()
+        
+        let todayView: UIView = {
+            let view = UIView()
             return view
         }()
         
         let todayStackView: UIStackView = {
             let view = UIStackView()
             view.alignment = .center
-            view.axis = .vertical
+            view.axis = .horizontal
             view.distribution = .fillProportionally
+            view.spacing = 20
+            return view
+        }()
+        
+        let todayLeftStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .vertical
+            view.distribution = .fill
+            return view
+        }()
+        
+        let overallView: UIView = {
+            let view = UIView()
             return view
         }()
         
         let overallStackView: UIStackView = {
             let view = UIStackView()
             view.alignment = .center
-            view.axis = .vertical
+            view.axis = .horizontal
             view.distribution = .fillProportionally
+            view.spacing = 20
+            return view
+        }()
+        
+        let overallLeftStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .center
+            view.axis = .vertical
+            view.distribution = .fill
             return view
         }()
         
@@ -341,12 +367,26 @@ class DPaymentViewController: BaseViewController {
             return label
         }()
         
+        let todayIconImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "payment_coinTodayIcon")
+            imgView.contentMode = .center
+            return imgView
+        }()
+        
         let overallTitleLabel: UILabel = {
             let label = UILabel()
             label.font = UIConstants.Font.foot
             label.textColor = UIConstants.Color.foot
             label.text = "累计金币"
             return label
+        }()
+        
+        let overallIconImgView: UIImageView = {
+            let imgView = UIImageView()
+            imgView.image = UIImage(named: "payment_coinOverallIcon")
+            imgView.contentMode = .center
+            return imgView
         }()
         
         let footnoteLabel: UILabel = {
@@ -357,23 +397,40 @@ class DPaymentViewController: BaseViewController {
             return label
         }()
         
-        stackView.addArrangedSubview(todayStackView)
-        stackView.addArrangedSubview(overallStackView)
-        todayStackView.addArrangedSubview(todayRewardLabel)
-        todayStackView.addArrangedSubview(todayTitleLabel)
-        overallStackView.addArrangedSubview(overallRewardLabel)
-        overallStackView.addArrangedSubview(overallTitleLabel)
+        stackView.addArrangedSubview(todayView)
+        stackView.addArrangedSubview(overallView)
+        
+        todayView.addSubview(todayStackView)
+        todayStackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        overallView.addSubview(overallStackView)
+        overallStackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
+        todayStackView.addArrangedSubview(todayLeftStackView)
+        todayStackView.addArrangedSubview(todayIconImgView)
+        
+        todayLeftStackView.addArrangedSubview(todayRewardLabel)
+        todayLeftStackView.addArrangedSubview(todayTitleLabel)
+        
+        overallStackView.addArrangedSubview(overallLeftStackView)
+        overallStackView.addArrangedSubview(overallIconImgView)
+        
+        overallLeftStackView.addArrangedSubview(overallRewardLabel)
+        overallLeftStackView.addArrangedSubview(overallTitleLabel)
         
         superview.addSubviews([stackView, footnoteLabel])
         footnoteLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(-26)
+            make.centerX.bottom.equalToSuperview()
+            make.height.equalTo(52)
         }
         stackView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.height.equalTo(58)
-            make.bottom.equalTo(footnoteLabel.snp.top).offset(-26)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(76)
+            make.bottom.equalTo(footnoteLabel.snp.top)
         }
     }
     
@@ -613,7 +670,7 @@ extension DPaymentViewController: UITableViewDataSource, UITableViewDelegate {
         if coinLogModels?.count == 0 {
             return 385
         }
-        return 86
+        return 72
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

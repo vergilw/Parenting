@@ -20,6 +20,12 @@ class DPhoneViewController: BaseViewController {
     
     lazy fileprivate var viewModel = DAuthorizationViewModel()
     
+    fileprivate lazy var bgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "authorization_signInBg")
+        return imgView
+    }()
+    
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIFont.systemFont(ofSize: 32)
@@ -196,7 +202,7 @@ class DPhoneViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        view.addSubviews([titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
+        view.addSubviews([bgImgView, titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
         
         if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {
             separatorLabel.isHidden = true
@@ -225,6 +231,10 @@ class DPhoneViewController: BaseViewController {
             make.leading.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.bottom.lessThanOrEqualTo(phoneView.snp.top).offset(-26).priority(.required)
+        }
+        bgImgView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(subtitleLabel.snp.bottom).offset(20)
         }
         phoneView.snp.makeConstraints { make in
             make.leading.equalTo(40)
