@@ -88,25 +88,38 @@ class DHomeViewController: BaseViewController {
     fileprivate lazy var topBgFrontImgView: UIImageView = {
         let imgView = UIImageView()
         //FIXME: DEBUG banner
-        imgView.image = UIImage(named: "debug_homeBg")
+//        imgView.image = UIImage(named: "debug_homeBg")
         return imgView
     }()
     
     fileprivate lazy var topBgBackImgView: UIImageView = {
         let imgView = UIImageView()
         //FIXME: DEBUG banner
-        imgView.image = UIImage(named: "debug_homeBg1")
+//        imgView.image = UIImage(named: "debug_homeBg1")
         return imgView
     }()
     
-    lazy fileprivate var carouselView: TYCyclePagerView = {
-        let view = TYCyclePagerView()
-        view.isInfiniteLoop = false
-        view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.className())
-        view.dataSource = self
-        view.delegate = self
-        return view
+    lazy fileprivate var carouselScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        if #available(iOS 11, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.isPagingEnabled = true
+        scrollView.delegate = self
+        return scrollView
     }()
+    
+    fileprivate lazy var carouselViews = [UIButton]()
+    
+//    lazy fileprivate var carouselView: TYCyclePagerView = {
+//        let view = TYCyclePagerView()
+//        view.isInfiniteLoop = false
+//        view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.className())
+//        view.dataSource = self
+//        view.delegate = self
+//        return view
+//    }()
     
     lazy fileprivate var pageControl: UIPageControl = {
         let view = UIPageControl()
@@ -234,7 +247,7 @@ class DHomeViewController: BaseViewController {
             self?.fetchData()
         })
 //        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        scrollView.addSubviews([topBannerBgView, titleImgView, carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([topBannerBgView, titleImgView, carouselScrollView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyTitleImgView, storyIndicatorImgView, storyAvatarsView])
         
@@ -329,7 +342,7 @@ class DHomeViewController: BaseViewController {
                 make.height.equalTo(height)
             }
         }
-        carouselView.snp.makeConstraints { make in
+        carouselScrollView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(topBannerBgView.snp.bottom).offset(-50)
             make.width.equalTo(UIScreenWidth)
@@ -387,8 +400,8 @@ class DHomeViewController: BaseViewController {
         
         //banner view
         pageControl.snp.makeConstraints { make in
-            make.centerX.equalTo(carouselView)
-            make.bottom.equalTo(carouselView.snp.bottom)
+            make.centerX.equalTo(carouselScrollView)
+            make.bottom.equalTo(carouselScrollView.snp.bottom)
         }
         
         //story view
@@ -435,13 +448,14 @@ class DHomeViewController: BaseViewController {
     @objc func reload() {
         
         pageControl.numberOfPages = viewModel.bannerModels?.count ?? 0
-        carouselView.reloadData()
+//        carouselView.reloadData()
+        reloadCarouselView()
         
-        if let model = viewModel.bannerModels?[exist: 0], let string = model.background?.service_url {
-            topBgBackImgView.kf.setImage(with: URL(string: string))
-        }
-        if let model = viewModel.bannerModels?[exist: 1], let string = model.background?.service_url {
+        if let model = viewModel.bannerModels?[exist: 0], let string = model.background_attribute?.service_url {
             topBgFrontImgView.kf.setImage(with: URL(string: string))
+        }
+        if let model = viewModel.bannerModels?[exist: 1], let string = model.background_attribute?.service_url {
+            topBgBackImgView.kf.setImage(with: URL(string: string))
         }
         
         coursesCollectionView.reloadData()
@@ -535,6 +549,53 @@ class DHomeViewController: BaseViewController {
         }
     }
     
+    fileprivate func reloadCarouselView() {
+        for view in carouselViews {
+            view.superview?.removeFromSuperview()
+        }
+        
+        carouselViews.removeAll()
+        
+        for i in 0..<(viewModel.bannerModels?.count ?? 0) {
+            
+            let contentView: UIView = {
+                let view = UIView()
+                view.backgroundColor = .clear
+                return view
+            }()
+            carouselScrollView.addSubview(contentView)
+            contentView.snp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+                make.leading.equalTo(CGFloat(i) * UIScreenWidth)
+                make.width.equalTo(UIScreenWidth)
+                make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
+                if i == (viewModel.bannerModels?.count ?? 0)-1 {
+                    make.trailing.equalToSuperview()
+                }
+            }
+            
+            let button: UIButton = {
+                let button = UIButton()
+//                button.adjustsImageWhenHighlighted = false
+                button.layer.cornerRadius = 4
+                button.imageView?.contentMode = .scaleAspectFill
+                button.clipsToBounds = true
+                button.addTarget(self, action: #selector(bannerBtnAction(sender:)), for: .touchUpInside)
+                return button
+            }()
+            contentView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.edges.equalTo(UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing))
+            }
+            
+            carouselViews.append(button)
+            
+            if let URLString = viewModel.bannerModels?[exist: i]?.image_attribute?.service_url {
+                button.kf.setImage(with: URL(string: URLString), for: .normal)
+            }
+        }
+    }
+    
     // MARK: - ============= Action =============
     @objc func searchBtnAction() {
         let navigationController = BaseNavigationController(rootViewController: DSearchViewController())
@@ -573,6 +634,18 @@ class DHomeViewController: BaseViewController {
             self?.navigationController?.pushViewController(DCourseSectionViewController(courseID: courseID, sectionID: sectionID), animated: true)
         }
         customPresentViewController(PlayListService.sharedInstance.presenter, viewController: viewController, animated: true)
+    }
+    
+    @objc fileprivate func bannerBtnAction(sender: UIButton) {
+        guard let index = carouselViews.firstIndex(of: sender) else { return }
+        
+        if let model = viewModel.bannerModels?[exist: index] {
+            if let courseID = model.target_id, model.target_type == "Course" {
+                navigationController?.pushViewController(DCourseDetailViewController(courseID: courseID), animated: true)
+            } else if let storyID = model.target_id, model.target_type == "Story" {
+                navigationController?.pushViewController(DTeacherStoryDetailViewController(storyID: storyID), animated: true)
+            }
+        }
     }
     
     deinit {
@@ -917,10 +990,46 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
         return layout
     }
     
+    func pagerView(_ pageView: TYCyclePagerView, didScrollFrom fromIndex: Int, to toIndex: Int) {
+        print(#function, toIndex)
+//        if let model = viewModel.bannerModels?[exist: toIndex], let string = model.background_attribute?.service_url {
+//            topBgFrontImgView.kf.setImage(with: URL(string: string))
+//        }
+        
+//        var index: Int = 0
+//        if pageView.contentOffset.x >= CGFloat(pageView.curIndex) * pageView.layout.itemSize.width + pageView.layout.itemSize.width/2 {
+//            index = pageView.curIndex + 1
+//        } else {
+//            index = pageView.curIndex - 1
+//        }
+//        if let model = viewModel.bannerModels?[exist: index], let string = model.background_attribute?.service_url {
+//            topBgBackImgView.kf.setImage(with: URL(string: string))
+//        }
+        
+        pageControl.currentPage = toIndex
+    }
+    
+    func pagerViewDidEndDecelerating(_ pageView: TYCyclePagerView) {
+        print(#function, pageView.curIndex)
+        if let model = viewModel.bannerModels?[exist: pageView.curIndex], let string = model.background_attribute?.service_url {
+            topBgFrontImgView.kf.setImage(with: URL(string: string))
+        }
+    }
+    
     func pagerViewDidScroll(_ pageView: TYCyclePagerView) {
-        pageControl.currentPage = pageView.curIndex
         
 //        print(pageView.contentOffset.x)
+        
+        var index: Int = 0
+        if pageView.contentOffset.x >= CGFloat(pageView.curIndex) * pageView.layout.itemSize.width + pageView.layout.itemSize.width/2 {
+            index = pageView.curIndex + 1
+        } else {
+            index = pageView.curIndex - 1
+        }
+        print(#function, pageView.contentOffset.x, index)
+        if let model = viewModel.bannerModels?[exist: index], let string = model.background_attribute?.service_url {
+            topBgBackImgView.kf.setImage(with: URL(string: string))
+        }
         
         topBgFrontImgView.alpha = 1 -  pageView.contentOffset.x.truncatingRemainder(dividingBy: UIScreenWidth)/UIScreenWidth
         topBgBackImgView.alpha = pageView.contentOffset.x.truncatingRemainder(dividingBy: UIScreenWidth)/UIScreenWidth
@@ -935,5 +1044,44 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
                 navigationController?.pushViewController(DTeacherStoryDetailViewController(storyID: storyID), animated: true)
             }
         }
+    }
+}
+
+
+extension DHomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == carouselScrollView else { return }
+        
+        let progress: CGFloat = abs((scrollView.contentOffset.x - CGFloat(pageControl.currentPage) * UIScreenWidth))/UIScreenWidth
+//        print(#function, scrollView.contentOffset.x, progress)
+        var index: Int = 0
+        if scrollView.contentOffset.x >= CGFloat(pageControl.currentPage) * UIScreenWidth {
+            index = pageControl.currentPage + 1
+            
+        } else {
+            index = pageControl.currentPage - 1
+        }
+        
+        topBgFrontImgView.alpha = 1 - progress
+        topBgBackImgView.alpha = progress
+        
+        if let model = viewModel.bannerModels?[exist: index], let string = model.background_attribute?.service_url {
+            topBgBackImgView.kf.setImage(with: URL(string: string))
+        }
+        
+        
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == carouselScrollView else { return }
+        
+        let index = Int(scrollView.contentOffset.x / UIScreenWidth)
+        
+        if let model = viewModel.bannerModels?[exist: index], let string = model.background_attribute?.service_url {
+            topBgFrontImgView.kf.setImage(with: URL(string: string))
+            topBgFrontImgView.alpha = 1.0
+        }
+        
+        pageControl.currentPage = index
     }
 }
