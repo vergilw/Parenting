@@ -24,7 +24,7 @@ class DPlayListViewController: BaseViewController {
         } else {
             height = 94+UIStatusBarHeight
         }
-        view.drawSeparator(startPoint: CGPoint(x: 0, y: height), endPoint: CGPoint(x: UIScreenWidth, y: height))
+        view.drawSeparator(startPoint: CGPoint(x: 0, y: height-0.5), endPoint: CGPoint(x: UIScreenWidth, y: height-0.5))
         return view
     }()
     
@@ -61,7 +61,7 @@ class DPlayListViewController: BaseViewController {
         button.setImage(UIImage(named: "public_arrowIndicator"), for: .normal)
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
-        button.layer.borderWidth = 0.5
+        button.layer.borderWidth = 12.5
         button.addTarget(self, action: #selector(courseEntranceBtnAction), for: .touchUpInside)
         return button
     }()
@@ -249,7 +249,7 @@ class DPlayListViewController: BaseViewController {
         playingSectionBtn.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(playingTitleLabel.snp.top).offset(-20)
-            make.bottom.equalTo(playingTitleLabel.snp.bottom).offset(20)
+            make.bottom.equalTo(playingTitleLabel.snp.bottom).offset(10)
         }
         
         audioSlider.snp.makeConstraints { make in
@@ -259,11 +259,11 @@ class DPlayListViewController: BaseViewController {
         }
         audioCurrentTimeLabel.snp.makeConstraints { make in
             make.leading.equalTo(view.snp_leadingMargin)
-            make.top.equalTo(playingTitleLabel.snp.bottom).offset(32)
+            make.top.equalTo(playingTitleLabel.snp.bottom).offset(16)
         }
         audioDurationTimeLabel.snp.makeConstraints { make in
             make.trailing.equalTo(view.snp_trailingMargin)
-            make.top.equalTo(playingTitleLabel.snp.bottom).offset(32)
+            make.top.equalTo(playingTitleLabel.snp.bottom).offset(16)
         }
         audioActionBtn.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

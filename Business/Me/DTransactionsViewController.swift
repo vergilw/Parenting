@@ -23,17 +23,11 @@ class DTransactionsViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var backBarBtn: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
-        return button
-    }()
-    
     lazy fileprivate var navigationTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h2
+        if let font = UINavigationBar.appearance().titleTextAttributes?[NSAttributedString.Key.font] as? UIFont {
+            label.font = font
+        }
         label.textColor = .white
         label.textAlignment = .center
         label.text = "讲师入口"
@@ -149,14 +143,8 @@ class DTransactionsViewController: BaseViewController {
         }
         
         backBarBtn.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            if #available(iOS 11, *) {
-                make.top.equalTo(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? UIStatusBarHeight)
-            } else {
-                make.height.equalTo(UIStatusBarHeight)
-            }
-            make.width.equalTo(62.5)
-            make.height.equalTo(navigationController!.navigationBar.bounds.size.height)
+            make.top.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
         }
         navigationTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

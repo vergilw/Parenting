@@ -14,7 +14,7 @@ class CourseEvaluationTitleCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.text = "留言"
         return label

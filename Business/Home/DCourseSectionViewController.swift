@@ -17,7 +17,7 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var navigationView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIConstants.Color.primaryGreen
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -31,23 +31,8 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var backgroundImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.backgroundColor = UIConstants.Color.primaryGreen
+        imgView.image = UIImage(named: "payment_topBg")
         return imgView
-    }()
-    
-    lazy fileprivate var cornerBgImgView: UIImageView = {
-        let imgView = UIImageView()
-        imgView.backgroundColor = .white
-        imgView.layer.cornerRadius = 5
-        return imgView
-    }()
-    
-    lazy fileprivate var backBarBtn: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
-        return button
     }()
     
     lazy fileprivate var shareBarBtn: UIButton = {
@@ -60,7 +45,9 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var navigationTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18)
+        if let font = UINavigationBar.appearance().titleTextAttributes?[NSAttributedString.Key.font] as? UIFont {
+            label.font = font
+        }
         label.textColor = .white
         label.textAlignment = .center
         label.isHidden = true
@@ -119,7 +106,7 @@ class DCourseSectionViewController: BaseViewController {
     lazy fileprivate var audioPanelView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.layer.cornerRadius = UIConstants.cornerRadius
+        view.layer.cornerRadius = 4
         view.layer.shadowOffset = CGSize(width: 0, height: 3)
         view.layer.shadowOpacity = 0.6
         view.layer.shadowRadius = UIConstants.cornerRadius
@@ -164,7 +151,7 @@ class DCourseSectionViewController: BaseViewController {
     
     lazy fileprivate var sliderBufferView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIConstants.Color.disable
+        view.backgroundColor = UIConstants.Color.separator
         view.layer.cornerRadius = 1
         view.isUserInteractionEnabled = false
         return view
@@ -267,12 +254,7 @@ class DCourseSectionViewController: BaseViewController {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if scrollView.contentOffset.y > cornerBgImgView.frame.origin.y &&
-            navigationView.frame.origin.y < -navigationView.frame.size.height + UIStatusBarHeight {
-            return UIStatusBarStyle.default
-        } else {
-            return UIStatusBarStyle.lightContent
-        }
+        return UIStatusBarStyle.lightContent
     }
     
     // MARK: - ============= Initialize View =============
@@ -280,7 +262,7 @@ class DCourseSectionViewController: BaseViewController {
         
         view.addSubviews([scrollView, navigationView, dismissDimBtn, courseCataloguesView])
         navigationView.addSubviews([backBarBtn, shareBarBtn, navigationTitleLabel])
-        scrollView.addSubviews([backgroundImgView, cornerBgImgView, avatarImgView, courseEntranceBtn, titleLabel, tagLabel, audioPanelView, sectionTitleLabel, containerView])
+        scrollView.addSubviews([backgroundImgView, avatarImgView, courseEntranceBtn, titleLabel, tagLabel, audioPanelView, sectionTitleLabel, containerView])
         audioPanelView.addSubviews([audioActionBtn, progressLabel, sliderBgView, sliderBufferView, audioSlider, audioCurrentTimeLabel, audioDurationTimeLabel, playListBtn])
         
         scrollView.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
@@ -293,18 +275,14 @@ class DCourseSectionViewController: BaseViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        backgroundImgView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(audioPanelView)
+        }
         dismissDimBtn.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        backgroundImgView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.bottom.equalTo(audioPanelView.snp.centerY).offset(10)
-        }
-        cornerBgImgView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(audioPanelView.snp.centerY)
-            make.height.equalTo(30)
-        }
+        
         navigationView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(navigationController!.navigationBar.bounds.size.height+UIStatusBarHeight)
@@ -315,10 +293,13 @@ class DCourseSectionViewController: BaseViewController {
             make.height.equalTo(view.snp.height)
         }
         backBarBtn.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.top.equalTo(UIStatusBarHeight)
-            make.width.equalTo(62.5)
-            make.height.equalTo(navigationController!.navigationBar.bounds.size.height)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(0)
+            } else {
+                make.top.equalTo(UIStatusBarHeight)
+            }
+            make.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
         }
         shareBarBtn.snp.makeConstraints { make in
             make.trailing.equalTo(0)
@@ -340,26 +321,30 @@ class DCourseSectionViewController: BaseViewController {
         }
         courseEntranceBtn.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.centerY.equalTo(avatarImgView)
+            make.top.equalTo(titleLabel).offset(2)
             make.width.equalTo(80)
             make.height.equalTo(25)
         }
         titleLabel.snp.makeConstraints { make in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(100)
+            } else {
+                make.top.equalTo(100-UIStatusBarHeight)
+            }
             make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(avatarImgView.snp.top).offset(-2.5)
             make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
             make.height.equalTo(14)
         }
         tagLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.lessThanOrEqualTo(courseEntranceBtn.snp.leading).offset(-12)
-            make.top.equalTo(titleLabel.snp.bottom).offset(9)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
             make.height.equalTo(12)
         }
         audioPanelView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(avatarImgView.snp.bottom).offset(32)
+            make.top.equalTo(tagLabel.snp.bottom).offset(18)
             make.height.equalTo(94)
         }
         audioActionBtn.snp.makeConstraints { make in
@@ -956,54 +941,12 @@ extension DCourseSectionViewController: UIScrollViewDelegate {
         
         guard navigationView.frame.size != .zero else { return }
         
-        if navigationView.translatesAutoresizingMaskIntoConstraints == false {
-            navigationView.translatesAutoresizingMaskIntoConstraints = true
-        }
-        
-        let offsetY = scrollView.contentOffset.y - lastOffsetY
-        if scrollView.contentOffset.y < 0 {
-            navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                          y: 0,
-                                          width: navigationView.frame.size.width,
-                                          height: navigationView.frame.size.height)
-            lastOffsetY = 0
-        } else if offsetY > 0 {
-            if navigationView.frame.origin.y > -navigationView.frame.size.height &&
-                offsetY < navigationView.frame.size.height {
-                
-                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: (navigationView.frame.origin.y-offsetY < -navigationView.frame.size.height) ? -navigationView.frame.size.height : navigationView.frame.origin.y-offsetY,
-                                              width: navigationView.frame.size.width,
-                                              height: navigationView.frame.size.height)
-            } else {
-                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: -navigationView.frame.size.height,
-                                              width: navigationView.frame.size.width,
-                                              height: navigationView.frame.size.height)
-            }
-            lastOffsetY = scrollView.contentOffset.y
+        let offsetY = scrollView.contentOffset.y
+        if offsetY > audioPanelView.frame.maxY {
+            navigationView.backgroundColor = UIConstants.Color.primaryGreen
+            
         } else {
-            if navigationView.frame.origin.y < 0 &&
-                offsetY < navigationView.frame.size.height {
-                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: (navigationView.frame.origin.y-offsetY > 0) ? 0 : navigationView.frame.origin.y-offsetY,
-                                              width: navigationView.frame.size.width,
-                                              height: navigationView.frame.size.height)
-            } else {
-                navigationView.frame = CGRect(x: navigationView.frame.origin.x,
-                                              y: 0,
-                                              width: navigationView.frame.size.width,
-                                              height: navigationView.frame.size.height)
-            }
-            lastOffsetY = scrollView.contentOffset.y
+            navigationView.backgroundColor = UIColor.clear
         }
-        
-        if scrollView.contentOffset.y > sectionTitleLabel.frame.origin.y+sectionTitleLabel.frame.size.height {
-            navigationTitleLabel.isHidden = false
-        } else {
-            navigationTitleLabel.isHidden = true
-        }
-        
-        setNeedsStatusBarAppearanceUpdate()
     }
 }

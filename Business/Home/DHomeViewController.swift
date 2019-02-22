@@ -19,7 +19,7 @@ class DHomeViewController: BaseViewController {
     lazy fileprivate var section0FooterHeight: CGFloat = 15 + 35
     lazy fileprivate var section1HeaderHeight: CGFloat = 25 + 10
     lazy fileprivate var itemWidth: CGFloat = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
-    lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 10 + 12 + 7 + 37
+    lazy fileprivate var item0Height: CGFloat = itemWidth/16.0*9 + 8 + 12 + 3.4 + 40
     lazy fileprivate var item1Height: CGFloat = itemWidth/16.0*9 + 7 + 40 + 10 + 12 + 15
     lazy fileprivate var item0Spacing: CGFloat = 15
     lazy fileprivate var collectionHeight: CGFloat = section0HeaderHeight + item0Height * 2 + item0Spacing + section0FooterHeight
@@ -82,18 +82,21 @@ class DHomeViewController: BaseViewController {
     
     fileprivate lazy var topBannerBgView: UIView = {
         let view = UIView()
-        
-        //FIXME: Debug bg
-        let imgView: UIImageView = {
-            let imgView = UIImageView()
-            imgView.image = UIImage(named: "debug_homeBg")
-            return imgView
-        }()
-        view.addSubview(imgView)
-        imgView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
         return view
+    }()
+    
+    fileprivate lazy var topBgFrontImgView: UIImageView = {
+        let imgView = UIImageView()
+        //FIXME: DEBUG banner
+        imgView.image = UIImage(named: "debug_homeBg")
+        return imgView
+    }()
+    
+    fileprivate lazy var topBgBackImgView: UIImageView = {
+        let imgView = UIImageView()
+        //FIXME: DEBUG banner
+        imgView.image = UIImage(named: "debug_homeBg1")
+        return imgView
     }()
     
     lazy fileprivate var carouselView: TYCyclePagerView = {
@@ -116,7 +119,7 @@ class DHomeViewController: BaseViewController {
         let button = UIButton()
         button.addTarget(self, action: #selector(teacherStoriesBtnAction), for: .touchUpInside)
         button.backgroundColor = .white
-        button.roundCorners(corners: [.topLeft, .topRight], radius: 9)
+        button.roundCorners(corners: [.topLeft, .topRight], radius: 18)
         button.drawSeparator(startPoint: CGPoint(x: 0, y: 51.5), endPoint: CGPoint(x: UIScreenWidth, y: 51.5))
         return button
     }()
@@ -199,7 +202,7 @@ class DHomeViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+//        super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
@@ -234,6 +237,8 @@ class DHomeViewController: BaseViewController {
         scrollView.addSubviews([topBannerBgView, titleImgView, carouselView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyTitleImgView, storyIndicatorImgView, storyAvatarsView])
+        
+        topBannerBgView.addSubviews([topBgBackImgView, topBgFrontImgView])
     }
     
     func initNavigationItem() {
@@ -306,6 +311,12 @@ class DHomeViewController: BaseViewController {
             height += UIStatusBarHeight
             height += 5
             make.height.equalTo(height + (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9+50)
+        }
+        topBgBackImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        topBgFrontImgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         titleImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -425,6 +436,13 @@ class DHomeViewController: BaseViewController {
         
         pageControl.numberOfPages = viewModel.bannerModels?.count ?? 0
         carouselView.reloadData()
+        
+        if let model = viewModel.bannerModels?[exist: 0], let string = model.background?.service_url {
+            topBgBackImgView.kf.setImage(with: URL(string: string))
+        }
+        if let model = viewModel.bannerModels?[exist: 1], let string = model.background?.service_url {
+            topBgFrontImgView.kf.setImage(with: URL(string: string))
+        }
         
         coursesCollectionView.reloadData()
         
@@ -672,9 +690,18 @@ extension DHomeViewController: UITableViewDataSource, UITableViewDelegate {
 //            }
             let titleLabel: UILabel = {
                 let label = UILabel()
-                label.font = UIConstants.Font.h2
+                label.font = UIConstants.Font.h1
                 label.textColor = UIConstants.Color.head
                 label.text = "最新课程"
+                
+                let gradientLayer = CAGradientLayer()
+                gradientLayer.frame = CGRect(origin: CGPoint(x: 0, y: 15), size: CGSize(width: 80, height: 10))
+                gradientLayer.colors = [UIColor("#00cddd").cgColor, UIColor.white.cgColor]
+                gradientLayer.locations = [0.0, 1.0]
+                gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+                gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+                label.layer.addSublayer(gradientLayer)
+                
                 return label
             }()
             view?.addSubview(titleLabel)
@@ -711,9 +738,18 @@ fileprivate class HomeSectionHeader: UICollectionReusableView {
         
         let titleLabel: UILabel = {
             let label = UILabel()
-            label.font = UIConstants.Font.h2
+            label.font = UIConstants.Font.h1
             label.textColor = UIConstants.Color.head
             label.text = "精选课程"
+            
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = CGRect(origin: CGPoint(x: 0, y: 15), size: CGSize(width: 80, height: 10))
+            gradientLayer.colors = [UIColor("#00cddd").cgColor, UIColor.white.cgColor]
+            gradientLayer.locations = [0.0, 1.0]
+            gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+            label.layer.addSublayer(gradientLayer)
+            
             return label
         }()
         
@@ -875,7 +911,7 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
     func layout(for pageView: TYCyclePagerView) -> TYCyclePagerViewLayout {
         let layout = TYCyclePagerViewLayout()
         layout.itemSize = CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/16.0*9)
-        layout.itemSpacing = 12
+        layout.itemSpacing = UIConstants.Margin.trailing
         layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
         //        layout.layoutType = .normal
         return layout
@@ -883,6 +919,11 @@ extension DHomeViewController: TYCyclePagerViewDataSource, TYCyclePagerViewDeleg
     
     func pagerViewDidScroll(_ pageView: TYCyclePagerView) {
         pageControl.currentPage = pageView.curIndex
+        
+//        print(pageView.contentOffset.x)
+        
+        topBgFrontImgView.alpha = 1 -  pageView.contentOffset.x.truncatingRemainder(dividingBy: UIScreenWidth)/UIScreenWidth
+        topBgBackImgView.alpha = pageView.contentOffset.x.truncatingRemainder(dividingBy: UIScreenWidth)/UIScreenWidth
     }
     
     func pagerView(_ pageView: TYCyclePagerView, didSelectedItemCell cell: UICollectionViewCell, at index: Int) {

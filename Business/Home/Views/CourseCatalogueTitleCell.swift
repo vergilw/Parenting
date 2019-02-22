@@ -12,7 +12,7 @@ class CourseCatalogueTitleCell: UITableViewCell {
 
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.text = "课程目录"
         return label
@@ -20,13 +20,17 @@ class CourseCatalogueTitleCell: UITableViewCell {
     
     lazy fileprivate var videoTagLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.foot
-        label.textColor = UIConstants.Color.primaryGreen
-        label.backgroundColor = UIColor("#e5f6f6")
+        label.font = UIConstants.Font.foot3
+        label.textColor = .white
         label.text = "视频"
-        label.layer.cornerRadius = 8.5
-        label.clipsToBounds = true
         label.textAlignment = .center
+        
+        let sublayer = CAShapeLayer()
+        let circlePath = UIBezierPath(roundedRect: CGRect(origin: .zero, size: CGSize(width: 38, height: 15)), byRoundingCorners: [.topLeft, .topRight, .bottomRight] , cornerRadii: CGSize(width: 7.25, height: 7.25))
+        sublayer.path = circlePath.cgPath
+        sublayer.fillColor = UIConstants.Color.primaryGreen.cgColor
+        label.layer.addSublayer(sublayer)
+        
         return label
     }()
     
@@ -53,10 +57,10 @@ class CourseCatalogueTitleCell: UITableViewCell {
             make.bottom.equalTo(-16)
         }
         videoTagLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel.snp.trailing).offset(10)
+            make.leading.equalTo(titleLabel.snp.trailing).offset(1)
             make.centerY.equalTo(titleLabel)
-            make.width.equalTo(42)
-            make.height.equalTo(17)
+            make.width.equalTo(38)
+            make.height.equalTo(15)
         }
     }
     

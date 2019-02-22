@@ -20,17 +20,21 @@ class DRewardCoursesViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var backBarBtn: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
-        return button
-    }()
+//    lazy fileprivate var backBarBtn: UIButton = {
+//        let button = UIButton()
+//        let img = UIImage(named: "public_backBarItem")!.withRenderingMode(.alwaysTemplate)
+//        button.setImage(img, for: .normal)
+//        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
+//        button.tintColor = .white
+//        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+//        return button
+//    }()
     
     lazy fileprivate var navigationTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Medium", size: 20)!
+        if let font = UINavigationBar.appearance().titleTextAttributes?[NSAttributedString.Key.font] as? UIFont {
+            label.font = font
+        }
         label.textColor = .white
         label.textAlignment = .center
         label.text = "赏金课程"
@@ -52,7 +56,7 @@ class DRewardCoursesViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -142,17 +146,6 @@ class DRewardCoursesViewController: BaseViewController {
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(UIScreenWidth/375*182)
         }
-//        titleLabel.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(UIStatusBarHeight)
-//            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
-//        }
-//        backBarBtn.snp.makeConstraints { make in
-//            make.leading.equalTo(0)
-//            make.top.equalTo(UIStatusBarHeight)
-//            make.width.equalTo(62.5)
-//            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
-//        }
         
         tableView.tableHeaderView = headerView
     }
@@ -167,10 +160,13 @@ class DRewardCoursesViewController: BaseViewController {
             make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0)+UIStatusBarHeight)
         }
         backBarBtn.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.top.equalTo(UIStatusBarHeight)
-            make.width.equalTo(62.5)
-            make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(0)
+            } else {
+                make.top.equalTo(UIStatusBarHeight)
+            }
+            make.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
         }
         navigationTitleLabel.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(backBarBtn.snp.trailing)

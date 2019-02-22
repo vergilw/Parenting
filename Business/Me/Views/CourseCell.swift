@@ -56,7 +56,7 @@ class CourseCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-CourseCell.previewImgWidth()-24
         return label
@@ -81,7 +81,7 @@ class CourseCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot3
         label.textColor = UIConstants.Color.body
-        label.backgroundColor = UIConstants.Color.separator
+        label.backgroundColor = UIConstants.Color.background
         label.layer.cornerRadius = 9
         label.clipsToBounds = true
         return label
@@ -106,7 +106,7 @@ class CourseCell: UITableViewCell {
         
         let bgImgView: UIImageView = {
             let imgView = UIImageView()
-            imgView.backgroundColor = UIConstants.Color.primaryOrange.withAlphaComponent(0.15)
+            imgView.backgroundColor = UIConstants.Color.primaryOrange.withAlphaComponent(0.13)
             imgView.layer.cornerRadius = 10
             imgView.clipsToBounds = true
             return imgView
@@ -134,7 +134,7 @@ class CourseCell: UITableViewCell {
             let label = UILabel()
             label.font = UIConstants.Font.foot1
             label.textColor = UIConstants.Color.primaryOrange
-            label.text = "前往分享"
+            label.text = "前往分享 "
             return label
         }()
         
@@ -279,7 +279,7 @@ class CourseCell: UITableViewCell {
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.bottom.equalTo(previewImgView)
             make.height.equalTo(20)
-            make.width.equalTo(85)
+            make.width.equalTo(77.5)
         }
         deleteBtn.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()

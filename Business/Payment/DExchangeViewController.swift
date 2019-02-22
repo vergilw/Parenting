@@ -30,20 +30,11 @@ class DExchangeViewController: BaseViewController {
         return imgView
     }()
     
-    fileprivate lazy var backBarBtn: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .white
-        if #available(iOS 11.0, *) {
-            button.imageEdgeInsets = UIEdgeInsets(top: UIStatusBarHeight, left: 0, bottom: 0, right: 0)
-        }
-        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
-        return button
-    }()
-    
     fileprivate lazy var navigationTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h1
+        if let font = UINavigationBar.appearance().titleTextAttributes?[NSAttributedString.Key.font] as? UIFont {
+            label.font = font
+        }
         label.textColor = .white
         label.textAlignment = .center
         label.text = "金币兑换"
@@ -242,17 +233,8 @@ class DExchangeViewController: BaseViewController {
             make.bottom.equalTo(balanceView)
         }
         backBarBtn.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview()
-            make.width.equalTo(62.5)
-            if #available(iOS 11.0, *) {
-                var topHeight = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
-                if topHeight == 0 {
-                    topHeight = 20
-                }
-                make.height.equalTo(topHeight+(navigationController?.navigationBar.bounds.size.height ?? 0))
-            } else {
-                make.height.equalTo((navigationController?.navigationBar.bounds.size.height ?? 0))
-            }
+            make.top.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
         }
         navigationTitleLabel.snp.makeConstraints { make in
             if #available(iOS 11.0, *) {

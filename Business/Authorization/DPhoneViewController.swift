@@ -40,7 +40,7 @@ class DPhoneViewController: BaseViewController {
     
     lazy fileprivate var subtitleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIConstants.Font.h2
+        label.font = UIFont(name: "PingFangSC-Regular", size: 18)!
         label.textColor = UIConstants.Color.body
         label.setParagraphText("知识赋能早教")
         if mode == .binding {
@@ -194,6 +194,12 @@ class DPhoneViewController: BaseViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -202,7 +208,7 @@ class DPhoneViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        view.addSubviews([bgImgView, titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
+        view.addSubviews([bgImgView, backBarBtn, titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
         
         if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {
             separatorLabel.isHidden = true
@@ -222,24 +228,35 @@ class DPhoneViewController: BaseViewController {
     
     // MARK: - ============= Constraints =============
     func initConstraints() {
+        bgImgView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(subtitleLabel.snp.bottom).offset(40)
+        }
+        backBarBtn.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
+        }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(40)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(80).priority(.low)
+//            make.top.equalTo(80).priority(.low)
+            
+//            if #available(iOS 11.0, *) {
+                make.top.equalTo(16+(self.navigationController?.navigationBar.bounds.height ?? 0)+UIStatusBarHeight).priority(.required)
+//            } else {
+//                make.top.equalTo(16+(self.navigationController?.navigationBar.bounds.height ?? 0)).priority(.required)
+//            }
         }
         subtitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.bottom.lessThanOrEqualTo(phoneView.snp.top).offset(-26).priority(.required)
         }
-        bgImgView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.bottom.equalTo(subtitleLabel.snp.bottom).offset(20)
-        }
+        
         phoneView.snp.makeConstraints { make in
             make.leading.equalTo(40)
             make.trailing.equalTo(-40)
-//            make.top.equalTo(subtitleLabel.snp.bottom).offset(130)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(106).priority(.low)
             make.bottom.equalTo(codeView.snp.top).offset(-35)
             make.height.equalTo(32)
         }
@@ -254,7 +271,7 @@ class DPhoneViewController: BaseViewController {
             make.leading.equalTo(48)
             make.trailing.equalTo(-48)
 //            make.top.equalTo(codeView.snp.bottom).offset(27)
-            make.bottom.equalTo(separatorLabel.snp.top).offset(-80)
+            make.bottom.lessThanOrEqualTo(separatorLabel.snp.top).offset(-80).priority(.required)
             make.height.equalTo(52)
         }
         wechatBtn.snp.makeConstraints { make in

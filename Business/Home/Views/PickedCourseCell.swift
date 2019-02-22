@@ -133,7 +133,7 @@ class PickedCourseCell: UICollectionViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
-            make.top.equalTo(nameLabel.snp.bottom).offset(7)
+            make.top.equalTo(nameLabel.snp.bottom).offset(8-5.6)
         }
     }
     
@@ -225,6 +225,6 @@ class PickedCourseCell: UICollectionViewCell {
         let maxWidth = (UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing-12)/2
         let size = NSString(string: title).boundingRect(with: CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : UIFont(name: "PingFangSC-Regular", size: 14)!], context: nil).size
         
-        return maxWidth/16.0*9 + 8 + 12 + 7 + size.height
+        return maxWidth/16.0*9 + 8 + 12 + 3.4 + size.height
     }
 }

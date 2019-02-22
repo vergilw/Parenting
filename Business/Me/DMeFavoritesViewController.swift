@@ -62,7 +62,7 @@ class DMeFavoritesViewController: BaseViewController {
     lazy fileprivate var editBtn: UIButton = {
         let button = UIButton()
         button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
-        button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
+        button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h3
         button.setTitle("编辑", for: .normal)
         button.addTarget(self, action: #selector(editBtnAction), for: .touchUpInside)

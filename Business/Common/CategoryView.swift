@@ -91,7 +91,7 @@ class CategoryView: UIView {
                 button.titleLabel?.font = UIConstants.Font.body
                 if titles[exist: 0] == title {
                     button.setTitleColor(UIConstants.Color.head, for: .normal)
-                    button.titleLabel?.font = UIConstants.Font.h2
+                    button.titleLabel?.font = UIConstants.Font.h3
                 }
                 button.setTitle(title, for: .normal)
                 button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
@@ -186,7 +186,7 @@ class CategoryView: UIView {
         recoverCategoryStyle()
         
         sender.setTitleColor(UIConstants.Color.head, for: .normal)
-        sender.titleLabel?.font = UIConstants.Font.h2
+        sender.titleLabel?.font = UIConstants.Font.h3
         
         if let delegate = delegate, let contentView = childViews[exist: index] {
             delegate.contentView(contentView, didScrollRowAt: index)
@@ -244,7 +244,7 @@ extension CategoryView: UIScrollViewDelegate {
             recoverCategoryStyle()
             
             sender.setTitleColor(UIConstants.Color.head, for: .normal)
-            sender.titleLabel?.font = UIConstants.Font.h2
+            sender.titleLabel?.font = UIConstants.Font.h3
             
             if let delegate = delegate, let contentView = childViews[exist: index] {
                 delegate.contentView(contentView, didScrollRowAt: index)

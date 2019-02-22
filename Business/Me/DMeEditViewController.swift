@@ -46,8 +46,8 @@ class DMeEditViewController: BaseViewController {
     lazy fileprivate var saveBtn: ActionButton = {
         let button = ActionButton()
         button.frame = CGRect(origin: .zero, size: CGSize(width: 84, height: 44))
-        button.setIndicatorColor(UIConstants.Color.primaryRed)
-        button.setTitleColor(UIConstants.Color.primaryRed, for: .normal)
+        button.setIndicatorColor(UIConstants.Color.primaryGreen)
+        button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
         button.titleLabel?.font = UIConstants.Font.h3
         button.setTitle("保存", for: .normal)
         button.addTarget(self, action: #selector(saveBtnAction), for: .touchUpInside)
@@ -135,19 +135,15 @@ class DMeEditViewController: BaseViewController {
         return label
     }()
     
-    lazy fileprivate var signatureTextField: UITextField = {
-        let textField = UITextField()
-        textField.textAlignment = .right
-        textField.delegate = self
-        textField.returnKeyType = .done
-        textField.clearButtonMode = .whileEditing
-        textField.font = UIConstants.Font.h4
-        textField.textColor = UIConstants.Color.head
-        textField.attributedPlaceholder = NSAttributedString(string: "请输入你的签名", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
-        let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
-        textField.leftView = placeholderView
-        textField.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
-        return textField
+    lazy fileprivate var signatureBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.Color.foot, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.h4
+        button.setTitle("请输入你的签名", for: .normal)
+        button.contentHorizontalAlignment = .right
+        button.addTarget(self, action: #selector(signatureBtnAction), for: .touchUpInside)
+        button.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 51.5), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, y: 51.5))
+        return button
     }()
     
     override func viewDidLoad() {
@@ -171,7 +167,7 @@ class DMeEditViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     func initContentView() {
         view.addSubview(scrollView)
-        scrollView.addSubviews([avatarBtn, avatarFootnoteLabel, nameTextField, nameTitleLabel, wechatBtn, wechatTitleLabel, phoneTextField, phoneTitleLabel, signatureTextField, signatureTitleLabel])
+        scrollView.addSubviews([avatarBtn, avatarFootnoteLabel, nameTextField, nameTitleLabel, wechatBtn, wechatTitleLabel, phoneTextField, phoneTitleLabel, signatureBtn, signatureTitleLabel])
     }
     
     // MARK: - ============= Constraints =============
@@ -226,7 +222,7 @@ class DMeEditViewController: BaseViewController {
             make.top.equalTo(phoneTitleLabel.snp.bottom)
             make.height.equalTo(52)
         }
-        signatureTextField.snp.makeConstraints { make in
+        signatureBtn.snp.makeConstraints { make in
             make.top.equalTo(signatureTitleLabel)
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
@@ -239,7 +235,7 @@ class DMeEditViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -260,7 +256,11 @@ class DMeEditViewController: BaseViewController {
                 wechatBtn.setTitle("未绑定微信，点击绑定", for: .normal)
             }
             
-            signatureTextField.text = model.intro
+            if let signature = model.intro {
+                signatureBtn.setTitle(signature, for: .normal)
+            } else {
+                signatureBtn.setTitle("请输入签名", for: .normal)
+            }
         }
     }
     
@@ -280,8 +280,7 @@ class DMeEditViewController: BaseViewController {
     @objc override func backBarItemAction() {
         view.endEditing(true)
         
-        if nameTextField.text != AuthorizationService.sharedInstance.user?.name ||
-           signatureTextField.text != AuthorizationService.sharedInstance.user?.intro {
+        if nameTextField.text != AuthorizationService.sharedInstance.user?.name {
             let alertController = UIAlertController(title: nil, message: "您有未保存的资料，确定不保存吗？", preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (action) in
@@ -297,8 +296,6 @@ class DMeEditViewController: BaseViewController {
     @objc func saveBtnAction() {
         if nameTextField.isFirstResponder {
             nameSaveBtnAction()
-        } else if signatureTextField.isFirstResponder {
-            signatureSaveBtnAction()
         }
     }
     
@@ -385,41 +382,45 @@ class DMeEditViewController: BaseViewController {
         })
     }
     
+    @objc fileprivate func signatureBtnAction() {
+        navigationController?.pushViewController(DMeSignatureViewController(), animated: true)
+    }
+    
     @objc func signatureSaveBtnAction() {
-        view.endEditing(true)
-        
-        let text = signatureTextField.text?.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
-        
-        guard text?.count ?? 0 != 0 else {
-            HUDService.sharedInstance.show(string: "签名不能为空")
-            return
-        }
-        
-        guard text?.encodingCount() ?? 0 <= 40 else {
-            HUDService.sharedInstance.show(string: "签名长度限制40字符")
-            return
-        }
-        
-        saveBtn.startAnimating()
-        
-        UserProvider.request(.updateUser(name: nil, avatar: nil, signature: text), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            self.saveBtn.stopAnimating()
-            
-            if code >= 0 {
-                if let JSON = JSON, let name = JSON["intro"] as? String {
-                    self.signatureTextField.text = name
-                    
-                    if let model = AuthorizationService.sharedInstance.user {
-                        model.intro = name
-                        AuthorizationService.sharedInstance.user = model
-                        NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
-                    }
-                    HUDService.sharedInstance.show(string: "签名修改成功")
-                }
-            }
-            
-            self.reloadNavigationItem()
-        }))
+//        view.endEditing(true)
+//
+//        let text = signatureTextField.text?.replacingOccurrences(of: "\\s", with: "", options: String.CompareOptions.regularExpression)
+//
+//        guard text?.count ?? 0 != 0 else {
+//            HUDService.sharedInstance.show(string: "签名不能为空")
+//            return
+//        }
+//
+//        guard text?.encodingCount() ?? 0 <= 40 else {
+//            HUDService.sharedInstance.show(string: "签名长度限制40字符")
+//            return
+//        }
+//
+//        saveBtn.startAnimating()
+//
+//        UserProvider.request(.updateUser(name: nil, avatar: nil, signature: text), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+//            self.saveBtn.stopAnimating()
+//
+//            if code >= 0 {
+//                if let JSON = JSON, let name = JSON["intro"] as? String {
+//                    self.signatureTextField.text = name
+//
+//                    if let model = AuthorizationService.sharedInstance.user {
+//                        model.intro = name
+//                        AuthorizationService.sharedInstance.user = model
+//                        NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
+//                    }
+//                    HUDService.sharedInstance.show(string: "签名修改成功")
+//                }
+//            }
+//
+//            self.reloadNavigationItem()
+//        }))
     }
 }
 
@@ -462,8 +463,6 @@ extension DMeEditViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == nameTextField {
             nameSaveBtnAction()
-        } else if textField == signatureTextField {
-            signatureSaveBtnAction()
         }
         
         

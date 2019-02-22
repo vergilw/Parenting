@@ -27,7 +27,7 @@ class BaseNavigationController: UINavigationController, UINavigationControllerDe
 
         navigationBar.titleTextAttributes =
             [NSAttributedString.Key.foregroundColor: UIColor("#333"),
-             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .medium)]
+             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .medium)]
         navigationBar.tintColor = .white
 
         navigationBar.setBackgroundImage(UIImage(color: .white), for: .any, barMetrics: .default)

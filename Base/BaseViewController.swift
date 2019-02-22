@@ -28,6 +28,22 @@ class BaseViewController: UIViewController {
         return $0
     }(UITableView.init(frame: .zero, style: .plain))
     
+    lazy var backBarBtn: UIButton = {
+        let img = UIImage(named: "public_backBarItem")!.withRenderingMode(.alwaysTemplate)
+        let button = UIButton()
+        button.setImage(img, for: .normal)
+        if #available(iOS 11.0, *) {
+            button.frame = CGRect(origin: .zero, size: CGSize(width: UIConstants.Margin.leading+img.size.width+35, height: UIStatusBarHeight+(navigationController?.navigationBar.bounds.height ?? 0)))
+            button.imageEdgeInsets = UIEdgeInsets(top: UIStatusBarHeight, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
+        } else {
+            button.frame = CGRect(origin: .zero, size: CGSize(width: UIConstants.Margin.leading+img.size.width+35, height: (navigationController?.navigationBar.bounds.height ?? 0)))
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
+        }
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -35,9 +51,10 @@ class BaseViewController: UIViewController {
         
         if let nav = navigationController, nav.viewControllers.first != self {
             let backBtn: UIButton = {
-                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 50+12+30, height: 44)))
-                button.setImage(UIImage(named: "public_backBarItem")?.withRenderingMode(.alwaysOriginal), for: .normal)
-                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 15)
+                let img = UIImage(named: "public_backBarItem")!.withRenderingMode(.alwaysOriginal)
+                let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: UIConstants.Margin.leading+img.size.width+35, height: nav.navigationBar.bounds.height)))
+                button.setImage(img, for: .normal)
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
                 button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
                 return button
             }()

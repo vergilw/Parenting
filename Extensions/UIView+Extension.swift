@@ -28,7 +28,7 @@ extension UIView {
         }
     }
     
-    public func drawSeparator(startPoint: CGPoint, endPoint: CGPoint, color: UIColor = UIColor("#f1f1f1")) {
+    public func drawSeparator(startPoint: CGPoint, endPoint: CGPoint, color: UIColor = UIConstants.Color.separator) {
         let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: startPoint)

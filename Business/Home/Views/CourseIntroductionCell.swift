@@ -12,7 +12,7 @@ class CourseIntroductionCell: UITableViewCell {
 
     lazy var courseBriefLabel: ParagraphLabel = {
         let label = ParagraphLabel()
-        label.font = UIFont(name: "PingFangSC-Regular", size: 14)!
+        label.font = UIConstants.Font.body
         label.textColor = UIConstants.Color.subhead
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing
@@ -21,7 +21,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var teacherTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.text = "老师简介"
         return label
@@ -48,7 +48,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var teacherNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Medium", size: 14)!
+        label.font = UIConstants.Font.h4
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -78,7 +78,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var courseTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.text = "课程介绍"
         return label
@@ -91,7 +91,7 @@ class CourseIntroductionCell: UITableViewCell {
     
     lazy var noteTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "PingFangSC-Semibold", size: 14)!
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         label.text = "听课须知"
         return label

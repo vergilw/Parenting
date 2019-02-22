@@ -45,7 +45,7 @@ class PriceLabel: UILabel {
             text = " \(symbol)\(text)"
         }
         if let formatterDiscount = formatterDiscount {
-            text = " \(formatterDiscount)  \(text)"
+            text = "\(text)  \(formatterDiscount) "
         }
         
         let attributedString = NSMutableAttributedString(string: text)
@@ -59,14 +59,15 @@ class PriceLabel: UILabel {
         attributedText = attributedString
         
         if let formatterDiscount = formatterDiscount {
+            let indentSize: CGSize = NSString(string: "\(formatterText) ").boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font: UIConstants.Font.h3], context: nil).size
             let strikethroughSize: CGSize = NSString(string: " \(formatterDiscount) ").boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font: UIConstants.Font.foot], context: nil).size
             let size = attributedText?.size() ?? .zero
             let strikethroughHeight = (size.height - (size.height - strikethroughSize.height) + (font.lineHeight - font.pointSize)) / 2
                 
             strikethroughLayer = CAShapeLayer()
             let linePath = UIBezierPath()
-            linePath.move(to: CGPoint(x: 0, y: strikethroughHeight))
-            linePath.addLine(to: CGPoint(x: strikethroughSize.width, y: strikethroughHeight))
+            linePath.move(to: CGPoint(x: indentSize.width, y: strikethroughHeight))
+            linePath.addLine(to: CGPoint(x: indentSize.width+strikethroughSize.width, y: strikethroughHeight))
             strikethroughLayer?.path = linePath.cgPath
             strikethroughLayer?.strokeColor = UIColor("#acacac").cgColor
             strikethroughLayer?.lineWidth = 1.0

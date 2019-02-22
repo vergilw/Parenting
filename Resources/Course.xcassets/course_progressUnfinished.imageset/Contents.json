@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "weiwancheng@2x.png",
+      "filename" : "weiwancheng.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "weiwancheng@3x.png",
+      "filename" : "weiwancheng@1.5x.png",
       "scale" : "3x"
     }
   ],

@@ -28,7 +28,6 @@ class CourseCatalogueCell: UITableViewCell {
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h4
-        label.textColor = UIConstants.Color.body
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = UIScreenWidth-54-25
         return label
@@ -68,17 +67,6 @@ class CourseCatalogueCell: UITableViewCell {
         return dateFormatter
     }()
     
-    lazy fileprivate var progressView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .horizontal
-        view.distribution = .fillProportionally
-        view.spacing = 5
-        view.isHidden = true
-        
-        return view
-    }()
-    
     var progressImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "course_progressFinished")
@@ -90,6 +78,12 @@ class CourseCatalogueCell: UITableViewCell {
         label.font = UIConstants.Font.foot2
         label.textColor = UIConstants.Color.primaryGreen
         return label
+    }()
+    
+    fileprivate lazy var separatorImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIConstants.Color.separator
+        return imgView
     }()
     
     override func awakeFromNib() {
@@ -106,9 +100,7 @@ class CourseCatalogueCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.addSubviews([sequenceLabel, listeningIndicatorImgView, titleLabel, timeImgView, timeLabel, auditionLabel, progressView])
-        progressView.addArrangedSubview(progressImgView)
-        progressView.addArrangedSubview(progressLabel)
+        contentView.addSubviews([sequenceLabel, listeningIndicatorImgView, titleLabel, timeImgView, timeLabel, auditionLabel, progressImgView, progressLabel, separatorImgView])
         
         sequenceLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -126,7 +118,7 @@ class CourseCatalogueCell: UITableViewCell {
         }
         timeImgView.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom).offset(18)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
             make.bottom.equalTo(-16)
         }
         timeLabel.snp.makeConstraints { make in
@@ -139,9 +131,19 @@ class CourseCatalogueCell: UITableViewCell {
             make.width.equalTo(42)
             make.height.equalTo(17)
         }
-        progressView.snp.makeConstraints { make in
+        progressImgView.snp.makeConstraints { make in
+            make.trailing.equalTo(-UIConstants.Margin.trailing-31.5)
             make.centerY.equalTo(timeImgView)
+        }
+        progressLabel.snp.makeConstraints { make in
+            make.leading.equalTo(progressImgView.snp.trailing).offset(2.5)
+            make.centerY.equalTo(timeImgView)
+        }
+        separatorImgView.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(0.5)
         }
     }
     
@@ -170,7 +172,8 @@ class CourseCatalogueCell: UITableViewCell {
         }
         if isProgressHidden == false && (recordSeconds != nil || (model.learned != nil && model.learned != 0)) && isBought == true {
             auditionLabel.isHidden = true
-            progressView.isHidden = false
+            progressImgView.isHidden = false
+            progressLabel.isHidden = false
             
             if recordSeconds == nil {
                 if let learned = model.learned {
@@ -193,10 +196,13 @@ class CourseCatalogueCell: UITableViewCell {
             
         } else if !isBought && model.audition == true {
             auditionLabel.isHidden = false
-            progressView.isHidden = true
+            progressImgView.isHidden = true
+            progressLabel.isHidden = true
+            
         } else {
             auditionLabel.isHidden = true
-            progressView.isHidden = true
+            progressImgView.isHidden = true
+            progressLabel.isHidden = true
         }
         
         if isPlaying {
@@ -206,7 +212,7 @@ class CourseCatalogueCell: UITableViewCell {
         } else {
             sequenceLabel.isHidden = false
             listeningIndicatorImgView.isHidden = true
-            titleLabel.textColor = UIConstants.Color.body
+            titleLabel.textColor = UIConstants.Color.subhead
         }
         
         

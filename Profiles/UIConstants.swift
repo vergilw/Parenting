@@ -17,7 +17,7 @@ public struct UIConstants {
     
     public struct Color {
         public static let primaryGreen: UIColor = UIColor("#00cddd")
-        public static let primaryOrange: UIColor = UIColor("#ffb701")
+        public static let primaryOrange: UIColor = UIColor("#ffc201")
         public static let primaryRed: UIColor = UIColor("#f05053")
         
         public static let head: UIColor = UIColor("#222")

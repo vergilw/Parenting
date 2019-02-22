@@ -47,7 +47,7 @@ class OrderCell: UITableViewCell {
     
     lazy fileprivate var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.h4
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -71,7 +71,7 @@ class OrderCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.foot3
         label.textColor = UIConstants.Color.body
-        label.backgroundColor = UIConstants.Color.separator
+        label.backgroundColor = UIConstants.Color.background
         label.layer.cornerRadius = 9
         label.clipsToBounds = true
         return label
@@ -211,19 +211,19 @@ class OrderCell: UITableViewCell {
         subtitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(previewImgView.snp.trailing).offset(15)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(previewImgView).offset(4.5)
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.height.equalTo(15)
         }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.top.equalTo(subtitleLabel.snp.bottom).offset(8.5)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(8)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
             make.height.equalTo(11)
         }
         
         priceLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.bottom.equalTo(previewImgView)
+            make.lastBaseline.equalTo(previewImgView.snp.bottom)
         }
         sectionCountLabel.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)

@@ -89,13 +89,13 @@ class DCoursesViewController: BaseViewController {
             let button: UIButton = {
                 let button = UIButton()
                 button.setTitleColor(UIConstants.Color.body, for: .normal)
-                button.titleLabel?.font = UIConstants.Font.title1
+                button.titleLabel?.font = UIConstants.Font.body
                 if let string = model?.name {
                     button.setTitle(string, for: .normal)
                 } else {
                     button.setTitle("全部", for: .normal)
                     button.setTitleColor(UIConstants.Color.head, for: .normal)
-                    button.titleLabel?.font = UIConstants.Font.h2
+                    button.titleLabel?.font = UIConstants.Font.h3
                 }
                 button.addTarget(self, action: #selector(categoryBtnAction(sender:)), for: .touchUpInside)
                 button.tag = i+1
@@ -331,7 +331,7 @@ class DCoursesViewController: BaseViewController {
         for button in scrollView.subviews {
             guard let button = button as? UIButton else { continue }
             
-            button.titleLabel?.font = UIConstants.Font.title1
+            button.titleLabel?.font = UIConstants.Font.body
             button.setTitleColor(UIConstants.Color.body, for: .normal)
         }
         
@@ -353,7 +353,7 @@ class DCoursesViewController: BaseViewController {
         recoverCategoryStyle()
         
         sender.setTitleColor(UIConstants.Color.head, for: .normal)
-        sender.titleLabel?.font = UIConstants.Font.h2
+        sender.titleLabel?.font = UIConstants.Font.h3
         
         refetchCourses(index: sender.tag)
         tableViewScrollView.setContentOffset(CGPoint(x: UIScreenWidth*CGFloat(sender.tag), y: 0), animated: true)
@@ -436,7 +436,7 @@ extension DCoursesViewController: UIScrollViewDelegate {
             recoverCategoryStyle()
             
             sender.setTitleColor(UIConstants.Color.head, for: .normal)
-            sender.titleLabel?.font = UIConstants.Font.h2
+            sender.titleLabel?.font = UIConstants.Font.h3
             
             refetchCourses(index: index)
             

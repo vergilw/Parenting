@@ -72,23 +72,11 @@ class DVideoImportViewController: BaseViewController {
     }
     
     fileprivate func initBackBtn() {
-        let img = UIImage(named: "public_backBarItem")
-        let backBarBtn: UIButton = {
-            let button = UIButton()
-            button.setImage(img?.withRenderingMode(.alwaysTemplate), for: .normal)
-            button.tintColor = .white
-            button.addTarget(self, action: #selector(backBarItemAction), for: .touchUpInside)
-            return button
-        }()
         view.addSubview(backBarBtn)
+        
         backBarBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            if #available(iOS 11, *) {
-                make.top.equalTo(UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
-            } else {
-                make.top.equalTo(0)
-            }
-            make.size.equalTo(CGSize(width: UIConstants.Margin.leading*2+12, height: 60+22))
+            make.top.leading.equalToSuperview()
+            make.size.equalTo(backBarBtn.bounds.size)
         }
     }
     

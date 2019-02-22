@@ -207,10 +207,10 @@ class DOrdersViewController: BaseViewController {
             orderStatus = "paid"
         }
         
-        HUDService.sharedInstance.showFetchingView(target: tableView)
-        
         PaymentProvider.request(.orders(orderStatus, pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            HUDService.sharedInstance.hideFetchingView(target: self.view)
+            
+            self.tableView.mj_footer.endRefreshing()
+            
             if code >= 0 {
                 if let data = JSON?["orders"] as? [[String: Any]] {
                     if let models = [OrderModel].deserialize(from: data) as? [OrderModel] {
@@ -221,10 +221,9 @@ class DOrdersViewController: BaseViewController {
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber += 1
-                            self.tableView.mj_footer.isHidden = false
+                            self.tableView.mj_footer.endRefreshing()
                             
                         } else {
-                            self.tableView.mj_footer.isHidden = true
                             self.tableView.mj_footer.endRefreshingWithNoMoreData()
                         }
                     }
