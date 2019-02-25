@@ -67,17 +67,9 @@ class DHomeViewController: BaseViewController {
         button.isHidden = true
         button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
         
-        let path = Bundle.main.path(forResource: "course_playingStatus", ofType: "gif")!
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return button }
-        let img = DefaultImageProcessor.default.process(item: .data(data), options: [])
-        let animatedImgView: AnimatedImageView = {
-            let imgView = AnimatedImageView(image: img)
-            imgView.repeatCount = .infinite
-            imgView.autoPlayAnimatedImage = true
-            imgView.needsPrescaling = true
-            imgView.tintColor = .white
-            return imgView
-        }()
+        let img = YYImage(named: "course_playingStatus")
+        let animatedImgView = YYAnimatedImageView(image: img)
+        
         animatedImgView.stopAnimating()
         
         button.addSubview(animatedImgView)
@@ -530,18 +522,22 @@ class DHomeViewController: BaseViewController {
     func reloadPlayingStatus() {
         if PlayListService.sharedInstance.playingIndex != -1 {
             
-            audioBarBtn.isHidden = false
-            
-            if let animatedImgView = audioBarBtn.subviews.first(where: { (subview) -> Bool in
-                return subview.isKind(of: AnimatedImageView.self)
-            }) as? AnimatedImageView {
+            DispatchQueue.main.async {
+                self.audioBarBtn.isHidden = false
                 
-                if PlayListService.sharedInstance.isPlaying {
-                    animatedImgView.startAnimating()
-                } else {
-                    animatedImgView.stopAnimating()
+                if let animatedImgView = self.audioBarBtn.subviews.first(where: { (subview) -> Bool in
+                    return subview.isKind(of: YYAnimatedImageView.self)
+                }) as? YYAnimatedImageView {
+                    
+                    if PlayListService.sharedInstance.isPlaying {
+                        animatedImgView.startAnimating()
+                    } else {
+                        animatedImgView.autoPlayAnimatedImage = false
+                        animatedImgView.stopAnimating()
+                    }
                 }
             }
+            
         }
     }
     

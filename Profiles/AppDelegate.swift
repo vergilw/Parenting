@@ -246,3 +246,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
     
 }
 
+
+extension AppDelegate {
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
+        if userActivity.activityType == "NSUserActivityTypeBrowsingWeb" {
+            
+        }
+        
+        return true
+    }
+}
