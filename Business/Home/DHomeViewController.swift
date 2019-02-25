@@ -67,11 +67,21 @@ class DHomeViewController: BaseViewController {
         button.isHidden = true
         button.addTarget(self, action: #selector(audioPanelBarItemAction), for: .touchUpInside)
         
-        let img = YYImage(named: "public_audioAnimationItem")
-        let imgView = YYAnimatedImageView(image: img)
+        let path = Bundle.main.path(forResource: "course_playingStatus", ofType: "gif")!
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return button }
+        let img = DefaultImageProcessor.default.process(item: .data(data), options: [])
+        let animatedImgView: AnimatedImageView = {
+            let imgView = AnimatedImageView(image: img)
+            imgView.repeatCount = .infinite
+            imgView.autoPlayAnimatedImage = true
+            imgView.needsPrescaling = true
+            imgView.tintColor = .white
+            return imgView
+        }()
+        animatedImgView.stopAnimating()
         
-        button.addSubview(imgView)
-        imgView.snp.makeConstraints { make in
+        button.addSubview(animatedImgView)
+        animatedImgView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.centerX.equalToSuperview().offset(-5)
             make.width.equalTo(22)
@@ -247,7 +257,7 @@ class DHomeViewController: BaseViewController {
             self?.fetchData()
         })
 //        scrollView.addSubviews([searchBtn, audioBarBtn, carouselView, pageControl, storyView, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
-        scrollView.addSubviews([topBannerBgView, titleImgView, carouselScrollView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
+        scrollView.addSubviews([topBannerBgView, titleImgView, audioBarBtn, carouselScrollView, pageControl, storyView, rewardCoursesBtn, coursesCollectionView, teacherBannerBtn, tableView, bottomBannerView])
 //        searchBtn.addSubviews([searchIconImgView, searchTitleLabel])
         storyView.addSubviews([storyTitleImgView, storyIndicatorImgView, storyAvatarsView])
         
@@ -301,17 +311,7 @@ class DHomeViewController: BaseViewController {
 //            }
 //            make.height.equalTo(42)
 //        }
-//        audioBarBtn.snp.remakeConstraints { make in
-//            make.leading.equalTo(searchBtn.snp.trailing)
-//            make.trailing.equalToSuperview()
-//            if #available(iOS 11, *) {
-//                make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
-//            } else {
-//                make.top.equalTo(7.5)
-//            }
-//            make.height.equalTo(42)
-//            make.width.equalTo(15+22+25)
-//        }
+        
         topBannerBgView.snp.makeConstraints { make in
             if #available(iOS 11.0, *) {
                 make.top.equalToSuperview()
@@ -341,6 +341,12 @@ class DHomeViewController: BaseViewController {
             if let height: CGFloat = self.navigationController?.navigationBar.bounds.height {
                 make.height.equalTo(height)
             }
+        }
+        audioBarBtn.snp.remakeConstraints { make in
+            make.centerY.equalTo(titleImgView)
+            make.trailing.equalToSuperview()
+            make.height.equalTo(titleImgView)
+            make.width.equalTo(22+UIConstants.Margin.trailing*2)
         }
         carouselScrollView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -422,7 +428,7 @@ class DHomeViewController: BaseViewController {
     // MARK: - ============= Notification =============
     func addNotificationObservers() {
         observer = PlayListService.sharedInstance.observe(\.isPlaying) { [weak self] (service, changed) in
-            self?.initNavigationItem()
+            self?.reloadPlayingStatus()
         }
     }
     
@@ -521,30 +527,20 @@ class DHomeViewController: BaseViewController {
         }
     }
     
-    func reloadSearchBar() {
+    func reloadPlayingStatus() {
         if PlayListService.sharedInstance.playingIndex != -1 {
             
             audioBarBtn.isHidden = false
             
             if let animatedImgView = audioBarBtn.subviews.first(where: { (subview) -> Bool in
-                return subview.isKind(of: YYAnimatedImageView.self)
-            }) as? YYAnimatedImageView {
+                return subview.isKind(of: AnimatedImageView.self)
+            }) as? AnimatedImageView {
                 
                 if PlayListService.sharedInstance.isPlaying {
                     animatedImgView.startAnimating()
                 } else {
                     animatedImgView.stopAnimating()
                 }
-            }
-            
-            searchBtn.snp.remakeConstraints { make in
-                make.leading.equalTo(UIConstants.Margin.leading)
-                if #available(iOS 11, *) {
-                    make.top.equalTo((UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)+7.5)
-                } else {
-                    make.top.equalTo(7.5)
-                }
-                make.height.equalTo(42)
             }
         }
     }

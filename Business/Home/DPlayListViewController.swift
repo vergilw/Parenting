@@ -55,10 +55,11 @@ class DPlayListViewController: BaseViewController {
     lazy fileprivate var courseEntranceBtn: UIButton = {
         let button = UIButton()
         button.semanticContentAttribute = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
-        button.setTitleColor(UIConstants.Color.primaryGreen, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIConstants.Font.foot
         button.setTitle("进入课程 ", for: .normal)
-        button.setImage(UIImage(named: "public_arrowIndicator"), for: .normal)
+        button.setImage(UIImage(named: "public_arrowIndicator")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate), for: .normal)
+        button.tintColor = .white
         button.layer.cornerRadius = UIConstants.cornerRadius
         button.layer.borderColor = UIConstants.Color.primaryGreen.cgColor
         button.layer.borderWidth = 12.5

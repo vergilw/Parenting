@@ -27,9 +27,9 @@ class DetailsNotDataCell: UITableViewCell {
         selectionStyle = .none
         
         let HUD = ResultView()
-        HUD.titleLabel.setParagraphText("还没有金币明细哟")
-        HUD.solutionBtn.removeFromSuperview()
         HUD.mode = .noData
+        HUD.setupNoData(isSolutionHidden: true)
+        HUD.titleLabel.setParagraphText("还没有金币明细哟")
         contentView.addSubview(HUD)
         
         HUD.snp.makeConstraints { make in

@@ -26,6 +26,8 @@
 		130B84982201386E006A4B21 /* VideoTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B84972201386E006A4B21 /* VideoTagModel.swift */; };
 		130B849A220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */; };
 		130B849C22018E7E006A4B21 /* VideoRewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130B849B22018E7E006A4B21 /* VideoRewardView.swift */; };
+		130BB78A22239F8300D8522D /* AnimationTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130BB78922239F8300D8522D /* AnimationTabBar.swift */; };
+		130BB78C2223DB4900D8522D /* course_playingStatus.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130BB78B2223DB4900D8522D /* course_playingStatus.gif */; };
 		130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */; };
 		130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */; };
 		130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */; };
@@ -182,6 +184,9 @@
 		132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132DA60121C3A6F2004F0F42 /* VideoDetailCell.swift */; };
 		13477B8822114A5B00F09782 /* IAPSignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13477B8722114A5B00F09782 /* IAPSignInView.swift */; };
 		13796B3121B7D15A00E0C3D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13796B3021B7D15A00E0C3D9 /* ShareView.swift */; };
+		139D628C22200C46005CE454 /* tabbar_homeAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */; };
+		139D628F22200C4E005CE454 /* tabbar_meAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */; };
+		139D629022200C4E005CE454 /* tabbar_videoAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */; };
 		13B7F6EB21B657D5001BF15D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B7F6EA21B657D5001BF15D /* StoreKit.framework */; };
 		13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6EC21B65D18001BF15D /* PaymentService.swift */; };
 		13B7F6F221B67745001BF15D /* UploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F121B67745001BF15D /* UploadService.swift */; };
@@ -233,6 +238,8 @@
 		130B84972201386E006A4B21 /* VideoTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagModel.swift; sourceTree = "<group>"; };
 		130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewLeftAlignedLayout.swift; sourceTree = "<group>"; };
 		130B849B22018E7E006A4B21 /* VideoRewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRewardView.swift; sourceTree = "<group>"; };
+		130BB78922239F8300D8522D /* AnimationTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationTabBar.swift; sourceTree = "<group>"; };
+		130BB78B2223DB4900D8522D /* course_playingStatus.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = course_playingStatus.gif; sourceTree = "<group>"; };
 		130C5B8221DC86F100DC071E /* WithdrawDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawDetailsModel.swift; sourceTree = "<group>"; };
 		130C67F121A3A88200E30307 /* HomeCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewLayout.swift; sourceTree = "<group>"; };
 		130C67F321A3DCED00E30307 /* TeacherCoursesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCoursesCell.swift; sourceTree = "<group>"; };
@@ -394,6 +401,9 @@
 		13477B8722114A5B00F09782 /* IAPSignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPSignInView.swift; sourceTree = "<group>"; };
 		13796B3021B7D15A00E0C3D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		137A82B921B529040099A070 /* parenting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = parenting.entitlements; sourceTree = "<group>"; };
+		139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_homeAnimation.gif; sourceTree = "<group>"; };
+		139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_meAnimation.gif; sourceTree = "<group>"; };
+		139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_videoAnimation.gif; sourceTree = "<group>"; };
 		13B7F6EA21B657D5001BF15D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		13B7F6EC21B65D18001BF15D /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		13B7F6F121B67745001BF15D /* UploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadService.swift; sourceTree = "<group>"; };
@@ -595,6 +605,7 @@
 				130DDE5721D1C859007D0619 /* RewardView.swift */,
 				1310A09E21E6E638006399D8 /* PresentationManager.swift */,
 				13103D5E21EC631F00F13BC9 /* VerticallyButton.swift */,
+				130BB78922239F8300D8522D /* AnimationTabBar.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -602,6 +613,10 @@
 		1316F4E621D0C85B00F5A756 /* Gif */ = {
 			isa = PBXGroup;
 			children = (
+				139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */,
+				130BB78B2223DB4900D8522D /* course_playingStatus.gif */,
+				139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */,
+				139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */,
 				130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */,
 				130D8E2C21D63427008833C7 /* reward_courses.gif */,
 				130D8E2821D6234F008833C7 /* reward_share_bg.gif */,
@@ -1054,10 +1069,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130BB78C2223DB4900D8522D /* course_playingStatus.gif in Resources */,
+				139D629022200C4E005CE454 /* tabbar_videoAnimation.gif in Resources */,
 				130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */,
 				130C86B321F16E97005BBFF7 /* PLShortVideoKit.bundle in Resources */,
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
+				139D628F22200C4E005CE454 /* tabbar_meAnimation.gif in Resources */,
 				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
@@ -1067,6 +1085,7 @@
 				130EE8202202E03800651587 /* dita.wav in Resources */,
 				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
 				130C67FE21A3F6A900E30307 /* public_loadingAnimation.gif in Resources */,
+				139D628C22200C46005CE454 /* tabbar_homeAnimation.gif in Resources */,
 				1320C37B217EB76600902A5C /* LaunchScreen.storyboard in Resources */,
 				13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
@@ -1307,6 +1326,7 @@
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */,
+				130BB78A22239F8300D8522D /* AnimationTabBar.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */,
 				1309E14D21FEE9EA0005E770 /* VideoPlayedCacheService.swift in Sources */,

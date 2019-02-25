@@ -23,6 +23,14 @@ class DTeacherStoryDetailViewController: BaseViewController {
         return scrollView
     }()
     
+    fileprivate lazy var previewImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "public_coursePlaceholder")
+        imgView.contentMode = .scaleAspectFill
+        imgView.clipsToBounds = true
+        return imgView
+    }()
+    
     lazy fileprivate var titleLabel: ParagraphLabel = {
         let label = ParagraphLabel()
         label.font = UIConstants.Font.h1
@@ -106,7 +114,7 @@ class DTeacherStoryDetailViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         view.addSubview(scrollView)
-        scrollView.addSubviews([titleLabel, teacherAvatarImgView, teacherNameLabel, teacherTagLabel, teacherBriefBgImgView, teacherBriefLabel, separatorImgView, containerView])
+        scrollView.addSubviews([previewImgView, titleLabel, teacherAvatarImgView, teacherNameLabel, teacherTagLabel, teacherBriefBgImgView, teacherBriefLabel, separatorImgView, containerView])
         
         
     }
@@ -116,10 +124,15 @@ class DTeacherStoryDetailViewController: BaseViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        previewImgView.snp.makeConstraints { make in
+            let width = UIScreenWidth - UIConstants.Margin.leading - UIConstants.Margin.trailing
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(width/16.0*9)
+        }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(UIConstants.Margin.top)
+            make.top.equalTo(previewImgView.snp.bottom).offset(10)
         }
         teacherAvatarImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -186,6 +199,10 @@ class DTeacherStoryDetailViewController: BaseViewController {
     
     // MARK: - ============= Reload =============
     @objc func reload() {
+        
+        if let URLString = storyModel?.cover_image?.service_url {
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_coursePlaceholder"))
+        }
         
         if let avatarURL = storyModel?.story_teller?.avatar {
 //            avatarURL += "?imageMogr2/thumbnail/50x"

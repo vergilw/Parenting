@@ -19,27 +19,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     let tabBarController: UITabBarController = {
+        let homeVC = DHomeViewController()
         let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
         let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        homeNavigationController.tabBarItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
+        let homeItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
+        homeNavigationController.tabBarItem = homeItem
         homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
         homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
         let videoImg = UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        videoNavigationController.tabBarItem = UITabBarItem(title: "视频", image: videoImg, tag: 1)
+        let videoItem = UITabBarItem(title: "视频", image: videoImg, tag: 1)
+        videoNavigationController.tabBarItem = videoItem
         videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_videoSelected")?.withRenderingMode(.alwaysOriginal)
         videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
         let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        meNavigationController.tabBarItem = UITabBarItem(title: "我", image: meImg, tag: 2)
+        let meItem = UITabBarItem(title: "我", image: meImg, tag: 2)
+        meNavigationController.tabBarItem = meItem
         meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
         meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
         
         let tabBarController = UITabBarController()
         tabBarController.tabBar.isTranslucent = false
-        
         tabBarController.tabBar.backgroundImage = UIImage(color: .white)
         tabBarController.tabBar.shadowImage = UIImage()
         
@@ -51,6 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return tabBarController
     }()
+    
+    fileprivate lazy var tabBarDelegate = AnimationTabBar()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -86,14 +91,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @objc func setupRootViewController() {
         
         UITextField.appearance().tintColor = UIConstants.Color.primaryGreen
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.head, NSAttributedString.Key.font: UIConstants.Font.foot], for: .highlighted)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor("#BFC2C9"), NSAttributedString.Key.font: UIConstants.Font.foot2], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIConstants.Color.primaryGreen, NSAttributedString.Key.font: UIConstants.Font.foot2], for: .selected)
         
         guard let isFirstLaunch = AppCacheService.sharedInstance.isFirstLaunch, isFirstLaunch == false else {
             self.window?.rootViewController = GuideViewController()
             return
         }
         
+        tabBarController.delegate = tabBarDelegate
         self.window?.rootViewController = tabBarController
         
         NotificationCenter.default.addObserver(self, selector: #selector(setupRootViewController), name: Notification.Authorization.signInDidSuccess, object: nil)
