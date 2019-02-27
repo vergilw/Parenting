@@ -10,6 +10,8 @@ import HandyJSON
 
 class DVideoDetailViewModel {
     
+    var videoID: Int?
+    
     var videoModels: [VideoModel]?
     
     var listMode: DVideoDetailViewController.VideoListMode?

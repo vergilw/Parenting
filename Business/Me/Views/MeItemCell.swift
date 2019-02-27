@@ -36,6 +36,14 @@ class MeItemCell: UITableViewCell {
         return label
     }()
     
+    fileprivate lazy var valueBgImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIConstants.Color.primaryRed
+        imgView.layer.cornerRadius = 6
+        imgView.clipsToBounds = true
+        return imgView
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -52,7 +60,7 @@ class MeItemCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews([iconImgView, titleLabel, indicatorImgView, valueLabel])
+        contentView.addSubviews([iconImgView, titleLabel, indicatorImgView, valueBgImgView, valueLabel])
         
         iconImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -72,6 +80,13 @@ class MeItemCell: UITableViewCell {
         valueLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalTo(indicatorImgView.snp.leading).offset(-10)
+        }
+        valueBgImgView.snp.makeConstraints { make in
+            make.center.equalTo(valueLabel)
+            make.height.equalTo(12)
+            make.width.greaterThanOrEqualTo(12)
+            make.leading.lessThanOrEqualTo(valueLabel).offset(-3)
+            make.trailing.greaterThanOrEqualTo(valueLabel).offset(3)
         }
     }
     
@@ -101,8 +116,51 @@ class MeItemCell: UITableViewCell {
         if value != nil {
             valueLabel.text = value
             valueLabel.isHidden = false
+            valueLabel.textColor = UIConstants.Color.foot
+            valueLabel.font = UIConstants.Font.body
+            
+            valueLabel.snp.remakeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalTo(indicatorImgView.snp.leading).offset(-10)
+            }
         } else {
             valueLabel.isHidden = true
+        }
+        
+        valueBgImgView.isHidden = true
+        
+        titleLabel.text = title
+    }
+    
+    func setupMessages(img: UIImage, title: String, unreadCount: Int) {
+        iconImgView.image = img
+        
+        iconImgView.isHidden = false
+        titleLabel.snp.remakeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading+32)
+            make.centerY.equalToSuperview()
+        }
+        
+        if unreadCount == 0 {
+            valueLabel.isHidden = true
+            valueBgImgView.isHidden = true
+        } else if unreadCount < 100 {
+            valueLabel.text = "\(unreadCount)"
+            valueLabel.isHidden = false
+            valueBgImgView.isHidden = false
+        } else {
+            valueLabel.text = "99+"
+            valueLabel.isHidden = false
+            valueBgImgView.isHidden = false
+        }
+        
+        valueLabel.font = UIConstants.Font.foot3
+        valueLabel.textColor = .white
+        
+        valueLabel.snp.remakeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(indicatorImgView.snp.leading).offset(-10-3)
+            make.height.equalTo(12)
         }
         
         titleLabel.text = title

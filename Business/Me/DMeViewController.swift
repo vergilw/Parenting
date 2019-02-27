@@ -10,6 +10,8 @@ import UIKit
 import Kingfisher
 
 class DMeViewController: BaseViewController {
+    
+    fileprivate var unreadCount: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,7 @@ class DMeViewController: BaseViewController {
         
         if AuthorizationService.sharedInstance.isSignIn() {
             AuthorizationService.sharedInstance.updateUserInfo()
+            fetchMessages()
         }
         
     }
@@ -228,9 +231,40 @@ class DMeViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signInDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signOutDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchMessages), name: Notification.Message.messageUnreadCountDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
+    @objc fileprivate func fetchMessages() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            return
+        }
+        
+        MessageProvider.request(.messages(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["unread_count"] as? [String: Any] {
+                    self.unreadCount = 0
+                    if let string = data["Video"] as? String, let count = Int(string) {
+                        self.unreadCount += count
+                    }
+                    if let string = data["official"] as? String, let count = Int(string) {
+                        self.unreadCount += count
+                    }
+                    if let string = data["Attitude"] as? String, let count = Int(string) {
+                        self.unreadCount += count
+                    }
+                    if let string = data["Comment"] as? String, let count = Int(string) {
+                        self.unreadCount += count
+                    }
+                    if let string = data["PraiseIncome"] as? String, let count = Int(string) {
+                        self.unreadCount += count
+                    }
+                }
+                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: UITableView.RowAnimation.none)
+            }
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -261,20 +295,18 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 10
+        return 11
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 2 {
-            return 1
-        } else if section == 6 {
+        if section == 7 {
             return 0
         }
         return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 2 || indexPath.section == 7 {
+        if indexPath.section == 3 || indexPath.section == 8 {
             return 6
         } else {
             return 54
@@ -282,7 +314,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 2 || indexPath.section == 7 {
+        if indexPath.section == 3 || indexPath.section == 8 {
             let cell = tableView.dequeueReusableCell(withIdentifier: PlaceholderTableViewCell.className(), for: indexPath) as! PlaceholderTableViewCell
             return cell
         }
@@ -299,23 +331,25 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
             
-        //placeholder
         } else if indexPath.section == 2 {
-            
+            cell.setupMessages(img: UIImage(named: "me_itemMessages")!, title: "消息中心", unreadCount: unreadCount)
+        //placeholder
         } else if indexPath.section == 3 {
-            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
+            
         } else if indexPath.section == 4 {
-            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
+            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
         } else if indexPath.section == 5 {
-            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
+            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
         } else if indexPath.section == 6 {
+            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
+        } else if indexPath.section == 7 {
             cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
         //placeholder
-        } else if indexPath.section == 7 {
-            
         } else if indexPath.section == 8 {
-            cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
+            
         } else if indexPath.section == 9 {
+            cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
+        } else if indexPath.section == 10 {
             cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         }
         return cell
@@ -333,13 +367,17 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             }
             navigationController?.pushViewController(DOrdersViewController(), animated: true)
         } else if indexPath.section == 1 {
-//            guard AuthorizationService.sharedInstance.isSignIn() else {
-//                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-//                present(authorizationNavigationController, animated: true, completion: nil)
-//                return
-//            }
             navigationController?.pushViewController(DPaymentViewController(), animated: true)
-        } else if indexPath.section == 3 {
+            
+        } else if indexPath.section == 2 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
+            navigationController?.pushViewController(DMeMessagesViewController(), animated: true)
+            
+        } else if indexPath.section == 4 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
@@ -348,24 +386,24 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             let viewController = DVideoUserViewController()
             viewController.userID = AuthorizationService.sharedInstance.user?.id
             navigationController?.pushViewController(viewController, animated: true)
-        } else if indexPath.section == 4 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.section == 5 {
             guard AuthorizationService.sharedInstance.isSignIn() else {
                 let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
-            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
+            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
         } else if indexPath.section == 6 {
+            guard AuthorizationService.sharedInstance.isSignIn() else {
+                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+                present(authorizationNavigationController, animated: true, completion: nil)
+                return
+            }
+            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
+        } else if indexPath.section == 7 {
             navigationController?.pushViewController(DTransactionsViewController(), animated: true)
             
-        } else if indexPath.section == 8 {
+        } else if indexPath.section == 9 {
             let viewController = WebViewController()
             viewController.navigationItem.title = "帮助中心"
             #if DEBUG
@@ -374,7 +412,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
             viewController.url = URL(string: "https://yy.1314-edu.com/help/")
             #endif
             navigationController?.pushViewController(viewController, animated: true)
-        } else if indexPath.section == 9 {
+        } else if indexPath.section == 10 {
             navigationController?.pushViewController(DSettingsViewController(), animated: true)
         
         }

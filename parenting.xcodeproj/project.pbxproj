@@ -38,6 +38,15 @@
 		130C7CC121C0A4BF007C0344 /* EvaluationNoDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */; };
 		130C7CC321C0F8F0007C0344 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC221C0F8F0007C0344 /* WebViewController.swift */; };
 		130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7CC421C10380007C0344 /* GuideViewController.swift */; };
+		130C7F1F2226311D00E08E8D /* RouteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F1E2226311D00E08E8D /* RouteService.swift */; };
+		130C7F21222664DA00E08E8D /* DMeMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F20222664DA00E08E8D /* DMeMessagesViewController.swift */; };
+		130C7F23222665D100E08E8D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F22222665D100E08E8D /* MessageCell.swift */; };
+		130C7F252226694B00E08E8D /* MessageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F242226694B00E08E8D /* MessageAPI.swift */; };
+		130C7F2722266B7E00E08E8D /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F2622266B7E00E08E8D /* MessageModel.swift */; };
+		130C7F292226716500E08E8D /* GiftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F282226716500E08E8D /* GiftService.swift */; };
+		130C7F2B222674FB00E08E8D /* Message.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130C7F2A222674FB00E08E8D /* Message.xcassets */; };
+		130C7F2D2226919400E08E8D /* DMeMessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C7F2C2226919400E08E8D /* DMeMessageDetailViewController.swift */; };
+		130C7F2F22269B7C00E08E8D /* video_reward.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130C7F2E22269B7C00E08E8D /* video_reward.gif */; };
 		130C86B321F16E97005BBFF7 /* PLShortVideoKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */; };
 		130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */ = {isa = PBXBuildFile; fileRef = 130C86B421F1721B005BBFF7 /* plsfilters.json */; };
 		130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */; };
@@ -250,6 +259,15 @@
 		130C7CC021C0A4BF007C0344 /* EvaluationNoDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationNoDataCell.swift; sourceTree = "<group>"; };
 		130C7CC221C0F8F0007C0344 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		130C7CC421C10380007C0344 /* GuideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
+		130C7F1E2226311D00E08E8D /* RouteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteService.swift; sourceTree = "<group>"; };
+		130C7F20222664DA00E08E8D /* DMeMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeMessagesViewController.swift; sourceTree = "<group>"; };
+		130C7F22222665D100E08E8D /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		130C7F242226694B00E08E8D /* MessageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAPI.swift; sourceTree = "<group>"; };
+		130C7F2622266B7E00E08E8D /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		130C7F282226716500E08E8D /* GiftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftService.swift; sourceTree = "<group>"; };
+		130C7F2A222674FB00E08E8D /* Message.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Message.xcassets; sourceTree = "<group>"; };
+		130C7F2C2226919400E08E8D /* DMeMessageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeMessageDetailViewController.swift; sourceTree = "<group>"; };
+		130C7F2E22269B7C00E08E8D /* video_reward.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = video_reward.gif; sourceTree = "<group>"; };
 		130C86B421F1721B005BBFF7 /* plsfilters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = plsfilters.json; sourceTree = "<group>"; };
 		130C86B621F1A47B005BBFF7 /* VideoEditFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditFilterCell.swift; sourceTree = "<group>"; };
 		130C86B821F1D13E005BBFF7 /* VideoStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStickerView.swift; sourceTree = "<group>"; };
@@ -537,6 +555,7 @@
 				130F1C94219C1549004E1DD3 /* MeItemCell.swift */,
 				131FB28C219D51DD00B55210 /* CourseCell.swift */,
 				131067FF21A64B5500F79E92 /* TransactionCell.swift */,
+				130C7F22222665D100E08E8D /* MessageCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -613,6 +632,7 @@
 		1316F4E621D0C85B00F5A756 /* Gif */ = {
 			isa = PBXGroup;
 			children = (
+				130C7F2E22269B7C00E08E8D /* video_reward.gif */,
 				139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */,
 				130BB78B2223DB4900D8522D /* course_playingStatus.gif */,
 				139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */,
@@ -673,6 +693,7 @@
 				132DA5F921C35C21004F0F42 /* VideoModel.swift */,
 				130DDE5921D202CD007D0619 /* RewardRankingModel.swift */,
 				130A518721D4B89B00C42610 /* CoinLogModel.swift */,
+				130C7F2622266B7E00E08E8D /* MessageModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -719,6 +740,7 @@
 				130D569D21E5C5C800CE65CB /* Video.xcassets */,
 				1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */,
 				13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */,
+				130C7F2A222674FB00E08E8D /* Message.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -736,6 +758,8 @@
 				13B7F6F121B67745001BF15D /* UploadService.swift */,
 				1314250E21D316EE00B35346 /* PlaybackRecordService.swift */,
 				1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */,
+				130C7F1E2226311D00E08E8D /* RouteService.swift */,
+				130C7F282226716500E08E8D /* GiftService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -761,6 +785,7 @@
 				131170A321B774ED00C178BB /* PaymentAPI.swift */,
 				132DA5F321C357B2004F0F42 /* VideoAPI.swift */,
 				1316F4E421D0C2F000F5A756 /* RewardCoinAPI.swift */,
+				130C7F242226694B00E08E8D /* MessageAPI.swift */,
 			);
 			path = NetworkAPI;
 			sourceTree = "<group>";
@@ -815,6 +840,8 @@
 				131067F921A63D8000F79E92 /* DFeedbackViewController.swift */,
 				131067FD21A6473D00F79E92 /* DTransactionsViewController.swift */,
 				130C9194221BD93300689E64 /* DMeSignatureViewController.swift */,
+				130C7F20222664DA00E08E8D /* DMeMessagesViewController.swift */,
+				130C7F2C2226919400E08E8D /* DMeMessageDetailViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -1076,11 +1103,13 @@
 				130B80B3218FD2500076BB50 /* public_audioAnimationItem.gif in Resources */,
 				1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */,
 				139D628F22200C4E005CE454 /* tabbar_meAnimation.gif in Resources */,
+				130C7F2B222674FB00E08E8D /* Message.xcassets in Resources */,
 				130D569E21E5C5C800CE65CB /* Video.xcassets in Resources */,
 				13144B27218077F4002B4281 /* Course.xcassets in Resources */,
 				1310F8E5219EBEE9004073FF /* Payment.xcassets in Resources */,
 				1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */,
 				130D8E2921D6234F008833C7 /* reward_share_bg.gif in Resources */,
+				130C7F2F22269B7C00E08E8D /* video_reward.gif in Resources */,
 				130EA23C21F8507800D59D32 /* reward_videoAnimation.gif in Resources */,
 				130EE8202202E03800651587 /* dita.wav in Resources */,
 				130D8E2D21D63427008833C7 /* reward_courses.gif in Resources */,
@@ -1271,11 +1300,13 @@
 				130C67FC21A3ED1500E30307 /* DTeacherStoryDetailViewController.swift in Sources */,
 				132A492521B52AF700038027 /* AppService.swift in Sources */,
 				1310A0AB21E7473C006399D8 /* VideoUserHeaderView.swift in Sources */,
+				130C7F252226694B00E08E8D /* MessageAPI.swift in Sources */,
 				132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1312C81821F0709100F6B039 /* DVideoVolumeViewController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
 				13103D5F21EC631F00F13BC9 /* VerticallyButton.swift in Sources */,
+				130C7F23222665D100E08E8D /* MessageCell.swift in Sources */,
 				130AC5EE21EEC93C00D0286C /* DVideoClipViewController.swift in Sources */,
 				1320C391217EB93A00902A5C /* Array+Extension.swift in Sources */,
 				130C5B8321DC86F100DC071E /* WithdrawDetailsModel.swift in Sources */,
@@ -1286,6 +1317,8 @@
 				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,
 				13B7F73321B68728001BF15D /* QNFile.m in Sources */,
 				130F1C92219C0E8D004E1DD3 /* TopUpItemCell.swift in Sources */,
+				130C7F21222664DA00E08E8D /* DMeMessagesViewController.swift in Sources */,
+				130C7F1F2226311D00E08E8D /* RouteService.swift in Sources */,
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				130EF26B219A75C3008F61FA /* UserModel.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
@@ -1311,6 +1344,7 @@
 				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
 				1312C81A21F07FEB00F6B039 /* DVideoFiltersViewController.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
+				130C7F292226716500E08E8D /* GiftService.swift in Sources */,
 				130FF51A21F5927000F49DB3 /* DVideoPostViewController.swift in Sources */,
 				1324F5662186E099005276C9 /* DCourseSectionViewModel.swift in Sources */,
 				131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */,
@@ -1326,12 +1360,14 @@
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */,
+				130C7F2D2226919400E08E8D /* DMeMessageDetailViewController.swift in Sources */,
 				130BB78A22239F8300D8522D /* AnimationTabBar.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
 				13133AAC21A7F4F1009BD77A /* DCoursesViewModel.swift in Sources */,
 				1309E14D21FEE9EA0005E770 /* VideoPlayedCacheService.swift in Sources */,
 				13B7F6F221B67745001BF15D /* UploadService.swift in Sources */,
 				130B80B7218FF0750076BB50 /* CommentModel.swift in Sources */,
+				130C7F2722266B7E00E08E8D /* MessageModel.swift in Sources */,
 				13113F692199560200B6E0FE /* DPhoneViewController.swift in Sources */,
 				130D56A221E5F99900CE65CB /* VideoCommentModel.swift in Sources */,
 				130DD43521CC863F0008259F /* CategoryView.swift in Sources */,

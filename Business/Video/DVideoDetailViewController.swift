@@ -15,6 +15,7 @@ class DVideoDetailViewController: BaseViewController {
     enum VideoListMode {
         case paging
         case fragment
+        case singleton
     }
 
     lazy fileprivate var viewModel = DVideoDetailViewModel()
@@ -73,6 +74,14 @@ class DVideoDetailViewController: BaseViewController {
         }
     }
     
+    init(videoID: Int) {
+        super.init(nibName: nil, bundle: nil)
+        
+        viewModel.videoID = videoID
+        viewModel.listMode = .singleton
+        currentIndex = 0
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -110,6 +119,12 @@ class DVideoDetailViewController: BaseViewController {
                 self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.middle, animated: false)
                 self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
             }
+        } else if viewModel.listMode == .singleton {
+            
+            fetchData()
+            
+            self.addObserver(self, forKeyPath: "currentIndex", options: [.initial, .new], context: nil)
+            
         }
         
     }
@@ -172,6 +187,25 @@ class DVideoDetailViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    @objc fileprivate func fetchData() {
+        guard let videoID = viewModel.videoID else { return }
+        
+        VideoProvider.request(.videos(nil, videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                //current
+                if let data = JSON?["video"] as? [String: Any] {
+                    if let model = VideoModel.deserialize(from: data) {
+                        self.viewModel.videoModels = [model]
+                    }
+                }
+                
+                self.tableView.reloadData()
+                self.currentIndex = 0
+            }
+        }))
+    }
+    
     @objc fileprivate func refetchData() {
         guard let model = viewModel.videoModels?[exist: currentIndex], let string = model.id, let videoID = Int(string) else { return }
         
@@ -473,6 +507,8 @@ extension DVideoDetailViewController: UIScrollViewDelegate {
                 self.tableView.scrollToRow(at: IndexPath(row: self.currentIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
             }, completion: { finished in
                 scrollView.panGestureRecognizer.isEnabled = true
+                
+                guard self.viewModel.listMode != .singleton else { return }
                 
                 if isTop == true {
                     //向上翻页prefetching

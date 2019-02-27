@@ -43,4 +43,8 @@ public extension Notification {
         @objc public static let userSettingChange: Notification.Name = Notification.Name(String(describing: Setting.self) + #keyPath(userSettingChange))
     }
     
+    public class Message {
+        @objc public static let messageUnreadCountDidChange: Notification.Name = Notification.Name(String(describing: Message.self) + #keyPath(messageUnreadCountDidChange))
+    }
+    
 }

@@ -82,8 +82,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         
-        //FIXME: generate filter preview
-//        let filters = VideoFilter()
+        //FIXME: generate gifts
+        GiftService.shared.fetchGiftData()
         
         return true
     }
@@ -252,7 +252,15 @@ extension AppDelegate {
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
         if userActivity.activityType == "NSUserActivityTypeBrowsingWeb" {
+            guard let URL = userActivity.webpageURL else { return true }
             
+            guard let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController else { return true }
+            guard let navigationController = tabBarController.selectedViewController as? UINavigationController else { return true }
+            navigationController.popToRootViewController(animated: false)
+            
+            if let viewController = RouteService.shared.route(URI: URL) {
+                navigationController.pushViewController(viewController, animated: true)
+            }
         }
         
         return true
