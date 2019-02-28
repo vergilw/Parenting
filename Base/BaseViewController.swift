@@ -44,6 +44,22 @@ class BaseViewController: UIViewController {
         return button
     }()
     
+    lazy var dismissBarBtn: UIButton = {
+        let img = UIImage(named: "public_dismissBtn")!.withRenderingMode(.alwaysTemplate)
+        let button = UIButton()
+        button.setImage(img, for: .normal)
+        if #available(iOS 11.0, *) {
+            button.frame = CGRect(origin: .zero, size: CGSize(width: UIConstants.Margin.leading+img.size.width+35, height: UIStatusBarHeight+(navigationController?.navigationBar.bounds.height ?? 0)))
+            button.imageEdgeInsets = UIEdgeInsets(top: UIStatusBarHeight, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
+        } else {
+            button.frame = CGRect(origin: .zero, size: CGSize(width: UIConstants.Margin.leading+img.size.width+35, height: (navigationController?.navigationBar.bounds.height ?? 0)))
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -(35-UIConstants.Margin.leading)/2, bottom: 0, right: (35-UIConstants.Margin.leading)/2)
+        }
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(dimissBarItemAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -60,7 +76,12 @@ class BaseViewController: UIViewController {
             }()
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
             navigationItem.leftMargin = 0
-            
+        }
+        
+        if presentingViewController != nil {
+            if let nav = navigationController, nav.viewControllers.first == self {
+                initDismissBtn()
+            }
         }
         
         view.layoutMargins = UIEdgeInsets(top: 16, left: 25, bottom: 16, right: 25)
@@ -96,7 +117,7 @@ class BaseViewController: UIViewController {
     func initDismissBtn() {
         
         let backBtn: UIButton = {
-            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 25+15+25, height: 44)))
+            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 15+UIConstants.Margin.trailing*2, height: 44)))
             button.setImage(UIImage(named: "public_dismissBtn")?.withRenderingMode(.alwaysTemplate), for: .normal)
             button.tintColor = UIConstants.Color.head
             button.addTarget(self, action: #selector(dimissBarItemAction), for: .touchUpInside)

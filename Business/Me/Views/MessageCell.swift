@@ -125,7 +125,7 @@ class MessageCell: UITableViewCell {
             iconImgView.image = UIImage(named: "message_videoType")
             iconImgView.backgroundColor = UIColor("#00cddd")
             typeLabel.text = "视频消息"
-        } else if model.notifiable_type == "PraiseIncome" {
+        } else if model.notifiable_type == "RewardIncome" {
             iconImgView.image = UIImage(named: "message_giftType")
             iconImgView.backgroundColor = UIColor("#ffb701")
             typeLabel.text = "打赏消息"

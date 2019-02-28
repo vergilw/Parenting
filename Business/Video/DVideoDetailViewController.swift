@@ -595,6 +595,21 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
         viewController.userID = userID
         navigationController?.pushViewController(viewController, animated: true)
     }
+    
+    func tableViewCellReward(_ tableViewCell: VideoDetailCell) {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
+        guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
+        
+        let viewController = DVideoRewardViewController(videoID: videoID)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        present(viewController, animated: true, completion: nil)
+    }
 }
 
 extension DVideoDetailViewController: UIViewControllerTransitioningDelegate {
@@ -603,6 +618,12 @@ extension DVideoDetailViewController: UIViewControllerTransitioningDelegate {
         let presentation = PresentationManager(presentedViewController: presented, presenting: presenting)
         if presented.isKind(of: DVideoForwardViewController.self) {
             presentation.layoutHeight = 275
+        } else if presented.isKind(of: DVideoRewardViewController.self) {
+            if #available(iOS 11.0, *) {
+                presentation.layoutHeight = 305+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 305
+            }
         }
         return presentation
     }

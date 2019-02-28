@@ -427,6 +427,22 @@ class VideoDetailCell: UITableViewCell {
         }
         
         
+        //reward action
+        let rewardBtn: UIButton = {
+            let button = UIButton()
+            
+            let img = YYImage(named: "video_reward")
+            let imgView = YYAnimatedImageView(image: img)
+            button.addSubview(imgView)
+            imgView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.size.equalTo(CGSize(width: 60, height: 60))
+            }
+            
+            button.addTarget(self, action: #selector(rewardBtnAction), for: .touchUpInside)
+            return button
+        }()
+        
         
         //StackView Layout
         contentView.addSubview(stackView)
@@ -435,11 +451,14 @@ class VideoDetailCell: UITableViewCell {
         stackView.addArrangedSubview(likeStackView)
         stackView.addArrangedSubview(commentStackView)
         stackView.addArrangedSubview(shareStackView)
+        stackView.addArrangedSubview(rewardBtn)
         
         avatarBtn.heightAnchor.constraint(equalToConstant: 50).isActive = true
         likeStackView.heightAnchor.constraint(equalToConstant: 40.5).isActive = true
         commentStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         shareStackView.heightAnchor.constraint(equalToConstant: 41).isActive = true
+        rewardBtn.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
         if #available(iOS 11.0, *) {
             stackView.setCustomSpacing(32, after: avatarBtn)
         } else {
@@ -788,6 +807,12 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    @objc func rewardBtnAction() {
+        if let delegate = delegate {
+            delegate.tableViewCellReward(self)
+        }
+    }
+    
     fileprivate func asReadRequest() {
         guard let string = model?.id, let videoID = Int(string) else { return }
         
@@ -870,6 +895,8 @@ protocol VideoDetailCellDelegate: NSObjectProtocol {
     func tableViewCellForward(_ tableViewCell: VideoDetailCell)
     
     func tableViewCellAvatar(_ tableViewCell: VideoDetailCell)
+    
+    func tableViewCellReward(_ tableViewCell: VideoDetailCell)
 }
 
 

@@ -39,6 +39,14 @@ class PresentationManager: UIPresentationController {
         return CGRect(origin: CGPoint(x: 0, y: UIScreenHeight-layoutHeight), size: CGSize(width: UIScreenWidth, height: layoutHeight))
     }
     
+    override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        
+        if presentedView?.frame != frameOfPresentedViewInContainerView {
+            presentedView?.frame = frameOfPresentedViewInContainerView
+        }
+    }
+    
     override func presentationTransitionWillBegin() {
         containerView?.addSubview(dismissBtn)
         dismissBtn.snp.makeConstraints { make in

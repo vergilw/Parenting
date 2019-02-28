@@ -257,8 +257,13 @@ class FetchView: UIView {
             view = view?.superview
         } while view != nil
         
-        if viewController?.navigationController?.isNavigationBarHidden ?? false {
-            backBarBtn.isHidden = false
+        if (viewController?.navigationController?.isNavigationBarHidden ?? false) &&
+            viewController?.navigationController?.topViewController != viewController {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1.5) { [weak self] in
+                guard let self = `self` else { return }
+                self.backBarBtn.isHidden = false
+            }
+            
         }
     }
     

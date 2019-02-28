@@ -334,6 +334,7 @@ extension DVideoCommentViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         guard AuthorizationService.sharedInstance.isSignIn() else {
             let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            authorizationNavigationController.modalPresentationStyle = .overFullScreen
             present(authorizationNavigationController, animated: true, completion: nil)
             return false
         }

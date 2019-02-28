@@ -89,6 +89,9 @@
 		130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F1C94219C1549004E1DD3 /* MeItemCell.swift */; };
 		130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130F1C96219C174E004E1DD3 /* Me.xcassets */; };
 		130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F3C0721DDF08300AE2EF6 /* MediaModel.swift */; };
+		130F47D622277B2500BE9AB0 /* DVideoRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F47D522277B2500BE9AB0 /* DVideoRewardViewController.swift */; };
+		130F47D822277CC000BE9AB0 /* RewardGiftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F47D722277CC000BE9AB0 /* RewardGiftCell.swift */; };
+		130F47DA22277F0700BE9AB0 /* GiftModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130F47D922277F0700BE9AB0 /* GiftModel.swift */; };
 		130FE81A2193D0BE00609AF3 /* DAgreementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */; };
 		130FEECF21E82D1C00321F7F /* VideoRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FEECE21E82D1C00321F7F /* VideoRateView.swift */; };
 		130FF51A21F5927000F49DB3 /* DVideoPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */; };
@@ -309,6 +312,9 @@
 		130F1C94219C1549004E1DD3 /* MeItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemCell.swift; sourceTree = "<group>"; };
 		130F1C96219C174E004E1DD3 /* Me.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Me.xcassets; sourceTree = "<group>"; };
 		130F3C0721DDF08300AE2EF6 /* MediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaModel.swift; sourceTree = "<group>"; };
+		130F47D522277B2500BE9AB0 /* DVideoRewardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoRewardViewController.swift; sourceTree = "<group>"; };
+		130F47D722277CC000BE9AB0 /* RewardGiftCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardGiftCell.swift; sourceTree = "<group>"; };
+		130F47D922277F0700BE9AB0 /* GiftModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftModel.swift; sourceTree = "<group>"; };
 		130FE8192193D0BE00609AF3 /* DAgreementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAgreementViewController.swift; sourceTree = "<group>"; };
 		130FEECE21E82D1C00321F7F /* VideoRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRateView.swift; sourceTree = "<group>"; };
 		130FF51921F5927000F49DB3 /* DVideoPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoPostViewController.swift; sourceTree = "<group>"; };
@@ -566,6 +572,7 @@
 				130F3C0721DDF08300AE2EF6 /* MediaModel.swift */,
 				130D56A121E5F99900CE65CB /* VideoCommentModel.swift */,
 				130B84972201386E006A4B21 /* VideoTagModel.swift */,
+				130F47D922277F0700BE9AB0 /* GiftModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -857,6 +864,7 @@
 				132DA5FF21C3A3EE004F0F42 /* DVideoDetailViewModel.swift */,
 				130D569F21E5E9F700CE65CB /* DVideoCommentViewController.swift */,
 				1310A0A021E719F8006399D8 /* DVideoForwardViewController.swift */,
+				130F47D522277B2500BE9AB0 /* DVideoRewardViewController.swift */,
 				1310A0A421E737FF006399D8 /* DVideoUserViewController.swift */,
 				1310A0AC21E755FC006399D8 /* DVideoShootViewController.swift */,
 				130E69E221EDB47900C20915 /* DVideoEditViewController.swift */,
@@ -891,6 +899,7 @@
 				130B8495220135D6006A4B21 /* VideoTagCell.swift */,
 				130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */,
 				130B849B22018E7E006A4B21 /* VideoRewardView.swift */,
+				130F47D722277CC000BE9AB0 /* RewardGiftCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1251,7 +1260,9 @@
 				132DA60221C3A6F2004F0F42 /* VideoDetailCell.swift in Sources */,
 				131067FC21A6436A00F79E92 /* DCoursesViewController.swift in Sources */,
 				13144B1C21801332002B4281 /* PickedCourseCell.swift in Sources */,
+				130F47D622277B2500BE9AB0 /* DVideoRewardViewController.swift in Sources */,
 				13B7F72F21B68728001BF15D /* QNUploadOption.m in Sources */,
+				130F47DA22277F0700BE9AB0 /* GiftModel.swift in Sources */,
 				130D8B6521AFBCD5003E7645 /* StoryAPI.swift in Sources */,
 				13E5FC792200556E00DA6271 /* DVideoImportViewController.swift in Sources */,
 				13E5FC7B22005C1800DA6271 /* DVideoStickersViewController.swift in Sources */,
@@ -1343,6 +1354,7 @@
 				1316F4E321D0AEA900F5A756 /* RewardRankingCell.swift in Sources */,
 				130A518F21D4CF8400C42610 /* WithdrawModel.swift in Sources */,
 				1312C81A21F07FEB00F6B039 /* DVideoFiltersViewController.swift in Sources */,
+				130F47D822277CC000BE9AB0 /* RewardGiftCell.swift in Sources */,
 				130D46052189A77900CB4763 /* PlayListService.swift in Sources */,
 				130C7F292226716500E08E8D /* GiftService.swift in Sources */,
 				130FF51A21F5927000F49DB3 /* DVideoPostViewController.swift in Sources */,

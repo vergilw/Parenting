@@ -135,10 +135,6 @@ class DTopUpViewController: BaseViewController {
 
         navigationItem.title = "氧育币充值"
         
-        if presentingViewController != nil {
-            initDismissBtn()
-        }
-        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -167,7 +163,13 @@ class DTopUpViewController: BaseViewController {
         
         scrollView.drawSeparator(startPoint: CGPoint(x: UIConstants.Margin.leading, y: 163), endPoint: CGPoint(x: UIScreenWidth-UIConstants.Margin.trailing, y: 163))
         
-        scrollView.addSubviews([bgImgView, backBarBtn, navigationTitleLabel, detailsBtn, balanceTitleLabel, balanceView, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+        scrollView.addSubviews([bgImgView, navigationTitleLabel, detailsBtn, balanceTitleLabel, balanceView, topUpTitleLabel, collectionView, indicatorBtn, footnoteLabel])
+        
+        if presentingViewController != nil {
+            scrollView.addSubview(dismissBarBtn)
+        } else {
+            scrollView.addSubview(backBarBtn)
+        }
         
         balanceView.addSubviews([balanceIconImgView, balanceValueLabel])
         
@@ -183,10 +185,18 @@ class DTopUpViewController: BaseViewController {
             make.leading.equalToSuperview()
             make.bottom.equalTo(balanceView)
         }
-        backBarBtn.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview()
-            make.size.equalTo(backBarBtn.bounds.size)
+        if presentingViewController != nil {
+            dismissBarBtn.snp.makeConstraints { make in
+                make.top.leading.equalToSuperview()
+                make.size.equalTo(backBarBtn.bounds.size)
+            }
+        } else {
+            backBarBtn.snp.makeConstraints { make in
+                make.top.leading.equalToSuperview()
+                make.size.equalTo(backBarBtn.bounds.size)
+            }
         }
+        
         navigationTitleLabel.snp.makeConstraints { make in
             if #available(iOS 11.0, *) {
                 make.top.equalTo(UIStatusBarHeight)

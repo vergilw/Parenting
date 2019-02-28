@@ -125,8 +125,8 @@ class DHomeViewController: BaseViewController {
     
     lazy fileprivate var pageControl: UIPageControl = {
         let view = UIPageControl()
-        view.pageIndicatorTintColor = .white
-        view.currentPageIndicatorTintColor = UIColor(white: 1, alpha: 0.3)
+        view.pageIndicatorTintColor = UIColor(white: 1, alpha: 0.3)
+        view.currentPageIndicatorTintColor = .white
         return view
     }()
     
