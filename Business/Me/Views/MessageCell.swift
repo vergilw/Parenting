@@ -9,6 +9,8 @@
 import UIKit
 
 class MessageCell: UITableViewCell {
+    
+    var messageModel: MessageModel?
 
     fileprivate lazy var iconImgView: UIImageView = {
         let imgView = UIImageView()
@@ -56,6 +58,12 @@ class MessageCell: UITableViewCell {
         return label
     }()
     
+    fileprivate lazy var actionBtn: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(actionBtnAction), for: .touchUpInside)
+        return button
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -80,7 +88,7 @@ class MessageCell: UITableViewCell {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        contentView.addSubviews([iconImgView, markImgView, typeLabel, titleLabel, bodyLabel, timeLabel])
+        contentView.addSubviews([iconImgView, markImgView, typeLabel, titleLabel, bodyLabel, timeLabel, actionBtn])
     }
     
     // MARK: - ============= Constraints =============
@@ -113,10 +121,17 @@ class MessageCell: UITableViewCell {
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.centerY.equalTo(typeLabel)
         }
+        actionBtn.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(bodyLabel)
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
     }
     
     // MARK: - ============= Setup Data =============
     func setup(model: MessageModel) {
+        messageModel = model
+        
         if model.official == true {
             iconImgView.image = UIImage(named: "message_systemType")
             iconImgView.backgroundColor = UIColor("#41a9ff")
@@ -125,7 +140,7 @@ class MessageCell: UITableViewCell {
             iconImgView.image = UIImage(named: "message_videoType")
             iconImgView.backgroundColor = UIColor("#00cddd")
             typeLabel.text = "视频消息"
-        } else if model.notifiable_type == "RewardIncome" {
+        } else if model.notifiable_type == "PraiseIncome" {
             iconImgView.image = UIImage(named: "message_giftType")
             iconImgView.backgroundColor = UIColor("#ffb701")
             typeLabel.text = "打赏消息"
@@ -149,5 +164,13 @@ class MessageCell: UITableViewCell {
         } else {
             markImgView.isHidden = true
         }
+    }
+    
+    @objc fileprivate func actionBtnAction() {
+        guard let userID = messageModel?.sender?.id else { return }
+        
+        let viewController = DVideoUserViewController()
+        viewController.userID = userID
+        self.viewController?.navigationController?.pushViewController(viewController, animated: true)
     }
 }

@@ -165,6 +165,10 @@ class DVideoForwardViewController: BaseViewController {
     }
     
     fileprivate func rewardShareRequest() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            return
+        }
+        
         guard let string = videoModel.id, let videoID = Int(string) else { return }
         
         RewardCoinProvider.request(.reward_fetch("Video", videoID, "share_video"), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in

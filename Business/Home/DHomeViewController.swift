@@ -89,15 +89,11 @@ class DHomeViewController: BaseViewController {
     
     fileprivate lazy var topBgFrontImgView: UIImageView = {
         let imgView = UIImageView()
-        //FIXME: DEBUG banner
-//        imgView.image = UIImage(named: "debug_homeBg")
         return imgView
     }()
     
     fileprivate lazy var topBgBackImgView: UIImageView = {
         let imgView = UIImageView()
-        //FIXME: DEBUG banner
-//        imgView.image = UIImage(named: "debug_homeBg1")
         return imgView
     }()
     
@@ -599,7 +595,10 @@ class DHomeViewController: BaseViewController {
     }
     
     @objc func rewardCoursesBtnAction() {
-        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
+        //FIXME: DEBUG Gift animation
+//        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
+        
+        
     }
     
     @objc func teacherRecommendedBtnAction() {

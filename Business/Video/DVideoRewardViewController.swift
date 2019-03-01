@@ -59,6 +59,10 @@ class DVideoRewardViewController: BaseViewController {
         return button
     }()
     
+    var presentationView: GiftPresentationView?
+    
+    var workItem: DispatchWorkItem?
+    
     init(videoID: Int) {
         super.init(nibName: nil, bundle: nil)
         
@@ -135,7 +139,9 @@ class DVideoRewardViewController: BaseViewController {
                 }
                 
                 if let wallet = JSON?["wallet"] as? [String: Any], let balance = wallet["amount"] as? String {
-                    AuthorizationService.sharedInstance.user?.balance = balance
+                    let user = AuthorizationService.sharedInstance.user
+                    user?.balance = balance
+                    AuthorizationService.sharedInstance.user = user
                 }
                 
                 self.reload()
@@ -156,7 +162,7 @@ class DVideoRewardViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc func actionBtnAction() {
-        guard let index = collectionView.indexPathsForSelectedItems?.first?.row, let model = giftModels?[exist: index], let giftID = model.id, let priceString = model.amount, let price = Float(priceString) else { return }
+        guard let index = collectionView.indexPathsForSelectedItems?.first?.row, let model = giftModels?[exist: index], let giftID = model.id, let iconULRString = model.icon_url, let priceString = model.amount, let price = Float(priceString) else { return }
         
         guard let string = AuthorizationService.sharedInstance.user?.balance, let balance = Float(string), balance >= price else {
             let navigationController = BaseNavigationController(rootViewController: DTopUpViewController())
@@ -166,8 +172,6 @@ class DVideoRewardViewController: BaseViewController {
             return
         }
         
-
-
         actionBtn.startAnimating()
 
         VideoProvider.request(.video_gift_give(giftID, videoID ?? 0), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
@@ -175,7 +179,34 @@ class DVideoRewardViewController: BaseViewController {
             self.actionBtn.stopAnimating()
 
             if code >= 0 {
-                HUDService.sharedInstance.show(string: "赠送成功")
+                let user = AuthorizationService.sharedInstance.user
+                user?.balance = "\(balance - price)"
+                AuthorizationService.sharedInstance.user = user
+                self.balanceLabel.text = "氧育币 \(balance - price)"
+                
+                self.presentationView?.removeFromSuperview()
+                self.workItem?.cancel()
+                
+                self.presentationView = GiftPresentationView(imgURLString: iconULRString)
+                self.presentingViewController?.view.addSubview(self.presentationView!)
+                self.presentingViewController?.view.bringSubviewToFront(self.presentationView!)
+                self.presentationView?.snp.makeConstraints { make in
+                    make.centerX.equalToSuperview()
+                    make.centerY.equalTo((UIScreenHeight-self.view.bounds.height)/2)
+                }
+                
+                self.presentationView?.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: UIView.AnimationOptions.curveLinear, animations: {
+                    self.presentationView?.transform = .identity
+                }, completion: { finished in
+                    self.workItem = DispatchWorkItem(block: {
+                        self.presentationView?.removeFromSuperview()
+                    })
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3, execute: self.workItem!)
+                })
+                
+                
+                NotificationCenter.default.post(name: Notification.Video.videoGiftGiveDidSuccess, object: nil)
             }
         }))
     }

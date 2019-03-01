@@ -37,6 +37,8 @@ public extension Notification {
         @objc public static let videoSubmitDidSuccess: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(videoSubmitDidSuccess))
         
         @objc public static let videoFavoritesDidChange: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(videoFavoritesDidChange))
+        
+        @objc public static let videoGiftGiveDidSuccess: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(videoGiftGiveDidSuccess))
     }
     
     public class Setting {

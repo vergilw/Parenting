@@ -547,7 +547,9 @@ class DPaymentViewController: BaseViewController {
                     if let balance = data["amount"] as? String {
 //                        self.rewardBalanceLabel.setPriceText(text: balance)
                         
-                        AuthorizationService.sharedInstance.user?.reward = balance
+                        let user = AuthorizationService.sharedInstance.user
+                        user?.reward = balance
+                        AuthorizationService.sharedInstance.user = user
                         self.reload()
                     }
                     if let todayReward = data["today_amount"] as? String {

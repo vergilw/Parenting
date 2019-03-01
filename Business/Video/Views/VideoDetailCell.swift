@@ -180,6 +180,13 @@ class VideoDetailCell: UITableViewCell {
         return label
     }()
     
+    var giftRankModels: [GiftRankModel]?
+    
+    fileprivate lazy var giftRankView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     fileprivate lazy var rewardCountdownView: VideoRewardView = {
         let view = VideoRewardView()
         view.isHidden = true
@@ -264,6 +271,7 @@ class VideoDetailCell: UITableViewCell {
         
         initActionView()
         initCaptionView()
+        initGiftRankView()
         initRewardCountdownView()
         
         //FIXME: adjust shadow
@@ -493,6 +501,30 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    fileprivate func initGiftRankView() {
+        contentView.addSubview(giftRankView)
+        giftRankView.snp.makeConstraints { make in
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.width.equalTo(80)
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(UIStatusBarHeight)
+            } else {
+                make.top.equalTo(0)
+            }
+            make.height.equalTo(viewController?.navigationController?.navigationBar.bounds.height ?? 44)
+        }
+        
+        let actionBtn: UIButton = {
+            let button = UIButton()
+            button.addTarget(self, action: #selector(giftRankBtnAction), for: .touchUpInside)
+            return button
+        }()
+        giftRankView.addSubview(actionBtn)
+        actionBtn.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
     fileprivate func initRewardCountdownView() {
 //        let img = YYImage(named: "reward_videoAnimation")!
 //        let imgView = YYAnimatedImageView(image: img)
@@ -537,6 +569,8 @@ class VideoDetailCell: UITableViewCell {
         
         NotificationCenter.default.addObserver(self, selector: #selector(rewardStatusDidChange(sender:)), name: Notification.Video.rewardStatusDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(commentCountDidChange(sender:)), name: Notification.Video.commentCountDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refetchGiftRanking), name: Notification.Video.videoGiftGiveDidSuccess, object: nil)
+        
     }
     
     fileprivate func initConstraints() {
@@ -558,12 +592,16 @@ class VideoDetailCell: UITableViewCell {
         CATransaction.commit()
     }
     
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//        
-//        isPlayerReady = false
-//        playerView.cancelLoading()
-//    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        for view in giftRankView.subviews {
+            if view.isKind(of: UIImageView.self) {
+                view.removeFromSuperview()
+            }
+        }
+        giftRankModels = nil
+    }
     
     func setup(model: VideoModel) {
         self.model = model
@@ -807,6 +845,14 @@ class VideoDetailCell: UITableViewCell {
         }
     }
     
+    @objc func giftRankBtnAction() {
+        guard giftRankModels != nil else { return }
+        
+        if let delegate = delegate {
+            delegate.tableViewCellGiftRank(self)
+        }
+    }
+    
     @objc func rewardBtnAction() {
         if let delegate = delegate {
             delegate.tableViewCellReward(self)
@@ -821,6 +867,61 @@ class VideoDetailCell: UITableViewCell {
         }))
     }
     
+    @objc fileprivate func refetchGiftRanking() {
+        for view in giftRankView.subviews {
+            if view.isKind(of: UIImageView.self) {
+                view.removeFromSuperview()
+            }
+        }
+        giftRankModels = nil
+        
+        fetchGiftRanking()
+    }
+    
+    func fetchGiftRanking() {
+        guard giftRankModels == nil else { return }
+        
+        guard let string = model?.id, let videoID = Int(string) else { return }
+        
+        VideoProvider.request(.video_gifts_rank(videoID, 1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+            if code >= 0 {
+                if let data = JSON?["praise_users"] as? [[String: Any]] {
+                    if let models = [GiftRankModel].deserialize(from: data) as? [GiftRankModel] {
+                        self.giftRankModels = models
+                    }
+                    
+                    var containerWidth: CGFloat = 0
+                    for i in 0..<(self.giftRankModels?.count ?? 0) {
+                        guard let model = self.giftRankModels?[exist: i] else { break }
+                        guard let URLString = model.user?.avatar_url else { continue }
+                        
+                        let imgView: UIImageView = {
+                            let imgView = UIImageView()
+                            imgView.kf.setImage(with: URL(string: URLString))
+                            imgView.contentMode = .scaleAspectFill
+                            imgView.layer.cornerRadius = 20
+                            imgView.layer.borderWidth = 1
+                            imgView.layer.borderColor = UIColor.white.cgColor
+                            imgView.clipsToBounds = true
+                            return imgView
+                        }()
+                        self.giftRankView.addSubview(imgView)
+                        
+                        imgView.snp.makeConstraints { make in
+                            make.centerY.equalToSuperview()
+                            make.trailing.equalToSuperview().offset(-containerWidth)
+                            make.size.equalTo(CGSize(width: 40, height: 40))
+                        }
+                        containerWidth += 40 - 10
+                    }
+                }
+            }
+        }))
+        
+        
+        
+    }
     
     deinit {
         player.removeObserver(self, forKeyPath: "timeControlStatus")
@@ -897,6 +998,8 @@ protocol VideoDetailCellDelegate: NSObjectProtocol {
     func tableViewCellAvatar(_ tableViewCell: VideoDetailCell)
     
     func tableViewCellReward(_ tableViewCell: VideoDetailCell)
+    
+    func tableViewCellGiftRank(_ tableViewCell: VideoDetailCell)
 }
 
 

@@ -35,7 +35,7 @@ class ResponseService {
                 
                 if response.statusCode >= 200 && response.statusCode < 300 {
                     
-                    guard let JSON = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any] else {
+                    guard let JSON = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] else {
                         return completion(response.statusCode, nil)
                     }
                     
@@ -53,9 +53,15 @@ class ResponseService {
                     
                 } else {
                     do {
-                        let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions()) as? [String: Any]
+                        let JSON = try JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.allowFragments)
                         
-                        if let errorMsg = JSON?["message"] as? String {
+                        if let errorMsg = JSON as? String {
+                            #if DEBUG
+                            print("\(errorMsg)")
+                            #endif
+                            HUDService.sharedInstance.show(string: errorMsg)
+                            
+                        } else if let dictionary = JSON as? [String: Any], let errorMsg = dictionary["message"] as? String {
                             #if DEBUG
                             print("\(errorMsg)")
                             #endif

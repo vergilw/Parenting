@@ -31,6 +31,7 @@ enum VideoAPI {
     case video_comment_report(Int)
     case video_gifts
     case video_gift_give(Int, Int)
+    case video_gifts_rank(Int, Int)
 }
 
 extension VideoAPI: TargetType {
@@ -79,7 +80,8 @@ extension VideoAPI: TargetType {
             return "/api/gifts"
         case let .video_gift_give(giftID, _):
             return "/api/gifts/\(giftID)/give"
-
+        case .video_gifts_rank:
+            return "/api/rewards/top"
         }
     }
     
@@ -123,6 +125,8 @@ extension VideoAPI: TargetType {
             return .get
         case .video_gift_give:
             return .post
+        case .video_gifts_rank:
+            return .get
         }
     }
     
@@ -137,7 +141,6 @@ extension VideoAPI: TargetType {
         case let .videos_paging(parameters):
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case let .videos(scope, videoID):
-            //FIXME: DEBUG per = 10
             var parameters = ["per":"10"]
             if let videoID = videoID {
                 parameters["id"] = String(videoID)
@@ -178,6 +181,8 @@ extension VideoAPI: TargetType {
             return .requestPlain
         case let .video_gift_give(_, videoID):
             return .requestParameters(parameters: ["entity_type":"Video", "entity_id": videoID], encoding: URLEncoding.default)
+        case let .video_gifts_rank(videoID, page):
+            return .requestParameters(parameters: ["entity_type":"Video", "entity_id": videoID, "page":page, "per": "12"], encoding: URLEncoding.default)
         }
     }
     

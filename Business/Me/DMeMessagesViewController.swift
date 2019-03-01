@@ -141,7 +141,7 @@ class DMeMessagesViewController: BaseViewController {
         MessageProvider.request(.message(messageID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                NotificationCenter.default.post(name: Notification.User.userInfoDidChange, object: nil)
+                NotificationCenter.default.post(name: Notification.Message.messageUnreadCountDidChange, object: nil)
             }
         }))
     }

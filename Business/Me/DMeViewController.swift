@@ -244,22 +244,11 @@ class DMeViewController: BaseViewController {
             
             if code >= 0 {
                 if let data = JSON?["unread_count"] as? [String: Any] {
-                    self.unreadCount = 0
-                    if let string = data["Video"] as? String, let count = Int(string) {
-                        self.unreadCount += count
+                    if let number = data["total"] as? NSNumber {
+                        self.unreadCount = number.intValue
                     }
-                    if let string = data["official"] as? String, let count = Int(string) {
-                        self.unreadCount += count
-                    }
-                    if let string = data["Attitude"] as? String, let count = Int(string) {
-                        self.unreadCount += count
-                    }
-                    if let string = data["Comment"] as? String, let count = Int(string) {
-                        self.unreadCount += count
-                    }
-                    if let string = data["PraiseIncome"] as? String, let count = Int(string) {
-                        self.unreadCount += count
-                    }
+                    
+                    UIApplication.shared.applicationIconBadgeNumber = self.unreadCount
                 }
                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: UITableView.RowAnimation.none)
             }

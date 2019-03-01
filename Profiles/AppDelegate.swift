@@ -82,9 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
         
-        //FIXME: generate gifts
-        GiftService.shared.fetchGiftData()
-        
         return true
     }
     
@@ -198,12 +195,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
         let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
         GeTuiSdk.registerDeviceToken(token)
         
-        
-        guard AuthorizationService.sharedInstance.isSignIn() else { return }
-        
-        UserProvider.request(.updatePushToken(token), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            
-        }))
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -211,37 +202,62 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
         GeTuiSdk.handleRemoteNotification(response.notification.request.content.userInfo)
+
+        let JSON = response.notification.request.content.userInfo
+        if let payload = JSON["payload"] as? [String: Any], let string = payload["link"] as? String, let url = URL(string: string) {
+
+            guard let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? UITabBarController else { return }
+            guard let navigationController = tabBarController.selectedViewController as? UINavigationController else { return }
+            navigationController.popToRootViewController(animated: false)
+
+            if let viewController = RouteService.shared.route(URI: url) {
+                navigationController.pushViewController(viewController, animated: true)
+            }
+        }
         
         completionHandler()
     }
     
     func geTuiSdkDidRegisterClient(_ clientId: String!) {
         print(#function + clientId)
+        
+        guard AuthorizationService.sharedInstance.isSignIn() else { return }
+        
+        UserProvider.request(.updatePushToken(clientId), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+            
+        }))
     }
     
     func geTuiSdkDidReceivePayloadData(_ payloadData: Data!, andTaskId taskId: String!, andMsgId msgId: String!, andOffLine offLine: Bool, fromGtAppId appId: String!) {
         
-        guard let JSON = try? JSONSerialization.jsonObject(with: payloadData, options: JSONSerialization.ReadingOptions()) as? [String: Any] else {
-            return
-        }
-        guard let aps = JSON?["aps"] as? [String: Any], let alert = aps["alert"] as? [String: String] else {
-            return
-        }
-        if UIApplication.shared.applicationState == .inactive ||
-            UIApplication.shared.applicationState == .background {
-            let notiObj = UNMutableNotificationContent()
-            notiObj.title = alert["title"] ?? "氧育亲子"
-            if let subtitle = alert["subtitle"] {
-                notiObj.subtitle = subtitle
-            }
-            notiObj.body = alert["body"] ?? ""
-            notiObj.badge = NSNumber(string: (aps["badge"] as? String) ?? "")
-            notiObj.categoryIdentifier = UUID.init().uuidString
-            
-            let request = UNNotificationRequest.init(identifier: notiObj.categoryIdentifier, content: notiObj, trigger: nil)
-            UNUserNotificationCenter.current().add(request)
-        }
+//        guard let JSON = try? JSONSerialization.jsonObject(with: payloadData, options: JSONSerialization.ReadingOptions()) as? [String: Any] else {
+//            return
+//        }
+//        guard let aps = JSON?["aps"] as? [String: Any], let alert = aps["alert"] as? [String: String] else {
+//            return
+//        }
+        
+//        if UIApplication.shared.applicationState == .inactive ||
+//            UIApplication.shared.applicationState == .background {
+//            let notiObj = UNMutableNotificationContent()
+//            notiObj.title = alert["title"] ?? "氧育亲子"
+//            if let subtitle = alert["subtitle"] {
+//                notiObj.subtitle = subtitle
+//            }
+//            notiObj.body = alert["body"] ?? ""
+//            notiObj.badge = NSNumber(string: (aps["badge"] as? String) ?? "")
+//            notiObj.categoryIdentifier = UUID.init().uuidString
+//
+//            let request = UNNotificationRequest.init(identifier: notiObj.categoryIdentifier, content: notiObj, trigger: nil)
+//            UNUserNotificationCenter.current().add(request)
+//        } else {
+        
+        
+//        }
+        
+        NotificationCenter.default.post(name: Notification.Message.messageUnreadCountDidChange, object: nil)
     }
     
 }

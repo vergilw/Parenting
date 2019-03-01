@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1309E14D21FEE9EA0005E770 /* VideoPlayedCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */; };
+		130A45482228DA3E00F2F7CD /* GiftPresentationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A45472228DA3E00F2F7CD /* GiftPresentationView.swift */; };
+		130A454A222907D900F2F7CD /* DVideoGiftRankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A4549222907D900F2F7CD /* DVideoGiftRankViewController.swift */; };
+		130A454C222910D300F2F7CD /* VideoGiftRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A454B222910D300F2F7CD /* VideoGiftRankCell.swift */; };
+		130A454E222913EF00F2F7CD /* GiftRankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A454D222913EF00F2F7CD /* GiftRankModel.swift */; };
 		130A518821D4B89B00C42610 /* CoinLogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518721D4B89B00C42610 /* CoinLogModel.swift */; };
 		130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518A21D4C48800C42610 /* RewardExchangeModel.swift */; };
 		130A518D21D4CD7700C42610 /* DWithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */; };
@@ -232,6 +236,10 @@
 
 /* Begin PBXFileReference section */
 		1309E14C21FEE9EA0005E770 /* VideoPlayedCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayedCacheService.swift; sourceTree = "<group>"; };
+		130A45472228DA3E00F2F7CD /* GiftPresentationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftPresentationView.swift; sourceTree = "<group>"; };
+		130A4549222907D900F2F7CD /* DVideoGiftRankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoGiftRankViewController.swift; sourceTree = "<group>"; };
+		130A454B222910D300F2F7CD /* VideoGiftRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGiftRankCell.swift; sourceTree = "<group>"; };
+		130A454D222913EF00F2F7CD /* GiftRankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiftRankModel.swift; sourceTree = "<group>"; };
 		130A518721D4B89B00C42610 /* CoinLogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinLogModel.swift; sourceTree = "<group>"; };
 		130A518A21D4C48800C42610 /* RewardExchangeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardExchangeModel.swift; sourceTree = "<group>"; };
 		130A518C21D4CD7700C42610 /* DWithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DWithdrawViewController.swift; sourceTree = "<group>"; };
@@ -573,6 +581,7 @@
 				130D56A121E5F99900CE65CB /* VideoCommentModel.swift */,
 				130B84972201386E006A4B21 /* VideoTagModel.swift */,
 				130F47D922277F0700BE9AB0 /* GiftModel.swift */,
+				130A454D222913EF00F2F7CD /* GiftRankModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -865,6 +874,7 @@
 				130D569F21E5E9F700CE65CB /* DVideoCommentViewController.swift */,
 				1310A0A021E719F8006399D8 /* DVideoForwardViewController.swift */,
 				130F47D522277B2500BE9AB0 /* DVideoRewardViewController.swift */,
+				130A4549222907D900F2F7CD /* DVideoGiftRankViewController.swift */,
 				1310A0A421E737FF006399D8 /* DVideoUserViewController.swift */,
 				1310A0AC21E755FC006399D8 /* DVideoShootViewController.swift */,
 				130E69E221EDB47900C20915 /* DVideoEditViewController.swift */,
@@ -900,6 +910,8 @@
 				130B8499220149F7006A4B21 /* UICollectionViewLeftAlignedLayout.swift */,
 				130B849B22018E7E006A4B21 /* VideoRewardView.swift */,
 				130F47D722277CC000BE9AB0 /* RewardGiftCell.swift */,
+				130A45472228DA3E00F2F7CD /* GiftPresentationView.swift */,
+				130A454B222910D300F2F7CD /* VideoGiftRankCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1271,6 +1283,7 @@
 				130DD43721CCE27D0008259F /* RewardDetailsCell.swift in Sources */,
 				13113F6F21997D5500B6E0FE /* HUDService.swift in Sources */,
 				130F1C8C219BC26B004E1DD3 /* ActionButton.swift in Sources */,
+				130A45482228DA3E00F2F7CD /* GiftPresentationView.swift in Sources */,
 				130C7CC521C10380007C0344 /* GuideViewController.swift in Sources */,
 				13B7F72D21B68728001BF15D /* QNUpToken.m in Sources */,
 				1316742121A53CC400643BF0 /* DSearchViewController.swift in Sources */,
@@ -1313,6 +1326,7 @@
 				1310A0AB21E7473C006399D8 /* VideoUserHeaderView.swift in Sources */,
 				130C7F252226694B00E08E8D /* MessageAPI.swift in Sources */,
 				132DA5FC21C37C93004F0F42 /* VideoCollectionCell.swift in Sources */,
+				130A454C222910D300F2F7CD /* VideoGiftRankCell.swift in Sources */,
 				1320C37F217EB8E800902A5C /* BaseNavigationController.swift in Sources */,
 				1312C81821F0709100F6B039 /* DVideoVolumeViewController.swift in Sources */,
 				131067FE21A6473D00F79E92 /* DTransactionsViewController.swift in Sources */,
@@ -1372,6 +1386,7 @@
 				130D46012189615B00CB4763 /* ParagraphLabel.swift in Sources */,
 				1311201E218172F70088F5BF /* AssetModel.swift in Sources */,
 				130F1C8F219BF924004E1DD3 /* DTopUpViewController.swift in Sources */,
+				130A454A222907D900F2F7CD /* DVideoGiftRankViewController.swift in Sources */,
 				130C7F2D2226919400E08E8D /* DMeMessageDetailViewController.swift in Sources */,
 				130BB78A22239F8300D8522D /* AnimationTabBar.swift in Sources */,
 				131160B72182B9590000F105 /* CourseSectionModel.swift in Sources */,
@@ -1404,6 +1419,7 @@
 				130F1C95219C1549004E1DD3 /* MeItemCell.swift in Sources */,
 				1316742321A54B2300643BF0 /* SearchHistoryCell.swift in Sources */,
 				13133AAA21A7DA2A009BD77A /* CommonAPI.swift in Sources */,
+				130A454E222913EF00F2F7CD /* GiftRankModel.swift in Sources */,
 				130D8B6321AFB978003E7645 /* StoryModel.swift in Sources */,
 				130D8E2B21D631F2008833C7 /* DetailsNotDataCell.swift in Sources */,
 				13B7F73821B68728001BF15D /* QNPHAssetFile.m in Sources */,

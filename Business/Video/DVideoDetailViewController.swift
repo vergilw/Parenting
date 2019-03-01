@@ -543,6 +543,7 @@ extension DVideoDetailViewController {
                 cell?.player.play()
             }
             cell?.startCountdown()
+            cell?.fetchGiftRanking()
             
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -610,6 +611,16 @@ extension DVideoDetailViewController: VideoDetailCellDelegate {
         viewController.transitioningDelegate = self
         present(viewController, animated: true, completion: nil)
     }
+    
+    func tableViewCellGiftRank(_ tableViewCell: VideoDetailCell) {
+        
+        guard let string = tableViewCell.model?.id, let videoID = Int(string) else { return }
+        
+        let viewController = DVideoGiftRankViewController(videoID: videoID)
+        viewController.modalPresentationStyle = .custom
+        viewController.transitioningDelegate = self
+        present(viewController, animated: true, completion: nil)
+    }
 }
 
 extension DVideoDetailViewController: UIViewControllerTransitioningDelegate {
@@ -623,6 +634,13 @@ extension DVideoDetailViewController: UIViewControllerTransitioningDelegate {
                 presentation.layoutHeight = 305+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
             } else {
                 presentation.layoutHeight = 305
+            }
+            
+        } else if presented.isKind(of: DVideoGiftRankViewController.self) {
+            if #available(iOS 11.0, *) {
+                presentation.layoutHeight = 440+(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0)
+            } else {
+                presentation.layoutHeight = 440
             }
         }
         return presentation
