@@ -15,6 +15,7 @@ class VideoGiftRankCell: UITableViewCell {
         let label = UILabel()
         label.font = UIConstants.Font.h2
         label.textColor = UIConstants.Color.disable
+        label.textAlignment = .center
         return label
     }()
     
@@ -81,14 +82,16 @@ class VideoGiftRankCell: UITableViewCell {
     
     fileprivate func initConstraints() {
         sequenceLabel.snp.makeConstraints { make in
-            make.center.equalTo(sequenceImgView)
+            make.leading.equalTo(0)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20+UIConstants.Margin.leading*2)
         }
         sequenceImgView.snp.makeConstraints { make in
-            make.leading.equalTo(25)
+            make.leading.equalTo(UIConstants.Margin.leading)
             make.centerY.equalToSuperview()
         }
         avatarImgView.snp.makeConstraints { make in
-            make.leading.equalTo(70)
+            make.leading.equalTo(65)
             make.centerY.equalToSuperview()
             make.size.equalTo(CGSize(width: 35, height: 35))
         }

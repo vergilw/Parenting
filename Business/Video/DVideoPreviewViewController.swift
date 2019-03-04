@@ -8,19 +8,24 @@
 
 import UIKit
 
-//FIXME: debug in simulator (uncomment all code)
+#if !targetEnvironment(simulator)
 import PLPlayerKit
+#endif
 
 class DVideoPreviewViewController: BaseViewController {
 
     fileprivate lazy var fileURL: URL? = nil
     
+    #if !targetEnvironment(simulator)
     fileprivate lazy var player: PLPlayer? = nil
+    #endif
     
     init(fileURL: URL) {
         super.init(nibName: nil, bundle: nil)
         
         self.fileURL = fileURL
+        
+        #if !targetEnvironment(simulator)
         let option = PLPlayerOption.default()
         option.setOptionValue(NSNumber(value: 15), forKey: PLPlayerOptionKeyTimeoutIntervalForMediaPackets)
         option.setOptionValue(NSNumber(value: 2000), forKey: PLPlayerOptionKeyMaxL1BufferDuration)
@@ -30,6 +35,7 @@ class DVideoPreviewViewController: BaseViewController {
         player = PLPlayer(url: fileURL, option: option)
         player?.loopPlay = true
         player?.playerView?.contentMode = .scaleAspectFit
+        #endif
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -59,9 +65,11 @@ class DVideoPreviewViewController: BaseViewController {
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
         
+        #if !targetEnvironment(simulator)
         guard let playerView = player?.playerView else { return }
         view.addSubview(playerView)
         player?.play()
+        #endif
         
         initBackBtn()
     }
@@ -77,11 +85,13 @@ class DVideoPreviewViewController: BaseViewController {
     
     // MARK: - ============= Constraints =============
     fileprivate func initConstraints() {
+        #if !targetEnvironment(simulator)
         if let playerView = player?.playerView {
             playerView.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
         }
+        #endif
     }
     
     // MARK: - ============= Notification =============

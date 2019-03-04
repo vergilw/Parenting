@@ -152,7 +152,8 @@ class DVideoRewardViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         if let balance = AuthorizationService.sharedInstance.user?.balance {
-            balanceLabel.text = "氧育币 \(balance)"
+            let string = String.priceFormatter.string(from: (NSNumber(string: balance) ?? NSNumber())) ?? ""
+            balanceLabel.text = "氧育币 \(string)"
         } else {
             balanceLabel.text = "氧育币 0"
         }

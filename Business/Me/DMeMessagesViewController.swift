@@ -89,32 +89,38 @@ class DMeMessagesViewController: BaseViewController {
                         self.messageModels = models
                     }
                     self.tableView.reloadData()
-                    
-                    if let data = JSON?["unread_count"] as? [String: Any] {
-                        if let number = data["total"] as? NSNumber {
-                            self.unreadCount = number.intValue
-                            if self.unreadCount > 0 {
-                                self.initNavigationItem()
-                            }
-                        }
-                    }
-                    
-                    if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
-                        if totalPages > self.pageNumber {
-                            self.pageNumber = 2
-                            self.tableView.mj_footer.isHidden = false
-                            self.tableView.mj_footer.resetNoMoreData()
-                            
-                        } else {
-                            self.tableView.mj_footer.isHidden = true
+                }
+                
+                if let data = JSON?["unread_count"] as? [String: Any] {
+                    if let number = data["total"] as? NSNumber {
+                        self.unreadCount = number.intValue
+                        if self.unreadCount > 0 {
+                            self.initNavigationItem()
                         }
                     }
                 }
                 
-            } else if code == -2 {
-                HUDService.sharedInstance.showNoNetworkView(target: self.view) { [weak self] in
-                    self?.fetchData()
+                if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
+                    if totalPages > self.pageNumber {
+                        self.pageNumber = 2
+                        self.tableView.mj_footer.isHidden = false
+                        self.tableView.mj_footer.resetNoMoreData()
+                        
+                    } else {
+                        self.tableView.mj_footer.isHidden = true
+                    }
                 }
+                
+                if self.messageModels?.count ?? 0 == 0 {
+                    HUDService.sharedInstance.showNoDataView(target: self.view) { [weak self] in
+                        self?.navigationController?.pushViewController(DCoursesViewController(), animated: true)
+                    }
+                }
+                
+            } else if code == -2 {
+                HUDService.sharedInstance.showNoNetworkView(target: self.view, retry: {
+                    self.fetchData()
+                })
             }
         }))
     }

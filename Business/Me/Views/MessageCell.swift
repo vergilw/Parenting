@@ -136,22 +136,32 @@ class MessageCell: UITableViewCell {
             iconImgView.image = UIImage(named: "message_systemType")
             iconImgView.backgroundColor = UIColor("#41a9ff")
             typeLabel.text = "系统消息"
+            
+            actionBtn.isHidden = true
         } else if model.notifiable_type == "Video" {
             iconImgView.image = UIImage(named: "message_videoType")
             iconImgView.backgroundColor = UIColor("#00cddd")
             typeLabel.text = "视频消息"
+            
+            actionBtn.isHidden = true
         } else if model.notifiable_type == "PraiseIncome" {
             iconImgView.image = UIImage(named: "message_giftType")
             iconImgView.backgroundColor = UIColor("#ffb701")
             typeLabel.text = "打赏消息"
+            
+            actionBtn.isHidden = false
         } else if model.notifiable_type == "Attitude" {
             iconImgView.image = UIImage(named: "message_likeType")
             iconImgView.backgroundColor = UIColor("#f26a44")
             typeLabel.text = "点赞消息"
+            
+            actionBtn.isHidden = false
         } else if model.notifiable_type == "Comment" {
             iconImgView.image = UIImage(named: "message_commentType")
             iconImgView.backgroundColor = UIColor("#89d350")
             typeLabel.text = "评论消息"
+            
+            actionBtn.isHidden = false
         }
         
         let text = model.title ?? ""

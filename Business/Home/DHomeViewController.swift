@@ -595,10 +595,7 @@ class DHomeViewController: BaseViewController {
     }
     
     @objc func rewardCoursesBtnAction() {
-        //FIXME: DEBUG Gift animation
-//        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
-        
-        
+        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
     }
     
     @objc func teacherRecommendedBtnAction() {
