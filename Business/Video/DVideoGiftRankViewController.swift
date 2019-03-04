@@ -61,9 +61,7 @@ class DVideoGiftRankViewController: BaseViewController {
     fileprivate func initContentView() {
         
         tableView.rowHeight = 68
-        tableView.separatorStyle = .singleLine
-        tableView.separatorColor = UIConstants.Color.separator
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading, bottom: 0, right: UIConstants.Margin.trailing)
+        tableView.separatorStyle = .none
         tableView.register(VideoGiftRankCell.self, forCellReuseIdentifier: VideoGiftRankCell.className())
         tableView.dataSource = self
         tableView.delegate = self

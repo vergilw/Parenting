@@ -154,7 +154,36 @@ class MessageCell: UITableViewCell {
             typeLabel.text = "评论消息"
         }
         
-        titleLabel.text = model.title
+        let text = model.title ?? ""
+        
+        if model.notifiable_type == "PraiseIncome" {
+            let attributedString = NSMutableAttributedString(string: text)
+            if let expression = try? NSRegularExpression(pattern: "「.+」", options: NSRegularExpression.Options()) {
+                let range = expression.rangeOfFirstMatch(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.count))
+                attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryGreen], range: range)
+                titleLabel.attributedText = attributedString
+            } else {
+                titleLabel.text = text
+            }
+        } else if model.notifiable_type == "Video" {
+            
+            let attributedString = NSMutableAttributedString(string: text)
+            
+            var expression = try! NSRegularExpression(pattern: "未通过", options: NSRegularExpression.Options())
+            var range = expression.rangeOfFirstMatch(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.count))
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryRed], range: range)
+            
+            expression = try! NSRegularExpression(pattern: "已通过", options: NSRegularExpression.Options())
+            range = expression.rangeOfFirstMatch(in: text, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: text.count))
+            attributedString.addAttributes([NSAttributedString.Key.foregroundColor: UIConstants.Color.primaryGreen], range: range)
+            
+            titleLabel.attributedText = attributedString
+            
+        } else {
+            titleLabel.text = text
+        }
+        
+        
         bodyLabel.text = model.body
         
         timeLabel.text = model.created_at?.string(format: "yyyy.MM.dd HH:mm")

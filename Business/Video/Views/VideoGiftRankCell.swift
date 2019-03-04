@@ -27,10 +27,17 @@ class VideoGiftRankCell: UITableViewCell {
     
     lazy fileprivate var avatarImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 17.5
         imgView.clipsToBounds = true
         imgView.image = UIImage(named: "public_avatarPlaceholder")
         imgView.contentMode = .scaleAspectFill
+        return imgView
+    }()
+    
+    fileprivate lazy var avatarBorderImgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "video_giftRankBorder")
+        imgView.isHidden = true
         return imgView
     }()
     
@@ -63,7 +70,7 @@ class VideoGiftRankCell: UITableViewCell {
         
         selectionStyle = .none
         
-        contentView.addSubviews([sequenceLabel, sequenceImgView, avatarImgView, nameLabel, valueLabel])
+        contentView.addSubviews([sequenceLabel, sequenceImgView, avatarImgView, avatarBorderImgView, nameLabel, valueLabel])
         
         initConstraints()
     }
@@ -83,7 +90,13 @@ class VideoGiftRankCell: UITableViewCell {
         avatarImgView.snp.makeConstraints { make in
             make.leading.equalTo(70)
             make.centerY.equalToSuperview()
-            make.size.equalTo(CGSize(width: 40, height: 40))
+            make.size.equalTo(CGSize(width: 35, height: 35))
+        }
+        avatarBorderImgView.snp.makeConstraints { make in
+            make.leading.equalTo(avatarImgView).offset(-0.5)
+            make.trailing.equalTo(avatarImgView).offset(0.5)
+            make.top.equalTo(avatarImgView).offset(-0.5)
+            make.bottom.equalTo(avatarImgView).offset(0.5)
         }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(8.5)
@@ -112,6 +125,12 @@ class VideoGiftRankCell: UITableViewCell {
         
         if let URLString = model.user?.avatar_url {
             avatarImgView.kf.setImage(with: URL(string: URLString), placeholder: UIImage(named: "public_avatarPlaceholder"))
+        }
+        
+        if model.user?.id == AuthorizationService.sharedInstance.user?.id {
+            avatarBorderImgView.isHidden = false
+        } else {
+            avatarBorderImgView.isHidden = true
         }
         
         nameLabel.text = model.user?.name

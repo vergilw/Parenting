@@ -117,7 +117,7 @@ class DVideoRewardViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
@@ -194,13 +194,13 @@ class DVideoRewardViewController: BaseViewController {
                     make.centerX.equalToSuperview()
                     make.centerY.equalTo((UIScreenHeight-self.view.bounds.height)/2)
                 }
-                
+
                 self.presentationView?.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
                 UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: UIView.AnimationOptions.curveLinear, animations: {
                     self.presentationView?.transform = .identity
                 }, completion: { finished in
-                    self.workItem = DispatchWorkItem(block: {
-                        self.presentationView?.removeFromSuperview()
+                    self.workItem = DispatchWorkItem(block: { [weak self] in
+                        self?.presentationView?.removeFromSuperview()
                     })
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3, execute: self.workItem!)
                 })
@@ -215,6 +215,10 @@ class DVideoRewardViewController: BaseViewController {
     
     // MARK: - ============= Private =============
 
+    
+    deinit {
+        self.presentationView?.removeFromSuperview()
+    }
 }
 
 

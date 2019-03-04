@@ -506,11 +506,7 @@ class VideoDetailCell: UITableViewCell {
         giftRankView.snp.makeConstraints { make in
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.width.equalTo(80)
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(UIStatusBarHeight)
-            } else {
-                make.top.equalTo(0)
-            }
+            make.top.equalTo(UIStatusBarHeight)
             make.height.equalTo(viewController?.navigationController?.navigationBar.bounds.height ?? 44)
         }
         
@@ -846,7 +842,7 @@ class VideoDetailCell: UITableViewCell {
     }
     
     @objc func giftRankBtnAction() {
-        guard giftRankModels != nil else { return }
+        guard giftRankModels != nil, giftRankModels?.count != 0 else { return }
         
         if let delegate = delegate {
             delegate.tableViewCellGiftRank(self)
@@ -893,6 +889,7 @@ class VideoDetailCell: UITableViewCell {
                     
                     var containerWidth: CGFloat = 0
                     for i in 0..<(self.giftRankModels?.count ?? 0) {
+                        guard i <= 2 else { break }
                         guard let model = self.giftRankModels?[exist: i] else { break }
                         guard let URLString = model.user?.avatar_url else { continue }
                         

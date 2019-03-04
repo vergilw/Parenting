@@ -14,6 +14,8 @@ class DMeMessagesViewController: BaseViewController {
     
     fileprivate var messageModels: [MessageModel]?
     
+    fileprivate var unreadCount: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,7 +30,6 @@ class DMeMessagesViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
-        initNavigationItem()
         
         tableView.rowHeight = 88
         tableView.separatorInset = UIEdgeInsets(top: 0, left: UIConstants.Margin.leading+62, bottom: 0, right: UIConstants.Margin.trailing)
@@ -89,6 +90,15 @@ class DMeMessagesViewController: BaseViewController {
                     }
                     self.tableView.reloadData()
                     
+                    if let data = JSON?["unread_count"] as? [String: Any] {
+                        if let number = data["total"] as? NSNumber {
+                            self.unreadCount = number.intValue
+                            if self.unreadCount > 0 {
+                                self.initNavigationItem()
+                            }
+                        }
+                    }
+                    
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         if totalPages > self.pageNumber {
                             self.pageNumber = 2
@@ -141,6 +151,18 @@ class DMeMessagesViewController: BaseViewController {
         MessageProvider.request(.message(messageID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
+                
+                if let data = JSON?["unread_count"] as? [String: Any] {
+                    if let number = data["total"] as? NSNumber {
+                        self.unreadCount = number.intValue
+                        if self.unreadCount > 0 {
+                            self.initNavigationItem()
+                        } else {
+                            self.navigationItem.rightBarButtonItem = nil
+                        }
+                    }
+                }
+                
                 NotificationCenter.default.post(name: Notification.Message.messageUnreadCountDidChange, object: nil)
             }
         }))

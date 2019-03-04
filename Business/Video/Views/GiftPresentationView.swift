@@ -58,6 +58,7 @@ class GiftPresentationView: UIView {
         bgImgView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(titleImgView.snp.bottom).offset(12)
+            make.size.equalTo(CGSize(width: 170, height: 136))
         }
         iconImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
