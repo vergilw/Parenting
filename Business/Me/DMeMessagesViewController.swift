@@ -195,6 +195,8 @@ class DMeMessagesViewController: BaseViewController {
                 
                 HUDService.sharedInstance.show(string: "全部已读成功")
                 
+                self.navigationItem.rightBarButtonItem = nil
+                
                 NotificationCenter.default.post(name: Notification.Message.messageUnreadCountDidChange, object: nil)
             }
         }))

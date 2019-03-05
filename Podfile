@@ -38,4 +38,5 @@ target "parenting" do
 
 end
 
-
+flutter_application_path = '../inee_flutter/'
+eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)

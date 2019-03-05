@@ -2,6 +2,9 @@ PODS:
   - Alamofire (4.7.3)
   - Bugly (2.5.0)
   - FBRetainCycleDetector (0.1.4)
+  - Flutter (1.0.0)
+  - FlutterPluginRegistrant (0.0.1):
+    - Flutter
   - GTSDK (2.3.0.0)
   - HandyJSON (4.2.0)
   - HappyDNS (0.3.14)
@@ -50,6 +53,8 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - Bugly
+  - Flutter (from `../inee_flutter/.ios/Flutter/engine`)
+  - FlutterPluginRegistrant (from `../inee_flutter/.ios/Flutter/FlutterPluginRegistrant`)
   - GTSDK
   - HandyJSON
   - IQKeyboardManagerSwift
@@ -101,10 +106,18 @@ SPEC REPOS:
     - UMCShare
     - YYKit
 
+EXTERNAL SOURCES:
+  Flutter:
+    :path: "../inee_flutter/.ios/Flutter/engine"
+  FlutterPluginRegistrant:
+    :path: "../inee_flutter/.ios/Flutter/FlutterPluginRegistrant"
+
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   Bugly: 3ca9f255c01025582df26f9222893b383c7e4b4e
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  FlutterPluginRegistrant: 5f33f54e5f25444620ff39f2bdee4262d673ec7b
   GTSDK: 16f570807190eca9846653886a1f399cb0485061
   HandyJSON: 9dfc026c7d7adc1f0f8ba8b181495f0e0763b0f4
   HappyDNS: dc6a164ee81979093123c241c6353bcf0218add6
@@ -129,6 +142,6 @@ SPEC CHECKSUMS:
   UMCShare: aa233aecad67979930fe43f3a2f676023b669439
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 7dac4966f22cf5c6ac96950ac1fb1429cda1c600
+PODFILE CHECKSUM: c546d3c613d45d69fd43abac5ecef6d0b8345b7d
 
 COCOAPODS: 1.5.3

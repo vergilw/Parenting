@@ -596,6 +596,9 @@ class DHomeViewController: BaseViewController {
     
     @objc func rewardCoursesBtnAction() {
         navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
+        
+//        let flutter = MyHomePage()
+//        navigationController?.pushViewController(flutter, animated: true)
     }
     
     @objc func teacherRecommendedBtnAction() {
