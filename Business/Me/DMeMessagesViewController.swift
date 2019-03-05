@@ -194,6 +194,8 @@ class DMeMessagesViewController: BaseViewController {
                 self.tableView.reloadData()
                 
                 HUDService.sharedInstance.show(string: "全部已读成功")
+                
+                NotificationCenter.default.post(name: Notification.Message.messageUnreadCountDidChange, object: nil)
             }
         }))
     }
@@ -230,14 +232,17 @@ extension DMeMessagesViewController: UITableViewDataSource, UITableViewDelegate 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if let model = messageModels?[exist: indexPath.row], let string = model.link, let url = URL(string: string), let messageID = model.id {
-            guard let viewController = RouteService.shared.route(URI: url) else { return }
-            navigationController?.pushViewController(viewController, animated: true)
-            
-            model.read_at = Date()
-            tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+        if let model = messageModels?[exist: indexPath.row], let messageID = model.id {
             
             asReadRequest(messageID: messageID)
+            
+            if let string = model.link, let url = URL(string: string) {
+                guard let viewController = RouteService.shared.route(URI: url) else { return }
+                navigationController?.pushViewController(viewController, animated: true)
+                
+                model.read_at = Date()
+                tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+            }
         }
     }
 }

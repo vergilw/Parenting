@@ -129,15 +129,11 @@ class DVideoGiftRankViewController: BaseViewController {
                     }
                     self.tableView.reloadData()
                     
-                    
-                    if let string = JSON?["praise_amount"] as? String, let totalCount = Float(string) {
-                        self.titleLabel.text = String(format: "%.0f人打赏", totalCount)
-                    }
-                    
-                    
                     if let meta = JSON?["meta"] as? [String: Any], let pagination = meta["pagination"] as? [String: Any], let totalPages = pagination["total_pages"] as? Int {
                         
-                        
+                        if let totalCount = pagination["total_count"] as? Int {
+                            self.titleLabel.text = "\(totalCount)人打赏"
+                        }
                         
                         if totalPages > self.pageNumber {
                             self.pageNumber = 2
