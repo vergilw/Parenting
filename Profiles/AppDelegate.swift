@@ -12,11 +12,13 @@ import AVFoundation
 import StoreKit
 import UserNotifications
 import PLShortVideoKit
+import Flutter
+import FlutterPluginRegistrant
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: FlutterAppDelegate {
 
-    var window: UIWindow?
+//    var window: UIWindow?
     
     let tabBarController: UITabBarController = {
         let homeVC = DHomeViewController()
@@ -57,7 +59,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     fileprivate lazy var tabBarDelegate = AnimationTabBar()
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    var flutterEngine: FlutterEngine?
+    
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
@@ -72,6 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         setupAudioSession()
         setupThirdPartyPlatforms()
+        setupFlutter()
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
         PlaybackRecordService.sharedInstance.syncRecords()
@@ -144,21 +149,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        AVAudioSession.sharedInstance().setCategory(.playback, mode: AVAudioSession.Mode.moviePlayback, options: AVAudioSession.CategoryOptions())
     }
+    
+    func setupFlutter() {
+        flutterEngine = FlutterEngine(name: "io.flutter", project: nil)
+        flutterEngine?.run(withEntrypoint: nil)
+        GeneratedPluginRegistrant.register(with: flutterEngine)
+    }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
+    override func applicationDidEnterBackground(_ application: UIApplication) {
         PlayListService.sharedInstance.setupNowPlaying()
     }
     
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    override func applicationWillEnterForeground(_ application: UIApplication) {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         let result = UMSocialManager.default()?.handleOpen(url, options: options)
         return result ?? true
     }
 
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+    override func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         if let rootViewController = window?.rootViewController {
             if rootViewController.presentedViewController is DPlayerViewController {
                 return rootViewController.presentedViewController!.supportedInterfaceOrientations
@@ -191,7 +202,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
         UIApplication.shared.registerForRemoteNotifications()
     }
     
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
         GeTuiSdk.registerDeviceToken(token)
         
@@ -265,7 +276,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
 
 extension AppDelegate {
     
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+    override func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
         if userActivity.activityType == "NSUserActivityTypeBrowsingWeb" {
             guard let URL = userActivity.webpageURL else { return true }

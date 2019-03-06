@@ -190,7 +190,7 @@ class DVideoDetailViewController: BaseViewController {
     @objc fileprivate func fetchData() {
         guard let videoID = viewModel.videoID else { return }
         
-        VideoProvider.request(.videos(nil, videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        VideoProvider.request(.video_detail(videoID), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
                 //current

@@ -151,6 +151,8 @@ class DVideoShootViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        PlayListService.sharedInstance.pauseAudio()
+        
         initContentView()
         initConstraints()
         addNotificationObservers()

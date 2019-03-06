@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 import Presentr
 import UserNotifications
+import Flutter
 
 class DHomeViewController: BaseViewController {
     
@@ -595,10 +596,13 @@ class DHomeViewController: BaseViewController {
     }
     
     @objc func rewardCoursesBtnAction() {
-        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
+        //FIXME: DEBUG Flutter
+//        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
         
-//        let flutter = MyHomePage()
-//        navigationController?.pushViewController(flutter, animated: true)
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
+        
+        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
+        present(flutter, animated: true, completion: nil)
     }
     
     @objc func teacherRecommendedBtnAction() {

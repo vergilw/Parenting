@@ -213,7 +213,12 @@ class DPurchaseViewController: BaseViewController {
             make.bottom.equalTo(-30)
         }
         backBarBtn.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview()
+            make.leading.equalToSuperview()
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(0)
+            } else {
+                make.top.equalTo(UIStatusBarHeight)
+            }
             make.size.equalTo(backBarBtn.bounds.size)
         }
         navigationTitleLabel.snp.makeConstraints { make in

@@ -1050,7 +1050,7 @@
 				1320C352217EB66E00902A5C /* Resources */,
 				83015C9976BCD81FB321D7C1 /* [CP] Embed Pods Frameworks */,
 				1319724421CB6B180080EA99 /* ShellScript */,
-				130CB79C222E645E0064AF81 /* ShellScript */,
+				13124E48222F67FD00BC4467 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1148,7 +1148,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		130CB79C222E645E0064AF81 /* ShellScript */ = {
+		13124E48222F67FD00BC4467 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1163,7 +1163,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed\n";
+			shellScript = "\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n\"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed\n";
 		};
 		1319724421CB6B180080EA99 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1606,7 +1606,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Profiles/Info.plist;
@@ -1633,7 +1633,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Profiles/Info.plist;
