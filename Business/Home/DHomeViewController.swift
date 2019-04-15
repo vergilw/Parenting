@@ -10,7 +10,6 @@ import UIKit
 import Kingfisher
 import Presentr
 import UserNotifications
-import Flutter
 
 class DHomeViewController: BaseViewController {
     
@@ -596,23 +595,7 @@ class DHomeViewController: BaseViewController {
     }
     
     @objc func rewardCoursesBtnAction() {
-        //FIXME: DEBUG Flutter
-//        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
-        
-        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-//                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            }
-        }
-        
-//        present(flutter, animated: true, completion: nil)
-        self.navigationController?.pushViewController(flutter, animated: true)
+        navigationController?.pushViewController(DRewardCoursesViewController(), animated: true)
     }
     
     @objc func teacherRecommendedBtnAction() {

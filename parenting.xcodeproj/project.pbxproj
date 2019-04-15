@@ -80,6 +80,10 @@
 		130DDE5E21D2214D007D0619 /* CoinDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */; };
 		130DDE6821D22E7B007D0619 /* DRewardCoursesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */; };
 		130E018521DEF96500E2C5D3 /* DPromotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */; };
+		130E588022645438009D1D9A /* tabbar_crmAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130E587F22645438009D1D9A /* tabbar_crmAnimation.gif */; };
+		130E58832264547E009D1D9A /* CRMViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E58822264547E009D1D9A /* CRMViewController.swift */; };
+		130E5885226464E1009D1D9A /* CRM.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130E5884226464E1009D1D9A /* CRM.xcassets */; };
+		130E5887226484A0009D1D9A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E5886226484A0009D1D9A /* TestViewController.swift */; };
 		130E69E321EDB47900C20915 /* DVideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130E69E221EDB47900C20915 /* DVideoEditViewController.swift */; };
 		130EA23A21F8093C00D59D32 /* DVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */; };
 		130EA23C21F8507800D59D32 /* reward_videoAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */; };
@@ -307,6 +311,10 @@
 		130DDE5D21D2214D007D0619 /* CoinDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsCell.swift; sourceTree = "<group>"; };
 		130DDE6721D22E7B007D0619 /* DRewardCoursesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DRewardCoursesViewController.swift; sourceTree = "<group>"; };
 		130E018421DEF96500E2C5D3 /* DPromotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPromotionViewController.swift; sourceTree = "<group>"; };
+		130E587F22645438009D1D9A /* tabbar_crmAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_crmAnimation.gif; sourceTree = "<group>"; };
+		130E58822264547E009D1D9A /* CRMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRMViewController.swift; sourceTree = "<group>"; };
+		130E5884226464E1009D1D9A /* CRM.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CRM.xcassets; sourceTree = "<group>"; };
+		130E5886226484A0009D1D9A /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		130E69E221EDB47900C20915 /* DVideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoEditViewController.swift; sourceTree = "<group>"; };
 		130EA23921F8093C00D59D32 /* DVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DVideoPreviewViewController.swift; sourceTree = "<group>"; };
 		130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward_videoAnimation.gif; sourceTree = "<group>"; };
@@ -519,6 +527,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		130E588122645452009D1D9A /* CRM */ = {
+			isa = PBXGroup;
+			children = (
+				130E58822264547E009D1D9A /* CRMViewController.swift */,
+				130E5886226484A0009D1D9A /* TestViewController.swift */,
+			);
+			path = CRM;
+			sourceTree = "<group>";
+		};
 		130EE81A2202D66800651587 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -653,6 +670,7 @@
 				130BB78B2223DB4900D8522D /* course_playingStatus.gif */,
 				139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */,
 				139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */,
+				130E587F22645438009D1D9A /* tabbar_crmAnimation.gif */,
 				130EA23B21F8507800D59D32 /* reward_videoAnimation.gif */,
 				130D8E2C21D63427008833C7 /* reward_courses.gif */,
 				130D8E2821D6234F008833C7 /* reward_share_bg.gif */,
@@ -757,6 +775,7 @@
 				1312C81D21F085F300F6B039 /* PLShortVideoKit.bundle */,
 				13E5FC7E22005E6800DA6271 /* VideoStickers.xcassets */,
 				130C7F2A222674FB00E08E8D /* Message.xcassets */,
+				130E5884226464E1009D1D9A /* CRM.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -809,6 +828,7 @@
 		1320C377217EB76600902A5C /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				130E588122645452009D1D9A /* CRM */,
 				132DA5ED21C34E9A004F0F42 /* Video */,
 				130F1C8D219BF8CB004E1DD3 /* Payment */,
 				13113F632199131300B6E0FE /* Authorization */,
@@ -1118,6 +1138,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				130E588022645438009D1D9A /* tabbar_crmAnimation.gif in Resources */,
 				130BB78C2223DB4900D8522D /* course_playingStatus.gif in Resources */,
 				139D629022200C4E005CE454 /* tabbar_videoAnimation.gif in Resources */,
 				130C86B521F1721B005BBFF7 /* plsfilters.json in Resources */,
@@ -1141,6 +1162,7 @@
 				13E5FC7F22005E6800DA6271 /* VideoStickers.xcassets in Resources */,
 				130F1C97219C174E004E1DD3 /* Me.xcassets in Resources */,
 				1320C37A217EB76600902A5C /* Public.xcassets in Resources */,
+				130E5885226464E1009D1D9A /* CRM.xcassets in Resources */,
 				13113F6721994CD900B6E0FE /* Authorization.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1187,7 +1209,6 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-parenting/Pods-parenting-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/FBRetainCycleDetector/FBRetainCycleDetector.framework",
-				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
 				"${PODS_ROOT}/../../inee_flutter/.ios/Flutter/engine/Flutter.framework",
 				"${BUILT_PRODUCTS_DIR}/FlutterPluginRegistrant/FlutterPluginRegistrant.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
@@ -1211,13 +1232,12 @@
 				"${BUILT_PRODUCTS_DIR}/flutter_picker/flutter_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/image_picker/image_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework",
-				"${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework",
+				"${BUILT_PRODUCTS_DIR}/shared_preferences/shared_preferences.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBRetainCycleDetector.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlutterPluginRegistrant.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
@@ -1241,7 +1261,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/image_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/shared_preferences.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1289,6 +1309,7 @@
 				131FB28F219D5A1500B55210 /* DMeCoursesViewController.swift in Sources */,
 				1320C39C217EBFEA00902A5C /* DMeViewController.swift in Sources */,
 				131170A421B774ED00C178BB /* PaymentAPI.swift in Sources */,
+				130E5887226484A0009D1D9A /* TestViewController.swift in Sources */,
 				1316F4E121D0ADDA00F5A756 /* DRewardRankingViewController.swift in Sources */,
 				13144B2521806ED9002B4281 /* SeparatorView.swift in Sources */,
 				130C67F221A3A88200E30307 /* HomeCollectionViewLayout.swift in Sources */,
@@ -1468,6 +1489,7 @@
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				13B7F6ED21B65D18001BF15D /* PaymentService.swift in Sources */,
 				132C920C21BA81F2002148E1 /* OrderModel.swift in Sources */,
+				130E58832264547E009D1D9A /* CRMViewController.swift in Sources */,
 				130C9195221BD93300689E64 /* DMeSignatureViewController.swift in Sources */,
 				130C86B721F1A47B005BBFF7 /* VideoEditFilterCell.swift in Sources */,
 				130DD43321CC83C30008259F /* DPaymentViewController.swift in Sources */,
@@ -1616,7 +1638,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
@@ -1644,7 +1666,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 57;
+				CURRENT_PROJECT_VERSION = 60;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;

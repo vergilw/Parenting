@@ -10,10 +10,7 @@ PODS:
     - flutter_picker
     - image_picker
     - path_provider
-    - sqflite
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
+    - shared_preferences
   - GTSDK (2.3.0.0)
   - HandyJSON (4.2.0)
   - HappyDNS (0.3.14)
@@ -47,10 +44,9 @@ PODS:
   - Qiniu (7.2.5):
     - HappyDNS (~> 0.3)
   - Result (3.2.4)
-  - SnapKit (4.0.1)
-  - sqflite (0.0.1):
+  - shared_preferences (0.0.1):
     - Flutter
-    - FMDB (~> 2.7.2)
+  - SnapKit (4.0.1)
   - TYCyclePagerView (1.1.0)
   - "UINavigationItem+Margin (2.1.1)"
   - "UITableView+FDTemplateLayoutCell (1.6)"
@@ -86,8 +82,8 @@ DEPENDENCIES:
   - PLShortVideoKit
   - Presentr
   - Qiniu
+  - shared_preferences (from `../inee_flutter/.ios/Flutter/.symlinks/shared_preferences/ios`)
   - SnapKit
-  - sqflite (from `../inee_flutter/.ios/Flutter/.symlinks/sqflite/ios`)
   - TYCyclePagerView
   - "UINavigationItem+Margin"
   - "UITableView+FDTemplateLayoutCell"
@@ -102,7 +98,6 @@ SPEC REPOS:
     - Alamofire
     - Bugly
     - FBRetainCycleDetector
-    - FMDB
     - GTSDK
     - HandyJSON
     - HappyDNS
@@ -138,8 +133,8 @@ EXTERNAL SOURCES:
     :path: "../inee_flutter/.ios/Flutter/.symlinks/image_picker/ios"
   path_provider:
     :path: "../inee_flutter/.ios/Flutter/.symlinks/path_provider/ios"
-  sqflite:
-    :path: "../inee_flutter/.ios/Flutter/.symlinks/sqflite/ios"
+  shared_preferences:
+    :path: "../inee_flutter/.ios/Flutter/.symlinks/shared_preferences/ios"
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
@@ -147,8 +142,7 @@ SPEC CHECKSUMS:
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_picker: 8cd16302a9806a9789ba6e3ce85558c70c43b7f4
-  FlutterPluginRegistrant: 923df1f52b3f43f960c880e7f92c69643c2f6ee5
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  FlutterPluginRegistrant: 6bdaf1a2394c959d2c21364a4412dc1716a29b0c
   GTSDK: 16f570807190eca9846653886a1f399cb0485061
   HandyJSON: 9dfc026c7d7adc1f0f8ba8b181495f0e0763b0f4
   HappyDNS: dc6a164ee81979093123c241c6353bcf0218add6
@@ -165,8 +159,8 @@ SPEC CHECKSUMS:
   Presentr: 797ae6ec8904eaba4ec58a4c2065bd66e31569ea
   Qiniu: 909b408ee489ea54827e9717be90b94bc9dfbc48
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
+  shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
-  sqflite: d1612813fa7db7c667bed9f1d1b508deffc56999
   TYCyclePagerView: b70858c9b5d0e80e1e3129ff5ceb027eb0f76d44
   "UINavigationItem+Margin": 7368d506fb2f7daa0c0489846cc8c2384ab1ab6d
   "UITableView+FDTemplateLayoutCell": 5c949b4a5059c404b442926c0e80f81d10a2d66f

@@ -29,9 +29,9 @@ extension AuthorizationAPI: TargetType {
     public var path: String {
         switch self {
         case .fetchCode:
-            return "/app/login/confirm"
+            return "/join/token"
         case .signIn:
-            return "/app/login"
+            return "/login"
         case .signInWithWechat:
             return "/app/wechats"
         case .signUpWithWechat:
@@ -67,10 +67,10 @@ extension AuthorizationAPI: TargetType {
     var task: Task {
         switch self {
         case let .fetchCode(phone):
-            return .requestParameters(parameters: ["mobile":phone, "device":"app"], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["identity":phone], encoding: URLEncoding.default)
 
         case let .signIn(phone, code):
-            return .requestParameters(parameters: ["mobile":phone, "token":code], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["identity":phone, "password":code], encoding: URLEncoding.default)
             
         case let .signInWithWechat(openID, accessToken):
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken], encoding: URLEncoding.default)
