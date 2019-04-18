@@ -88,14 +88,17 @@ class DSettingsViewController: BaseViewController {
     // MARK: - ============= Reload =============
     @objc func reload() {
         initFooterView()
-        ImageCache.default.calculateDiskCacheSize { (size) in
-            let formatter = ByteCountFormatter()
-            formatter.countStyle = .binary
-            formatter.allowsNonnumericFormatting = false
-            formatter.allowedUnits = [.useMB, .useGB]
-            self.cacheSizeString = formatter.string(fromByteCount: Int64(size))
+        ImageCache.default.calculateDiskStorageSize { result in
+            if let size = try? result.get() {
+                let formatter = ByteCountFormatter()
+                formatter.countStyle = .binary
+                formatter.allowsNonnumericFormatting = false
+                formatter.allowedUnits = [.useMB, .useGB]
+                self.cacheSizeString = formatter.string(fromByteCount: Int64(size))
+                
+                self.tableView.reloadData()
+            }
             
-            self.tableView.reloadData()
         }
     }
     

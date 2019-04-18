@@ -151,8 +151,8 @@ class AppDelegate: FlutterAppDelegate {
         }
         
         PLShortVideoKitEnv.initEnv()
-        PLShortVideoKitEnv.setLogLevel(.debug)
-        PLShortVideoKitEnv.enableFileLogging()
+//        PLShortVideoKitEnv.setLogLevel(.debug)
+//        PLShortVideoKitEnv.enableFileLogging()
         
 //        AVAudioSession.sharedInstance().setCategory(.playback, mode: AVAudioSession.Mode.moviePlayback, options: AVAudioSession.CategoryOptions())
     }

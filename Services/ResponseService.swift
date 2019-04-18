@@ -35,7 +35,7 @@ class ResponseService {
                 
                 if response.statusCode >= 200 && response.statusCode < 300 {
                     
-                    guard let JSON = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any] else {
+                    guard let JSON = ((try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.allowFragments) as? [String: Any]) as [String : Any]??) else {
                         return completion(response.statusCode, nil)
                     }
                     

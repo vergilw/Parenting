@@ -469,7 +469,7 @@ class DVideoEditViewController: BaseViewController {
         
         //export video
         let exportSession = PLSAVAssetExportSession(asset: asset)
-        exportSession?.outputFileType = .MPEG4
+        exportSession?.outputFileType = PLSFileTypeMPEG4
         exportSession?.shouldOptimizeForNetworkUse = true
         
         exportSession?.outputSettings = outputSettings
@@ -479,7 +479,7 @@ class DVideoEditViewController: BaseViewController {
         exportSession?.outputVideoFrameRate = min(60, asset.pls_normalFrameRate)
         //TODO: aspect video size to 16:9
         exportSession?.outputVideoSize = asset.pls_videoSize
-        exportSession?.videoLayerOrientation = .portrait
+        exportSession?.videoLayerOrientation = PLSPreviewOrientationPortrait
         
         //filter
         let index = collectionView.indexPathsForSelectedItems?.first?.row ?? 0

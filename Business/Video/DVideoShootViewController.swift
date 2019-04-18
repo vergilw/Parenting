@@ -184,15 +184,15 @@ class DVideoShootViewController: BaseViewController {
         rateView.completionHandler = { [weak self] mode in
             switch mode {
             case .topfast:
-                self?.recorder.recoderRate = .topFast
+                self?.recorder.recoderRate = PLSVideoRecoderRateTopFast
             case .fast:
-                self?.recorder.recoderRate = .fast
+                self?.recorder.recoderRate = PLSVideoRecoderRateFast
             case .normal:
-                self?.recorder.recoderRate = .normal
+                self?.recorder.recoderRate = PLSVideoRecoderRateNormal
             case .slow:
-                self?.recorder.recoderRate = .slow
+                self?.recorder.recoderRate = PLSVideoRecoderRateSlow
             case .topslow:
-                self?.recorder.recoderRate = .topSlow
+                self?.recorder.recoderRate = PLSVideoRecoderRateTopSlow
             }
         }
         view.addSubviews([rateView, dismissBtn])
@@ -562,7 +562,7 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
     }
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didGetCameraAuthorizationStatus status: PLSAuthorizationStatus) {
-        if status == .authorized {
+        if status == PLSAuthorizationStatusAuthorized {
             if !recorder.isRecording {
                 recorder.startCaptureSession()
             }
@@ -573,7 +573,7 @@ extension DVideoShootViewController: PLShortVideoRecorderDelegate {
     }
     
     func shortVideoRecorder(_ recorder: PLShortVideoRecorder, didGetMicrophoneAuthorizationStatus status: PLSAuthorizationStatus) {
-        if status == .authorized {
+        if status == PLSAuthorizationStatusAuthorized {
             if !recorder.isRecording {
                 recorder.startCaptureSession()
             }
@@ -602,8 +602,8 @@ extension DVideoShootViewController: UIImagePickerControllerDelegate, UINavigati
             progressView.show(animated: true)
             
             transcoder = PLShortVideoTranscoder(url: URL)
-            transcoder?.outputFileType = .MPEG4
-            transcoder?.outputFilePreset = .presetHighestQuality
+            transcoder?.outputFileType = PLSFileTypeMPEG4
+            transcoder?.outputFilePreset = PLSFilePresetHighestQuality
             
             transcoder?.completionBlock = { [weak self] (URL) in
                 DispatchQueue.main.async {

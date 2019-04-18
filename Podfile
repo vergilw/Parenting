@@ -14,7 +14,7 @@ target "parenting" do
     pod 'SnapKit'
     pod 'IQKeyboardManagerSwift'
     pod 'Moya'
-    pod 'HandyJSON'
+    pod 'HandyJSON',:git => 'https://github.com/alibaba/HandyJSON.git', :branch => 'dev_for_swift5.0'
     pod 'Kingfisher'
     pod 'UINavigationItem+Margin'
     pod 'Presentr'

@@ -17,10 +17,10 @@ class GiftService {
         VideoProvider.request(.video_gifts, completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
             
             if code >= 0 {
-                if let data = JSON?["gifts"] as? [String: Any] {
+//                if let data = JSON?["gifts"] as? [String: Any] {
 //                    self.messageModel = MessageModel.deserialize(from: data)
 //                    self.reload()
-                }
+//                }
                 
             }
         }))

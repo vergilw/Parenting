@@ -10,26 +10,26 @@ import Foundation
 
 public extension Notification {
     
-    public class Authorization {
+    class Authorization {
         @objc public static let signInDidSuccess: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signInDidSuccess))
         
         @objc public static let signOutDidSuccess: Notification.Name = Notification.Name(String(describing: Authorization.self) + #keyPath(signOutDidSuccess))
     }
     
-    public class User {
+    class User {
         @objc public static let userInfoDidChange: Notification.Name = Notification.Name(String(describing: User.self) + #keyPath(userInfoDidChange))
     }
     
-    public class Payment {
+    class Payment {
         @objc public static let payCourseDidSuccess: Notification.Name = Notification.Name(String(describing: Payment.self) + #keyPath(payCourseDidSuccess))
     }
     
-    public class Course {
+    class Course {
         @objc public static let courseRecordDidChanged: Notification.Name = Notification.Name(String(describing: Course.self) + #keyPath(courseRecordDidChanged))
         
     }
     
-    public class Video {
+    class Video {
         @objc public static let rewardStatusDidChange: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(rewardStatusDidChange))
         
         @objc public static let commentCountDidChange: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(commentCountDidChange))
@@ -41,11 +41,11 @@ public extension Notification {
         @objc public static let videoGiftGiveDidSuccess: Notification.Name = Notification.Name(String(describing: Video.self) + #keyPath(videoGiftGiveDidSuccess))
     }
     
-    public class Setting {
+    class Setting {
         @objc public static let userSettingChange: Notification.Name = Notification.Name(String(describing: Setting.self) + #keyPath(userSettingChange))
     }
     
-    public class Message {
+    class Message {
         @objc public static let messageUnreadCountDidChange: Notification.Name = Notification.Name(String(describing: Message.self) + #keyPath(messageUnreadCountDidChange))
     }
     

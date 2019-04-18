@@ -160,10 +160,14 @@ class VideoCollectionCell: UICollectionViewCell {
         if let URLString = model.cover_url {
 //            let width = (UIScreenWidth-1)/2.0
 //            let processor = RoundCornerImageProcessor(cornerRadius: 0, targetSize: CGSize(width: width*2, height: width/9.0*16*2))
-            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { (image, error, type, URL) in
-                guard let image = image else { return }
-                if image.size.width > image.size.height {
-                    self.blurPreviewImgView.image = image
+            previewImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { result in
+                switch result {
+                case .success(let value):
+                    if value.image.size.width > value.image.size.height {
+                        self.blurPreviewImgView.image = value.image
+                    }
+                case .failure(let error):
+                    print("\(#function) kingfisher failure", error)
                 }
             }
         }

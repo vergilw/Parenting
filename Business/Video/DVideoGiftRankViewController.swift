@@ -219,7 +219,7 @@ extension DVideoGiftRankViewController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        guard let model = rankModels?[exist: indexPath.row], let string = model.user?.id else { return }
+//        guard let model = rankModels?[exist: indexPath.row], let string = model.user?.id else { return }
         
     }
 }

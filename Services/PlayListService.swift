@@ -272,10 +272,18 @@ class PlayListService: NSObject {
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = course.teacher?.name
         nowPlayingInfo[MPMediaItemPropertyMediaType] = sections[playingIndex].media_attribute?.content_type
         
-        if let image = ImageCache.default.retrieveImageInDiskCache(forKey: (course.teacher?.headshot_attribute?.service_url ?? ""), options: [.onlyFromCache]) {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] =
-                MPMediaItemArtwork(boundsSize: image.size) { size in
-                    return image
+        ImageCache.default.retrieveImageInDiskCache(forKey: (course.teacher?.headshot_attribute?.service_url ?? ""), options: [.onlyFromCache]) { result in
+            switch result {
+            case .success(let value):
+                if let image = value {
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] =
+                        MPMediaItemArtwork(boundsSize: image.size) { size in
+                            return image
+                    }
+                }
+                
+            case .failure(let error):
+                print("\(#function) kingfisher failure", error)
             }
         }
         

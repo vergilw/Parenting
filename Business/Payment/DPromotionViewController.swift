@@ -386,15 +386,15 @@ class DPromotionViewController: BaseViewController {
     
     @objc func sessionBtnAction() {
         if let URLString = AuthorizationService.sharedInstance.user?.avatar_url {
-            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { (img, error, type, URL) in
-                var resultImg: UIImage
-                if let img = img {
-                    resultImg = img
-                } else {
-                    resultImg = UIImage(named: "public_avatarPlaceholder")!
+            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { result in
+                switch result {
+                case .success(let value):
+                    self.shareToSession(img: value.image)
+                case .failure(let error):
+                    print("\(#function) kingfisher failure", error)
+                    self.shareToSession(img: UIImage(named: "public_avatarPlaceholder")!)
                 }
                 
-                self.shareToSession(img: resultImg)
             })
         } else {
             shareToSession(img: UIImage(named: "public_avatarPlaceholder")!)
@@ -403,15 +403,14 @@ class DPromotionViewController: BaseViewController {
     
     @objc func timelineBtnAction() {
         if let URLString = AuthorizationService.sharedInstance.user?.avatar_url {
-            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { (img, error, type, URL) in
-                var resultImg: UIImage
-                if let img = img {
-                    resultImg = img
-                } else {
-                    resultImg = UIImage(named: "public_avatarPlaceholder")!
+            KingfisherManager.shared.retrieveImage(with: URL(string: URLString)!, options: nil, progressBlock: nil, completionHandler: { result in
+                switch result {
+                case .success(let value):
+                    self.shareToTimeline(img: value.image)
+                case .failure(let error):
+                    print("\(#function) kingfisher failure", error)
+                    self.shareToTimeline(img: UIImage(named: "public_avatarPlaceholder")!)
                 }
-                
-                self.shareToTimeline(img: resultImg)
             })
         } else {
             shareToTimeline(img: UIImage(named: "public_avatarPlaceholder")!)

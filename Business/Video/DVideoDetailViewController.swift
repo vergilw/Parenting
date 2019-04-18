@@ -462,7 +462,7 @@ extension DVideoDetailViewController: UITableViewDataSource, UITableViewDelegate
             cellIndentifier =  VideoDetailCell.className()
         }
         
-        print("visibleRows \(tableView.indexPathsForVisibleRows) \n reuse \(cellIndentifier) at \(indexPath.row)")
+//        print("visibleRows \(tableView.indexPathsForVisibleRows) \n reuse \(cellIndentifier) at \(indexPath.row)")
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIndentifier, for: indexPath) as! VideoDetailCell
         cell.delegate = self

@@ -51,6 +51,8 @@ class CRMViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "园区管理系统"
+        
         initContentView()
         initConstraints()
         addNotificationObservers()
@@ -63,6 +65,20 @@ class CRMViewController: BaseViewController {
         scrollView.addSubviews([avatarImgView, nameLabel, notificationImgView, notificationLabel])
         
         initShortcutView()
+        
+        let userProfileBtn: UIButton = {
+            let button = UIButton()
+            button.setTitleColor(UIConstants.Color.body, for: .normal)
+            button.titleLabel?.font = UIConstants.Font.body
+            button.setTitle("个人资料修改", for: .normal)
+            button.addTarget(self, action: #selector(userProfileBtnAction), for: .touchUpInside)
+            return button
+        }()
+        scrollView.addSubview(userProfileBtn)
+        userProfileBtn.snp.makeConstraints { make in
+            make.centerY.leading.equalTo(avatarImgView)
+            make.size.equalTo(CGSize(width: 100, height: 40))
+        }
     }
     
     fileprivate func initShortcutView() {
@@ -156,6 +172,36 @@ class CRMViewController: BaseViewController {
             make.top.equalTo(classPunchTitleLabel.snp.bottom)
         }
         
+        let activityBtn: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "crm_notification"), for: .normal)
+            button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
+            return button
+        }()
+        let activityTitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.h2
+            label.textColor = .white
+            label.text = "活动"
+            return label
+        }()
+        let activitySubtitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.caption1
+            label.textColor = .white
+            label.text = "信息动态可视化"
+            return label
+        }()
+        activityBtn.addSubviews([activityTitleLabel, activitySubtitleLabel])
+        activityTitleLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(-28)
+            make.top.equalTo(24)
+        }
+        activitySubtitleLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(activityTitleLabel)
+            make.top.equalTo(activityTitleLabel.snp.bottom)
+        }
+        
         let notificationBtn: UIButton = {
             let button = UIButton()
             button.setImage(UIImage(named: "crm_notification"), for: .normal)
@@ -166,7 +212,7 @@ class CRMViewController: BaseViewController {
             let label = UILabel()
             label.font = UIConstants.Font.h2
             label.textColor = .white
-            label.text = "活动通知"
+            label.text = "通知"
             return label
         }()
         let notificationSubtitleLabel: UILabel = {
@@ -186,7 +232,7 @@ class CRMViewController: BaseViewController {
             make.top.equalTo(notificationTitleLabel.snp.bottom)
         }
         
-        scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn, notificationBtn])
+        scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn, activityBtn, notificationBtn])
         
         maintainBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
@@ -207,10 +253,16 @@ class CRMViewController: BaseViewController {
             make.top.equalTo(classScheduleBtn.snp.bottom).offset(20)
             make.height.equalTo(85)
         }
-        notificationBtn.snp.makeConstraints { make in
+        activityBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(classPunchBtn.snp.bottom).offset(20)
+            make.height.equalTo(85)
+        }
+        notificationBtn.snp.makeConstraints { make in
+            make.leading.equalTo(UIConstants.Margin.leading)
+            make.trailing.equalTo(-UIConstants.Margin.trailing)
+            make.top.equalTo(activityBtn.snp.bottom).offset(20)
             make.height.equalTo(85)
             make.bottom.equalTo(-20)
         }
@@ -258,9 +310,9 @@ class CRMViewController: BaseViewController {
     @objc fileprivate func maintainBtnAction() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
         
-        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
-//        let flutter = TestViewController()
-//        flutter.setInitialRoute("/")
+//        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_sales")
         
         let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
@@ -274,9 +326,7 @@ class CRMViewController: BaseViewController {
     }
     
     @objc fileprivate func classScheduleBtnAction() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
         
-//        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
         let flutter = TestViewController()
         flutter.setInitialRoute("teacher_class_schedule")
         
@@ -290,15 +340,55 @@ class CRMViewController: BaseViewController {
         
         present(flutter, animated: true, completion: nil)
         
-        
     }
     
     @objc fileprivate func classPunchBtnAction() {
         
     }
     
-    @objc fileprivate func notificationBtnAction() {
+    @objc fileprivate func activityBtnAction() {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_activity")
         
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            if call.method == "Unauthorized" {
+                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
+                self?.present(DTopUpViewController(), animated: true, completion: nil)
+            }
+        }
+        
+        present(flutter, animated: true, completion: nil)
+    }
+    
+    @objc fileprivate func notificationBtnAction() {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_notification")
+        
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            if call.method == "Unauthorized" {
+                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
+                self?.present(DTopUpViewController(), animated: true, completion: nil)
+            }
+        }
+        
+        present(flutter, animated: true, completion: nil)
+    }
+
+    @objc fileprivate func userProfileBtnAction() {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_personal_info")
+        
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            if call.method == "Unauthorized" {
+                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
+                self?.present(DTopUpViewController(), animated: true, completion: nil)
+            }
+        }
+        
+        present(flutter, animated: true, completion: nil)
     }
     
     // MARK: - ============= Public =============

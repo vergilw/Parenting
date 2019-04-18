@@ -152,15 +152,19 @@ class VideoUserHeaderView: UICollectionReusableView {
         descriptionLabel.text = model.intro
         
         if let URLString = model.badge {
-            badgeImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { (image, error, type, url) in
-                if let image = image {
+            badgeImgView.kf.setImage(with: URL(string: URLString), placeholder: nil, options: nil, progressBlock: nil) { result in
+                switch result {
+                case .success(let value):
                     self.badgeImgView.snp.remakeConstraints { make in
                         make.leading.equalTo(self.nameLabel.snp.trailing).offset(5)
                         make.centerY.equalTo(self.nameLabel)
-                        make.size.equalTo(CGSize(width: 20/image.size.height*image.size.width, height: 20))
+                        make.size.equalTo(CGSize(width: 20/value.image.size.height*value.image.size.width, height: 20))
                     }
-                    self.badgeImgView.image = image
+                    self.badgeImgView.image = value.image
+                case .failure(let error):
+                    print("\(#function) kingfisher failure", error)
                 }
+                
             }
         }
         
