@@ -8,6 +8,7 @@
 
 import UIKit
 import Flutter
+import MessageUI
 
 class CRMViewController: BaseViewController {
 
@@ -172,35 +173,6 @@ class CRMViewController: BaseViewController {
             make.top.equalTo(classPunchTitleLabel.snp.bottom)
         }
         
-        let activityBtn: UIButton = {
-            let button = UIButton()
-            button.setImage(UIImage(named: "crm_notification"), for: .normal)
-            button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
-            return button
-        }()
-        let activityTitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.h2
-            label.textColor = .white
-            label.text = "活动"
-            return label
-        }()
-        let activitySubtitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.caption1
-            label.textColor = .white
-            label.text = "信息动态可视化"
-            return label
-        }()
-        activityBtn.addSubviews([activityTitleLabel, activitySubtitleLabel])
-        activityTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
-        }
-        activitySubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(activityTitleLabel)
-            make.top.equalTo(activityTitleLabel.snp.bottom)
-        }
         
         let notificationBtn: UIButton = {
             let button = UIButton()
@@ -212,7 +184,7 @@ class CRMViewController: BaseViewController {
             let label = UILabel()
             label.font = UIConstants.Font.h2
             label.textColor = .white
-            label.text = "通知"
+            label.text = "消息通知"
             return label
         }()
         let notificationSubtitleLabel: UILabel = {
@@ -230,6 +202,37 @@ class CRMViewController: BaseViewController {
         notificationSubtitleLabel.snp.makeConstraints { make in
             make.trailing.equalTo(notificationTitleLabel)
             make.top.equalTo(notificationTitleLabel.snp.bottom)
+        }
+        
+        
+        let activityBtn: UIButton = {
+            let button = UIButton()
+            button.setImage(UIImage(named: "crm_activity"), for: .normal)
+            button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
+            return button
+        }()
+        let activityTitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.h2
+            label.textColor = .white
+            label.text = "线下活动"
+            return label
+        }()
+        let activitySubtitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = UIConstants.Font.caption1
+            label.textColor = .white
+            label.text = "信息动态可视化"
+            return label
+        }()
+        activityBtn.addSubviews([activityTitleLabel, activitySubtitleLabel])
+        activityTitleLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(-28)
+            make.top.equalTo(24)
+        }
+        activitySubtitleLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(activityTitleLabel)
+            make.top.equalTo(activityTitleLabel.snp.bottom)
         }
         
         scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn, activityBtn, notificationBtn])
@@ -253,19 +256,20 @@ class CRMViewController: BaseViewController {
             make.top.equalTo(classScheduleBtn.snp.bottom).offset(20)
             make.height.equalTo(85)
         }
-        activityBtn.snp.makeConstraints { make in
+        notificationBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(classPunchBtn.snp.bottom).offset(20)
             make.height.equalTo(85)
         }
-        notificationBtn.snp.makeConstraints { make in
+        activityBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(activityBtn.snp.bottom).offset(20)
+            make.top.equalTo(notificationBtn.snp.bottom).offset(20)
             make.height.equalTo(85)
             make.bottom.equalTo(-20)
         }
+        
     }
     
     // MARK: - ============= Constraints =============
@@ -314,7 +318,7 @@ class CRMViewController: BaseViewController {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_sales")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
@@ -330,7 +334,7 @@ class CRMViewController: BaseViewController {
         let flutter = TestViewController()
         flutter.setInitialRoute("teacher_class_schedule")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
@@ -343,14 +347,10 @@ class CRMViewController: BaseViewController {
     }
     
     @objc fileprivate func classPunchBtnAction() {
-        
-    }
-    
-    @objc fileprivate func activityBtnAction() {
         let flutter = TestViewController()
-        flutter.setInitialRoute("module_activity")
+        flutter.setInitialRoute("class_punch")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
@@ -361,11 +361,35 @@ class CRMViewController: BaseViewController {
         present(flutter, animated: true, completion: nil)
     }
     
+    @objc fileprivate func activityBtnAction() {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_activity")
+        
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            if call.method == "Unauthorized" {
+                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
+                self?.present(DTopUpViewController(), animated: true, completion: nil)
+            } else if call.method == "remindAll" {
+                if let mobileNumbers = call.arguments as? Array<String> {
+                    
+//                    if MFMessageComposeViewController.canSendText() {
+//                        let controller = MFMessageComposeViewController()
+//                        controller.recipients = mobileNumbers
+//                        flutter.present(controller, animated: true, completion: nil)
+//                    }
+                }
+            }
+        }
+        
+        present(flutter, animated: true, completion: nil)
+    }
+    
     @objc fileprivate func notificationBtnAction() {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_notification")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
@@ -380,11 +404,18 @@ class CRMViewController: BaseViewController {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_personal_info")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
                 self?.present(DTopUpViewController(), animated: true, completion: nil)
+            } else if call.method == "uploadByQiNiu" {
+                guard let params = call.arguments as? [String: Any], let filepath = params["file_path"] as? String, let key = params["key"] as? String, let token = params["token"] as? String else { return result(FlutterError()) }
+                UploadService.sharedInstance.putImgToQiniu(filepath: filepath, key: key, token: token, completeClosure: { (resultState) in
+                    result(resultState)
+                })
+            } else {
+                result(FlutterMethodNotImplemented)
             }
         }
         

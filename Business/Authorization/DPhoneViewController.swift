@@ -16,7 +16,14 @@ class DPhoneViewController: BaseViewController {
         case binding
     }
     
+    enum PasscodeMode {
+        case passcode
+        case password
+    }
+    
     lazy fileprivate var mode: DPhoneMode = .signIn
+    
+    fileprivate lazy var passcodeMode: PasscodeMode = .passcode
     
     lazy fileprivate var viewModel = DAuthorizationViewModel()
     
@@ -97,8 +104,32 @@ class DPhoneViewController: BaseViewController {
         textField.font = UIConstants.Font.body
         textField.textColor = UIConstants.Color.head
         textField.attributedPlaceholder = NSAttributedString(string: "验证码", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
-        let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
-        textField.leftView = placeholderView
+//        let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
+//        textField.leftView = placeholderView
+//        textField.leftViewMode = .always
+        textField.keyboardDistanceFromTextField = 26+52+12
+        return textField
+    }()
+    
+    lazy fileprivate var pwdView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.isHidden = true
+        return view
+    }()
+    
+    lazy fileprivate var pwdTextField: UITextField = {
+        let textField = UITextField()
+        textField.delegate = self
+        textField.returnKeyType = .done
+        textField.isSecureTextEntry = true
+        textField.clearButtonMode = .whileEditing
+        textField.font = UIConstants.Font.body
+        textField.textColor = UIConstants.Color.head
+        textField.attributedPlaceholder = NSAttributedString(string: "密码", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
+//        let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
+//        textField.leftView = placeholderView
+//        textField.leftViewMode = .always
         textField.keyboardDistanceFromTextField = 26+52+12
         return textField
     }()
@@ -118,6 +149,15 @@ class DPhoneViewController: BaseViewController {
         button.isEnabled = false
         button.addTarget(self, action: #selector(fetchCodeBtnAction), for: .touchUpInside)
         
+        return button
+    }()
+    
+    fileprivate lazy var passcodeModeBtn: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(UIConstants.Color.head, for: .normal)
+        button.titleLabel?.font = UIConstants.Font.body
+        button.setTitle("账号密码登录", for: .normal)
+        button.addTarget(self, action: #selector(passcodeModeBtnAction), for: .touchUpInside)
         return button
     }()
     
@@ -208,7 +248,7 @@ class DPhoneViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
-        view.addSubviews([bgImgView, backBarBtn, titleLabel, subtitleLabel, phoneView, codeView, actionBtn, separatorLabel, wechatBtn, agreementBtn])
+        view.addSubviews([bgImgView, backBarBtn, titleLabel, subtitleLabel, phoneView, codeView, pwdView, codeLineImgView, passcodeModeBtn, actionBtn, separatorLabel, wechatBtn, agreementBtn])
         
         if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {
             separatorLabel.isHidden = true
@@ -220,7 +260,8 @@ class DPhoneViewController: BaseViewController {
         }
         
         phoneView.addSubviews([phoneTextField, phoneLineImgView])
-        codeView.addSubviews([codeTextField, fetchBtn, codeLineImgView])
+        codeView.addSubviews([codeTextField, fetchBtn])
+        pwdView.addSubviews([pwdTextField])
         
         separatorLabel.drawSeparator(startPoint: CGPoint(x: 0, y: 6), endPoint: CGPoint(x: 16, y: 6))
         separatorLabel.drawSeparator(startPoint: CGPoint(x: 49, y: 6), endPoint: CGPoint(x: 65, y: 6))
@@ -264,8 +305,19 @@ class DPhoneViewController: BaseViewController {
             make.leading.equalTo(40)
             make.trailing.equalTo(-40)
 //            make.top.equalTo(phoneView.snp.bottom).offset(35)
-            make.bottom.equalTo(actionBtn.snp.top).offset(-26)
+            make.bottom.equalTo(passcodeModeBtn.snp.top).offset(0)
             make.height.equalTo(32)
+        }
+        pwdView.snp.makeConstraints { make in
+            make.leading.equalTo(40)
+            make.trailing.equalTo(-40)
+            make.bottom.equalTo(passcodeModeBtn.snp.top).offset(0)
+            make.height.equalTo(32)
+        }
+        passcodeModeBtn.snp.makeConstraints { make in
+            make.leading.equalTo(codeView)
+            make.size.equalTo(CGSize(width: 84, height: 35))
+            make.bottom.equalTo(actionBtn.snp.top).offset(-20)
         }
         actionBtn.snp.makeConstraints { make in
             make.leading.equalTo(48)
@@ -309,9 +361,13 @@ class DPhoneViewController: BaseViewController {
             make.leading.bottom.top.equalToSuperview()
             make.trailing.equalTo(fetchBtn.snp.leading)
         }
+        pwdTextField.snp.makeConstraints { make in
+            make.leading.bottom.top.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
         codeLineImgView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(codeView)
+            make.bottom.equalTo(codeView)
             make.height.equalTo(0.5)
         }
         fetchBtn.snp.makeConstraints { make in
@@ -436,6 +492,19 @@ class DPhoneViewController: BaseViewController {
         viewController.url = URL(string: "https://yy.1314-edu.com/agreement.html")
         #endif
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    @objc fileprivate func passcodeModeBtnAction() {
+        if passcodeMode == .passcode {
+            passcodeMode = .password
+            codeView.isHidden = true
+            pwdView.isHidden = false
+            
+        } else if passcodeMode == .password {
+            passcodeMode = .passcode
+            codeView.isHidden = false
+            pwdView.isHidden = true
+        }
     }
     
     deinit {

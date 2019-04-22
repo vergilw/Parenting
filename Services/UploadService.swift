@@ -36,6 +36,19 @@ class UploadService {
         }))
     }
     
+    func putImgToQiniu(filepath: String, key: String, token: String, completeClosure: @escaping ((Bool)->Void)) {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: filepath)) else { return completeClosure(false) }
+        
+        let option = QNUploadOption(mime: self.mimeType(imageData: data), progressHandler: { (string, float) in
+            
+        }, params: [AnyHashable : Any](), checkCrc: true, cancellationSignal: { () -> Bool in
+            return false
+        })
+        QNUploadManager()!.put(data, key: key, token: token, complete: { (response, key, data) in
+            completeClosure(response?.isOK ?? false)
+        }, option: option!)
+    }
+    
     func mimeType(imageData: Data) -> String {
         var values = [UInt8](repeating:0, count:1)
         imageData.copyBytes(to: &values, count: 1)

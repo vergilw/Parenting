@@ -20,6 +20,6 @@ platform :ios do
   lane :beta do
     increment_build_number
     build_app(workspace: "parenting.xcworkspace", scheme: "parenting")
-    upload_to_testflight
+    upload_to_testflight(distribute_external: true)
   end
 end
