@@ -312,7 +312,7 @@ class CRMViewController: BaseViewController {
     
     // MARK: - ============= Action =============
     @objc fileprivate func maintainBtnAction() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
         
 //        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
         let flutter = TestViewController()
@@ -370,15 +370,15 @@ class CRMViewController: BaseViewController {
             if call.method == "Unauthorized" {
                 //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
                 self?.present(DTopUpViewController(), animated: true, completion: nil)
-            } else if call.method == "remindAll" {
-                if let mobileNumbers = call.arguments as? Array<String> {
-                    
+//            } else if call.method == "remindAll" {
+//                if let mobileNumbers = call.arguments as? Array<String> {
+                
 //                    if MFMessageComposeViewController.canSendText() {
 //                        let controller = MFMessageComposeViewController()
 //                        controller.recipients = mobileNumbers
 //                        flutter.present(controller, animated: true, completion: nil)
 //                    }
-                }
+//                }
             }
         }
         

@@ -186,7 +186,7 @@ fileprivate class HUDView: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        let size = NSString(string: titleLabel.text!).boundingRect(with: CGSize(width: UIScreenWidth-100, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : titleLabel.font], context: nil).size
+        let size = NSString(string: titleLabel.text!).boundingRect(with: CGSize(width: UIScreenWidth-100, height: CGFloat.greatestFiniteMagnitude), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font : titleLabel.font!], context: nil).size
         layer.cornerRadius = (size.height+28)/2
         return CGSize(width: size.width+52, height: size.height+28)
     }

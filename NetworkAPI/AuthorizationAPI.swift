@@ -13,7 +13,8 @@ let AuthorizationProvider = MoyaProvider<AuthorizationAPI>(manager: DefaultAlamo
 
 enum AuthorizationAPI {
     case fetchCode(phone: Int)
-    case signIn(phone: String, code: String)
+    case signInWithPasscode(account: String, passcode: String)
+    case signInWithPassword(account: String, password: String)
     case signInWithWechat(openID: String, accessToken: String)
     case signUpWithWechat(openID: String, phone: String, code: String)
     case bindWechat(parameters: [String: Any])
@@ -23,14 +24,16 @@ enum AuthorizationAPI {
 extension AuthorizationAPI: TargetType {
     
     public var baseURL: URL {
-        return URL(string: ServerHost)!
+        return URL(string: CRMServerHost)!
     }
     
     public var path: String {
         switch self {
         case .fetchCode:
             return "/join/token"
-        case .signIn:
+        case .signInWithPasscode:
+            return "/login"
+        case .signInWithPassword:
             return "/login"
         case .signInWithWechat:
             return "/app/wechats"
@@ -47,7 +50,9 @@ extension AuthorizationAPI: TargetType {
         switch self {
         case .fetchCode:
             return .get
-        case .signIn:
+        case .signInWithPasscode:
+            return .post
+        case .signInWithPassword:
             return .post
         case .signInWithWechat:
             return .post
@@ -69,8 +74,11 @@ extension AuthorizationAPI: TargetType {
         case let .fetchCode(phone):
             return .requestParameters(parameters: ["identity":phone], encoding: URLEncoding.default)
 
-        case let .signIn(phone, code):
-            return .requestParameters(parameters: ["identity":phone, "password":code], encoding: URLEncoding.default)
+        case let .signInWithPasscode(account, passcode):
+            return .requestParameters(parameters: ["identity":account, "token":passcode], encoding: URLEncoding.default)
+            
+        case let .signInWithPassword(account, password):
+            return .requestParameters(parameters: ["identity":account, "password":password], encoding: URLEncoding.default)
             
         case let .signInWithWechat(openID, accessToken):
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken], encoding: URLEncoding.default)

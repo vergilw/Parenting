@@ -62,18 +62,18 @@ class DPhoneViewController: BaseViewController {
         return view
     }()
     
-    lazy fileprivate var phoneTextField: UITextField = {
+    lazy fileprivate var accountTextField: UITextField = {
         let textField = UITextField()
         if #available(iOS 11, *) {
             textField.textContentType = .telephoneNumber
         }
         textField.delegate = self
         textField.returnKeyType = .next
-        textField.keyboardType = .asciiCapableNumberPad
+        textField.keyboardType = .emailAddress
         textField.clearButtonMode = .whileEditing
         textField.font = UIConstants.Font.body
         textField.textColor = UIConstants.Color.head
-        textField.attributedPlaceholder = NSAttributedString(string: "手机号", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
+        textField.attributedPlaceholder = NSAttributedString(string: "手机号/邮箱", attributes: [NSAttributedString.Key.foregroundColor : UIConstants.Color.foot])
         let placeholderView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 36, height: 44)))
         textField.leftView = placeholderView
         textField.keyboardDistanceFromTextField = 35+32+26+52+12
@@ -157,6 +157,7 @@ class DPhoneViewController: BaseViewController {
         button.setTitleColor(UIConstants.Color.head, for: .normal)
         button.titleLabel?.font = UIConstants.Font.body
         button.setTitle("账号密码登录", for: .normal)
+        button.contentHorizontalAlignment = .left
         button.addTarget(self, action: #selector(passcodeModeBtnAction), for: .touchUpInside)
         return button
     }()
@@ -259,7 +260,7 @@ class DPhoneViewController: BaseViewController {
             wechatBtn.isHidden = true
         }
         
-        phoneView.addSubviews([phoneTextField, phoneLineImgView])
+        phoneView.addSubviews([accountTextField, phoneLineImgView])
         codeView.addSubviews([codeTextField, fetchBtn])
         pwdView.addSubviews([pwdTextField])
         
@@ -349,7 +350,7 @@ class DPhoneViewController: BaseViewController {
             make.height.equalTo(12+20)
         }
         
-        phoneTextField.snp.makeConstraints { make in
+        accountTextField.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         phoneLineImgView.snp.makeConstraints { make in
@@ -402,7 +403,7 @@ class DPhoneViewController: BaseViewController {
                 if interval <= -60 {
                     self?.passcodeTimer?.invalidate()
                     self?.passcodeTimer = nil
-                    if self?.phoneTextField.text?.isPhone() ?? false {
+                    if self?.accountTextField.text?.isPhone() ?? false {
                         self?.fetchBtn.isEnabled = true
                     }
                     self?.fetchBtn.setTitle("获取验证码", for: .normal)
@@ -420,7 +421,7 @@ class DPhoneViewController: BaseViewController {
     
     @objc func fetchCodeBtnAction() {
         fetchBtn.startAnimating()
-        viewModel.fetchCode(phone: Int(phoneTextField.text!)!) { (bool) in
+        viewModel.fetchCode(phone: Int(accountTextField.text!)!) { (bool) in
             self.fetchBtn.stopAnimating()
             self.codeTextField.becomeFirstResponder()
         
@@ -433,23 +434,36 @@ class DPhoneViewController: BaseViewController {
         view.endEditing(true)
 
         if mode == .signIn {
-            actionBtn.startAnimating()
-            viewModel.signIn(phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
-                self.actionBtn.stopAnimating()
-                if code >= 0 {
-                    HUDService.sharedInstance.show(string: "登录成功")
-                    self.dismiss(animated: true, completion: nil)
+            if passcodeMode == .passcode {
+                actionBtn.startAnimating()
+                viewModel.signInWithPasscode(account: accountTextField.text!, passcode: codeTextField.text!) { (code) in
+                    self.actionBtn.stopAnimating()
+                    if code >= 0 {
+                        HUDService.sharedInstance.show(string: "登录成功")
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
+                
+            } else if passcodeMode == .password {
+                actionBtn.startAnimating()
+                viewModel.signInWithPassword(account: accountTextField.text!, password: pwdTextField.text!) { (code) in
+                    self.actionBtn.stopAnimating()
+                    if code >= 0 {
+                        HUDService.sharedInstance.show(string: "登录成功")
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 }
             }
+            
 
         } else if mode == .binding {
             guard let openID = viewModel.wechatUID else { return }
             actionBtn.startAnimating()
-            viewModel.signUp(openID: openID, phone: phoneTextField.text!, code: codeTextField.text!) { (code) in
+            viewModel.signUp(openID: openID, phone: accountTextField.text!, code: codeTextField.text!) { (code) in
                 self.actionBtn.stopAnimating()
 
                 if code == 10004 {
-                    let alertController = UIAlertController(title: nil, message: "手机号\(self.phoneTextField.text!)已注册，请直接登录", preferredStyle: UIAlertController.Style.alert)
+                    let alertController = UIAlertController(title: nil, message: "手机号\(self.accountTextField.text!)已注册，请直接登录", preferredStyle: UIAlertController.Style.alert)
                     alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.cancel, handler: { alertAction in
                         self.navigationController?.pushViewController(DPhoneViewController(mode: .signIn), animated: true)
                     }))
@@ -499,11 +513,13 @@ class DPhoneViewController: BaseViewController {
             passcodeMode = .password
             codeView.isHidden = true
             pwdView.isHidden = false
+            passcodeModeBtn.setTitle("验证码登录", for: .normal)
             
         } else if passcodeMode == .password {
             passcodeMode = .passcode
             codeView.isHidden = false
             pwdView.isHidden = true
+            passcodeModeBtn.setTitle("账号密码登录", for: .normal)
         }
     }
     
@@ -517,7 +533,7 @@ class DPhoneViewController: BaseViewController {
 
 extension DPhoneViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField == phoneTextField {
+        if textField == accountTextField {
             phoneLineImgView.backgroundColor = UIConstants.Color.primaryGreen
             codeLineImgView.backgroundColor = UIConstants.Color.separator
         } else if textField == codeTextField {
@@ -534,7 +550,7 @@ extension DPhoneViewController: UITextFieldDelegate {
         
         //auto fill phone
         var autoFillString = string
-        if textField == phoneTextField && string.count > 1 {
+        if textField == accountTextField && string.count > 1 {
             autoFillString = string.trimmingCharacters(in: .whitespaces)
             if autoFillString.hasPrefix("+86") {
                 autoFillString.removeFirst(3)
@@ -543,7 +559,7 @@ extension DPhoneViewController: UITextFieldDelegate {
         
         let resultText = NSString(string: text).replacingCharacters(in: range, with: autoFillString)
         
-        if textField == phoneTextField {
+        if textField == accountTextField {
             if resultText.isPhone() {
                 if AppCacheService.sharedInstance.lastFetchingPasscodeDate == nil {
                     fetchBtn.isEnabled = true
@@ -559,7 +575,7 @@ extension DPhoneViewController: UITextFieldDelegate {
                 actionBtn.backgroundColor = UIConstants.Color.disable
             }
         } else if textField == codeTextField {
-            if resultText.isCode() && phoneTextField.text?.isPhone() ?? false {
+            if resultText.isCode() && accountTextField.text?.isPhone() ?? false {
                 actionBtn.isEnabled = true
                 actionBtn.backgroundColor = UIConstants.Color.primaryGreen
             } else {
@@ -569,14 +585,14 @@ extension DPhoneViewController: UITextFieldDelegate {
         }
         
         if autoFillString == string {
-            if textField == phoneTextField && resultText.isPhone() {
+            if textField == accountTextField && resultText.isPhone() {
                 textField.text = resultText
                 codeTextField.becomeFirstResponder()
             }
             return true
         }
         textField.text = autoFillString
-        if textField == phoneTextField && autoFillString.isPhone() {
+        if textField == accountTextField && autoFillString.isPhone() {
             codeTextField.becomeFirstResponder()
         }
         return false

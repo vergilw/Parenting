@@ -11,11 +11,8 @@ import Alamofire
 
 
 //FIXME: Server Host
-//#if DEBUG
-    var ServerHost = "http://sg_staging.1314-edu.com/"
-//#else
-//    var ServerHost = "https://yy.1314-edu.com"
-//#endif
+var CRMServerHost = "http://sg_staging.1314-edu.com/"
+var ServerHost = "https://yy.1314-edu.com"
 
 class DefaultAlamofireManager: Alamofire.SessionManager {
     static let sharedManager: DefaultAlamofireManager = {

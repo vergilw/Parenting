@@ -30,7 +30,7 @@ class AuthorizationViewController: BaseViewController {
         paragraph.maximumLineHeight = 45
         paragraph.minimumLineHeight = 45
         attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (45-label.font.lineHeight)/4+1.25, NSAttributedString.Key.font: label.font], range: NSRange(location: 0, length: attributedString.length))
+            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.baselineOffset: (45-label.font.lineHeight)/4+1.25, NSAttributedString.Key.font: label.font!], range: NSRange(location: 0, length: attributedString.length))
         label.attributedText = attributedString
         return label
     }()

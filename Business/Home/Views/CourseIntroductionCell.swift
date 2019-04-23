@@ -110,7 +110,7 @@ class CourseIntroductionCell: UITableViewCell {
         paragraph.paragraphSpacing = 19
         paragraph.lineBreakMode = .byCharWrapping
         attributedString.addAttributes([
-            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: label.font], range: NSRange(location: 0, length: attributedString.length))
+            NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: label.font!], range: NSRange(location: 0, length: attributedString.length))
         label.attributedText = attributedString
         
         return label

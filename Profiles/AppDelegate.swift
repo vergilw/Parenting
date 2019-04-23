@@ -20,36 +20,44 @@ class AppDelegate: FlutterAppDelegate {
 
 //    var window: UIWindow?
     
-    let tabBarController: UITabBarController = {
-        let homeVC = DHomeViewController()
+    lazy var homeNavigationController: UINavigationController = {
         let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-        let homeImg = UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        let homeItem = UITabBarItem(title: "首页", image: homeImg, tag: 0)
+        let homeItem = UITabBarItem(title: "首页", image: UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal), tag: 0)
         homeNavigationController.tabBarItem = homeItem
         homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
         homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
+        return homeNavigationController
+    }()
+    
+    lazy var videoNavigationController: UINavigationController = {
         let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
-        let videoImg = UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        let videoItem = UITabBarItem(title: "视频", image: videoImg, tag: 1)
+        let videoItem = UITabBarItem(title: "视频", image: UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal), tag: 1)
         videoNavigationController.tabBarItem = videoItem
         videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_videoSelected")?.withRenderingMode(.alwaysOriginal)
         videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
+        return videoNavigationController
+    }()
+    
+    lazy var crmNavigationController: UINavigationController = {
         let crmNavigationController = BaseNavigationController(rootViewController: CRMViewController())
-        let crmImg = UIImage(named: "tab_crmNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
-        let crmItem = UITabBarItem(title: "园区", image: crmImg, tag: 2)
+        let crmItem = UITabBarItem(title: "园区", image: UIImage(named: "tab_crmNormal")?.withRenderingMode(.alwaysOriginal), tag: 2)
         crmNavigationController.tabBarItem = crmItem
         crmNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_crmSelected")?.withRenderingMode(.alwaysOriginal)
         crmNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
+        return crmNavigationController
+    }()
+    
+    lazy var meNavigationController: UINavigationController = {
         let meNavigationController = BaseNavigationController(rootViewController: DMeViewController())
-        let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)//.byResize(to: CGSize(width: 24, height: 24))
+        let meImg = UIImage(named: "tab_meNormal")?.withRenderingMode(.alwaysOriginal)
         let meItem = UITabBarItem(title: "我", image: meImg, tag: 3)
         meNavigationController.tabBarItem = meItem
         meNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_meSelected")?.withRenderingMode(.alwaysOriginal)
         meNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        
+        return meNavigationController
+    }()
+    
+    let tabBarController: UITabBarController = {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.isTranslucent = false
         tabBarController.tabBar.backgroundImage = UIImage(color: .white)
@@ -59,7 +67,6 @@ class AppDelegate: FlutterAppDelegate {
         tabBarController.tabBar.layer.shadowOpacity = 0.05
         tabBarController.tabBar.layer.shadowColor = UIColor.black.cgColor
         
-        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, crmNavigationController, meNavigationController], animated: true)
         
         return tabBarController
     }()
@@ -108,6 +115,8 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
         
+        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, crmNavigationController, meNavigationController], animated: false)
+
         tabBarController.delegate = tabBarDelegate
         self.window?.rootViewController = tabBarController
         

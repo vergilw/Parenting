@@ -139,7 +139,7 @@ class DMeMessageDetailViewController: BaseViewController {
             paragraph.lineBreakMode = .byCharWrapping
             
             attributedString.addAttributes([
-                NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: bodyLabel.font], range: NSRange(location: 0, length: attributedString.length))
+                NSAttributedString.Key.paragraphStyle: paragraph, NSAttributedString.Key.font: bodyLabel.font!], range: NSRange(location: 0, length: attributedString.length))
             
             bodyLabel.attributedText = attributedString
         }

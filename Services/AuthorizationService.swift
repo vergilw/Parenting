@@ -29,6 +29,20 @@ class AuthorizationService {
         }
     }
     
+    var organToken: String? {
+        get {
+            let string = cache?.object(forKey: "organToken") as? String
+            return string
+        }
+        set {
+            if newValue != nil {
+                cache?.setObject(newValue as NSCoding?, forKey: "organToken")
+            } else {
+                cache?.removeObject(forKey: "organToken")
+            }
+        }
+    }
+    
     private init() {
         addObserver()
     }
@@ -39,8 +53,17 @@ class AuthorizationService {
     }
     
     @objc func signInDidSuccess() {
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-            appDelegate.registerRemoteNotification()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        appDelegate.registerRemoteNotification()
+        
+        let viewModel = DAuthorizationViewModel()
+        viewModel.fetchOrganToken { (token) in
+            if token != nil {
+                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.crmNavigationController, appDelegate.meNavigationController], animated: false)
+            } else {
+                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
+            }
         }
     }
     
