@@ -28,9 +28,5 @@ class TestViewController: FlutterViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    
-    deinit {
-        engine.destroyContext()
-    }
 
 }
