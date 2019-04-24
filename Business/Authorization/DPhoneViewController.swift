@@ -514,12 +514,14 @@ class DPhoneViewController: BaseViewController {
             codeView.isHidden = true
             pwdView.isHidden = false
             passcodeModeBtn.setTitle("验证码登录", for: .normal)
+            pwdTextField.becomeFirstResponder()
             
         } else if passcodeMode == .password {
             passcodeMode = .passcode
             codeView.isHidden = false
             pwdView.isHidden = true
             passcodeModeBtn.setTitle("账号密码登录", for: .normal)
+            codeTextField.becomeFirstResponder()
         }
     }
     
@@ -560,22 +562,34 @@ extension DPhoneViewController: UITextFieldDelegate {
         let resultText = NSString(string: text).replacingCharacters(in: range, with: autoFillString)
         
         if textField == accountTextField {
-            if resultText.isPhone() {
+            if resultText.isPhone() || resultText.isEmail() {
                 if AppCacheService.sharedInstance.lastFetchingPasscodeDate == nil {
                     fetchBtn.isEnabled = true
                 }
             } else {
                 fetchBtn.isEnabled = false
             }
-            if resultText.isPhone() && codeTextField.text?.isCode() ?? false {
+            if (resultText.isPhone() || resultText.isEmail()) &&
+                (passcodeMode == .passcode && codeTextField.text?.isCode() ?? false) &&
+                (passcodeMode == .password && pwdTextField.text?.count ?? 0 >= 6) {
                 actionBtn.isEnabled = true
                 actionBtn.backgroundColor = UIConstants.Color.primaryGreen
             } else {
                 actionBtn.isEnabled = false
                 actionBtn.backgroundColor = UIConstants.Color.disable
             }
-        } else if textField == codeTextField {
-            if resultText.isCode() && accountTextField.text?.isPhone() ?? false {
+            
+        } else if textField == codeTextField && passcodeMode == .passcode {
+            if resultText.isCode() && (accountTextField.text?.isPhone() ?? false || accountTextField.text?.isEmail() ?? false) {
+                actionBtn.isEnabled = true
+                actionBtn.backgroundColor = UIConstants.Color.primaryGreen
+            } else {
+                actionBtn.isEnabled = false
+                actionBtn.backgroundColor = UIConstants.Color.disable
+            }
+            
+        } else if textField == pwdTextField && passcodeMode == .password {
+            if resultText.count >= 6 && (accountTextField.text?.isPhone() ?? false || accountTextField.text?.isEmail() ?? false) {
                 actionBtn.isEnabled = true
                 actionBtn.backgroundColor = UIConstants.Color.primaryGreen
             } else {
@@ -587,7 +601,12 @@ extension DPhoneViewController: UITextFieldDelegate {
         if autoFillString == string {
             if textField == accountTextField && resultText.isPhone() {
                 textField.text = resultText
-                codeTextField.becomeFirstResponder()
+                if passcodeMode == .passcode {
+                    codeTextField.becomeFirstResponder()
+                } else if passcodeMode == .password {
+                    pwdTextField.becomeFirstResponder()
+                }
+                
             }
             return true
         }

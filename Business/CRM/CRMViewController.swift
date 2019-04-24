@@ -8,7 +8,7 @@
 
 import UIKit
 import Flutter
-import MessageUI
+import Kingfisher
 
 class CRMViewController: BaseViewController {
 
@@ -26,6 +26,8 @@ class CRMViewController: BaseViewController {
         let imgView = UIImageView()
 //        imgView.image = UIImage(named: <#T##String#>)
         imgView.contentMode = .scaleAspectFill
+        imgView.layer.cornerRadius = 17.5
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -46,7 +48,50 @@ class CRMViewController: BaseViewController {
         let label = UILabel()
         label.font = UIConstants.Font.caption1
         label.textColor = UIConstants.Color.head
+        label.text = "园区暂无通知"
         return label
+    }()
+    
+    fileprivate lazy var salesViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_sales")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
+    }()
+    
+    fileprivate lazy var scheduleViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("teacher_class_schedule")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
+    }()
+    
+    fileprivate lazy var punchViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("class_punch")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
+    }()
+    
+    fileprivate lazy var notificationViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_notification")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
+    }()
+    
+    fileprivate lazy var activityViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_activity")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
+    }()
+    
+    fileprivate lazy var profileViewController: TestViewController = {
+        let flutter = TestViewController()
+        flutter.setInitialRoute("module_personal_info")
+        setupFlutterChannel(flutter: flutter)
+        return flutter
     }()
     
     override func viewDidLoad() {
@@ -57,6 +102,8 @@ class CRMViewController: BaseViewController {
         initContentView()
         initConstraints()
         addNotificationObservers()
+        
+        fetchProfile()
     }
     
     // MARK: - ============= Initialize View =============
@@ -69,16 +116,15 @@ class CRMViewController: BaseViewController {
         
         let userProfileBtn: UIButton = {
             let button = UIButton()
-            button.setTitleColor(UIConstants.Color.body, for: .normal)
-            button.titleLabel?.font = UIConstants.Font.body
-            button.setTitle("个人资料修改", for: .normal)
             button.addTarget(self, action: #selector(userProfileBtnAction), for: .touchUpInside)
             return button
         }()
         scrollView.addSubview(userProfileBtn)
         userProfileBtn.snp.makeConstraints { make in
             make.centerY.leading.equalTo(avatarImgView)
-            make.size.equalTo(CGSize(width: 100, height: 40))
+            make.height.equalTo(40)
+            make.leading.equalTo(avatarImgView.snp.leading).offset(-10)
+            make.trailing.equalTo(nameLabel.snp.trailing).offset(10)
         }
     }
     
@@ -304,6 +350,24 @@ class CRMViewController: BaseViewController {
     }
     
     // MARK: - ============= Request =============
+    fileprivate func fetchProfile() {
+        CRMProvider.request(.members, completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            
+            if let accountsJSON = JSON?["members"] as? [[String: Any]] {
+                for account in accountsJSON {
+                    if let avatar = account["avatar_url"] as? String, let name = account["name"] as? String {
+                        self.nameLabel.text = name
+                        
+                        self.avatarImgView.kf.setImage(with: URL(string: avatar), placeholder: UIImage(named: "public_avatarPlaceholder"))
+                        return
+                    }
+                }
+            }
+            
+            self.nameLabel.text = "个人资料修改"
+            self.avatarImgView.image = UIImage(named: "public_avatarPlaceholder")
+        }))
+    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
@@ -315,115 +379,75 @@ class CRMViewController: BaseViewController {
 //        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
         
 //        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_sales")
         
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            }
-        }
+//        let flutter = TestViewController()
+//        flutter.setInitialRoute("module_sales")
+//        setupFlutterChannel(flutter: flutter)
+        present(salesViewController, animated: true, completion: nil)
         
-        present(flutter, animated: true, completion: nil)
     }
     
     @objc fileprivate func classScheduleBtnAction() {
-        
-        let flutter = TestViewController()
-        flutter.setInitialRoute("teacher_class_schedule")
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            }
-        }
-        
-        present(flutter, animated: true, completion: nil)
-        
+        present(scheduleViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func classPunchBtnAction() {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("class_punch")
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            }
-        }
-        
-        present(flutter, animated: true, completion: nil)
+        present(punchViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func activityBtnAction() {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_activity")
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-//            } else if call.method == "remindAll" {
-//                if let mobileNumbers = call.arguments as? Array<String> {
-                
-//                    if MFMessageComposeViewController.canSendText() {
-//                        let controller = MFMessageComposeViewController()
-//                        controller.recipients = mobileNumbers
-//                        flutter.present(controller, animated: true, completion: nil)
-//                    }
-//                }
-            }
-        }
-        
-        present(flutter, animated: true, completion: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func notificationBtnAction() {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_notification")
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            }
-        }
-        
-        present(flutter, animated: true, completion: nil)
+        present(notificationViewController, animated: true, completion: nil)
     }
 
     @objc fileprivate func userProfileBtnAction() {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_personal_info")
-        
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
-        channel.setMethodCallHandler { [weak self] (call, result) in
-            if call.method == "Unauthorized" {
-                //                let authorizationNavigationController = BaseNavigationController(rootViewController: DTopUpViewController())
-                self?.present(DTopUpViewController(), animated: true, completion: nil)
-            } else if call.method == "uploadByQiNiu" {
-                guard let params = call.arguments as? [String: Any], let filepath = params["file_path"] as? String, let key = params["key"] as? String, let token = params["token"] as? String else { return result(FlutterError()) }
-                UploadService.sharedInstance.putImgToQiniu(filepath: filepath, key: key, token: token, completeClosure: { (resultState) in
-                    result(resultState)
-                })
-            } else {
-                result(FlutterMethodNotImplemented)
-            }
-        }
-        
-        present(flutter, animated: true, completion: nil)
+        present(profileViewController, animated: true, completion: nil)
     }
     
     // MARK: - ============= Public =============
     
     // MARK: - ============= Private =============
-
+    fileprivate func setupFlutterChannel(flutter: FlutterViewController) {
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            if call.method == "uploadByQiNiu" {
+                guard let params = call.arguments as? [String: Any], let filepath = params["file_path"] as? String, let key = params["key"] as? String, let token = params["token"] as? String else { return result(FlutterError()) }
+                UploadService.sharedInstance.putImgToQiniu(filepath: filepath, key: key, token: token, completeClosure: { (resultState) in
+                    result(resultState)
+                })
+                
+            } else if call.method == "getTokens" {
+                if let authToken = AuthorizationService.sharedInstance.user?.auth_token, let organToken = AuthorizationService.sharedInstance.organToken {
+                    result(["Auth-Token": authToken, "Organ-Token": organToken])
+                } else {
+                    result(FlutterError(code: "Token does not exist", message: nil, details: nil))
+                }
+                
+            } else if call.method == "resetAuthToken" {
+                if let user = AuthorizationService.sharedInstance.user, let token = call.arguments as? String {
+                    let model = user
+                    model.auth_token = token
+                    AuthorizationService.sharedInstance.user = model
+                } else {
+                    result(FlutterError(code: "User does not exist", message: nil, details: nil))
+                }
+                
+            } else if call.method == "resetOrganToken" {
+                if let token = call.arguments as? String {
+                    AuthorizationService.sharedInstance.organToken = token
+                } else {
+                    result(FlutterError(code: "Arguments does not exist", message: nil, details: nil))
+                }
+                
+            } else if call.method == "reload" {
+                flutter.present(BaseNavigationController(rootViewController: AuthorizationViewController()), animated: true, completion: nil)
+                
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        }
+    }
 }

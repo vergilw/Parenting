@@ -68,7 +68,9 @@ class AuthorizationService {
     }
     
     @objc func signOutDidSuccess() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
+        appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
     }
     
     func isSignIn() -> Bool {
@@ -92,6 +94,7 @@ class AuthorizationService {
     
     func signOut() {
         user = nil
+        organToken = nil
         NotificationCenter.default.post(name: Notification.Authorization.signOutDidSuccess, object: nil)
     }
     

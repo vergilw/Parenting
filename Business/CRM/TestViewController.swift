@@ -14,7 +14,7 @@ class TestViewController: FlutterViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         GeneratedPluginRegistrant.register(with: engine)
     }
     
@@ -28,5 +28,9 @@ class TestViewController: FlutterViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    deinit {
+        engine.destroyContext()
+    }
 
 }

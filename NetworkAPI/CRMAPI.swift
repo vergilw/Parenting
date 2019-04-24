@@ -13,6 +13,7 @@ let CRMProvider = MoyaProvider<CRMAPI>(manager: DefaultAlamofireManager.sharedMa
 
 enum CRMAPI {
     case accounts
+    case members
 }
 
 extension CRMAPI: TargetType {
@@ -25,12 +26,16 @@ extension CRMAPI: TargetType {
         switch self {
         case .accounts:
             return "/my/accounts"
+        case .members:
+            return "/my/members"
         }
     }
     
     public var method: Moya.Method {
         switch self {
         case .accounts:
+            return .get
+        case .members:
             return .get
         }
     }
@@ -42,6 +47,8 @@ extension CRMAPI: TargetType {
     var task: Task {
         switch self {
         case .accounts:
+            return .requestPlain
+        case .members:
             return .requestPlain
         }
         

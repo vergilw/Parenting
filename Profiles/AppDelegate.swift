@@ -115,7 +115,12 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
         
-        tabBarController.setViewControllers([homeNavigationController, videoNavigationController, crmNavigationController, meNavigationController], animated: false)
+        if AuthorizationService.sharedInstance.organToken != nil {
+            tabBarController.setViewControllers([homeNavigationController, videoNavigationController, crmNavigationController, meNavigationController], animated: false)
+        } else {
+            tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: false)
+        }
+        
 
         tabBarController.delegate = tabBarDelegate
         self.window?.rootViewController = tabBarController
