@@ -11,7 +11,6 @@ import HandyJSON
 class UserModel: HandyJSON {
     
     var id: Int?
-    var auth_token: String?
     var mobile: Int?
     var avatar_url: String?
     var name: String?

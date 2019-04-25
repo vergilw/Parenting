@@ -29,6 +29,20 @@ class AuthorizationService {
         }
     }
     
+    var authToken: String? {
+        get {
+            let string = cache?.object(forKey: "authToken") as? String
+            return string
+        }
+        set {
+            if newValue != nil {
+                cache?.setObject(newValue as NSCoding?, forKey: "authToken")
+            } else {
+                cache?.removeObject(forKey: "authToken")
+            }
+        }
+    }
+    
     var organToken: String? {
         get {
             let string = cache?.object(forKey: "organToken") as? String

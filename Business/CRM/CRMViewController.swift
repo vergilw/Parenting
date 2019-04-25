@@ -420,17 +420,15 @@ class CRMViewController: BaseViewController {
                 })
                 
             } else if call.method == "getTokens" {
-                if let authToken = AuthorizationService.sharedInstance.user?.auth_token, let organToken = AuthorizationService.sharedInstance.organToken {
+                if let authToken = AuthorizationService.sharedInstance.authToken, let organToken = AuthorizationService.sharedInstance.organToken {
                     result(["Auth-Token": authToken, "Organ-Token": organToken])
                 } else {
                     result(FlutterError(code: "Token does not exist", message: nil, details: nil))
                 }
                 
             } else if call.method == "resetAuthToken" {
-                if let user = AuthorizationService.sharedInstance.user, let token = call.arguments as? String {
-                    let model = user
-                    model.auth_token = token
-                    AuthorizationService.sharedInstance.user = model
+                if let token = call.arguments as? String {
+                    AuthorizationService.sharedInstance.authToken = token
                 } else {
                     result(FlutterError(code: "User does not exist", message: nil, details: nil))
                 }

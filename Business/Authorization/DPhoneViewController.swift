@@ -618,4 +618,17 @@ extension DPhoneViewController: UITextFieldDelegate {
         }
         return false
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == accountTextField {
+            if passcodeMode == .passcode {
+                codeTextField.becomeFirstResponder()
+            } else if passcodeMode == .password {
+                pwdTextField.becomeFirstResponder()
+            }
+        } else if textField == pwdTextField {
+            pwdTextField.resignFirstResponder()
+        }
+        return false
+    }
 }

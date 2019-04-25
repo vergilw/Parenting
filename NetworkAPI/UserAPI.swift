@@ -90,7 +90,7 @@ extension UserAPI: TargetType {
                        "Device-Model": UIDevice.current.machineModel ?? "",
                        "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
                        "Accept": "application/vnd.inee.v1+json"]
-        if let model = AuthorizationService.sharedInstance.user, let token = model.auth_token {
+        if let token = AuthorizationService.sharedInstance.authToken {
             headers["Auth-Token"] = token
         }
         return headers

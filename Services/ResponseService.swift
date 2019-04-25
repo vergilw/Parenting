@@ -27,10 +27,10 @@ class ResponseService {
             case let .success(response):
                 
                 if let token = response.response?.allHeaderFields["Auth-Token"] as? String {
-                    if let model = AuthorizationService.sharedInstance.user {
-                        model.auth_token = token
-                        AuthorizationService.sharedInstance.user = model
-                    }
+                    AuthorizationService.sharedInstance.authToken = token
+                }
+                if let token = response.response?.allHeaderFields["Organ-Token"] as? String {
+                    AuthorizationService.sharedInstance.organToken = token
                 }
                 
                 if response.statusCode >= 200 && response.statusCode < 300 {
