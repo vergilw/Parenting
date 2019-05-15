@@ -188,7 +188,7 @@ class DTopUpViewController: BaseViewController {
         if presentingViewController != nil {
             dismissBarBtn.snp.makeConstraints { make in
                 make.top.leading.equalToSuperview()
-                make.size.equalTo(backBarBtn.bounds.size)
+                make.size.equalTo(dismissBarBtn.bounds.size)
             }
         } else {
             backBarBtn.snp.makeConstraints { make in

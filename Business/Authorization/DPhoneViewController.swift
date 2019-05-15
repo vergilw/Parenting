@@ -269,6 +269,7 @@ class DPhoneViewController: BaseViewController {
         
         separatorLabel.drawSeparator(startPoint: CGPoint(x: 0, y: 6), endPoint: CGPoint(x: 16, y: 6))
         separatorLabel.drawSeparator(startPoint: CGPoint(x: 49, y: 6), endPoint: CGPoint(x: 65, y: 6))
+        
     }
     
     // MARK: - ============= Constraints =============

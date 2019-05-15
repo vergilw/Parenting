@@ -185,7 +185,7 @@ class AuthorizationViewController: BaseViewController {
 //                          shadowOpacityLabel, shadowOpacityAddBtn, shadowOpacityRemoveBtn,
 //                          shadowRadiusLabel, shadowRadiusAddBtn, shadowRadiusRemoveBtn])
         
-        if presentingViewController != nil {
+//        if presentingViewController != nil {
             let backBtn: UIButton = {
                 let img = UIImage(named: "public_dismissBorderBtn")!.withRenderingMode(.alwaysOriginal)
                 let button = UIButton()
@@ -204,7 +204,7 @@ class AuthorizationViewController: BaseViewController {
                 make.width.equalTo(UIConstants.Margin.leading*2+backBtn.imageView!.image!.size.width)
                 make.height.equalTo(50)
             }
-        }
+//        }
         
         
         if !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {

@@ -155,7 +155,7 @@ SPEC CHECKSUMS:
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_picker: 8cd16302a9806a9789ba6e3ce85558c70c43b7f4
-  FlutterPluginRegistrant: 96008eec2bdf1b01dda9b516706d2acdb956c85c
+  FlutterPluginRegistrant: 88ae18fa5075fa5fcf6088efa4742b8344e02844
   GTSDK: bba418c3949cd5450b004c7ff0e2fe297fa98565
   HandyJSON: 582477127ab3ab65bd2e471815f1a7b846856978
   HappyDNS: 00c15e651a347206e58a20503a32a5564589b56a
