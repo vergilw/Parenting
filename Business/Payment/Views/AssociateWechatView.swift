@@ -123,7 +123,7 @@ class AssociateWechatView: UIView {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: viewController, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self?.viewModel.bindWechat(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                self?.viewModel.bindWechat(openID: response.openid, accessToken: response.accessToken, refreshToken: response.refreshToken, expiresAt: response.expiration.string(format: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"), completion: { (code) in
                     self?.wechatBtn.stopAnimating()
                     if code >= 0 {
                         HUDService.sharedInstance.show(string: "微信绑定成功")

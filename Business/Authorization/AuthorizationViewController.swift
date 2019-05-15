@@ -337,11 +337,11 @@ class AuthorizationViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
+                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, refreshToken: response.refreshToken, expiresAt: response.expiration.string(format: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"), completion: { (code, oauthID) in
                     self?.wechatBtn.stopAnimating()
-                    if code == 10002 {
-                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.openid), animated: true)
-                    } else if code == 10001 {
+                    if code == -1, let oauthID = oauthID {
+                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: oauthID), animated: true)
+                    } else if code >= 0 {
                         HUDService.sharedInstance.show(string: "登录成功")
                         self?.dismiss(animated: true, completion: nil)
                     }

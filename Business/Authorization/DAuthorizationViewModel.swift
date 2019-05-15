@@ -45,8 +45,23 @@ class DAuthorizationViewModel {
         }))
     }
     
-    func signIn(openID: String, accessToken: String, completion: @escaping (_ code: Int)->Void) {
-        AuthorizationProvider.request(.signInWithWechat(openID: openID, accessToken: accessToken), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+    func signIn(openID: String, accessToken: String, refreshToken: String, expiresAt: String, completion: @escaping (_ code: Int, _ oauthID: String?)->Void) {
+        AuthorizationProvider.request(.signInWithWechat(openID: openID, accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+            
+            if let oauthID = JSON?["oauth_user_id"] as? String {
+                completion(-1, oauthID)
+            } else if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON), let token = JSON?["auth_token"] as? String {
+                AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
+                AuthorizationService.sharedInstance.authToken = token
+                NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
+                AuthorizationService.sharedInstance.updateUserInfo()
+            }
+            completion(code, nil)
+        }))
+    }
+    
+    func signUp(oauthID: String, phone: String, passcode: String, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.signUpWithWechat(oauthID: oauthID, phone: phone, passcode: passcode), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
             
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON), let token = JSON?["auth_token"] as? String {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
@@ -58,21 +73,8 @@ class DAuthorizationViewModel {
         }))
     }
     
-    func signUp(openID: String, phone: String, code: String, completion: @escaping (_ code: Int)->Void) {
-        AuthorizationProvider.request(.signUpWithWechat(openID: openID, phone: phone, code: code), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
-            
-            if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON), let token = JSON?["auth_token"] as? String {
-                AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
-                AuthorizationService.sharedInstance.authToken = token
-                NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
-                AuthorizationService.sharedInstance.updateUserInfo()
-            }
-            completion(code)
-        }))
-    }
-    
-    func bindWechat(openID: String, accessToken: String, completion: @escaping (_ code: Int)->Void) {
-        AuthorizationProvider.request(.bindWechat(parameters: ["access_token": accessToken, "openid": openID]), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+    func bindWechat(openID: String, accessToken: String, refreshToken: String, expiresAt: String, completion: @escaping (_ code: Int)->Void) {
+        AuthorizationProvider.request(.bindWechat(openID: openID, accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
             
             if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON), let token = JSON?["auth_token"] as? String {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
@@ -87,9 +89,12 @@ class DAuthorizationViewModel {
             
             if let accountsJSON = JSON?["accounts"] as? [[String: Any]] {
                 for account in accountsJSON {
-                    if let member = account["member"] as? [String: Any], let token = member["organ_token"] as? String {
-                        AuthorizationService.sharedInstance.organToken = token
-                        return completion(token)
+                    guard let members = account["members"] as? [[String: Any]] else { continue }
+                    for member in members {
+                        if let token = member["organ_token"] as? String {
+                            AuthorizationService.sharedInstance.organToken = token
+                            return completion(token)
+                        }
                     }
                 }
             }

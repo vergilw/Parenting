@@ -256,6 +256,7 @@ class DPhoneViewController: BaseViewController {
         if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {
             separatorLabel.isHidden = true
             wechatBtn.isHidden = true
+            passcodeModeBtn.isHidden = true
         }
         if !(UMSocialManager.default()?.isInstall(.wechatSession) ?? false) {
             separatorLabel.isHidden = true
@@ -461,21 +462,23 @@ class DPhoneViewController: BaseViewController {
         } else if mode == .binding {
             guard let openID = viewModel.wechatUID else { return }
             actionBtn.startAnimating()
-            viewModel.signUp(openID: openID, phone: accountTextField.text!, code: codeTextField.text!) { (code) in
+            viewModel.signUp(oauthID: openID, phone: accountTextField.text!, passcode: codeTextField.text!) { (code) in
                 self.actionBtn.stopAnimating()
 
-                if code == 10004 {
-                    let alertController = UIAlertController(title: nil, message: "手机号\(self.accountTextField.text!)已注册，请直接登录", preferredStyle: UIAlertController.Style.alert)
-                    alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.cancel, handler: { alertAction in
-                        self.navigationController?.pushViewController(DPhoneViewController(mode: .signIn), animated: true)
-                    }))
-                    self.present(alertController, animated: true, completion: nil)
-                    
-                    
-                } else if code >= 0 {
+                if code >= 0 {
                     HUDService.sharedInstance.show(string: "登录成功")
                     self.dismiss(animated: true, completion: nil)
                 }
+                
+//                if code == 10004 {
+//                    let alertController = UIAlertController(title: nil, message: "手机号\(self.accountTextField.text!)已注册，请直接登录", preferredStyle: UIAlertController.Style.alert)
+//                    alertController.addAction(UIAlertAction(title: "去登录", style: UIAlertAction.Style.cancel, handler: { alertAction in
+//                        self.navigationController?.pushViewController(DPhoneViewController(mode: .signIn), animated: true)
+//                    }))
+//                    self.present(alertController, animated: true, completion: nil)
+//
+//
+//                }
             }
         }
         
@@ -485,10 +488,10 @@ class DPhoneViewController: BaseViewController {
         UMSocialManager.default()?.auth(with: .wechatSession, currentViewController: self, completion: { [weak self] (response, error) in
             if let response = response as? UMSocialAuthResponse {
                 HUDService.sharedInstance.show(string: "微信授权成功")
-                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, completion: { (code) in
-                    if code == 10002 {
-                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: response.uid), animated: true)
-                    } else if code == 10001 {
+                self?.viewModel.signIn(openID: response.openid, accessToken: response.accessToken, refreshToken: response.refreshToken, expiresAt: response.expiration.string(format: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"), completion: { (code, oauthID) in
+                    if code == -1, let oauthID = oauthID {
+                        self?.navigationController?.pushViewController(DPhoneViewController(mode: .binding, wechatUID: oauthID), animated: true)
+                    } else if code >= 0 {
                         HUDService.sharedInstance.show(string: "登录成功")
                         self?.dismiss(animated: true, completion: nil)
                     }

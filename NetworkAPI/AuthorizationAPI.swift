@@ -15,9 +15,9 @@ enum AuthorizationAPI {
     case fetchCode(phone: Int)
     case signInWithPasscode(account: String, passcode: String)
     case signInWithPassword(account: String, password: String)
-    case signInWithWechat(openID: String, accessToken: String)
-    case signUpWithWechat(openID: String, phone: String, code: String)
-    case bindWechat(parameters: [String: Any])
+    case signInWithWechat(openID: String, accessToken: String, refreshToken: String, expiresAt: String)
+    case signUpWithWechat(oauthID: String, phone: String, passcode: String)
+    case bindWechat(openID: String, accessToken: String, refreshToken: String, expiresAt: String)
     case signUpWithDeviceID
 }
 
@@ -30,17 +30,17 @@ extension AuthorizationAPI: TargetType {
     public var path: String {
         switch self {
         case .fetchCode:
-            return "/join/token"
+            return "/sign/token"
         case .signInWithPasscode:
             return "/login"
         case .signInWithPassword:
             return "/login"
         case .signInWithWechat:
-            return "/app/wechats"
+            return "/wechat/auth"
         case .signUpWithWechat:
-            return "/app/wechats/bind_mobile"
+            return "/login"
         case .bindWechat:
-            return "/app/login/bind_wechat"
+            return "/wechat/auth"
         case .signUpWithDeviceID:
             return "/backend/mock"
         }
@@ -49,7 +49,7 @@ extension AuthorizationAPI: TargetType {
     public var method: Moya.Method {
         switch self {
         case .fetchCode:
-            return .get
+            return .post
         case .signInWithPasscode:
             return .post
         case .signInWithPassword:
@@ -80,14 +80,14 @@ extension AuthorizationAPI: TargetType {
         case let .signInWithPassword(account, password):
             return .requestParameters(parameters: ["identity":account, "password":password], encoding: URLEncoding.default)
             
-        case let .signInWithWechat(openID, accessToken):
-            return .requestParameters(parameters: ["openid":openID, "access_token":accessToken], encoding: URLEncoding.default)
+        case let .signInWithWechat(openID, accessToken, refreshToken, expiresAt):
+            return .requestParameters(parameters: ["openid":openID, "access_token":accessToken, "refresh_token":refreshToken, "expires_at":expiresAt, "app_id":"wxc7c60047a9c75018"], encoding: JSONEncoding.default)
             
-        case let .signUpWithWechat(openID, phone, code):
-            return .requestParameters(parameters: ["uid":openID, "mobile":phone, "token":code], encoding: URLEncoding.default)
+        case let .signUpWithWechat(oauthID, phone, passcode):
+            return .requestParameters(parameters: ["oauth_user_id":oauthID, "identity":phone, "token":passcode], encoding: JSONEncoding.default)
             
-        case let .bindWechat(parameters):
-            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case let .bindWechat(openID, accessToken, refreshToken, expiresAt):
+            return .requestParameters(parameters: ["openid":openID, "access_token":accessToken, "refresh_token":refreshToken, "expires_at":expiresAt, "app_id":"wxc7c60047a9c75018"], encoding: JSONEncoding.default)
             
         case .signUpWithDeviceID:
             return .requestParameters(parameters: ["account":AppService.sharedInstance.uniqueIdentifier], encoding: URLEncoding.default)
@@ -106,9 +106,14 @@ extension AuthorizationAPI: TargetType {
                        "Device-Model": UIDevice.current.machineModel ?? "",
                        "App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
                        "Accept": "application/vnd.inee.v1+json"]
-        if let token = AuthorizationService.sharedInstance.authToken {
-            headers["Auth-Token"] = token
+        switch self {
+        case .bindWechat:
+            if let token = AuthorizationService.sharedInstance.authToken {
+                headers["Auth-Token"] = token
+            }
+        default: break
         }
+        
         return headers
     }
 }
