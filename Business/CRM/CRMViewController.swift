@@ -33,7 +33,7 @@ class CRMViewController: BaseViewController {
     
     fileprivate lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIConstants.Font.body
+        label.font = UIConstants.Font.h3
         label.textColor = UIConstants.Color.head
         return label
     }()
@@ -41,6 +41,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var notificationImgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "crm_notificationIcon")
+        imgView.contentMode = .center
         return imgView
     }()
     
@@ -110,6 +111,7 @@ class CRMViewController: BaseViewController {
     fileprivate func initContentView() {
         view.addSubview(scrollView)
         
+        scrollView.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: UIConstants.Margin.leading, y: 80), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 30)), cornerRadius: 15, color: UIConstants.Color.background)
         scrollView.addSubviews([avatarImgView, nameLabel, notificationImgView, notificationLabel])
         
         initShortcutView()
@@ -122,7 +124,7 @@ class CRMViewController: BaseViewController {
         scrollView.addSubview(userProfileBtn)
         userProfileBtn.snp.makeConstraints { make in
             make.centerY.leading.equalTo(avatarImgView)
-            make.height.equalTo(40)
+            make.height.equalTo(45)
             make.leading.equalTo(avatarImgView.snp.leading).offset(-10)
             make.trailing.equalTo(nameLabel.snp.trailing).offset(10)
         }
@@ -151,11 +153,11 @@ class CRMViewController: BaseViewController {
         }()
         maintainBtn.addSubviews([maintainTitleLabel, maintainSubtitleLabel])
         maintainTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
+            make.leading.equalTo(28)
+            make.top.equalTo(31)
         }
         maintainSubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(maintainTitleLabel)
+            make.leading.equalTo(maintainTitleLabel)
             make.top.equalTo(maintainTitleLabel.snp.bottom)
         }
         
@@ -181,11 +183,11 @@ class CRMViewController: BaseViewController {
         }()
         classScheduleBtn.addSubviews([classScheduleTitleLabel, classScheduleSubtitleLabel])
         classScheduleTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
+            make.leading.equalTo(28)
+            make.top.equalTo(31)
         }
         classScheduleSubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(classScheduleTitleLabel)
+            make.leading.equalTo(classScheduleTitleLabel)
             make.top.equalTo(classScheduleTitleLabel.snp.bottom)
         }
         
@@ -211,11 +213,11 @@ class CRMViewController: BaseViewController {
         }()
         classPunchBtn.addSubviews([classPunchTitleLabel, classPunchSubtitleLabel])
         classPunchTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
+            make.leading.equalTo(28)
+            make.top.equalTo(31)
         }
         classPunchSubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(classPunchTitleLabel)
+            make.leading.equalTo(classPunchTitleLabel)
             make.top.equalTo(classPunchTitleLabel.snp.bottom)
         }
         
@@ -242,11 +244,11 @@ class CRMViewController: BaseViewController {
         }()
         notificationBtn.addSubviews([notificationTitleLabel, notificationSubtitleLabel])
         notificationTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
+            make.leading.equalTo(28)
+            make.top.equalTo(31)
         }
         notificationSubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(notificationTitleLabel)
+            make.leading.equalTo(notificationTitleLabel)
             make.top.equalTo(notificationTitleLabel.snp.bottom)
         }
         
@@ -273,11 +275,11 @@ class CRMViewController: BaseViewController {
         }()
         activityBtn.addSubviews([activityTitleLabel, activitySubtitleLabel])
         activityTitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(-28)
-            make.top.equalTo(24)
+            make.leading.equalTo(28)
+            make.top.equalTo(31)
         }
         activitySubtitleLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(activityTitleLabel)
+            make.leading.equalTo(activityTitleLabel)
             make.top.equalTo(activityTitleLabel.snp.bottom)
         }
         
@@ -287,32 +289,32 @@ class CRMViewController: BaseViewController {
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(avatarImgView.snp.bottom).offset(66)
-            make.height.equalTo(85)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
             make.width.equalTo(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)
         }
         classScheduleBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(maintainBtn.snp.bottom).offset(20)
-            make.height.equalTo(85)
+            make.top.equalTo(maintainBtn.snp.bottom).offset(0)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
         }
         classPunchBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(classScheduleBtn.snp.bottom).offset(20)
-            make.height.equalTo(85)
+            make.top.equalTo(classScheduleBtn.snp.bottom).offset(0)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
         }
         notificationBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(classPunchBtn.snp.bottom).offset(20)
-            make.height.equalTo(85)
+            make.top.equalTo(classPunchBtn.snp.bottom).offset(0)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
         }
         activityBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(notificationBtn.snp.bottom).offset(20)
-            make.height.equalTo(85)
+            make.top.equalTo(notificationBtn.snp.bottom).offset(0)
+            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*261)
             make.bottom.equalTo(-20)
         }
         
@@ -327,20 +329,21 @@ class CRMViewController: BaseViewController {
         avatarImgView.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.top.equalTo(20)
-            make.size.equalTo(CGSize(width: 35, height: 35))
+            make.size.equalTo(CGSize(width: 45, height: 45))
         }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarImgView.snp.trailing).offset(5)
             make.centerY.equalTo(avatarImgView)
         }
         notificationImgView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.top.equalTo(avatarImgView.snp.bottom).offset(24)
+            make.leading.equalTo(UIConstants.Margin.leading+15)
+            make.top.equalTo(avatarImgView.snp.bottom).offset(15)
+            make.height.equalTo(30)
         }
         notificationLabel.snp.makeConstraints { make in
-            make.leading.equalTo(notificationImgView.snp.trailing).offset(3)
+            make.leading.equalTo(notificationImgView.snp.trailing).offset(6.5)
             make.centerY.equalTo(notificationImgView)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing)
+            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing-25)
         }
     }
     
