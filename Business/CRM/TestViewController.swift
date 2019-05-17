@@ -18,6 +18,11 @@ class TestViewController: FlutterViewController {
         GeneratedPluginRegistrant.register(with: engine)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
 
     /*
     // MARK: - Navigation

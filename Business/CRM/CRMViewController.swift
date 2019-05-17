@@ -404,7 +404,7 @@ class CRMViewController: BaseViewController {
     }
 
     @objc fileprivate func userProfileBtnAction() {
-        present(profileViewController, animated: true, completion: nil)
+        present(BaseNavigationController(rootViewController: profileViewController), animated: true, completion: nil)
     }
     
     // MARK: - ============= Public =============
