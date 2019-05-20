@@ -56,6 +56,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var salesViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_sales")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -63,6 +64,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var scheduleViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("teacher_class_schedule")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -70,6 +72,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var punchViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("class_punch")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -77,6 +80,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var notificationViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_notification")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -84,6 +88,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var activityViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_activity")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -91,6 +96,7 @@ class CRMViewController: BaseViewController {
     fileprivate lazy var profileViewController: TestViewController = {
         let flutter = TestViewController()
         flutter.setInitialRoute("module_personal_info")
+        flutter.splashScreenView = SplashView()
         setupFlutterChannel(flutter: flutter)
         return flutter
     }()
@@ -128,6 +134,7 @@ class CRMViewController: BaseViewController {
             make.leading.equalTo(avatarImgView.snp.leading).offset(-10)
             make.trailing.equalTo(nameLabel.snp.trailing).offset(10)
         }
+        
     }
     
     fileprivate func initShortcutView() {

@@ -169,6 +169,7 @@
 		1316F4E521D0C2F000F5A756 /* RewardCoinAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1316F4E421D0C2F000F5A756 /* RewardCoinAPI.swift */; };
 		1316F4E821D0C86D00F5A756 /* public_shareRewardAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 1316F4E721D0C86D00F5A756 /* public_shareRewardAnimation.gif */; };
 		1316F4EA21D0C87400F5A756 /* course_commentRewardAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 1316F4E921D0C87400F5A756 /* course_commentRewardAnimation.gif */; };
+		131C83F222925722005661D4 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131C83F122925722005661D4 /* SplashView.swift */; };
 		131CF01521953E5100CA7941 /* AppCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131CF01421953E5100CA7941 /* AppCacheService.swift */; };
 		131F015721ABC77D004F5F0F /* SolutionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131F015621ABC77D004F5F0F /* SolutionViewController.swift */; };
 		131FB28B219D0DE500B55210 /* DMeEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FB28A219D0DE500B55210 /* DMeEditViewController.swift */; };
@@ -402,6 +403,7 @@
 		1316F4E721D0C86D00F5A756 /* public_shareRewardAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = public_shareRewardAnimation.gif; sourceTree = "<group>"; };
 		1316F4E921D0C87400F5A756 /* course_commentRewardAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = course_commentRewardAnimation.gif; sourceTree = "<group>"; };
 		1319724521CB91CD0080EA99 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		131C83F122925722005661D4 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		131CF01421953E5100CA7941 /* AppCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCacheService.swift; sourceTree = "<group>"; };
 		131F015621ABC77D004F5F0F /* SolutionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolutionViewController.swift; sourceTree = "<group>"; };
 		131FB28A219D0DE500B55210 /* DMeEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMeEditViewController.swift; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 		130E588122645452009D1D9A /* CRM */ = {
 			isa = PBXGroup;
 			children = (
+				131C83F022925565005661D4 /* Views */,
 				130E58822264547E009D1D9A /* CRMViewController.swift */,
 				130E5886226484A0009D1D9A /* TestViewController.swift */,
 			);
@@ -682,6 +685,14 @@
 				130C67FD21A3F6A900E30307 /* public_loadingAnimation.gif */,
 			);
 			path = Gif;
+			sourceTree = "<group>";
+		};
+		131C83F022925565005661D4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				131C83F122925722005661D4 /* SplashView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		1320C34B217EB66E00902A5C = {
@@ -1374,6 +1385,7 @@
 				130A518B21D4C48800C42610 /* RewardExchangeModel.swift in Sources */,
 				130B0C9921FFE7B500505165 /* DVideoCoverViewController.swift in Sources */,
 				1310A0A121E719F8006399D8 /* DVideoForwardViewController.swift in Sources */,
+				131C83F222925722005661D4 /* SplashView.swift in Sources */,
 				130C67F421A3DCED00E30307 /* TeacherCoursesCell.swift in Sources */,
 				130DDE5A21D202CD007D0619 /* RewardRankingModel.swift in Sources */,
 				130F3C0821DDF08300AE2EF6 /* MediaModel.swift in Sources */,
@@ -1665,7 +1677,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
@@ -1693,7 +1705,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
