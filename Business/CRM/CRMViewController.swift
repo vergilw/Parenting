@@ -140,9 +140,16 @@ class CRMViewController: BaseViewController {
     fileprivate func initShortcutView() {
         let maintainBtn: UIButton = {
             let button = UIButton()
-            button.setImage(UIImage(named: "crm_maintain"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "crm_maintain"), for: .normal)
             button.addTarget(self, action: #selector(maintainBtnAction), for: .touchUpInside)
             return button
+        }()
+        let maintainStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
         }()
         let maintainTitleLabel: UILabel = {
             let label = UILabel()
@@ -158,21 +165,26 @@ class CRMViewController: BaseViewController {
             label.text = "录入到签单一体化"
             return label
         }()
-        maintainBtn.addSubviews([maintainTitleLabel, maintainSubtitleLabel])
-        maintainTitleLabel.snp.makeConstraints { make in
+        maintainStackView.addArrangedSubview(maintainTitleLabel)
+        maintainStackView.addArrangedSubview(maintainSubtitleLabel)
+        maintainBtn.addSubview(maintainStackView)
+        maintainStackView.snp.makeConstraints { make in
             make.leading.equalTo(28)
-            make.top.equalTo(31)
-        }
-        maintainSubtitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(maintainTitleLabel)
-            make.top.equalTo(maintainTitleLabel.snp.bottom)
+            make.centerY.equalToSuperview().offset(-7.5)
         }
         
         let classScheduleBtn: UIButton = {
             let button = UIButton()
-            button.setImage(UIImage(named: "crm_classSchedule"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "crm_classSchedule"), for: .normal)
             button.addTarget(self, action: #selector(classScheduleBtnAction), for: .touchUpInside)
             return button
+        }()
+        let classScheduleStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
         }()
         let classScheduleTitleLabel: UILabel = {
             let label = UILabel()
@@ -188,21 +200,26 @@ class CRMViewController: BaseViewController {
             label.text = "一周课程早知道"
             return label
         }()
-        classScheduleBtn.addSubviews([classScheduleTitleLabel, classScheduleSubtitleLabel])
-        classScheduleTitleLabel.snp.makeConstraints { make in
+        classScheduleStackView.addArrangedSubview(classScheduleTitleLabel)
+        classScheduleStackView.addArrangedSubview(classScheduleSubtitleLabel)
+        classScheduleBtn.addSubview(classScheduleStackView)
+        classScheduleStackView.snp.makeConstraints { make in
             make.leading.equalTo(28)
-            make.top.equalTo(31)
-        }
-        classScheduleSubtitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(classScheduleTitleLabel)
-            make.top.equalTo(classScheduleTitleLabel.snp.bottom)
+            make.centerY.equalToSuperview().offset(-7.5)
         }
         
         let classPunchBtn: UIButton = {
             let button = UIButton()
-            button.setImage(UIImage(named: "crm_classPunch"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "crm_classPunch"), for: .normal)
             button.addTarget(self, action: #selector(classPunchBtnAction), for: .touchUpInside)
             return button
+        }()
+        let classPunchStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
         }()
         let classPunchTitleLabel: UILabel = {
             let label = UILabel()
@@ -218,22 +235,27 @@ class CRMViewController: BaseViewController {
             label.text = "宝宝考勤一键完成"
             return label
         }()
-        classPunchBtn.addSubviews([classPunchTitleLabel, classPunchSubtitleLabel])
-        classPunchTitleLabel.snp.makeConstraints { make in
+        classPunchStackView.addArrangedSubview(classPunchTitleLabel)
+        classPunchStackView.addArrangedSubview(classPunchSubtitleLabel)
+        classPunchBtn.addSubview(classPunchStackView)
+        classPunchStackView.snp.makeConstraints { make in
             make.leading.equalTo(28)
-            make.top.equalTo(31)
-        }
-        classPunchSubtitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(classPunchTitleLabel)
-            make.top.equalTo(classPunchTitleLabel.snp.bottom)
+            make.centerY.equalToSuperview().offset(-7.5)
         }
         
         
         let notificationBtn: UIButton = {
             let button = UIButton()
-            button.setImage(UIImage(named: "crm_notification"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "crm_notification"), for: .normal)
             button.addTarget(self, action: #selector(notificationBtnAction), for: .touchUpInside)
             return button
+        }()
+        let notificationStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
         }()
         let notificationTitleLabel: UILabel = {
             let label = UILabel()
@@ -249,22 +271,27 @@ class CRMViewController: BaseViewController {
             label.text = "信息动态可视化"
             return label
         }()
-        notificationBtn.addSubviews([notificationTitleLabel, notificationSubtitleLabel])
-        notificationTitleLabel.snp.makeConstraints { make in
+        notificationStackView.addArrangedSubview(notificationTitleLabel)
+        notificationStackView.addArrangedSubview(notificationSubtitleLabel)
+        notificationBtn.addSubview(notificationStackView)
+        notificationStackView.snp.makeConstraints { make in
             make.leading.equalTo(28)
-            make.top.equalTo(31)
-        }
-        notificationSubtitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(notificationTitleLabel)
-            make.top.equalTo(notificationTitleLabel.snp.bottom)
+            make.centerY.equalToSuperview().offset(-7.5)
         }
         
         
         let activityBtn: UIButton = {
             let button = UIButton()
-            button.setImage(UIImage(named: "crm_activity"), for: .normal)
+            button.setBackgroundImage(UIImage(named: "crm_activity"), for: .normal)
             button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
             return button
+        }()
+        let activityStackView: UIStackView = {
+            let view = UIStackView()
+            view.alignment = .leading
+            view.axis = .vertical
+            view.distribution = .fillProportionally
+            return view
         }()
         let activityTitleLabel: UILabel = {
             let label = UILabel()
@@ -280,14 +307,12 @@ class CRMViewController: BaseViewController {
             label.text = "信息动态可视化"
             return label
         }()
-        activityBtn.addSubviews([activityTitleLabel, activitySubtitleLabel])
-        activityTitleLabel.snp.makeConstraints { make in
+        activityStackView.addArrangedSubview(activityTitleLabel)
+        activityStackView.addArrangedSubview(activitySubtitleLabel)
+        activityBtn.addSubview(activityStackView)
+        activityStackView.snp.makeConstraints { make in
             make.leading.equalTo(28)
-            make.top.equalTo(31)
-        }
-        activitySubtitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(activityTitleLabel)
-            make.top.equalTo(activityTitleLabel.snp.bottom)
+            make.centerY.equalToSuperview().offset(-13)
         }
         
         scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn, activityBtn, notificationBtn])
