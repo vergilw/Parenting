@@ -85,13 +85,13 @@ class DAuthorizationViewModel {
     }
     
     func fetchOrganToken(completion: @escaping (_ token: String?)->Void) {
-        CRMProvider.request(.accounts, completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
+        CRMProvider.request(.members, completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
             
-            if let accountsJSON = JSON?["accounts"] as? [[String: Any]] {
-                for account in accountsJSON {
-                    guard let members = account["members"] as? [[String: Any]] else { continue }
-                    for member in members {
-                        if let token = member["organ_token"] as? String {
+            if let members = JSON?["members"] as? [[String: Any]] {
+                for member in members {
+                    guard let organs = member["organs"] as? [[String: Any]] else { continue }
+                    for organ in organs {
+                        if let token = organ["organ_token"] as? String {
                             AuthorizationService.sharedInstance.organToken = token
                             return completion(token)
                         }
