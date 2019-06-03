@@ -99,7 +99,10 @@ class AppDelegate: FlutterAppDelegate {
         
         //FIXME: shutdown constraints log
 //        UserDefaults.standard.setValue(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        
+        /* inee_flutter/.ios/Flutter/.symlinks/image_picker/ios/Classes/ImagePickerPlugin.m
+        *  registerWithRegistrar方法里修改为
+        *  UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController.presentedViewController;
+        */
         
         return true
     }

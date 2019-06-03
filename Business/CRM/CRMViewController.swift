@@ -26,7 +26,7 @@ class CRMViewController: BaseViewController {
         let imgView = UIImageView()
 //        imgView.image = UIImage(named: <#T##String#>)
         imgView.contentMode = .scaleAspectFill
-        imgView.layer.cornerRadius = 17.5
+        imgView.layer.cornerRadius = 22.5
         imgView.clipsToBounds = true
         return imgView
     }()
