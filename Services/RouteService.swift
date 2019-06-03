@@ -21,29 +21,7 @@ class RouteService {
         
         let path = URI.path
         
-        if NSPredicate(format: "SELF MATCHES %@", "^/course$").evaluate(with: path) {
-            return DCoursesViewController()
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/course/[0-9]+$").evaluate(with: path) {
-            guard let string = URI.pathComponents.last, let identifier = Int(string) else { return nil }
-            return DCourseDetailViewController(courseID: identifier)
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/story$").evaluate(with: path) {
-            return DTeacherStoriesViewController()
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/story/[0-9]+$").evaluate(with: path) {
-            guard let string = URI.pathComponents.last, let identifier = Int(string) else { return nil }
-            return DTeacherStoryDetailViewController(storyID: identifier)
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/video/[0-9]+$").evaluate(with: path) {
-            guard let string = URI.pathComponents.last, let identifier = Int(string) else { return nil }
-            return DVideoDetailViewController(videoID: identifier)
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/notification/[0-9]+$").evaluate(with: path) {
-            guard let string = URI.pathComponents.last, let identifier = Int(string) else { return nil }
-            return DMeMessageDetailViewController(messageID: identifier)
-            
-        } else if NSPredicate(format: "SELF MATCHES %@", "^/web").evaluate(with: path) {
+        if NSPredicate(format: "SELF MATCHES %@", "^/web").evaluate(with: path) {
             guard let urlComponent = URLComponents(url: URI, resolvingAgainstBaseURL: false) else { return nil }
             guard let items = urlComponent.queryItems else { return nil }
             guard let item = items.first(where: { (queryItem) -> Bool in

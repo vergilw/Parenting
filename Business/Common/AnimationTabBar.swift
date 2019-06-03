@@ -25,9 +25,7 @@ class AnimationTabBar: NSObject, UITabBarControllerDelegate {
         }
         
         var path = Bundle.main.path(forResource: "tabbar_homeAnimation", ofType: "gif")!
-        if topViewController.isKind(of: DVideosViewController.self) {
-            path = Bundle.main.path(forResource: "tabbar_videoAnimation", ofType: "gif")!
-        } else if topViewController.isKind(of: CRMViewController.self) {
+        if topViewController.isKind(of: CRMViewController.self) {
             path = Bundle.main.path(forResource: "tabbar_crmAnimation", ofType: "gif")!
         } else if topViewController.isKind(of: DMeViewController.self) {
             path = Bundle.main.path(forResource: "tabbar_meAnimation", ofType: "gif")!
@@ -54,11 +52,7 @@ class AnimationTabBar: NSObject, UITabBarControllerDelegate {
                             continue
                         }
                         
-                        if topViewController.isKind(of: DHomeViewController.self) {
-                            guard imgView.image!.pngData() == UIImage(named: "tab_homeSelected")!.pngData() else { continue }
-                        } else if topViewController.isKind(of: DVideosViewController.self) {
-                            guard imgView.image!.pngData() == UIImage(named: "tab_videoSelected")!.pngData() else { continue }
-                        } else if topViewController.isKind(of: CRMViewController.self) {
+                        if topViewController.isKind(of: CRMViewController.self) {
                             guard imgView.image!.pngData() == UIImage(named: "tab_crmSelected")!.pngData() else { continue }
                         } else if topViewController.isKind(of: DMeViewController.self) {
                             guard imgView.image!.pngData() == UIImage(named: "tab_meSelected")!.pngData() else { continue }

@@ -30,17 +30,6 @@ PODS:
     - Result (~> 4.1)
   - path_provider (0.0.1):
     - Flutter
-  - PLPlayerKit (3.4.1):
-    - PLPlayerKit/iphoneos (= 3.4.1)
-  - PLPlayerKit/iphoneos (3.4.1)
-  - PLShortVideoKit (2.0.0):
-    - PLShortVideoKit/ex-libMuseProcessor (= 2.0.0)
-    - PLShortVideoKit/libMuseProcessor (= 2.0.0)
-    - Qiniu (= 7.2.5)
-  - PLShortVideoKit/ex-libMuseProcessor (2.0.0):
-    - Qiniu (= 7.2.5)
-  - PLShortVideoKit/libMuseProcessor (2.0.0):
-    - Qiniu (= 7.2.5)
   - Presentr (1.9)
   - Qiniu (7.2.5):
     - HappyDNS (~> 0.3)
@@ -81,8 +70,6 @@ DEPENDENCIES:
   - MLeaksFinder
   - Moya
   - path_provider (from `../inee_flutter/.ios/Flutter/.symlinks/path_provider/ios`)
-  - PLPlayerKit
-  - PLShortVideoKit
   - Presentr
   - Qiniu
   - shared_preferences (from `../inee_flutter/.ios/Flutter/.symlinks/shared_preferences/ios`)
@@ -110,8 +97,6 @@ SPEC REPOS:
     - MJRefresh
     - MLeaksFinder
     - Moya
-    - PLPlayerKit
-    - PLShortVideoKit
     - Presentr
     - Qiniu
     - Result
@@ -167,8 +152,6 @@ SPEC CHECKSUMS:
   MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
   Moya: 161263550064ff8a4948e8ff63137fd72a876292
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  PLPlayerKit: ebec9d70b66a95d1770b2dc5107fe2a469454a28
-  PLShortVideoKit: fc04d59968c4d70d529290ef817e84ec5d30e3aa
   Presentr: 7078d7eb5d1661ebeaae60c9e42a1e534de1b993
   Qiniu: 909b408ee489ea54827e9717be90b94bc9dfbc48
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
@@ -184,6 +167,6 @@ SPEC CHECKSUMS:
   url_launcher: 92b89c1029a0373879933c21642958c874539095
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: aaab67dd62ef2f47b22683637c4cd8d093558b3d
+PODFILE CHECKSUM: 19a0a1e1d043363dd25a61345ae590696ff6211f
 
 COCOAPODS: 1.5.3

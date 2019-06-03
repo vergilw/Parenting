@@ -381,36 +381,50 @@ class CRMViewController: BaseViewController {
     
     // MARK: - ============= Notification =============
     fileprivate func addNotificationObservers() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signInDidSuccess, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signOutDidSuccess, object: nil)
     }
     
     // MARK: - ============= Request =============
     fileprivate func fetchProfile() {
         CRMProvider.request(.members, completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
             
-            if let accountsJSON = JSON?["members"] as? [[String: Any]] {
-                for account in accountsJSON {
-                    if let avatar = account["avatar_url"] as? String, let name = account["name"] as? String {
-                        self.nameLabel.text = name
-                        
-                        self.avatarImgView.kf.setImage(with: URL(string: avatar), placeholder: UIImage(named: "public_avatarPlaceholder"))
-                        return
+            if code >= 0 {
+                if let accountsJSON = JSON?["members"] as? [[String: Any]] {
+                    for account in accountsJSON {
+                        if let avatar = account["avatar_url"] as? String, let name = account["name"] as? String {
+                            self.nameLabel.text = name
+                            
+                            self.avatarImgView.kf.setImage(with: URL(string: avatar), placeholder: UIImage(named: "public_avatarPlaceholder"))
+                            return
+                        }
                     }
                 }
+                
+                self.nameLabel.text = "个人资料修改"
+                self.avatarImgView.image = UIImage(named: "public_avatarPlaceholder")
             }
-            
-            self.nameLabel.text = "个人资料修改"
-            self.avatarImgView.image = UIImage(named: "public_avatarPlaceholder")
         }))
     }
     
     // MARK: - ============= Reload =============
     @objc func reload() {
-        
+        if AuthorizationService.sharedInstance.isSignIn() {
+            fetchProfile()
+        } else {
+            self.nameLabel.text = "登录/注册"
+            self.avatarImgView.image = UIImage(named: "public_avatarPlaceholder")
+        }
     }
     
     // MARK: - ============= Action =============
     @objc fileprivate func maintainBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
 //        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let engine = appDelegate.flutterEngine else { return }
         
 //        guard let flutter = FlutterViewController(engine: engine, nibName: nil, bundle: nil) else { return }
@@ -423,22 +437,52 @@ class CRMViewController: BaseViewController {
     }
     
     @objc fileprivate func classScheduleBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         present(scheduleViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func classPunchBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         present(punchViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func activityBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         present(activityViewController, animated: true, completion: nil)
     }
     
     @objc fileprivate func notificationBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         present(notificationViewController, animated: true, completion: nil)
     }
 
     @objc fileprivate func userProfileBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
         present(BaseNavigationController(rootViewController: profileViewController), animated: true, completion: nil)
     }
     

@@ -73,18 +73,18 @@ class AuthorizationService {
         
         let viewModel = DAuthorizationViewModel()
         viewModel.fetchOrganToken { (token) in
-            if token != nil {
-                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.crmNavigationController, appDelegate.meNavigationController], animated: false)
-            } else {
-                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
-            }
+//            if token != nil {
+//                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.crmNavigationController, appDelegate.meNavigationController], animated: false)
+//            } else {
+//                appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
+//            }
         }
     }
     
     @objc func signOutDidSuccess() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
-        appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
+//        appDelegate.tabBarController.setViewControllers([appDelegate.homeNavigationController, appDelegate.videoNavigationController, appDelegate.meNavigationController], animated: false)
     }
     
     func isSignIn() -> Bool {

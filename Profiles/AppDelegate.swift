@@ -8,10 +8,7 @@
 
 import UIKit
 import IQKeyboardManagerSwift
-import AVFoundation
-import StoreKit
 import UserNotifications
-import PLShortVideoKit
 import Flutter
 import FlutterPluginRegistrant
 
@@ -19,24 +16,6 @@ import FlutterPluginRegistrant
 class AppDelegate: FlutterAppDelegate {
 
 //    var window: UIWindow?
-    
-    lazy var homeNavigationController: UINavigationController = {
-        let homeNavigationController = BaseNavigationController(rootViewController: DHomeViewController())
-        let homeItem = UITabBarItem(title: "首页", image: UIImage(named: "tab_homeNormal")?.withRenderingMode(.alwaysOriginal), tag: 0)
-        homeNavigationController.tabBarItem = homeItem
-        homeNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_homeSelected")?.withRenderingMode(.alwaysOriginal)
-        homeNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        return homeNavigationController
-    }()
-    
-    lazy var videoNavigationController: UINavigationController = {
-        let videoNavigationController = BaseNavigationController(rootViewController: DVideosViewController())
-        let videoItem = UITabBarItem(title: "视频", image: UIImage(named: "tab_videoNormal")?.withRenderingMode(.alwaysOriginal), tag: 1)
-        videoNavigationController.tabBarItem = videoItem
-        videoNavigationController.tabBarItem.selectedImage = UIImage(named: "tab_videoSelected")?.withRenderingMode(.alwaysOriginal)
-        videoNavigationController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 1)
-        return videoNavigationController
-    }()
     
     lazy var crmNavigationController: UINavigationController = {
         let crmNavigationController = BaseNavigationController(rootViewController: CRMViewController())
@@ -88,12 +67,9 @@ class AppDelegate: FlutterAppDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.toolbarDoneBarButtonItemImage = UIImage(named: "public_dismissKeyboard")
         
-        setupAudioSession()
         setupThirdPartyPlatforms()
         setupFlutter()
         
-        SKPaymentQueue.default().add(PaymentService.sharedInstance)
-        PlaybackRecordService.sharedInstance.syncRecords()
         
         UIApplication.shared.applicationIconBadgeNumber = 0
         
@@ -118,11 +94,11 @@ class AppDelegate: FlutterAppDelegate {
             return
         }
         
-        if AuthorizationService.sharedInstance.organToken != nil {
-            tabBarController.setViewControllers([homeNavigationController, videoNavigationController, crmNavigationController, meNavigationController], animated: false)
-        } else {
-            tabBarController.setViewControllers([homeNavigationController, videoNavigationController, meNavigationController], animated: false)
-        }
+//        if AuthorizationService.sharedInstance.organToken != nil {
+            tabBarController.setViewControllers([crmNavigationController, meNavigationController], animated: false)
+//        } else {
+//            tabBarController.setViewControllers([meNavigationController], animated: false)
+//        }
         
 
         tabBarController.delegate = tabBarDelegate
@@ -130,15 +106,6 @@ class AppDelegate: FlutterAppDelegate {
         
         NotificationCenter.default.addObserver(self, selector: #selector(setupRootViewController), name: Notification.Authorization.signInDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(setupRootViewController), name: Notification.Authorization.signOutDidSuccess, object: nil)
-    }
-    
-    func setupAudioSession() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(.playback, mode: .default)
-        } catch {
-            print("Setting category to AVAudioSessionCategoryPlayback failed.")
-        }
     }
     
     func setupThirdPartyPlatforms() {
@@ -167,11 +134,6 @@ class AppDelegate: FlutterAppDelegate {
             registerRemoteNotification()
         }
         
-        PLShortVideoKitEnv.initEnv()
-//        PLShortVideoKitEnv.setLogLevel(.debug)
-//        PLShortVideoKitEnv.enableFileLogging()
-        
-//        AVAudioSession.sharedInstance().setCategory(.playback, mode: AVAudioSession.Mode.moviePlayback, options: AVAudioSession.CategoryOptions())
     }
     
     func setupFlutter() {
@@ -181,7 +143,6 @@ class AppDelegate: FlutterAppDelegate {
     }
 
     override func applicationDidEnterBackground(_ application: UIApplication) {
-        PlayListService.sharedInstance.setupNowPlaying()
     }
     
     override func applicationWillEnterForeground(_ application: UIApplication) {
@@ -193,23 +154,6 @@ class AppDelegate: FlutterAppDelegate {
         return result ?? true
     }
 
-    override func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        if let rootViewController = window?.rootViewController {
-            if rootViewController.presentedViewController is DPlayerViewController {
-                return rootViewController.presentedViewController!.supportedInterfaceOrientations
-            } else if rootViewController is DPlayerViewController {
-                return rootViewController.supportedInterfaceOrientations
-            } else if let rootViewController = rootViewController as? UINavigationController, rootViewController.topViewController is DPlayerViewController {
-                return rootViewController.topViewController!.supportedInterfaceOrientations
-            } else if let rootViewController = rootViewController as? UITabBarController, let navigationController = rootViewController.selectedViewController as? UINavigationController, navigationController.topViewController is DPlayerViewController {
-                return navigationController.topViewController!.supportedInterfaceOrientations
-            }
-            
-        }
-        return [UIInterfaceOrientationMask.portrait]
-    }
-    
-    
 }
 
 // MARK: - ============= APNS =============

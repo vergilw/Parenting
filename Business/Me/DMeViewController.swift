@@ -284,61 +284,20 @@ class DMeViewController: BaseViewController {
 extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 11
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 7 {
-            return 0
-        }
         return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 3 || indexPath.section == 8 {
-            return 6
-        } else {
-            return 54
-        }
+        return 54
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 3 || indexPath.section == 8 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: PlaceholderTableViewCell.className(), for: indexPath) as! PlaceholderTableViewCell
-            return cell
-        }
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: MeItemCell.className(), for: indexPath) as! MeItemCell
         if indexPath.section == 0 {
-            cell.setup(img: UIImage(named: "me_itemOrder")!, title: "我的订单")
-        } else if indexPath.section == 1 {
-            var value: String?
-            if let balance = AuthorizationService.sharedInstance.user?.balance {
-                if let string = String.priceFormatter.string(from: NSNumber(string: balance) ?? NSNumber()) {
-                    value = "氧育币" + string
-                }
-            }
-            cell.setup(img: UIImage(named: "me_itemPayment")!, title: "支付中心", value: value)
-            
-        } else if indexPath.section == 2 {
-            cell.setupMessages(img: UIImage(named: "me_itemMessages")!, title: "消息中心", unreadCount: unreadCount)
-        //placeholder
-        } else if indexPath.section == 3 {
-            
-        } else if indexPath.section == 4 {
-            cell.setup(img: UIImage(named: "me_itemVideos")!, title: "我的视频")
-        } else if indexPath.section == 5 {
-            cell.setup(img: UIImage(named: "me_itemCourses")!, title: "我的课程")
-        } else if indexPath.section == 6 {
-            cell.setup(img: UIImage(named: "me_itemFavorites")!, title: "我的收藏")
-        } else if indexPath.section == 7 {
-            cell.setup(img: UIImage(named: "me_itemTeacher")!, title: "我是老师")
-        //placeholder
-        } else if indexPath.section == 8 {
-            
-        } else if indexPath.section == 9 {
-            cell.setup(img: UIImage(named: "me_itemHelp")!, title: "帮助中心")
-        } else if indexPath.section == 10 {
             cell.setup(img: UIImage(named: "me_itemOthers")!, title: "设置")
         }
         return cell
@@ -347,63 +306,8 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        
         if indexPath.section == 0 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DOrdersViewController(), animated: true)
-        } else if indexPath.section == 1 {
-            navigationController?.pushViewController(DPaymentViewController(), animated: true)
-            
-        } else if indexPath.section == 2 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DMeMessagesViewController(), animated: true)
-            
-        } else if indexPath.section == 4 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            let viewController = DVideoUserViewController()
-            viewController.userID = AuthorizationService.sharedInstance.user?.id
-            navigationController?.pushViewController(viewController, animated: true)
-        } else if indexPath.section == 5 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DMeCoursesViewController(), animated: true)
-        } else if indexPath.section == 6 {
-            guard AuthorizationService.sharedInstance.isSignIn() else {
-                let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-                present(authorizationNavigationController, animated: true, completion: nil)
-                return
-            }
-            navigationController?.pushViewController(DMeFavoritesViewController(), animated: true)
-        } else if indexPath.section == 7 {
-            navigationController?.pushViewController(DTransactionsViewController(), animated: true)
-            
-        } else if indexPath.section == 9 {
-            let viewController = WebViewController()
-            viewController.navigationItem.title = "帮助中心"
-            #if DEBUG
-            viewController.url = URL(string: "http://m.1314-edu.com/help/")
-            #else
-            viewController.url = URL(string: "https://yy.1314-edu.com/help/")
-            #endif
-            navigationController?.pushViewController(viewController, animated: true)
-        } else if indexPath.section == 10 {
             navigationController?.pushViewController(DSettingsViewController(), animated: true)
-        
         }
     }
 }
