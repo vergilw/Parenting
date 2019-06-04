@@ -110,7 +110,10 @@ class CRMViewController: BaseViewController {
         initConstraints()
         addNotificationObservers()
         
-        fetchProfile()
+        reload()
+        if AuthorizationService.sharedInstance.isSignIn() {
+            fetchProfile()
+        }
     }
     
     // MARK: - ============= Initialize View =============

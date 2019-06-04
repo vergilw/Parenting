@@ -11,7 +11,7 @@ import Alamofire
 
 
 //FIXME: Server Host
-var CRMServerHost = "http://sg_staging.1314-edu.com/"
+var CRMServerHost = "http://sg.1314-edu.com"
 
 var ServerHost = "https://m.1314-edu.com"
 //var ServerHost = "https://yy.1314-edu.com"
