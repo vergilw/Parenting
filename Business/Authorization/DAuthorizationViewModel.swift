@@ -89,12 +89,9 @@ class DAuthorizationViewModel {
             
             if let members = JSON?["members"] as? [[String: Any]] {
                 for member in members {
-                    guard let organs = member["organs"] as? [[String: Any]] else { continue }
-                    for organ in organs {
-                        if let token = organ["organ_token"] as? String {
-                            AuthorizationService.sharedInstance.organToken = token
-                            return completion(token)
-                        }
+                    if let token = member["organ_token"] as? String {
+                        AuthorizationService.sharedInstance.organToken = token
+                        return completion(token)
                     }
                 }
             }
