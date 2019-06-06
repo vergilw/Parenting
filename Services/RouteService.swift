@@ -16,8 +16,8 @@ class RouteService {
     
     func route(URI: URL) -> UIViewController? {
         
-        guard URI.scheme == "https" else { return nil }
-        guard URI.host == "crm.1314-edu.com" else { return nil }
+//        guard (URI.scheme == "https" || URI.scheme == nil) else { return nil }
+        guard (URI.host == "sg.1314-edu.com" || URI.host == "m.1314-edu.com" || URI.host == nil) else { return nil }
         
         let path = URI.path
         
@@ -31,6 +31,10 @@ class RouteService {
             let webViewController = WebViewController()
             webViewController.url = url
             return webViewController
+            
+        } else if NSPredicate(format: "SELF MATCHES %@", "^/notification/[0-9]+$").evaluate(with: path) {
+            guard let string = URI.pathComponents.last, let identifier = Int(string) else { return nil }
+            return DMeMessageDetailViewController(messageID: identifier)
         }
         
         return nil

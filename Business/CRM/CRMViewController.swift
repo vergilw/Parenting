@@ -118,6 +118,8 @@ class CRMViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     fileprivate func initContentView() {
+        initNavigationItems()
+        
         view.addSubview(scrollView)
         
         scrollView.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: UIConstants.Margin.leading, y: 80), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 30)), cornerRadius: 15, color: UIConstants.Color.background)
@@ -138,6 +140,17 @@ class CRMViewController: BaseViewController {
             make.trailing.equalTo(nameLabel.snp.trailing).offset(10)
         }
         
+    }
+    
+    fileprivate func initNavigationItems() {
+        let msgBtn: UIButton = {
+            let button = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 18+UIConstants.Margin.trailing*2, height: navigationController?.navigationBar.bounds.height ?? 44)))
+            button.setImage(UIImage(named: "crm_msgBar"), for: .normal)
+            button.addTarget(self, action: #selector(msgsBarBtnAction), for: .touchUpInside)
+            return button
+        }()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: msgBtn)
+        navigationItem.rightMargin = 0
     }
     
     fileprivate func initShortcutView() {
@@ -421,6 +434,16 @@ class CRMViewController: BaseViewController {
     }
     
     // MARK: - ============= Action =============
+    @objc fileprivate func msgsBarBtnAction() {
+        guard AuthorizationService.sharedInstance.isSignIn() else {
+            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+            present(authorizationNavigationController, animated: true, completion: nil)
+            return
+        }
+        
+        navigationController?.pushViewController(DMeMessagesViewController(), animated: true)
+    }
+    
     @objc fileprivate func maintainBtnAction() {
         guard AuthorizationService.sharedInstance.isSignIn() else {
             let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())

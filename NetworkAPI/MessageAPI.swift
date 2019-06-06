@@ -20,7 +20,7 @@ enum MessageAPI {
 extension MessageAPI: TargetType {
     
     public var baseURL: URL {
-        return URL(string: ServerHost)!
+        return URL(string: CRMServerHost)!
     }
     
     public var path: String {
@@ -74,6 +74,9 @@ extension MessageAPI: TargetType {
                        "Accept": "application/vnd.inee.v1+json"]
         if let token = AuthorizationService.sharedInstance.authToken {
             headers["Auth-Token"] = token
+        }
+        if let organToken = AuthorizationService.sharedInstance.organToken {
+            headers["Organ-Token"] = organToken
         }
         return headers
     }

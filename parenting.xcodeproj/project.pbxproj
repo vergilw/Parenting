@@ -94,6 +94,9 @@
 		139D628C22200C46005CE454 /* tabbar_homeAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */; };
 		139D628F22200C4E005CE454 /* tabbar_meAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */; };
 		139D629022200C4E005CE454 /* tabbar_videoAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = 139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */; };
+		13AD3C4722A9049600C72E2F /* DMeMessageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AD3C4522A9049500C72E2F /* DMeMessageDetailViewController.swift */; };
+		13AD3C4822A9049600C72E2F /* DMeMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AD3C4622A9049600C72E2F /* DMeMessagesViewController.swift */; };
+		13AD3C4A22A904E600C72E2F /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13AD3C4922A904E600C72E2F /* MessageCell.swift */; };
 		13B7F6F221B67745001BF15D /* UploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F121B67745001BF15D /* UploadService.swift */; };
 		13B7F72A21B68728001BF15D /* QNUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6F921B68727001BF15D /* QNUploadManager.m */; };
 		13B7F72B21B68728001BF15D /* QNConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7F6FA21B68727001BF15D /* QNConfiguration.m */; };
@@ -213,6 +216,9 @@
 		139D628B22200C46005CE454 /* tabbar_homeAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_homeAnimation.gif; sourceTree = "<group>"; };
 		139D628D22200C4E005CE454 /* tabbar_meAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_meAnimation.gif; sourceTree = "<group>"; };
 		139D628E22200C4E005CE454 /* tabbar_videoAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = tabbar_videoAnimation.gif; sourceTree = "<group>"; };
+		13AD3C4522A9049500C72E2F /* DMeMessageDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DMeMessageDetailViewController.swift; sourceTree = "<group>"; };
+		13AD3C4622A9049600C72E2F /* DMeMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DMeMessagesViewController.swift; sourceTree = "<group>"; };
+		13AD3C4922A904E600C72E2F /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		13B7F6F121B67745001BF15D /* UploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadService.swift; sourceTree = "<group>"; };
 		13B7F6F621B68727001BF15D /* QNResumeUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNResumeUpload.h; sourceTree = "<group>"; };
 		13B7F6F721B68727001BF15D /* QNUploadOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNUploadOption.h; sourceTree = "<group>"; };
@@ -301,6 +307,7 @@
 		130F1C93219C1512004E1DD3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				13AD3C4922A904E600C72E2F /* MessageCell.swift */,
 				130F1C94219C1549004E1DD3 /* MeItemCell.swift */,
 			);
 			path = Views;
@@ -514,6 +521,8 @@
 				131067F721A63D7400F79E92 /* DAboutViewController.swift */,
 				131067F921A63D8000F79E92 /* DFeedbackViewController.swift */,
 				130C9194221BD93300689E64 /* DMeSignatureViewController.swift */,
+				13AD3C4522A9049500C72E2F /* DMeMessageDetailViewController.swift */,
+				13AD3C4622A9049600C72E2F /* DMeMessagesViewController.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -938,9 +947,11 @@
 				13B7F73E21B68728001BF15D /* QNPipeline.m in Sources */,
 				13B7F73321B68728001BF15D /* QNFile.m in Sources */,
 				130C7F1F2226311D00E08E8D /* RouteService.swift in Sources */,
+				13AD3C4722A9049600C72E2F /* DMeMessageDetailViewController.swift in Sources */,
 				1320C390217EB93A00902A5C /* UIDevice+Extension.swift in Sources */,
 				130EF26B219A75C3008F61FA /* UserModel.swift in Sources */,
 				1320C396217EB95200902A5C /* NotificationConstants.swift in Sources */,
+				13AD3C4A22A904E600C72E2F /* MessageCell.swift in Sources */,
 				1310680221A696D600F79E92 /* BannerModel.swift in Sources */,
 				13B7F73721B68728001BF15D /* QNALAssetFile.m in Sources */,
 				13128B8D21BE0ACC00251B6F /* ModelTransform.swift in Sources */,
@@ -975,6 +986,7 @@
 				13B7F73D21B68728001BF15D /* QNFileRecorder.m in Sources */,
 				13B7F73921B68728001BF15D /* QN_GTM_Base64.m in Sources */,
 				1320C38C217EB93A00902A5C /* NSObject+Extension.swift in Sources */,
+				13AD3C4822A9049600C72E2F /* DMeMessagesViewController.swift in Sources */,
 				13B7F73021B68728001BF15D /* QNPHAssetResource.m in Sources */,
 				130E58832264547E009D1D9A /* CRMViewController.swift in Sources */,
 				130C9195221BD93300689E64 /* DMeSignatureViewController.swift in Sources */,
@@ -1123,7 +1135,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
@@ -1151,7 +1163,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
