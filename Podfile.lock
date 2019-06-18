@@ -8,10 +8,13 @@ PODS:
   - FlutterPluginRegistrant (0.0.1):
     - Flutter
     - flutter_picker
+    - fluttertoast
     - image_picker
     - path_provider
     - shared_preferences
     - url_launcher
+  - fluttertoast (0.0.2):
+    - Flutter
   - GTSDK (2.4.0.0)
   - HandyJSON (5.0.0-beta.1)
   - HappyDNS (0.3.15)
@@ -60,6 +63,7 @@ DEPENDENCIES:
   - Flutter (from `../inee_flutter/.ios/Flutter/engine`)
   - flutter_picker (from `../inee_flutter/.ios/Flutter/.symlinks/flutter_picker/ios`)
   - FlutterPluginRegistrant (from `../inee_flutter/.ios/Flutter/FlutterPluginRegistrant`)
+  - fluttertoast (from `../inee_flutter/.ios/Flutter/.symlinks/fluttertoast/ios`)
   - GTSDK
   - HandyJSON (from `https://github.com/alibaba/HandyJSON.git`, branch `dev_for_swift5.0`)
   - image_picker (from `../inee_flutter/.ios/Flutter/.symlinks/image_picker/ios`)
@@ -117,6 +121,8 @@ EXTERNAL SOURCES:
     :path: "../inee_flutter/.ios/Flutter/.symlinks/flutter_picker/ios"
   FlutterPluginRegistrant:
     :path: "../inee_flutter/.ios/Flutter/FlutterPluginRegistrant"
+  fluttertoast:
+    :path: "../inee_flutter/.ios/Flutter/.symlinks/fluttertoast/ios"
   HandyJSON:
     :branch: dev_for_swift5.0
     :git: https://github.com/alibaba/HandyJSON.git
@@ -140,7 +146,8 @@ SPEC CHECKSUMS:
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_picker: 8cd16302a9806a9789ba6e3ce85558c70c43b7f4
-  FlutterPluginRegistrant: 88ae18fa5075fa5fcf6088efa4742b8344e02844
+  FlutterPluginRegistrant: 86610ccd0939ab72b18d22560a0740f04174b09a
+  fluttertoast: 0a20dcbbb8ecfd1a61b6285651ff2d5989d033fb
   GTSDK: bba418c3949cd5450b004c7ff0e2fe297fa98565
   HandyJSON: 582477127ab3ab65bd2e471815f1a7b846856978
   HappyDNS: 00c15e651a347206e58a20503a32a5564589b56a

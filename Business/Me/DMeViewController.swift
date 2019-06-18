@@ -24,7 +24,6 @@ class DMeViewController: BaseViewController {
         
         if AuthorizationService.sharedInstance.isSignIn() {
             AuthorizationService.sharedInstance.updateUserInfo()
-            fetchMessages()
         }
         
     }
@@ -231,29 +230,9 @@ class DMeViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signInDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Authorization.signOutDidSuccess, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.User.userInfoDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchMessages), name: Notification.Message.messageUnreadCountDidChange, object: nil)
     }
     
     // MARK: - ============= Request =============
-    @objc fileprivate func fetchMessages() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            return
-        }
-        
-        MessageProvider.request(.messages(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
-            
-            if code >= 0 {
-                if let data = JSON?["unread_count"] as? [String: Any] {
-                    if let number = data["total"] as? NSNumber {
-                        self.unreadCount = number.intValue
-                    }
-                    
-                    UIApplication.shared.applicationIconBadgeNumber = self.unreadCount
-                }
-                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 2)], with: UITableView.RowAnimation.none)
-            }
-        }))
-    }
     
     // MARK: - ============= Reload =============
     @objc func reload() {

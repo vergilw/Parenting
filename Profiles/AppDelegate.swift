@@ -68,7 +68,7 @@ class AppDelegate: FlutterAppDelegate {
         IQKeyboardManager.shared.toolbarDoneBarButtonItemImage = UIImage(named: "public_dismissKeyboard")
         
         setupThirdPartyPlatforms()
-        setupFlutter()
+//        setupFlutter()
         
         
         UIApplication.shared.applicationIconBadgeNumber = 0

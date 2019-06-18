@@ -9,6 +9,7 @@
 import UIKit
 import Flutter
 import Kingfisher
+import FlutterPluginRegistrant
 
 class CRMViewController: BaseViewController {
 
@@ -77,21 +78,21 @@ class CRMViewController: BaseViewController {
         return flutter
     }()
     
-    fileprivate lazy var notificationViewController: TestViewController = {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_notification")
-        flutter.splashScreenView = SplashView()
-        setupFlutterChannel(flutter: flutter)
-        return flutter
-    }()
-    
-    fileprivate lazy var activityViewController: TestViewController = {
-        let flutter = TestViewController()
-        flutter.setInitialRoute("module_activity")
-        flutter.splashScreenView = SplashView()
-        setupFlutterChannel(flutter: flutter)
-        return flutter
-    }()
+//    fileprivate lazy var notificationViewController: TestViewController = {
+//        let flutter = TestViewController()
+//        flutter.setInitialRoute("module_notification")
+//        flutter.splashScreenView = SplashView()
+//        setupFlutterChannel(flutter: flutter)
+//        return flutter
+//    }()
+//
+//    fileprivate lazy var activityViewController: TestViewController = {
+//        let flutter = TestViewController()
+//        flutter.setInitialRoute("module_activity")
+//        flutter.splashScreenView = SplashView()
+//        setupFlutterChannel(flutter: flutter)
+//        return flutter
+//    }()
     
     fileprivate lazy var profileViewController: TestViewController = {
         let flutter = TestViewController()
@@ -114,6 +115,7 @@ class CRMViewController: BaseViewController {
         if AuthorizationService.sharedInstance.isSignIn() {
             fetchProfile()
         }
+        
     }
     
     // MARK: - ============= Initialize View =============
@@ -122,8 +124,8 @@ class CRMViewController: BaseViewController {
         
         view.addSubview(scrollView)
         
-        scrollView.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: UIConstants.Margin.leading, y: 80), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 30)), cornerRadius: 15, color: UIConstants.Color.background)
-        scrollView.addSubviews([avatarImgView, nameLabel, notificationImgView, notificationLabel])
+//        scrollView.drawRoundBg(roundedRect: CGRect(origin: CGPoint(x: UIConstants.Margin.leading, y: 80), size: CGSize(width: UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing, height: 30)), cornerRadius: 15, color: UIConstants.Color.background)
+        scrollView.addSubviews([avatarImgView, nameLabel])
         
         initShortcutView()
         
@@ -260,83 +262,83 @@ class CRMViewController: BaseViewController {
         }
         
         
-        let notificationBtn: UIButton = {
-            let button = UIButton()
-            button.setBackgroundImage(UIImage(named: "crm_notification"), for: .normal)
-            button.addTarget(self, action: #selector(notificationBtnAction), for: .touchUpInside)
-            return button
-        }()
-        let notificationStackView: UIStackView = {
-            let view = UIStackView()
-            view.alignment = .leading
-            view.axis = .vertical
-            view.distribution = .fillProportionally
-            return view
-        }()
-        let notificationTitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.h2
-            label.textColor = .white
-            label.text = "消息通知"
-            return label
-        }()
-        let notificationSubtitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.caption1
-            label.textColor = .white
-            label.text = "信息动态可视化"
-            return label
-        }()
-        notificationStackView.addArrangedSubview(notificationTitleLabel)
-        notificationStackView.addArrangedSubview(notificationSubtitleLabel)
-        notificationBtn.addSubview(notificationStackView)
-        notificationStackView.snp.makeConstraints { make in
-            make.leading.equalTo(28)
-            make.centerY.equalToSuperview().offset(-7.5)
-        }
+//        let notificationBtn: UIButton = {
+//            let button = UIButton()
+//            button.setBackgroundImage(UIImage(named: "crm_notification"), for: .normal)
+//            button.addTarget(self, action: #selector(notificationBtnAction), for: .touchUpInside)
+//            return button
+//        }()
+//        let notificationStackView: UIStackView = {
+//            let view = UIStackView()
+//            view.alignment = .leading
+//            view.axis = .vertical
+//            view.distribution = .fillProportionally
+//            return view
+//        }()
+//        let notificationTitleLabel: UILabel = {
+//            let label = UILabel()
+//            label.font = UIConstants.Font.h2
+//            label.textColor = .white
+//            label.text = "消息通知"
+//            return label
+//        }()
+//        let notificationSubtitleLabel: UILabel = {
+//            let label = UILabel()
+//            label.font = UIConstants.Font.caption1
+//            label.textColor = .white
+//            label.text = "信息动态可视化"
+//            return label
+//        }()
+//        notificationStackView.addArrangedSubview(notificationTitleLabel)
+//        notificationStackView.addArrangedSubview(notificationSubtitleLabel)
+//        notificationBtn.addSubview(notificationStackView)
+//        notificationStackView.snp.makeConstraints { make in
+//            make.leading.equalTo(28)
+//            make.centerY.equalToSuperview().offset(-7.5)
+//        }
+//
+//
+//        let activityBtn: UIButton = {
+//            let button = UIButton()
+//            button.setBackgroundImage(UIImage(named: "crm_activity"), for: .normal)
+//            button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
+//            return button
+//        }()
+//        let activityStackView: UIStackView = {
+//            let view = UIStackView()
+//            view.alignment = .leading
+//            view.axis = .vertical
+//            view.distribution = .fillProportionally
+//            return view
+//        }()
+//        let activityTitleLabel: UILabel = {
+//            let label = UILabel()
+//            label.font = UIConstants.Font.h2
+//            label.textColor = .white
+//            label.text = "线下活动"
+//            return label
+//        }()
+//        let activitySubtitleLabel: UILabel = {
+//            let label = UILabel()
+//            label.font = UIConstants.Font.caption1
+//            label.textColor = .white
+//            label.text = "信息动态可视化"
+//            return label
+//        }()
+//        activityStackView.addArrangedSubview(activityTitleLabel)
+//        activityStackView.addArrangedSubview(activitySubtitleLabel)
+//        activityBtn.addSubview(activityStackView)
+//        activityStackView.snp.makeConstraints { make in
+//            make.leading.equalTo(28)
+//            make.centerY.equalToSuperview().offset(-13)
+//        }
         
-        
-        let activityBtn: UIButton = {
-            let button = UIButton()
-            button.setBackgroundImage(UIImage(named: "crm_activity"), for: .normal)
-            button.addTarget(self, action: #selector(activityBtnAction), for: .touchUpInside)
-            return button
-        }()
-        let activityStackView: UIStackView = {
-            let view = UIStackView()
-            view.alignment = .leading
-            view.axis = .vertical
-            view.distribution = .fillProportionally
-            return view
-        }()
-        let activityTitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.h2
-            label.textColor = .white
-            label.text = "线下活动"
-            return label
-        }()
-        let activitySubtitleLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIConstants.Font.caption1
-            label.textColor = .white
-            label.text = "信息动态可视化"
-            return label
-        }()
-        activityStackView.addArrangedSubview(activityTitleLabel)
-        activityStackView.addArrangedSubview(activitySubtitleLabel)
-        activityBtn.addSubview(activityStackView)
-        activityStackView.snp.makeConstraints { make in
-            make.leading.equalTo(28)
-            make.centerY.equalToSuperview().offset(-13)
-        }
-        
-        scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn, activityBtn, notificationBtn])
+        scrollView.addSubviews([maintainBtn, classScheduleBtn, classPunchBtn])
         
         maintainBtn.snp.makeConstraints { make in
             make.leading.equalTo(UIConstants.Margin.leading)
             make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(avatarImgView.snp.bottom).offset(66)
+            make.top.equalTo(avatarImgView.snp.bottom).offset(20)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
             make.width.equalTo(UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)
         }
@@ -351,20 +353,21 @@ class CRMViewController: BaseViewController {
             make.trailing.equalTo(-UIConstants.Margin.trailing)
             make.top.equalTo(classScheduleBtn.snp.bottom).offset(0)
             make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
-        }
-        notificationBtn.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(classPunchBtn.snp.bottom).offset(0)
-            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
-        }
-        activityBtn.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading)
-            make.trailing.equalTo(-UIConstants.Margin.trailing)
-            make.top.equalTo(notificationBtn.snp.bottom).offset(0)
-            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*261)
             make.bottom.equalTo(-20)
         }
+//        notificationBtn.snp.makeConstraints { make in
+//            make.leading.equalTo(UIConstants.Margin.leading)
+//            make.trailing.equalTo(-UIConstants.Margin.trailing)
+//            make.top.equalTo(classPunchBtn.snp.bottom).offset(0)
+//            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*240)
+//        }
+//        activityBtn.snp.makeConstraints { make in
+//            make.leading.equalTo(UIConstants.Margin.leading)
+//            make.trailing.equalTo(-UIConstants.Margin.trailing)
+//            make.top.equalTo(notificationBtn.snp.bottom).offset(0)
+//            make.height.equalTo((UIScreenWidth-UIConstants.Margin.leading-UIConstants.Margin.trailing)/678*261)
+//            make.bottom.equalTo(-20)
+//        }
         
     }
     
@@ -383,16 +386,16 @@ class CRMViewController: BaseViewController {
             make.leading.equalTo(avatarImgView.snp.trailing).offset(5)
             make.centerY.equalTo(avatarImgView)
         }
-        notificationImgView.snp.makeConstraints { make in
-            make.leading.equalTo(UIConstants.Margin.leading+15)
-            make.top.equalTo(avatarImgView.snp.bottom).offset(15)
-            make.height.equalTo(30)
-        }
-        notificationLabel.snp.makeConstraints { make in
-            make.leading.equalTo(notificationImgView.snp.trailing).offset(6.5)
-            make.centerY.equalTo(notificationImgView)
-            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing-25)
-        }
+//        notificationImgView.snp.makeConstraints { make in
+//            make.leading.equalTo(UIConstants.Margin.leading+15)
+//            make.top.equalTo(avatarImgView.snp.bottom).offset(15)
+//            make.height.equalTo(30)
+//        }
+//        notificationLabel.snp.makeConstraints { make in
+//            make.leading.equalTo(notificationImgView.snp.trailing).offset(6.5)
+//            make.centerY.equalTo(notificationImgView)
+//            make.trailing.lessThanOrEqualTo(-UIConstants.Margin.trailing-25)
+//        }
     }
     
     // MARK: - ============= Notification =============
@@ -458,6 +461,24 @@ class CRMViewController: BaseViewController {
 //        let flutter = TestViewController()
 //        flutter.setInitialRoute("module_sales")
 //        setupFlutterChannel(flutter: flutter)
+        
+//        let salesViewController: TestViewController = {
+//            let flutter = TestViewController()
+//            flutter.setInitialRoute("module_sales")
+//            flutter.splashScreenView = SplashView()
+//            setupFlutterChannel(flutter: flutter)
+//            return flutter
+//        }()
+        
+        
+        salesViewController.engine.destroyContext()
+        salesViewController = {
+            let flutter = TestViewController()
+            flutter.setInitialRoute("module_sales")
+            flutter.splashScreenView = SplashView()
+            setupFlutterChannel(flutter: flutter)
+            return flutter
+        }()
         present(salesViewController, animated: true, completion: nil)
         
     }
@@ -469,6 +490,14 @@ class CRMViewController: BaseViewController {
             return
         }
         
+        scheduleViewController.engine.destroyContext()
+        scheduleViewController = {
+            let flutter = TestViewController()
+            flutter.setInitialRoute("teacher_class_schedule")
+            flutter.splashScreenView = SplashView()
+            setupFlutterChannel(flutter: flutter)
+            return flutter
+        }()
         present(scheduleViewController, animated: true, completion: nil)
     }
     
@@ -479,28 +508,36 @@ class CRMViewController: BaseViewController {
             return
         }
         
+        punchViewController.engine.destroyContext()
+        punchViewController = {
+            let flutter = TestViewController()
+            flutter.setInitialRoute("class_punch")
+            flutter.splashScreenView = SplashView()
+            setupFlutterChannel(flutter: flutter)
+            return flutter
+        }()
         present(punchViewController, animated: true, completion: nil)
     }
     
-    @objc fileprivate func activityBtnAction() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            present(authorizationNavigationController, animated: true, completion: nil)
-            return
-        }
-        
-        present(activityViewController, animated: true, completion: nil)
-    }
-    
-    @objc fileprivate func notificationBtnAction() {
-        guard AuthorizationService.sharedInstance.isSignIn() else {
-            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
-            present(authorizationNavigationController, animated: true, completion: nil)
-            return
-        }
-        
-        present(notificationViewController, animated: true, completion: nil)
-    }
+//    @objc fileprivate func activityBtnAction() {
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//            present(authorizationNavigationController, animated: true, completion: nil)
+//            return
+//        }
+//
+//        present(activityViewController, animated: true, completion: nil)
+//    }
+//
+//    @objc fileprivate func notificationBtnAction() {
+//        guard AuthorizationService.sharedInstance.isSignIn() else {
+//            let authorizationNavigationController = BaseNavigationController(rootViewController: AuthorizationViewController())
+//            present(authorizationNavigationController, animated: true, completion: nil)
+//            return
+//        }
+//
+//        present(notificationViewController, animated: true, completion: nil)
+//    }
 
     @objc fileprivate func userProfileBtnAction() {
         guard AuthorizationService.sharedInstance.isSignIn() else {
@@ -509,6 +546,14 @@ class CRMViewController: BaseViewController {
             return
         }
         
+        profileViewController.engine.destroyContext()
+        profileViewController = {
+            let flutter = TestViewController()
+            flutter.setInitialRoute("module_personal_info")
+            flutter.splashScreenView = SplashView()
+            setupFlutterChannel(flutter: flutter)
+            return flutter
+        }()
         present(BaseNavigationController(rootViewController: profileViewController), animated: true, completion: nil)
     }
     
