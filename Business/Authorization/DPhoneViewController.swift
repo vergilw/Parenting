@@ -233,8 +233,6 @@ class DPhoneViewController: BaseViewController {
         
         reloadPasscodeTimer()
         
-        //FIXME: DEBUG
-        accountTextField.text = "mingyuan0715@foxmail.com"
     }
     
     override func viewWillAppear(_ animated: Bool) {
