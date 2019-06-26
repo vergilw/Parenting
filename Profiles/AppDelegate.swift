@@ -73,8 +73,6 @@ class AppDelegate: FlutterAppDelegate {
     
     fileprivate lazy var tabBarDelegate = AnimationTabBar()
     
-    var flutterEngine: FlutterEngine?
-    
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
 //        [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundVerticalPositionAdjustment:-3 forBarMetrics:UIBarMetricsDefault];
@@ -90,7 +88,6 @@ class AppDelegate: FlutterAppDelegate {
         
         setupAudioSession()
         setupThirdPartyPlatforms()
-        setupFlutter()
         
         SKPaymentQueue.default().add(PaymentService.sharedInstance)
         PlaybackRecordService.sharedInstance.syncRecords()
@@ -172,12 +169,6 @@ class AppDelegate: FlutterAppDelegate {
 //        PLShortVideoKitEnv.enableFileLogging()
         
 //        AVAudioSession.sharedInstance().setCategory(.playback, mode: AVAudioSession.Mode.moviePlayback, options: AVAudioSession.CategoryOptions())
-    }
-    
-    func setupFlutter() {
-        flutterEngine = FlutterEngine(name: "io.flutter", project: nil)
-        flutterEngine?.run(withEntrypoint: nil)
-        GeneratedPluginRegistrant.register(with: flutterEngine)
     }
 
     override func applicationDidEnterBackground(_ application: UIApplication) {

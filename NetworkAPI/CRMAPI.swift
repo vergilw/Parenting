@@ -14,6 +14,9 @@ let CRMProvider = MoyaProvider<CRMAPI>(manager: DefaultAlamofireManager.sharedMa
 enum CRMAPI {
     case accounts
     case members
+    case messages(Int)
+    case message(Int)
+    case messages_asReadAll
 }
 
 extension CRMAPI: TargetType {
@@ -28,6 +31,12 @@ extension CRMAPI: TargetType {
             return "/my/accounts"
         case .members:
             return "/my/members"
+        case .messages:
+            return "/notifications"
+        case let .message(identifier):
+            return "/notifications/\(identifier)"
+        case .messages_asReadAll:
+            return "/notifications/read_all"
         }
     }
     
@@ -36,6 +45,12 @@ extension CRMAPI: TargetType {
         case .accounts:
             return .get
         case .members:
+            return .get
+        case .messages:
+            return .get
+        case .message:
+            return .get
+        case .messages_asReadAll:
             return .get
         }
     }
@@ -49,6 +64,12 @@ extension CRMAPI: TargetType {
         case .accounts:
             return .requestPlain
         case .members:
+            return .requestPlain
+        case let .messages(page):
+            return .requestParameters(parameters: ["page":page, "per":"10"], encoding: URLEncoding.default)
+        case .message:
+            return .requestPlain
+        case .messages_asReadAll:
             return .requestPlain
         }
         
@@ -68,6 +89,9 @@ extension CRMAPI: TargetType {
                        "Accept": "application/vnd.inee.v1+json"]
         if let token = AuthorizationService.sharedInstance.authToken {
             headers["Auth-Token"] = token
+        }
+        if let organToken = AuthorizationService.sharedInstance.organToken {
+            headers["Organ-Token"] = organToken
         }
         return headers
     }

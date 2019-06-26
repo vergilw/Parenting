@@ -364,7 +364,7 @@ extension DMeViewController: UITableViewDataSource, UITableViewDelegate {
                 present(authorizationNavigationController, animated: true, completion: nil)
                 return
             }
-            navigationController?.pushViewController(DMeMessagesViewController(), animated: true)
+            navigationController?.pushViewController(DMeMessagesViewController(mode: .normal), animated: true)
             
         } else if indexPath.section == 4 {
             guard AuthorizationService.sharedInstance.isSignIn() else {

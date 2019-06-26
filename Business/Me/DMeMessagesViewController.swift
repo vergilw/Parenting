@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import Moya
 
 class DMeMessagesViewController: BaseViewController {
 
+    enum MsgMode {
+        case normal
+        case organ
+    }
+    
+    fileprivate var mode: MsgMode
+    
     fileprivate lazy var pageNumber: Int = 1
     
     fileprivate var messageModels: [MessageModel]?
@@ -26,6 +34,16 @@ class DMeMessagesViewController: BaseViewController {
         addNotificationObservers()
         
         fetchData()
+    }
+    
+    init(mode: MsgMode) {
+        self.mode = mode
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
     
     // MARK: - ============= Initialize View =============
@@ -79,7 +97,7 @@ class DMeMessagesViewController: BaseViewController {
     fileprivate func fetchData() {
         HUDService.sharedInstance.showFetchingView(target: self.view)
         
-        MessageProvider.request(.messages(1), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        let closure:(Int, ([String: Any])?)->() = { (code, JSON) in
             
             HUDService.sharedInstance.hideFetchingView(target: self.view)
             
@@ -122,12 +140,18 @@ class DMeMessagesViewController: BaseViewController {
                     self.fetchData()
                 })
             }
-        }))
+        }
+        
+        if mode == .normal {
+            MessageProvider.request(.messages(1), completion: ResponseService.sharedInstance.response(completion: closure))
+        } else if mode == .organ {
+            CRMProvider.request(.messages(1), completion: ResponseService.sharedInstance.response(completion: closure))
+        }
+        
     }
     
     fileprivate func fetchMoreData() {
-        
-        MessageProvider.request(.messages(pageNumber), completion: ResponseService.sharedInstance.response(completion: { (code, JSON) in
+        let closure:(Int, ([String: Any])?)->() = { (code, JSON) in
             
             self.tableView.mj_footer.endRefreshing()
             
@@ -149,7 +173,13 @@ class DMeMessagesViewController: BaseViewController {
                 }
                 
             }
-        }))
+        }
+        
+        if mode == .normal {
+            MessageProvider.request(.messages(pageNumber), completion: ResponseService.sharedInstance.response(completion: closure))
+        } else if mode == .organ {
+            CRMProvider.request(.messages(pageNumber), completion: ResponseService.sharedInstance.response(completion: closure))
+        }
     }
     
     fileprivate func asReadRequest(messageID: Int) {
