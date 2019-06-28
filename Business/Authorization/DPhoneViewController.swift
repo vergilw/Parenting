@@ -236,7 +236,7 @@ class DPhoneViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+//        super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
@@ -249,6 +249,11 @@ class DPhoneViewController: BaseViewController {
     
     // MARK: - ============= Initialize View =============
     func initContentView() {
+        if navigationController?.viewControllers.first != self {
+            backBarBtn.tintColor = UIConstants.Color.head
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarBtn)
+        }
+        
         view.addSubviews([bgImgView, backBarBtn, titleLabel, subtitleLabel, phoneView, codeView, pwdView, codeLineImgView, passcodeModeBtn, actionBtn, separatorLabel, wechatBtn, agreementBtn])
         
         if mode == .binding && (UMSocialManager.default()?.isInstall(.wechatSession) ?? true) {

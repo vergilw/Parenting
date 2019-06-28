@@ -42,7 +42,7 @@ extension AuthorizationAPI: TargetType {
         case .bindWechat:
             return "/wechat/auth"
         case .signUpWithDeviceID:
-            return "/backend/mock"
+            return "/sign/mock"
         }
     }
     
@@ -75,7 +75,7 @@ extension AuthorizationAPI: TargetType {
             return .requestParameters(parameters: ["identity":phone], encoding: URLEncoding.default)
 
         case let .signInWithPasscode(account, passcode):
-            return .requestParameters(parameters: ["identity":account, "token":passcode], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["identity":account, "token":passcode, "device_id":AppService.sharedInstance.uniqueIdentifier], encoding: JSONEncoding.default)
             
         case let .signInWithPassword(account, password):
             return .requestParameters(parameters: ["identity":account, "password":password], encoding: URLEncoding.default)
@@ -84,13 +84,13 @@ extension AuthorizationAPI: TargetType {
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken, "refresh_token":refreshToken, "expires_at":expiresAt, "app_id":"wxc7c60047a9c75018"], encoding: JSONEncoding.default)
             
         case let .signUpWithWechat(oauthID, phone, passcode):
-            return .requestParameters(parameters: ["oauth_user_id":oauthID, "identity":phone, "token":passcode], encoding: JSONEncoding.default)
+            return .requestParameters(parameters: ["oauth_user_id":oauthID, "identity":phone, "token":passcode, "device_id":AppService.sharedInstance.uniqueIdentifier], encoding: JSONEncoding.default)
             
         case let .bindWechat(openID, accessToken, refreshToken, expiresAt):
             return .requestParameters(parameters: ["openid":openID, "access_token":accessToken, "refresh_token":refreshToken, "expires_at":expiresAt, "app_id":"wxc7c60047a9c75018"], encoding: JSONEncoding.default)
             
         case .signUpWithDeviceID:
-            return .requestParameters(parameters: ["account":AppService.sharedInstance.uniqueIdentifier], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["device_id":AppService.sharedInstance.uniqueIdentifier], encoding: JSONEncoding.default)
         }
     }
     
