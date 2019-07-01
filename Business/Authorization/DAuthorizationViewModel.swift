@@ -48,15 +48,18 @@ class DAuthorizationViewModel {
     func signIn(openID: String, accessToken: String, refreshToken: String, expiresAt: String, completion: @escaping (_ code: Int, _ oauthID: String?)->Void) {
         AuthorizationProvider.request(.signInWithWechat(openID: openID, accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt), completion: ResponseService.sharedInstance.response(completion: { (code,JSON) in
             
-            if let oauthID = JSON?["oauth_user_id"] as? String {
-                completion(-1, oauthID)
+            if let oauthID = JSON?["oauth_user_id"] as? Int {
+                completion(-1, String(oauthID))
             } else if let userJSON = JSON?["user"] as? [String: Any], let model = UserModel.deserialize(from: userJSON), let token = JSON?["auth_token"] as? String {
                 AuthorizationService.sharedInstance.cacheSignInInfo(model: model)
                 AuthorizationService.sharedInstance.authToken = token
                 NotificationCenter.default.post(name: Notification.Authorization.signInDidSuccess, object: nil)
                 AuthorizationService.sharedInstance.updateUserInfo()
+                completion(0, nil)
+            } else {
+                completion(code, nil)
             }
-            completion(code, nil)
+            
         }))
     }
     
