@@ -1679,7 +1679,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 99;
+				CURRENT_PROJECT_VERSION = 105;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;
@@ -1707,7 +1707,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/parenting.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 99;
+				CURRENT_PROJECT_VERSION = 105;
 				DEVELOPMENT_TEAM = P45JM86Y46;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/fiber/Desktop/GitProject.nosync/inee_flutter;

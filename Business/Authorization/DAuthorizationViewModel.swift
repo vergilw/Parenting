@@ -57,7 +57,7 @@ class DAuthorizationViewModel {
                 AuthorizationService.sharedInstance.updateUserInfo()
                 completion(0, nil)
             } else {
-                completion(code, nil)
+                completion(-1, nil)
             }
             
         }))
