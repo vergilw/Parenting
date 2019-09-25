@@ -20,15 +20,17 @@ PODS:
   - HappyDNS (0.3.15)
   - image_picker (0.0.1):
     - Flutter
-  - IQKeyboardManagerSwift (6.2.1)
-  - Kingfisher (5.3.1)
+  - inee_flutter (0.0.1):
+    - Flutter
+  - IQKeyboardManagerSwift (6.3.0)
+  - Kingfisher (5.5.0)
   - MBProgressHUD (1.1.0)
-  - MJRefresh (3.1.16)
+  - MJRefresh (3.2.0)
   - MLeaksFinder (1.0.0):
     - FBRetainCycleDetector
-  - Moya (13.0.0):
-    - Moya/Core (= 13.0.0)
-  - Moya/Core (13.0.0):
+  - Moya (13.0.1):
+    - Moya/Core (= 13.0.1)
+  - Moya/Core (13.0.1):
     - Alamofire (~> 4.1)
     - Result (~> 4.1)
   - path_provider (0.0.1):
@@ -36,13 +38,13 @@ PODS:
   - PLPlayerKit (3.4.1):
     - PLPlayerKit/iphoneos (= 3.4.1)
   - PLPlayerKit/iphoneos (3.4.1)
-  - PLShortVideoKit (2.0.0):
-    - PLShortVideoKit/ex-libMuseProcessor (= 2.0.0)
-    - PLShortVideoKit/libMuseProcessor (= 2.0.0)
+  - PLShortVideoKit (2.1.0):
+    - PLShortVideoKit/ex-libMuseProcessor (= 2.1.0)
+    - PLShortVideoKit/libMuseProcessor (= 2.1.0)
     - Qiniu (= 7.2.5)
-  - PLShortVideoKit/ex-libMuseProcessor (2.0.0):
+  - PLShortVideoKit/ex-libMuseProcessor (2.1.0):
     - Qiniu (= 7.2.5)
-  - PLShortVideoKit/libMuseProcessor (2.0.0):
+  - PLShortVideoKit/libMuseProcessor (2.1.0):
     - Qiniu (= 7.2.5)
   - Presentr (1.9)
   - Qiniu (7.2.5):
@@ -50,7 +52,7 @@ PODS:
   - Result (4.1.0)
   - shared_preferences (0.0.1):
     - Flutter
-  - SnapKit (4.2.0)
+  - SnapKit (5.0.0)
   - TYCyclePagerView (1.2.0)
   - "UINavigationItem+Margin (2.1.1)"
   - "UITableView+FDTemplateLayoutCell (1.6)"
@@ -78,6 +80,7 @@ DEPENDENCIES:
   - GTSDK
   - HandyJSON (from `https://github.com/alibaba/HandyJSON.git`, branch `dev_for_swift5.0`)
   - image_picker (from `../inee_flutter/.ios/Flutter/.symlinks/image_picker/ios`)
+  - inee_flutter (from `../inee_flutter/.ios/Flutter`)
   - IQKeyboardManagerSwift
   - Kingfisher
   - MBProgressHUD
@@ -143,6 +146,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/alibaba/HandyJSON.git
   image_picker:
     :path: "../inee_flutter/.ios/Flutter/.symlinks/image_picker/ios"
+  inee_flutter:
+    :path: "../inee_flutter/.ios/Flutter"
   path_provider:
     :path: "../inee_flutter/.ios/Flutter/.symlinks/path_provider/ios"
   shared_preferences:
@@ -159,28 +164,29 @@ SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   Bugly: 3ca9f255c01025582df26f9222893b383c7e4b4e
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
-  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  flutter_picker: 8cd16302a9806a9789ba6e3ce85558c70c43b7f4
-  FlutterPluginRegistrant: 86610ccd0939ab72b18d22560a0740f04174b09a
-  fluttertoast: 0a20dcbbb8ecfd1a61b6285651ff2d5989d033fb
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_picker: 8ff0d7440b4e8327fcc9e6b21a39ef9369e697c7
+  FlutterPluginRegistrant: e5d74920f364efb3542ee909a198d0d20b47f24f
+  fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
   GTSDK: bba418c3949cd5450b004c7ff0e2fe297fa98565
   HandyJSON: 582477127ab3ab65bd2e471815f1a7b846856978
   HappyDNS: 00c15e651a347206e58a20503a32a5564589b56a
-  image_picker: ee00aab0487cedc80a304085219503cc6d0f2e22
-  IQKeyboardManagerSwift: 0f0ae8935360b4003e6ea1ac7c19898f01e2f7c7
-  Kingfisher: d9e7e0b209b59b8f9873aa2f37654e81a7beea51
+  image_picker: a211f28b95a560433c00f5cd3773f4710a20404d
+  inee_flutter: 0fc2ccb0bb1e7464d8b41114685356dd17067900
+  IQKeyboardManagerSwift: a8228c257614af98743b4cd8584637025f36358f
+  Kingfisher: 6fe5e67a90fd335e49b0f5c075ff55ac5ebedd94
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
-  MJRefresh: 7798e16e53a5ef7f332dd05b27664db4e29530fd
+  MJRefresh: ed450d6eb9d3346a2cb033ab7eb6de090aeef437
   MLeaksFinder: 8c435bd2f6d070af18cff082b503b21adc130fc0
-  Moya: 161263550064ff8a4948e8ff63137fd72a876292
-  path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
+  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
   PLPlayerKit: ebec9d70b66a95d1770b2dc5107fe2a469454a28
-  PLShortVideoKit: fc04d59968c4d70d529290ef817e84ec5d30e3aa
+  PLShortVideoKit: 03a936d7d23d5c437aad4dee93d57f7a554aeb48
   Presentr: 7078d7eb5d1661ebeaae60c9e42a1e534de1b993
   Qiniu: 909b408ee489ea54827e9717be90b94bc9dfbc48
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
-  shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
-  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
   TYCyclePagerView: 2b051dade0615c70784aa34f40c646feeddb7344
   "UINavigationItem+Margin": 7368d506fb2f7daa0c0489846cc8c2384ab1ab6d
   "UITableView+FDTemplateLayoutCell": 5c949b4a5059c404b442926c0e80f81d10a2d66f
@@ -188,9 +194,9 @@ SPEC CHECKSUMS:
   UMCCommon: 0263a057a2e1ae1da4c8308541e56904a493ce13
   UMCSecurityPlugins: 0831a08f3988f3cea9f1d3a7626cd9bee4fef150
   UMCShare: 552b29753f1b4da87b51d96545ed19e6263df397
-  url_launcher: 92b89c1029a0373879933c21642958c874539095
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: aaab67dd62ef2f47b22683637c4cd8d093558b3d
+PODFILE CHECKSUM: 376efe969d4fc92ada0212db7500b25529a40a32
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.0

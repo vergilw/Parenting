@@ -7,6 +7,9 @@ inhibit_all_warnings!
 
 use_frameworks!
 
+flutter_application_path = '../inee_flutter/'
+load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+
 target "parenting" do
 
     #pod 'RealmSwift'            
@@ -36,7 +39,15 @@ target "parenting" do
     pod 'Qiniu'
     pod 'PLPlayerKit'
 
+    install_all_flutter_pods(flutter_application_path)
+    
+    post_install do |installer|
+        installer.pods_project.targets.each do |target|
+            target.build_configurations.each do |config|
+                config.build_settings['ENABLE_BITCODE'] = 'NO'
+            end
+        end
+    end
 end
 
-flutter_application_path = '../inee_flutter/'
-eval(File.read(File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')), binding)
+

@@ -561,7 +561,7 @@ class CRMViewController: BaseViewController {
     
     // MARK: - ============= Private =============
     fileprivate func setupFlutterChannel(flutter: FlutterViewController) {
-        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter)
+        let channel = FlutterMethodChannel(name: "com.otof.yangyu/crm", binaryMessenger: flutter.binaryMessenger)
         channel.setMethodCallHandler { [weak self] (call, result) in
             if call.method == "uploadByQiNiu" {
                 guard let params = call.arguments as? [String: Any], let filepath = params["file_path"] as? String, let key = params["key"] as? String, let token = params["token"] as? String else { return result(FlutterError()) }
