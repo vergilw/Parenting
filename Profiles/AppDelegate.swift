@@ -218,8 +218,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate, GeTuiSdkDelegate {
     }
     
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
-        GeTuiSdk.registerDeviceToken(token)
+//        let token = deviceToken.map({ String(format: "%02.2hhx", $0)}).joined()
+        GeTuiSdk.registerDeviceTokenData(deviceToken)
         
     }
     

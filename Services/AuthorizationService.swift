@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 class AuthorizationService {
     
@@ -110,6 +111,37 @@ class AuthorizationService {
         user = nil
         organToken = nil
         NotificationCenter.default.post(name: Notification.Authorization.signOutDidSuccess, object: nil)
+        
+        Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
+            tasks.forEach({ $0.cancel() })
+        }
+
+        URLSession.shared.flush {
+            URLSession.shared.reset {
+            }
+        }
+
+        URLSession.shared.invalidateAndCancel()
+
+//        Alamofire.SessionManager.default.session.flush {
+//            Alamofire.SessionManager.default.session.reset {
+//                var storage: URLCredentialStorage? {
+//                    return Alamofire.SessionManager.default.session.configuration.urlCredentialStorage
+//                }
+//
+//                print("Credentials found: \(storage?.allCredentials.first?.value.first?.value.user ?? "nil")\n")
+//                if let protectionSpace: URLProtectionSpace = storage?.allCredentials.first?.key, let credential = storage?.allCredentials.first?.value.first?.value {
+//                    storage?.remove(credential, for: protectionSpace)
+//                    NSLog("Credentials removed: %@", credential.user ?? "nil")
+//                    print("Credentials removed: \(credential.user ?? "")\n")
+//                    print("Credentials found: \(storage?.allCredentials.first?.value.first?.value.user ?? "nil")\n")
+//                }
+//
+//                DispatchQueue.main.sync {
+//                    listener(response, error)
+//                }
+//            }
+//        }
     }
     
     func updateUserInfo() {
